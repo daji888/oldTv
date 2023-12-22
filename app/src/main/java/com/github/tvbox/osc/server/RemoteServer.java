@@ -13,6 +13,7 @@ import com.github.tvbox.osc.event.RefreshEvent;
 import com.github.tvbox.osc.event.ServerEvent;
 import com.github.tvbox.osc.util.FileUtils;
 import com.github.tvbox.osc.util.OkGoHelper;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -111,22 +112,29 @@ public class RemoteServer extends NanoHTTPD {
                 }
                 if (fileName.equals("/proxy")) {
                     Map<String, String> params = session.getParms();
+                    params.putAll(session.getHeaders());
+                    params.put("request-headers", new Gson().toJson(session.getHeaders()));
                     if (params.containsKey("do")) {
                         Object[] rs = ApiConfig.get().proxyLocal(params);
-                        try {
-                            int code = (int) rs[0];
-                            String mime = (String) rs[1];
-                            InputStream stream = rs[2] != null ? (InputStream) rs[2] : null;
-                            Response response = NanoHTTPD.newChunkedResponse(
-                                    NanoHTTPD.Response.Status.lookup(code),
-                                    mime,
-                                    stream
-                            );
-                            return response;
-                        } catch (Throwable th) {
-                            return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.INTERNAL_ERROR, NanoHTTPD.MIME_PLAINTEXT, "500");
-                        }
-                    }
+                        int code = (int) rs[0];
+                        String mime = (String) rs[1];
+                        InputStream stream = rs[2] != null ? (InputStream) rs[2] : null;
+                        Response response = NanoHTTPD.newChunkedResponse(
+                        NanoHTTPD.Response.Status.lookup(code),
+                        mime,
+                        stream);
+                        if (rs.length > 3) {
+                            try {
+                                HashMap < String, String > headers = (HashMap < String, String > ) rs[3];
+                                for (String key: headers.keySet()) {
+                                    response.addHeader(key, headers.get(key));
+                                }
+                            } catch (Throwable th) {
+                                th.printStackTrace();
+                            }
+                         }
+                         return response;                        
+                     }
                 } else if (fileName.startsWith("/file/")) {
                     try {
                         String f = fileName.substring(6);
