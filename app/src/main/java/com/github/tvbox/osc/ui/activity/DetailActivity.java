@@ -1,5 +1,6 @@
 package com.github.tvbox.osc.ui.activity;
 
+import android.app.AlertDialog;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,17 +9,22 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextUtils;
+import android.view.Window;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Gravity;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.ScrollView;
 import android.widget.Toast;
 import android.content.ClipboardManager;
 import android.content.ClipData;
+import android.util.DisplayMetrics;
 
 import androidx.fragment.app.FragmentContainerView;
 import androidx.lifecycle.Observer;
@@ -114,6 +120,7 @@ public class DetailActivity extends BaseActivity {
     private TextView tvSort;
     private TextView tvQuickSearch;
     private TextView tvCollect;
+    private TextView tvSynopsis;
     private TvRecyclerView mGridViewFlag;
     private TvRecyclerView mGridView;
     private TvRecyclerView mSeriesGroupView;
@@ -173,6 +180,7 @@ public class DetailActivity extends BaseActivity {
         tvSort = findViewById(R.id.tvSort);
         tvCollect = findViewById(R.id.tvCollect);
         tvQuickSearch = findViewById(R.id.tvQuickSearch);
+        tvSynopsis = findViewById(R.id.tvSynopsis);
         mEmptyPlayList = findViewById(R.id.mEmptyPlaylist);
         mGridView = findViewById(R.id.mGridView);
         mGridView.setHasFixedSize(true);
@@ -292,6 +300,17 @@ public class DetailActivity extends BaseActivity {
                 }
             }
         });
+        tvSynopsis.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FastClickCheckUtil.check(v);
+                if (mVideo.des != null && !TextUtils.isEmpty(mVideo.des)) {
+                    showDialog("全部简介", removeHtmlTag(mVideo.des));
+                } else {
+                    Toast.makeText(DetailActivity.this, "全部简介为空", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         tvPlayUrl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -300,6 +319,17 @@ public class DetailActivity extends BaseActivity {
                 //设置内容到剪切板
                 cm.setPrimaryClip(ClipData.newPlainText(null, tvPlayUrl.getText().toString().replace("播放地址：","")));
                 Toast.makeText(DetailActivity.this, "已复制", Toast.LENGTH_SHORT).show();
+            }
+        });
+        tvDes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FastClickCheckUtil.check(v);
+                if (mVideo.des != null && !TextUtils.isEmpty(mVideo.des)) {
+                    showDialog("全部简介", removeHtmlTag(mVideo.des));
+                } else {
+                    Toast.makeText(DetailActivity.this, "全部简介为空", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         mGridView.setOnItemListener(new TvRecyclerView.OnItemListener() {
@@ -707,6 +737,52 @@ public class DetailActivity extends BaseActivity {
         });
     }
 
+    private void showDialog(String title, String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(DetailActivity.this);
+        TextView titleText = new TextView(DetailActivity.this);
+        titleText.setText(title);
+        titleText.setTextColor(0xCC000000);
+        titleText.setTextSize(18);
+        titleText.setGravity(Gravity.CENTER);
+        TextView messageText = new TextView(DetailActivity.this);
+        messageText.setText(message);
+        messageText.setTextColor(0xCC000000);
+        messageText.setTextSize(16);
+        messageText.setGravity(Gravity.CENTER);
+        ScrollView scrollView = new ScrollView(DetailActivity.this);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        scrollView.setLayoutParams(layoutParams);
+        scrollView.addView(messageText);
+        LinearLayout layout = new LinearLayout(DetailActivity.this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(20, 0, 20, 20);
+        layout.addView(titleText);
+        layout.addView(scrollView);
+        builder.setView(layout);
+        AlertDialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        int screenWidth = getResources().getDisplayMetrics().widthPixels;
+        int maxWidth = (int) (screenWidth * 0.6);
+        dialog.show();
+        dialog.getWindow().setLayout(maxWidth, ViewGroup.LayoutParams.WRAP_CONTENT);
+        int screenHeight = getResources().getDisplayMetrics().heightPixels;
+        int maxHeight = (int) (screenHeight * 0.5);
+        scrollView.post(new Runnable() {
+            @Override
+            public void run() {
+                int contentHeight = scrollView.getChildAt(0).getHeight();
+                if (contentHeight > maxHeight) {
+                    scrollView.getLayoutParams().height = maxHeight;
+                    scrollView.requestLayout();
+                } else {
+                    scrollView.getLayoutParams().height = contentHeight;
+                    scrollView.requestLayout();
+                }
+            }
+        });
+    }
+
     private String getHtml(String label, String content) {
         if (content == null) {
             content = "";
@@ -974,6 +1050,7 @@ public class DetailActivity extends BaseActivity {
         tvSort.setFocusable(!fullWindows);
         tvCollect.setFocusable(!fullWindows);
         tvQuickSearch.setFocusable(!fullWindows);
+        tvSynopsis.setFocusable(!fullWindows);
         toggleSubtitleTextSize();
     }
 
