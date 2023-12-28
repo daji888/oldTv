@@ -169,8 +169,12 @@ public class HomeActivity extends BaseActivity {
                     textView.getPaint().setFakeBoldText(true);
                     textView.setTextColor(HomeActivity.this.getResources().getColor(R.color.color_FFFFFF));
                     textView.invalidate();
+                    if (position == -1) {
+                        position = 0;
+                        HomeActivity.this.mGridView.setSelection(0);
+                    }
                     MovieSort.SortData sortData = sortAdapter.getItem(position);
-                    if (!sortData.filters.isEmpty()) {
+                    if (null != sortData && !sortData.filters.isEmpty()) {
                         showFilterIcon(sortData.filterSelectCount());
                     }
                     HomeActivity.this.sortFocusView = view;
