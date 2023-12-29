@@ -195,19 +195,6 @@
                         android:textSize="@dimen/vs_20" />
 
                     <TextView
-                        android:id="@+id/tvSort"
-                        android:layout_width="@dimen/vs_120"
-                        android:layout_height="@dimen/vs_40"
-                        android:layout_marginEnd="@dimen/vs_10"
-                        android:layout_marginRight="@dimen/vs_10"
-                        android:background="@drawable/button_detail_sort"
-                        android:focusable="true"
-                        android:gravity="center"
-                        android:text="剧集倒序"
-                        android:textColor="@android:color/white"
-                        android:textSize="@dimen/vs_20" />
-
-                    <TextView
                         android:id="@+id/tvSynopsis"
                         android:layout_width="@dimen/vs_120"
                         android:layout_height="@dimen/vs_40"
@@ -217,6 +204,19 @@
                         android:focusable="true"
                         android:gravity="center"
                         android:text="全部简介"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/vs_20" />
+
+                    <TextView
+                        android:id="@+id/tvSort"
+                        android:layout_width="@dimen/vs_120"
+                        android:layout_height="@dimen/vs_40"
+                        android:layout_marginEnd="@dimen/vs_10"
+                        android:layout_marginRight="@dimen/vs_10"
+                        android:background="@drawable/button_detail_sort"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:text="剧集倒序"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/vs_20" />
 
