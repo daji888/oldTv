@@ -48,7 +48,7 @@ public class XWalkInitDialog extends BaseDialog {
 
             private void setTextEnable(boolean enable) {
                 downText.setEnabled(enable);
-                downText.setTextColor(enable ? Color.BLACK : Color.GRAY);
+                downText.setTextColor(enable ? Color.BLACK : Color.WHITE);
             }
 
             @Override
