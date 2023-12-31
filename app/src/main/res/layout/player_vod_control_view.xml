@@ -163,20 +163,6 @@
                 android:textSize="@dimen/ts_20" />
 
             <TextView
-                android:id="@+id/play_retry"
-                android:singleLine="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/vs_5"
-                android:layout_marginRight="@dimen/vs_5"
-                android:background="@drawable/button_dialog_main"
-                android:focusable="true"
-                android:padding="@dimen/vs_10"
-                android:text="重播"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/ts_20" />
-
-            <TextView
                 android:id="@+id/play_refresh"
                 android:singleLine="true"
                 android:layout_width="wrap_content"
@@ -187,6 +173,20 @@
                 android:focusable="true"
                 android:padding="@dimen/vs_10"
                 android:text="刷新"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/ts_20" />
+            
+            <TextView
+                android:id="@+id/play_retry"
+                android:singleLine="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/vs_5"
+                android:layout_marginRight="@dimen/vs_5"
+                android:background="@drawable/button_dialog_main"
+                android:focusable="true"
+                android:padding="@dimen/vs_10"
+                android:text="重播"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/ts_20" />
 
