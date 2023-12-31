@@ -314,14 +314,14 @@ public class VodController extends BaseController {
         mPlayerRetry.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.replay(false);
+                listener.replay(true);
                 hideBottom();
             }
         });
         mPlayrefresh.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.replay(true);
+                listener.replay(false);
                 hideBottom();
             }
         });
