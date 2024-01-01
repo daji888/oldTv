@@ -29,7 +29,8 @@
             android:textStyle="bold"
             android:text="确定全部删除 ?" 
             android:textColor="@color/color_CC000000"
-            android:textSize="@dimen/ts_26" />
+            android:textSize="@dimen/ts_26" 
+            android:textStyle="bold" />
 
         <TableRow
             android:layout_width="match_parent"
