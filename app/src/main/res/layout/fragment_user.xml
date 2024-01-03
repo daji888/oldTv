@@ -54,9 +54,9 @@
                     android:gravity="center"
                     android:text="历史"
                     android:textAlignment="gravity"
-                    android:textColor="@android:color/white"
-                    android:textSize="@dimen/ts_30" 
-                    android:textStyle="bold" />
+                    android:textColor="@color/color_CCFFFFFF"
+                    android:textSize="@dimen/ts_30" />
+
 
             </LinearLayout>
 
@@ -94,9 +94,9 @@
                     android:gravity="center"
                     android:text="直播"
                     android:textAlignment="gravity"
-                    android:textColor="@android:color/white"
-                    android:textSize="@dimen/ts_30" 
-                    android:textStyle="bold" />
+                    android:textColor="@color/color_CCFFFFFF"
+                    android:textSize="@dimen/ts_30" />
+
 
             </LinearLayout>
 
@@ -134,9 +134,8 @@
                     android:gravity="center"
                     android:text="搜索"
                     android:textAlignment="gravity"
-                    android:textColor="@android:color/white"
-                    android:textSize="@dimen/ts_30" 
-                    android:textStyle="bold" />
+                    android:textColor="@color/color_CCFFFFFF"
+                    android:textSize="@dimen/ts_30" />
 
             </LinearLayout>
 
@@ -175,9 +174,8 @@
                     android:gravity="center"
                     android:text="推送"
                     android:textAlignment="gravity"
-                    android:textColor="@android:color/white"
-                    android:textSize="@dimen/ts_30" 
-                    android:textStyle="bold" />
+                    android:textColor="@color/color_CCFFFFFF"
+                    android:textSize="@dimen/ts_30" />
 
             </LinearLayout>
 
@@ -215,9 +213,8 @@
                     android:gravity="center"
                     android:text="收藏"
                     android:textAlignment="gravity"
-                    android:textColor="@android:color/white"
-                    android:textSize="@dimen/ts_30" 
-                    android:textStyle="bold" />
+                    android:textColor="@color/color_CCFFFFFF"
+                    android:textSize="@dimen/ts_30" />
 
             </LinearLayout>
 
@@ -257,9 +254,8 @@
                     android:gravity="center"
                     android:text="设置"
                     android:textAlignment="gravity"
-                    android:textColor="@android:color/white"
-                    android:textSize="@dimen/ts_30" 
-                    android:textStyle="bold" />
+                    android:textColor="@color/color_CCFFFFFF"
+                    android:textSize="@dimen/ts_30" />
 
             </LinearLayout>
 
@@ -273,9 +269,9 @@
             android:clipToPadding="false"
             android:layout_below="@+id/tvUserHome"
             android:paddingLeft="@dimen/vs_5"
-            android:paddingTop="@dimen/vs_5"
+            android:paddingTop="@dimen/vs_10"
             android:paddingRight="@dimen/vs_5"
-            android:paddingBottom="@dimen/vs_5"
+            android:paddingBottom="@dimen/vs_10"
             app:tv_horizontalSpacingWithMargins="@dimen/vs_10"
             app:tv_layoutManager="V7GridLayoutManager"
             app:tv_selectedItemIsCentered="true"
@@ -291,9 +287,9 @@
             android:layout_below="@+id/tvUserHome"
             android:orientation="horizontal"
             android:paddingLeft="@dimen/vs_5"
-            android:paddingTop="@dimen/vs_5"
+            android:paddingTop="@dimen/vs_10"
             android:paddingRight="@dimen/vs_5"
-            android:paddingBottom="@dimen/vs_5"
+            android:paddingBottom="@dimen/vs_10"
             app:tv_horizontalSpacingWithMargins="@dimen/vs_10"
             app:tv_layoutManager="V7LinearLayoutManager"
             app:tv_selectedItemIsCentered="true"
