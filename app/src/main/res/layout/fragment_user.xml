@@ -54,7 +54,7 @@
                     android:gravity="center"
                     android:text="历史"
                     android:textAlignment="gravity"
-                    android:textColor="@color/color_CCFFFFFF"
+                    android:textColor="@android:color/white"
                     android:textSize="@dimen/ts_30" 
                     android:textStyle="bold" />
 
@@ -94,7 +94,7 @@
                     android:gravity="center"
                     android:text="直播"
                     android:textAlignment="gravity"
-                    android:textColor="@color/color_CCFFFFFF"
+                    android:textColor="@android:color/white"
                     android:textSize="@dimen/ts_30" 
                     android:textStyle="bold" />
 
@@ -134,7 +134,7 @@
                     android:gravity="center"
                     android:text="搜索"
                     android:textAlignment="gravity"
-                    android:textColor="@color/color_CCFFFFFF"
+                    android:textColor="@android:color/white"
                     android:textSize="@dimen/ts_30" 
                     android:textStyle="bold" />
 
@@ -175,7 +175,7 @@
                     android:gravity="center"
                     android:text="推送"
                     android:textAlignment="gravity"
-                    android:textColor="@color/color_CCFFFFFF"
+                    android:textColor="@android:color/white"
                     android:textSize="@dimen/ts_30" 
                     android:textStyle="bold" />
 
@@ -215,7 +215,7 @@
                     android:gravity="center"
                     android:text="收藏"
                     android:textAlignment="gravity"
-                    android:textColor="@color/color_CCFFFFFF"
+                    android:textColor="@android:color/white"
                     android:textSize="@dimen/ts_30" 
                     android:textStyle="bold" />
 
@@ -257,7 +257,7 @@
                     android:gravity="center"
                     android:text="设置"
                     android:textAlignment="gravity"
-                    android:textColor="@color/color_CCFFFFFF"
+                    android:textColor="@android:color/white"
                     android:textSize="@dimen/ts_30" 
                     android:textStyle="bold" />
 
