@@ -166,18 +166,26 @@ public class FileUtils {
         return;
     }
 
+    //启动app清除
     public static void cleanPlayerCache() {
         String ijkCachePath = getCachePath() + "/ijkcaches/";
         String thunderCachePath = getCachePath() + "/thunder/";
+        String jpaliCachePath = getExternalCachePath() + "/jpali/Downloads/";
         File ijkCacheDir = new File(ijkCachePath);
         File thunderCacheDir = new File(thunderCachePath);
+        File jpaliCacheDir = new File(jpaliCachePath);
         try {
-            if (ijkCacheDir.exists()) cleanDirectory(ijkCacheDir);
+            if (ijkCacheDir.exists()) deleteDir(ijkCacheDir);
         } catch (Exception e) {
             e.printStackTrace();
         }
         try {
-            if (thunderCacheDir.exists()) cleanDirectory(thunderCacheDir);
+            if (thunderCacheDir.exists()) deleteDir(thunderCacheDir);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            if (jpaliCacheDir.exists()) deleteDir(jpaliCacheDir);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -234,5 +242,36 @@ public class FileUtils {
         int lastSlashIndex = Math.max(path.lastIndexOf("/"), path.lastIndexOf("\\"));
         // 如果路径中有点号，并且点号在最后一个斜杠之后，认为有后缀
         return lastDotIndex > lastSlashIndex && lastDotIndex < path.length() - 1;
+    }
+
+    public static void cleanDirectory(File dir) {
+        if (!dir.exists()) return;
+        File[] files = dir.listFiles();
+        if (files == null || files.length == 0) return;
+        for(File one : files) {
+            try {
+                deleteFile(one);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    public static void deleteFile(File file) {
+        if (!file.exists()) return;
+        if (file.isFile()) {
+            if (file.canWrite()) file.delete();
+            return;
+        }
+        if (file.isDirectory()) {
+            File[] files = file.listFiles();
+            if (files == null || files.length == 0) {
+                if (file.canWrite()) file.delete();
+                return;
+            }
+            for(File one : files) {
+                deleteFile(one);
+            }
+        }
+        return;
     }
 }
