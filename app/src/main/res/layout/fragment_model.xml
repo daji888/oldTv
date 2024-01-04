@@ -394,7 +394,6 @@
                             android:textSize="@dimen/ts_30" />
                 </LinearLayout>
 
-
                 <LinearLayout
                     android:layout_width="@dimen/vs_0"
                     android:layout_height="match_parent"
@@ -405,7 +404,7 @@
                     android:orientation="horizontal">
 
                     <LinearLayout
-                        android:id="@+id/llSearchTv"
+                        android:id="@+id/llScale"
                         android:layout_width="@dimen/vs_0"
                         android:layout_height="match_parent"
                         android:layout_marginEnd="@dimen/vs_5"
@@ -421,7 +420,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="搜索附近TVBox"
+                            android:text="画面缩放"
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
@@ -431,7 +430,7 @@
                             android:layout_weight="1" />
 
                         <TextView
-                            android:id="@+id/remoteTv"
+                            android:id="@+id/tvScaleType"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@android:color/white"
@@ -446,8 +445,9 @@
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_30" />
                     </LinearLayout>
+
                     <LinearLayout
-                        android:id="@+id/llHistoryNum"
+                        android:id="@+id/showPreview"
                         android:layout_width="@dimen/vs_0"
                         android:layout_height="match_parent"
                         android:layout_marginStart="@dimen/vs_5"
@@ -463,7 +463,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="历史记录"
+                            android:text="窗口预览"
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
@@ -473,7 +473,7 @@
                             android:layout_weight="1" />
 
                         <TextView
-                            android:id="@+id/tvHistoryNum"
+                            android:id="@+id/showPreviewText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@android:color/white"
@@ -489,7 +489,6 @@
                             android:textSize="@dimen/ts_30" />
                     </LinearLayout>
                 </LinearLayout>
-
 
             </LinearLayout>
 
@@ -793,7 +792,7 @@
                     android:orientation="horizontal">
 
                     <LinearLayout
-                        android:id="@+id/llScale"
+                        android:id="@+id/llSearchTv"
                         android:layout_width="@dimen/vs_0"
                         android:layout_height="match_parent"
                         android:layout_marginEnd="@dimen/vs_5"
@@ -809,7 +808,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="画面缩放"
+                            android:text="搜索附近TVBox"
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
@@ -819,7 +818,7 @@
                             android:layout_weight="1" />
 
                         <TextView
-                            android:id="@+id/tvScaleType"
+                            android:id="@+id/remoteTv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@android:color/white"
@@ -834,9 +833,8 @@
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_30" />
                     </LinearLayout>
-
                     <LinearLayout
-                        android:id="@+id/showPreview"
+                        android:id="@+id/llHistoryNum"
                         android:layout_width="@dimen/vs_0"
                         android:layout_height="match_parent"
                         android:layout_marginStart="@dimen/vs_5"
@@ -852,7 +850,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="窗口预览"
+                            android:text="历史记录"
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
@@ -862,7 +860,7 @@
                             android:layout_weight="1" />
 
                         <TextView
-                            android:id="@+id/showPreviewText"
+                            android:id="@+id/tvHistoryNum"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@android:color/white"
@@ -878,7 +876,6 @@
                             android:textSize="@dimen/ts_30" />
                     </LinearLayout>
                 </LinearLayout>
-
 
             </LinearLayout>
 
