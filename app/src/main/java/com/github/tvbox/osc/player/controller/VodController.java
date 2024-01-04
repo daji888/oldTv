@@ -1,7 +1,9 @@
 package com.github.tvbox.osc.player.controller;
 
-import android.app.Activity;
+import static xyz.doikki.videoplayer.util.PlayerUtils.stringForTime;
+
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.Handler;
@@ -28,11 +30,9 @@ import com.github.tvbox.osc.ui.adapter.ParseAdapter;
 import com.github.tvbox.osc.ui.adapter.SelectDialogAdapter;
 import com.github.tvbox.osc.ui.dialog.SelectDialog;
 import com.github.tvbox.osc.util.FastClickCheckUtil;
-import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.PlayerHelper;
 import com.github.tvbox.osc.util.ScreenUtils;
 import com.github.tvbox.osc.util.SubtitleHelper;
-import com.orhanobut.hawk.Hawk;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
 import com.owen.tvrecyclerview.widget.V7LinearLayoutManager;
 
@@ -42,14 +42,11 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
-
 import java.util.Date;
+import java.util.List;
 
 import xyz.doikki.videoplayer.player.VideoView;
 import xyz.doikki.videoplayer.util.PlayerUtils;
-
-import static xyz.doikki.videoplayer.util.PlayerUtils.stringForTime;
 
 public class VodController extends BaseController {
     public VodController(@NonNull @NotNull Context context) {
@@ -107,6 +104,7 @@ public class VodController extends BaseController {
     LinearLayout mProgressRoot;
     TextView mProgressText;
     ImageView mProgressIcon;
+    SeekBar mProgressSeekBar;
     ImageView mLockView;
     LinearLayout mBottomRoot;
     LinearLayout mTopRoot1;
@@ -181,6 +179,7 @@ public class VodController extends BaseController {
         mProgressRoot = findViewById(R.id.tv_progress_container);
         mProgressIcon = findViewById(R.id.tv_progress_icon);
         mProgressText = findViewById(R.id.tv_progress_text);
+        mProgressSeekBar = findViewById(R.id.tv_progress_seekBar);
         mBottomRoot = findViewById(R.id.bottom_container);
         mTopRoot1 = findViewById(R.id.tv_top_l_container);
         mTopRoot2 = findViewById(R.id.tv_top_r_container);
@@ -794,7 +793,7 @@ public class VodController extends BaseController {
 
     private boolean simSlideStart = false;
     private int simSeekPosition = 0;
-    private long simSlideOffset = 0;
+    private int simStartPosition = 0;
 
     public void tvSlideStop() {
         if (!simSlideStart)
@@ -804,7 +803,7 @@ public class VodController extends BaseController {
             mControlWrapper.start();
         simSlideStart = false;
         simSeekPosition = 0;
-        simSlideOffset = 0;
+         simStartPosition = 0;
     }
 
     public void tvSlideStart(int dir) {
@@ -813,15 +812,14 @@ public class VodController extends BaseController {
             return;
         if (!simSlideStart) {
             simSlideStart = true;
+            simStartPosition = (int) mControlWrapper.getCurrentPosition();
+            simSeekPosition = simStartPosition;
         }
         // 每次10秒
-        simSlideOffset += (10000.0f * dir);
-        int currentPosition = (int) mControlWrapper.getCurrentPosition();
-        int position = (int) (simSlideOffset + currentPosition);
-        if (position > duration) position = duration;
-        if (position < 0) position = 0;
-        updateSeekUI(currentPosition, position, duration);
-        simSeekPosition = position;
+        simSeekPosition += (80000.0f * dir);
+        if (simSeekPosition > duration) simSeekPosition = duration;
+        if (simSeekPosition < 0) simSeekPosition = 0;
+        updateSeekUI(simStartPosition, simSeekPosition, duration);
     }
 
     @Override
@@ -833,6 +831,8 @@ public class VodController extends BaseController {
             mProgressIcon.setImageResource(R.drawable.icon_back);
         }
         mProgressText.setText(PlayerUtils.stringForTime(seekTo) + " / " + PlayerUtils.stringForTime(duration));
+        int pos = (int) (seekTo * 1.0 / duration * mProgressSeekBar.getMax());
+        mProgressSeekBar.setProgress(pos);
         mHandler.sendEmptyMessage(1000);
         mHandler.removeMessages(1001);
         mHandler.sendEmptyMessageDelayed(1001, 1000);
