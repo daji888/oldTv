@@ -221,10 +221,10 @@ public class LivePlayActivity extends BaseActivity {
         tip_chname = (TextView)  findViewById(R.id.tv_channel_bar_name);//底部名称
         tv_channelnum = (TextView) findViewById(R.id.tv_channel_bottom_number); //底部数字
         tip_epg1 = (TextView) findViewById(R.id.tv_current_program_time);//底部EPG当前节目信息
-        tip_epg2 = (TextView) findViewById(R.id.tv_next_program_time);//底部EPG当下个节目信息
+        tip_epg2 = (TextView) findViewById(R.id.tv_next_program_time);//底部EPG下个节目信息
         tv_srcinfo = (TextView) findViewById(R.id.tv_source);//线路状态
         tv_curepg_left = (TextView) findViewById(R.id.tv_current_program);//当前节目
-        tv_nextepg_left= (TextView) findViewById(R.id.tv_current_program);//下一节目
+        tv_nextepg_left= (TextView) findViewById(R.id.tv_current_program);//下个节目
         ll_epg = (RelativeLayout) findViewById(R.id.ll_epg);
         tv_right_top_tipnetspeed = (TextView)findViewById(R.id.tv_right_top_tipnetspeed);
         tv_right_top_channel_name = (TextView)findViewById(R.id.tv_right_top_channel_name);
