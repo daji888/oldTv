@@ -541,6 +541,25 @@
             android:textSize="@dimen/ts_30"
             tools:text="100" />
 
+        <SeekBar
+            android:id="@+id/tv_progress_seekBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@null"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:max="1000"
+            android:maxHeight="@dimen/vs_6"
+            android:minHeight="@dimen/vs_6"
+            android:padding="@dimen/vs_0"
+            android:paddingStart="@dimen/vs_0"
+            android:paddingEnd="@dimen/vs_0"
+            android:progressDrawable="@drawable/shape_player_control_vod_seek"
+            android:thumb="@drawable/shape_player_control_vod_seek_thumb"
+            android:thumbOffset="@dimen/vs_0" />
+
     </LinearLayout>
 
     <ProgressBar
