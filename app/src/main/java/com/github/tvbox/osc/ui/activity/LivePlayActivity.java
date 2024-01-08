@@ -116,6 +116,10 @@ public class LivePlayActivity extends BaseActivity {
     private LiveSettingItemAdapter liveSettingItemAdapter;
     private List<LiveSettingGroup> liveSettingGroupList = new ArrayList<>();
 
+    // 遥控器数字键输入的要切换的频道号码
+    private int selectedChannelNumber = 0;
+    private TextView tvSelectedChannel;
+
     public static  int currentChannelGroupIndex = 0;
     private Handler mHandler = new Handler();
 
@@ -206,7 +210,8 @@ public class LivePlayActivity extends BaseActivity {
 
         setLoadSir(findViewById(R.id.live_root));
         mVideoView = findViewById(R.id.mVideoView);
-
+        
+        tvSelectedChannel = findViewById(R.id.tv_selected_channel);
         tvLeftChannelListLayout = findViewById(R.id.tvLeftChannnelListLayout);
         mChannelGroupView = findViewById(R.id.mGroupGridView);
         mLiveChannelView = findViewById(R.id.mChannelGridView);
@@ -592,6 +597,36 @@ public class LivePlayActivity extends BaseActivity {
             super.onBackPressed();
         }
     }
+    
+    private final Runnable mPlaySelectedChannel = new Runnable() {
+        @Override
+        public void run() {
+            tvSelectedChannel.setVisibility(View.INVISIBLE);
+            tvSelectedChannel.setText("");
+            int maxChannelIndex = getLiveChannels(currentChannelGroupIndex).size();
+            if (selectedChannelNumber > maxChannelIndex) {
+                selectedChannelNumber = maxChannelIndex;
+            }
+            if (selectedChannelNumber > 0) {
+                playChannel(currentChannelGroupIndex, selectedChannelNumber - 1, false);
+            }
+            selectedChannelNumber = 0;
+        }
+    };
+
+    private void numericKeyDown(int digit) {
+        int maxChannelIndex = getLiveChannels(currentChannelGroupIndex).size();
+        selectedChannelNumber = selectedChannelNumber * 10 + digit;
+        if (selectedChannelNumber > maxChannelIndex) {
+            selectedChannelNumber = maxChannelIndex;
+        }
+
+        tvSelectedChannel.setText(Integer.toString(selectedChannelNumber));
+        tvSelectedChannel.setVisibility(View.VISIBLE);
+
+        mHandler.removeCallbacks(mPlaySelectedChannel);
+        mHandler.postDelayed(mPlaySelectedChannel, 2000);
+    }
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
@@ -632,6 +667,15 @@ public class LivePlayActivity extends BaseActivity {
                     case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
                         showChannelList();
                         break;
+                    default:
+                        if (keyCode >= KeyEvent.KEYCODE_0 && keyCode <= KeyEvent.KEYCODE_9) {
+                            keyCode -= KeyEvent.KEYCODE_0;
+                        } else if ( keyCode >= KeyEvent.KEYCODE_NUMPAD_0 && keyCode <= KeyEvent.KEYCODE_NUMPAD_9) {
+                            keyCode -= KeyEvent.KEYCODE_NUMPAD_0;
+                        } else {
+                            break;
+                        }
+                        numericKeyDown(keyCode); 
                 }
             }
         } else if (event.getAction() == KeyEvent.ACTION_UP) {
