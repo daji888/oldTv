@@ -274,6 +274,9 @@ public class HomeActivity extends BaseActivity {
             } else {
                 LOG.e("无");
             }
+            if (Hawk.get(HawkConfig.HOME_DEFAULT_SHOW, false)) {
+                jumpActivity(LivePlayActivity.class);
+            }   
             return;
         }
         showLoading();
@@ -287,9 +290,6 @@ public class HomeActivity extends BaseActivity {
                             @Override
                             public void run() {
                                 if (!useCacheConfig) {
-                                    if (Hawk.get(HawkConfig.HOME_DEFAULT_SHOW, false)) {
-                                        jumpActivity(LivePlayActivity.class);
-                                   }
                                     Toast.makeText(HomeActivity.this, "自定义jar加载成功", Toast.LENGTH_SHORT).show();
                                 }
                                 initData();
