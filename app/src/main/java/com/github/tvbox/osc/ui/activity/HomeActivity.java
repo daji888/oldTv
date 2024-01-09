@@ -291,8 +291,8 @@ public class HomeActivity extends BaseActivity {
                                         jumpActivity(LivePlayActivity.class);
                                    }
                                     Toast.makeText(HomeActivity.this, "自定义jar加载成功", Toast.LENGTH_SHORT).show();
-                                initData();
                                 }
+                                initData();
                             }
                         }, 50);
                     }
