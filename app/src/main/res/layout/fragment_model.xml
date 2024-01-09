@@ -480,6 +480,7 @@
                             android:textSize="@dimen/ts_30" />
                 </LinearLayout>
             </LinearLayout> 
+                    
                 <LinearLayout
                     android:layout_width="@dimen/vs_0"
                     android:layout_height="match_parent"
