@@ -403,7 +403,7 @@
                     android:orientation="horizontal">
 
                 <LinearLayout
-                        android:id="@+id/llReset"
+                        android:id="@+id/llHomeRec"
                         android:layout_width="@dimen/vs_0"
                         android:layout_height="match_parent"
                         android:layout_marginEnd="@dimen/vs_5"
@@ -417,16 +417,23 @@
                         android:paddingRight="@dimen/vs_20">
 
                         <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/mn_reset"
-                                android:textColor="@android:color/white"
-                                android:textSize="@dimen/ts_24" />
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="首页推荐"
+                            android:textColor="@android:color/white"
+                            android:textSize="@dimen/ts_24" />
 
                         <Space
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1" />
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" />
+
+                        <TextView
+                            android:id="@+id/tvHomeRec"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@android:color/white"
+                            android:textSize="@dimen/ts_24" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -436,10 +443,10 @@
                             android:text=">"
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_30" />
-                     </LinearLayout>    
-                        
-                <LinearLayout
-                        android:id="@+id/llDns"
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/llHomeRecStyle"
                         android:layout_width="@dimen/vs_0"
                         android:layout_height="match_parent"
                         android:layout_marginStart="@dimen/vs_5"
@@ -452,26 +459,26 @@
                         android:paddingLeft="@dimen/vs_20"
                         android:paddingRight="@dimen/vs_20">
 
-                    <TextView
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="安全DNS"
+                            android:text="首页多行"
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
-                    <Space
+                        <Space
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1" />
 
-                    <TextView
-                            android:id="@+id/tvDns"
+                        <TextView
+                            android:id="@+id/showRecStyleText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
-                    <TextView
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/vs_10"
@@ -479,7 +486,7 @@
                             android:text=">"
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_30" />
-                </LinearLayout>
+                    </LinearLayout>
             </LinearLayout> 
                     
                 <LinearLayout
@@ -597,7 +604,7 @@
                     android:orientation="horizontal">
 
                     <LinearLayout
-                        android:id="@+id/llHomeRec"
+                        android:id="@+id/llReset"
                         android:layout_width="@dimen/vs_0"
                         android:layout_height="match_parent"
                         android:layout_marginEnd="@dimen/vs_5"
@@ -611,23 +618,16 @@
                         android:paddingRight="@dimen/vs_20">
 
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="首页推荐"
-                            android:textColor="@android:color/white"
-                            android:textSize="@dimen/ts_24" />
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/mn_reset"
+                                android:textColor="@android:color/white"
+                                android:textSize="@dimen/ts_24" />
 
                         <Space
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1" />
-
-                        <TextView
-                            android:id="@+id/tvHomeRec"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@android:color/white"
-                            android:textSize="@dimen/ts_24" />
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -637,10 +637,10 @@
                             android:text=">"
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_30" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/llHomeRecStyle"
+                     </LinearLayout>    
+                        
+                <LinearLayout
+                        android:id="@+id/llDns"
                         android:layout_width="@dimen/vs_0"
                         android:layout_height="match_parent"
                         android:layout_marginStart="@dimen/vs_5"
@@ -653,26 +653,26 @@
                         android:paddingLeft="@dimen/vs_20"
                         android:paddingRight="@dimen/vs_20">
 
-                        <TextView
+                    <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="首页多行"
+                            android:text="安全DNS"
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
-                        <Space
+                    <Space
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1" />
 
-                        <TextView
-                            android:id="@+id/showRecStyleText"
+                    <TextView
+                            android:id="@+id/tvDns"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
-                        <TextView
+                    <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/vs_10"
@@ -680,7 +680,7 @@
                             android:text=">"
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_30" />
-                    </LinearLayout>
+                </LinearLayout>
                 </LinearLayout>
 
 
