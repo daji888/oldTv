@@ -63,6 +63,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
     private TextView tvRender;
     private TextView tvScale;
     private TextView tvApi;
+    private TextView tvHomeDefaultShow;
     private TextView tvHomeApi;
     private TextView tvDns;
     private TextView tvHomeRec;
@@ -111,7 +112,8 @@ public class ModelSettingFragment extends BaseLazyFragment {
         tvDebugOpen.setText(Hawk.get(HawkConfig.DEBUG_OPEN, false) ? "已打开" : "已关闭");
         tvParseWebView.setText(Hawk.get(HawkConfig.PARSE_WEBVIEW, true) ? "系统自带" : "XWalkView");
         tvApi.setText(Hawk.get(HawkConfig.API_URL, ""));
-
+        tvHomeDefaultShow = findViewById(R.id.tvHomeDefaultShow);
+        tvHomeDefaultShow.setText(Hawk.get(HawkConfig.HOME_DEFAULT_SHOW, false) ? "开启" : "关闭");
         tvDns.setText(OkGoHelper.dnsHttpsList.get(Hawk.get(HawkConfig.DOH_URL, 0)));
         tvHomeRec.setText(getHomeRecName(Hawk.get(HawkConfig.HOME_REC, 0)));
         tvHistoryNum.setText(HistoryHelper.getHistoryNumName(Hawk.get(HawkConfig.HISTORY_NUM, 0)));
@@ -601,7 +603,14 @@ public class ModelSettingFragment extends BaseLazyFragment {
                 tvRecStyleText.setText(Hawk.get(HawkConfig.HOME_REC_STYLE, false) ? "是" : "否");
             }
         });
-
+        findViewById(R.id.llHomeLive).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FastClickCheckUtil.check(v);
+                Hawk.put(HawkConfig.HOME_DEFAULT_SHOW, !Hawk.get(HawkConfig.HOME_DEFAULT_SHOW, false));
+                tvHomeDefaultShow.setText(Hawk.get(HawkConfig.HOME_DEFAULT_SHOW, true) ? "开启" : "关闭");
+            }
+        });
         findViewById(R.id.llSearchTv).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
