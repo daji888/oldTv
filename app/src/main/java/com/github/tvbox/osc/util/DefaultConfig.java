@@ -14,6 +14,7 @@ import com.github.tvbox.osc.base.App;
 import com.github.tvbox.osc.bean.MovieSort;
 import com.github.tvbox.osc.bean.SourceBean;
 import com.github.tvbox.osc.server.ControlManager;
+import com.github.tvbox.osc.ui.activity.HomeActivity;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
