@@ -195,7 +195,6 @@
                         android:textSize="@dimen/ts_30" />
             </LinearLayout>
 
-
             <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/vs_60"
