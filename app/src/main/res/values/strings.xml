@@ -6,4 +6,5 @@
     <string name="act_live_play_empty_channel">频道列表为空</string>
     <string name="act_live_play_network_error">直播地址网络请求失败</string>
     <string name="mn_reset">重置APP</string>
+    <string name="dia_reset">确定重置将清除全部数据！</string>
 </resources>
