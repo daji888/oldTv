@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 33
 
     defaultConfig {
         applicationId 'com.github.tvbox.osc'
@@ -59,7 +59,7 @@ android {
 }
 
 dependencies {
-    api fileTree(dir: "libs", include: ["*.jar"])
+    api fileTree(dir: "libs", include: ['*.jar', '*.aar'])
 
 
     implementation 'org.nanohttpd:nanohttpd:2.3.1'
