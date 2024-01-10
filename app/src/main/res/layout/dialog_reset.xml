@@ -23,7 +23,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
             android:text="@string/dia_reset"
-            android:textColor="@color/color_FFFFFF"
+            android:textColor="@color/color_CC000000"
             android:textSize="24sp"
             android:textStyle="bold"
             tools:text="@string/dia_reset" />
