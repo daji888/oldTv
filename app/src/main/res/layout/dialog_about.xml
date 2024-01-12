@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:lineSpacingExtra="@dimen/ts_50"
         android:lineSpacingMultiplier="0"
-        android:text="         本软件只提供聚合展示功能, 所有资源来自网上, 软件不参与任何制作, 上传, 储存, 下载等内容, 仅供学习参考, 请于安装后24小时内删除。"
+        android:text="         本软件只提供聚合展示功能, 没有参与任何制作, 上传, 储存, 下载等内容, 所有资源均来自网络。"
         android:gravity="center"
         android:textColor="@color/color_CC000000"
         android:textSize="@dimen/ts_24" />
