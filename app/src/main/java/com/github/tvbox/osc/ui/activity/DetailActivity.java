@@ -743,7 +743,6 @@ public class DetailActivity extends BaseActivity {
         titleText.setText(title);
         titleText.setTextColor(0xCC000000);
         titleText.setTextSize(20);
-        titleText.setTextStyle(BOLD);
         titleText.setGravity(Gravity.CENTER);
         TextView messageText = new TextView(DetailActivity.this);
         messageText.setText(message);
