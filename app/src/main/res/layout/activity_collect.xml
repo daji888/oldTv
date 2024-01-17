@@ -40,7 +40,7 @@
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:gravity="center"
-            android:text="选中下面1个收藏后，按确定键删除"
+            android:text="选1个收藏按确定键删除"
             android:textColor="@android:color/white"
             android:textSize="@dimen/ts_24"
             android:visibility="gone" />
