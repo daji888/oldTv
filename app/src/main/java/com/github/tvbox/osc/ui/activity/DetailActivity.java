@@ -1,5 +1,5 @@
 package com.github.tvbox.osc.ui.activity;
-
+import android.content.Context;
 import android.app.AlertDialog;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
@@ -330,6 +330,23 @@ public class DetailActivity extends BaseActivity {
                 } else {
                     Toast.makeText(DetailActivity.this, "全部简介为空", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+        tvDes.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        FastClickCheckUtil.check(v);
+                        ClipboardManager clipprofile = (ClipboardManager) DetailActivity.this.getSystemService(Context.CLIPBOARD_SERVICE);
+                        String cpContent = removeHtmlTag(mVideo.des);
+                        ClipData clipData = ClipData.newPlainText(null,cpContent);
+                        clipprofile.setPrimaryClip(clipData);
+                        Toast.makeText(DetailActivity.this, "已复制：" + cpContent, Toast.LENGTH_SHORT).show();
+                    }
+                });
+                return true;
             }
         });
         mGridView.setOnItemListener(new TvRecyclerView.OnItemListener() {
