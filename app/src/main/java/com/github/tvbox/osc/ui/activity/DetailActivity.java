@@ -332,7 +332,7 @@ public class DetailActivity extends BaseActivity {
                 }
             }
         });
-        tvDesc.setOnLongClickListener(new View.OnLongClickListener() {
+        tvDes.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 runOnUiThread(new Runnable() {
