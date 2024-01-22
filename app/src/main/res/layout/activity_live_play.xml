@@ -166,7 +166,7 @@
 
 				<TextView
 					android:id="@+id/tv_arrow0"
-					android:layout_width="20dp"
+					android:layout_width="25dp"
 					android:layout_height="match_parent"
 					android:gravity="center"
 					android:onClick="divLoadEpgLeft"
@@ -176,11 +176,12 @@
 					android:shadowRadius="5.0"
 					android:text="更 多"
 					android:textColor="@color/color_FFFFFF"
+					android:textSize="@dimen/ts_22"
 					android:textStyle="bold" />
 
 				<ImageView
 					android:id="@+id/iv_arrow2"
-					android:layout_width="20dp"
+					android:layout_width="25dp"
 					android:layout_height="20dp"
 					android:gravity="center|left"
 					android:onClick="divLoadEpgLeft"
@@ -190,7 +191,7 @@
 
 				<TextView
 					android:id="@+id/tv_arrow3"
-					android:layout_width="20dp"
+					android:layout_width="25dp"
 					android:layout_height="match_parent"
 					android:gravity="center"
 					android:onClick="divLoadEpgLeft"
@@ -200,6 +201,7 @@
 					android:shadowRadius="5.0"
 					android:text="节 目"
 					android:textColor="@color/color_FFFFFF"
+					android:textSize="@dimen/ts_22"
 					android:textStyle="bold" />
 			</LinearLayout>
 
@@ -237,7 +239,7 @@
 
 				<TextView
 					android:id="@+id/tv_arrow"
-					android:layout_width="20dp"
+					android:layout_width="25dp"
 					android:layout_height="match_parent"
 					android:gravity="center"
 					android:onClick="divLoadEpgRight"
@@ -247,11 +249,12 @@
 					android:shadowRadius="5.0"
 					android:text="节 目"
 					android:textColor="@color/color_FFFFFF"
+					android:textSize="@dimen/ts_22"
 					android:textStyle="bold" />
 
 				<ImageView
 					android:id="@+id/iv_arrow"
-					android:layout_width="20dp"
+					android:layout_width="25dp"
 					android:layout_height="20dp"
 					android:layout_gravity="center"
 					android:layout_marginLeft="1dp"
@@ -262,7 +265,7 @@
 
 				<TextView
 					android:id="@+id/tv_arrow2"
-					android:layout_width="20dp"
+					android:layout_width="25dp"
 					android:layout_height="match_parent"
 					android:gravity="center"
 					android:onClick="divLoadEpgRight"
@@ -272,11 +275,12 @@
 					android:shadowRadius="5.0"
 					android:text="信 息"
 					android:textColor="@color/color_FFFFFF"
+					android:textSize="@dimen/ts_22"
 					android:textStyle="bold" />
 			</LinearLayout>
 			<LinearLayout
 				android:id="@+id/divEPG"
-				android:layout_width="@dimen/vs_480"
+				android:layout_width="@dimen/vs_580"
 				android:layout_height="match_parent"
 				android:layout_gravity="center_horizontal"
 				android:orientation="horizontal"
@@ -284,7 +288,7 @@
 
 				<com.owen.tvrecyclerview.widget.TvRecyclerView
 					android:id="@+id/mEpgDateGridView"
-					android:layout_width="@dimen/vs_100"
+					android:layout_width="@dimen/vs_160"
 					android:layout_height="wrap_content"
 					android:paddingLeft="5mm"
 					android:paddingTop="10mm"
