@@ -1137,7 +1137,7 @@ public class LivePlayActivity extends BaseActivity {
         liveEpgDateAdapter = new LiveEpgDateAdapter();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
-        SimpleDateFormat datePresentFormat = new SimpleDateFormat("MM-dd");
+        SimpleDateFormat datePresentFormat = new SimpleDateFormat("M-d EE");
         calendar.add(Calendar.DAY_OF_MONTH, 1);
         for (int i = 0; i < 8; i++) {
             Date dateIns = calendar.getTime();
