@@ -291,8 +291,12 @@ public class FileUtils {
             .getExternalCacheDir();
     }
     public static String getExternalCachePath() {
-        return getExternalCacheDir()
-            .getAbsolutePath();
+        //部分机器getExternalCacheDir()会返回空
+        File externalCacheDir = getExternalCacheDir();
+        if (externalCacheDir == null){
+            return getCachePath();
+        }
+        return externalCacheDir.getAbsolutePath();
     }
     public static String getCachePath() {
         return getCacheDir()
