@@ -149,6 +149,8 @@ public class LivePlayActivity extends BaseActivity {
     TextView tv_curepg_left;
     TextView tv_nextepg_left;
     private MyEpgAdapter myAdapter;
+    private TextView tv_info_name1;
+    private TextView tv_videosize;
     private TextView tv_right_top_tipnetspeed;
     private TextView tv_right_top_channel_name;
     private TextView tv_right_top_epg_name;
@@ -221,6 +223,8 @@ public class LivePlayActivity extends BaseActivity {
         tvChannelInfo = findViewById(R.id.tvChannel);
         tvTime = findViewById(R.id.tvTime);
         tvNetSpeed = findViewById(R.id.tvNetSpeed);
+        tv_info_name1 = findViewById(R.id.tv_info_name1);
+        tv_videosize = findViewById(R.id.tv_videosize);
 
         //EPG  findViewById  by 龍
         tip_chname = (TextView)  findViewById(R.id.tv_channel_bar_name);//底部名称
@@ -470,6 +474,7 @@ public class LivePlayActivity extends BaseActivity {
         if (isSHIYI)
             return;
         if (channel_Name.getChannelName() != null) {
+            ((TextView) findViewById(R.id.tv_info_name1)).setText(channel_Name.getChannelName());
             ((TextView) findViewById(R.id.tv_channel_bar_name)).setText(channel_Name.getChannelName());
             ((TextView) findViewById(R.id.tv_channel_bottom_number)).setText("" + channel_Name.getChannelNum());
             tip_epg1.setText("暂无信息");
@@ -530,16 +535,19 @@ public class LivePlayActivity extends BaseActivity {
             }
             tv_right_top_channel_name.setText(channel_Name.getChannelName());
             tv_right_top_epg_name.setText(channel_Name.getChannelName());
-
+            
             Handler handler = new Handler(Looper.getMainLooper());
             ll_right_top_loading.setVisibility(View.VISIBLE);
-
+            ((TextView) findViewById(R.id.tv_info_name1)).setVisibility(View.VISIBLE);
+            ((TextView) findViewById(R.id.tv_videosize)).setVisibility(View.VISIBLE);
             // 延迟5秒后执行隐藏操作
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     ll_right_top_loading.setVisibility(View.GONE);
                     ll_right_top_huikan.setVisibility(View.GONE);
+                    ((TextView) findViewById(R.id.tv_info_name1)).setVisibility(View.GONE);
+                    ((TextView) findViewById(R.id.tv_videosize)).setVisibility(View.GONE);
                 }
             }, 5000);
         }
