@@ -41,7 +41,7 @@ public class LiveController extends BaseController {
         }
     };
 
-     @Override
+    @Override
     protected int getLayoutId() {
         return R.layout.player_live_control_view;
     }
