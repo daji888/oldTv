@@ -4,10 +4,11 @@ import android.content.Context;
 import android.view.MotionEvent;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
+import android.widget.TextView;
 import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.base.App;
-
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,8 +25,23 @@ public class LiveController extends BaseController {
     public LiveController(@NotNull Context context) {
         super(context);
     }
+    TextView tv_videosize;
+    TextView mPlayPauseTime;
+    private Runnable myRunnable2 = new Runnable() {
+        @Override
+        public void run() {
+            Date date = new Date();
+            SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            mPlayPauseTime.setText(timeFormat.format(date));
+            String width = Integer.toString(mControlWrapper.getVideoSize()[0]);
+            String height = Integer.toString(mControlWrapper.getVideoSize()[1]);
+            tv_videosize.setText("分辨率：" + width + " X " + height);
 
-    @Override
+            mHandler.postDelayed(this, 1000);
+        }
+    };
+
+     @Override
     protected int getLayoutId() {
         return R.layout.player_live_control_view;
     }
@@ -34,6 +50,14 @@ public class LiveController extends BaseController {
     protected void initView() {
         super.initView();
         mLoading = findViewById(R.id.loading);
+        tv_videosize = findViewById(R.id.tv_videosize);
+        mPlayPauseTime = findViewById(R.id.tv_sys_time);
+        mPlayPauseTime.post(new Runnable() {
+            @Override
+            public void run() {
+                mHandler.post(myRunnable2);
+            }
+        });
     }
 
     public interface LiveControlListener {
