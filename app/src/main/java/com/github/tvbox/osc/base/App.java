@@ -79,7 +79,7 @@ public class App extends MultiDexApplication {
         putDefault(HawkConfig.SEARCH_VIEW, 0);               //搜索展示: 0=文字列表, 1=缩略图
         putDefault(HawkConfig.PARSE_WEBVIEW, true);          //嗅探Webview: true=系统自带, false=XWalkView
         putDefault(HawkConfig.DOH_URL, 0);                   //安全DNS: 0=关闭, 1=腾讯, 2=阿里, 3=360, 4=Google, 5=AdGuard, 6=Quad9
-
+        putDefault(HawkConfig.API_URL, "http://www.饭太硬.top/tv");
     }
 
     public static App getInstance() {
