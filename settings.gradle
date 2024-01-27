@@ -1,4 +1,4 @@
-rootProject.name = "ant3"
+rootProject.name = "ANT3"
 include ':app'
 include ':player'
 include ':quickjs'
