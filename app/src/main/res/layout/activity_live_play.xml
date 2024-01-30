@@ -631,7 +631,7 @@
 			android:layout_marginTop="@dimen/vs_10"
 			android:layout_marginBottom="@dimen/vs_10"
 			android:layout_alignParentRight="true"
-			android:text="源 1/1"
+			android:text="线路 1/1"
 			android:textColor="@color/color_FFFFFF"
 			android:textSize="@dimen/ts_26" />
 	</RelativeLayout>
@@ -792,7 +792,7 @@
 			android:layout_toLeftOf="@+id/iv_circle_bg"
 			android:gravity="center"
 			android:singleLine="true"
-			android:text=""
+			android:text="0Kb/s"
 			tools:text="0Kb/s"
 			android:textColor="#FFFCFFFF"
 			android:textSize="@dimen/vs_20" />
