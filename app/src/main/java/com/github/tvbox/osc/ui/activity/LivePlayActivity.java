@@ -384,6 +384,21 @@ public class LivePlayActivity extends BaseActivity {
     //获取EPG并存储 // 百川epg  DIYP epg   51zmt epg ------- 自建EPG格式输出格式请参考 51zmt
     private List<Epginfo> epgdata = new ArrayList<>();
 
+    private void showtv_right_top_tipnetspeed() {
+        tv_right_top_tipnetspeed.setVisibility(View.VISIBLE);
+        mHandler.post(mUpdatetv_right_top_tipnetspeedRun);
+    }
+
+    private Runnable mUpdatetv_right_top_tipnetspeedRun = new Runnable() {
+        @Override
+        public void run() {
+            if (mVideoView == null) return;
+            String speed = PlayerHelper.getDisplaySpeed(mVideoView.getTcpSpeed());
+            tv_right_top_tipnetspeed.setText(speed);
+            mHandler.postDelayed(this, 1000);
+        }
+    };
+
     private void showEpg(Date date, ArrayList<Epginfo> arrayList) {
         if (arrayList != null && arrayList.size() > 0) {
             epgdata = arrayList;
@@ -467,20 +482,6 @@ public class LivePlayActivity extends BaseActivity {
 //                showBottomEpg();
             }
         });
-    }
-    private void showtv_right_top_tipnetspeed() {
-        tv_right_top_tipnetspeed.setVisibility(View.VISIBLE);
-        mHandler.post(mUpdatetv_right_top_tipnetspeedRun);
-    }
-
-    private Runnable mUpdatetv_right_top_tipnetspeedRun = new Runnable() {
-        @Override
-        public void run() {
-            if (mVideoView == null) return;
-            String speed = PlayerHelper.getDisplaySpeed(mVideoView.getTcpSpeed());
-            tv_right_top_tipnetspeed.setText(speed);
-            mHandler.postDelayed(this, 1000);
-        }
     }
 
     //显示底部EPG
