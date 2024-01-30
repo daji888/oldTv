@@ -535,7 +535,22 @@ public class LivePlayActivity extends BaseActivity {
             }
             tv_right_top_channel_name.setText(channel_Name.getChannelName());
             tv_right_top_epg_name.setText(channel_Name.getChannelName());
+
+           private void showtv_right_top_tipnetspeed() {
+        tv_right_top_tipnetspeed.setVisibility(View.VISIBLE);
+        mHandler.post(mUpdatetv_right_top_tipnetspeedRun);
+    }
+
+    private Runnable mUpdatetv_right_top_tipnetspeedRun = new Runnable() {
+        @Override
+        public void run() {
+            if (mVideoView == null) return;
+            String speed = PlayerHelper.getDisplaySpeed(mVideoView.getTcpSpeed());
             tv_right_top_tipnetspeed.setText(speed);
+            mHandler.postDelayed(this, 1000);
+        }
+    }; 
+            
             Handler handler = new Handler(Looper.getMainLooper());
             ll_right_top_loading.setVisibility(View.VISIBLE);
             ((TextView) findViewById(R.id.tv_info_name1)).setVisibility(View.VISIBLE);
@@ -1741,20 +1756,7 @@ public class LivePlayActivity extends BaseActivity {
         }
     };
 
-    private void showtv_right_top_tipnetspeed() {
-        tv_right_top_tipnetspeed.setVisibility(View.VISIBLE);
-        mHandler.post(mUpdatetv_right_top_tipnetspeedRun);
-    }
-
-    private Runnable mUpdatetv_right_top_tipnetspeedRun = new Runnable() {
-        @Override
-        public void run() {
-            if (mVideoView == null) return;
-            String speed = PlayerHelper.getDisplaySpeed(mVideoView.getTcpSpeed());
-            tv_right_top_tipnetspeed.setText(speed);
-            mHandler.postDelayed(this, 1000);
-        }
-    };
+    
 
     private void showNetSpeed() {
         if (Hawk.get(HawkConfig.LIVE_SHOW_NET_SPEED, false)) {
