@@ -26,7 +26,6 @@ public class LiveController extends BaseController {
         super(context);
     }
     TextView tv_videosize;
-    TextView mPlayPauseTime;
     private Runnable myRunnable2 = new Runnable() {
         @Override
         public void run() {
