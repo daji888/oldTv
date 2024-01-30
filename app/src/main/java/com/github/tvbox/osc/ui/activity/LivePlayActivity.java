@@ -1743,12 +1743,12 @@ public class LivePlayActivity extends BaseActivity {
         }
     };
 
-    private void showtipNetSpeed() {
+    private void showtv_right_top_tipnetspeed() {
         tv_right_top_tipnetspeed.setVisibility(View.VISIBLE);
-        mHandler.post(mUpdatetipNetSpeedRun);
+        mHandler.post(mUpdatetv_right_top_tipnetspeedRun);
     }
 
-    private Runnable mUpdatetipNetSpeedRun = new Runnable() {
+    private Runnable mUpdatetv_right_top_tipnetspeedRun = new Runnable() {
         @Override
         public void run() {
             if (mVideoView == null) return;
