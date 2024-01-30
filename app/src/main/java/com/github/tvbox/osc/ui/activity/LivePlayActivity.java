@@ -842,7 +842,7 @@ public class LivePlayActivity extends BaseActivity {
         showBottomEpg();
         getEpg(new Date());
         backcontroller.setVisibility(View.GONE);
-        ll_right_top_huikan.setVisibility(View.GONE);
+       // ll_right_top_huikan.setVisibility(View.GONE);
         mVideoView.setUrl(currentLiveChannelItem.getUrl());
        // showChannelInfo();
         mVideoView.start();
