@@ -792,7 +792,7 @@
 			android:layout_toLeftOf="@+id/iv_circle_bg"
 			android:gravity="center"
 			android:singleLine="true"
-			android:text="0Kb/s"
+			android:text=""
 			tools:text="0Kb/s"
 			android:textColor="#FFFCFFFF"
 			android:textSize="@dimen/vs_20" />
