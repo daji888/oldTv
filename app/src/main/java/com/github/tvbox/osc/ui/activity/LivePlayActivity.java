@@ -1743,6 +1743,7 @@ public class LivePlayActivity extends BaseActivity {
 
     private void showtipNetSpeed() {
         tv_right_top_tipnetspeed.setVisibility(View.VISIBLE);
+        mHandler.post(mUpdatetipNetSpeedRun);
     }
 
     private Runnable mUpdatetipNetSpeedRun = new Runnable() {
