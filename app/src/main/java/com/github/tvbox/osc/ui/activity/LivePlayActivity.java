@@ -550,7 +550,8 @@ public class LivePlayActivity extends BaseActivity {
             }
             tv_right_top_channel_name.setText(channel_Name.getChannelName());
             tv_right_top_epg_name.setText(channel_Name.getChannelName());
-
+            tv_right_top_tipnetspeed.setText(speed);
+                
             Handler handler = new Handler(Looper.getMainLooper());
             ll_right_top_loading.setVisibility(View.VISIBLE);
             ((TextView) findViewById(R.id.tv_info_name1)).setVisibility(View.VISIBLE);
