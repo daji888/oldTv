@@ -468,20 +468,6 @@ public class LivePlayActivity extends BaseActivity {
             }
         });
     }
-    private void showtv_right_top_tipnetspeed() {
-        tv_right_top_tipnetspeed.setVisibility(View.VISIBLE);
-        mHandler.post(mUpdatetv_right_top_tipnetspeedRun);
-    }
-
-    private Runnable mUpdatetv_right_top_tipnetspeedRun = new Runnable() {
-        @Override
-        public void run() {
-            if (mVideoView == null) return;
-            String speed = PlayerHelper.getDisplaySpeed(mVideoView.getTcpSpeed());
-            tv_right_top_tipnetspeed.setText(speed);
-            mHandler.postDelayed(this, 1000);
-        }
-    };
 
     //显示底部EPG
     private void showBottomEpg() {
@@ -549,10 +535,9 @@ public class LivePlayActivity extends BaseActivity {
             }
             tv_right_top_channel_name.setText(channel_Name.getChannelName());
             tv_right_top_epg_name.setText(channel_Name.getChannelName());
-            
+            tv_right_top_tipnetspeed.setText(speed);
             Handler handler = new Handler(Looper.getMainLooper());
             ll_right_top_loading.setVisibility(View.VISIBLE);
-            tv_right_top_tipnetspeed.setVisibility(View.VISIBLE);
             ((TextView) findViewById(R.id.tv_info_name1)).setVisibility(View.VISIBLE);
             ((TextView) findViewById(R.id.tv_videosize)).setVisibility(View.VISIBLE);
             // 延迟5秒后执行隐藏操作
@@ -560,7 +545,6 @@ public class LivePlayActivity extends BaseActivity {
                 @Override
                 public void run() {
                     ll_right_top_loading.setVisibility(View.GONE);
-                    tv_right_top_tipnetspeed.setVisibility(View.GONE);
                     ((TextView) findViewById(R.id.tv_info_name1)).setVisibility(View.GONE);
                     ((TextView) findViewById(R.id.tv_videosize)).setVisibility(View.GONE);
                 }
@@ -1753,6 +1737,21 @@ public class LivePlayActivity extends BaseActivity {
             Date day=new Date();
             SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
             tvTime.setText(df.format(day));
+            mHandler.postDelayed(this, 1000);
+        }
+    };
+
+    private void showtv_right_top_tipnetspeed() {
+        tv_right_top_tipnetspeed.setVisibility(View.VISIBLE);
+        mHandler.post(mUpdatetv_right_top_tipnetspeedRun);
+    }
+
+    private Runnable mUpdatetv_right_top_tipnetspeedRun = new Runnable() {
+        @Override
+        public void run() {
+            if (mVideoView == null) return;
+            String speed = PlayerHelper.getDisplaySpeed(mVideoView.getTcpSpeed());
+            tv_right_top_tipnetspeed.setText(speed);
             mHandler.postDelayed(this, 1000);
         }
     };
