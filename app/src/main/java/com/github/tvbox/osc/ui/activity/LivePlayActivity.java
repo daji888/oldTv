@@ -468,6 +468,20 @@ public class LivePlayActivity extends BaseActivity {
             }
         });
     }
+    private void showtv_right_top_tipnetspeed() {
+        tv_right_top_tipnetspeed.setVisibility(View.VISIBLE);
+        mHandler.post(mUpdatetv_right_top_tipnetspeedRun);
+    }
+
+    private Runnable mUpdatetv_right_top_tipnetspeedRun = new Runnable() {
+        @Override
+        public void run() {
+            if (mVideoView == null) return;
+            String speed = PlayerHelper.getDisplaySpeed(mVideoView.getTcpSpeed());
+            tv_right_top_tipnetspeed.setText(speed);
+            mHandler.postDelayed(this, 1000);
+        }
+    };
 
     //显示底部EPG
     private void showBottomEpg() {
@@ -1739,21 +1753,6 @@ public class LivePlayActivity extends BaseActivity {
             Date day=new Date();
             SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
             tvTime.setText(df.format(day));
-            mHandler.postDelayed(this, 1000);
-        }
-    };
-
-    private void showtv_right_top_tipnetspeed() {
-        tv_right_top_tipnetspeed.setVisibility(View.VISIBLE);
-        mHandler.post(mUpdatetv_right_top_tipnetspeedRun);
-    }
-
-    private Runnable mUpdatetv_right_top_tipnetspeedRun = new Runnable() {
-        @Override
-        public void run() {
-            if (mVideoView == null) return;
-            String speed = PlayerHelper.getDisplaySpeed(mVideoView.getTcpSpeed());
-            tv_right_top_tipnetspeed.setText(speed);
             mHandler.postDelayed(this, 1000);
         }
     };
