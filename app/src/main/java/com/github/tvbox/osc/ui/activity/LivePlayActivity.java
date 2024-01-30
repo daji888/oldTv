@@ -533,10 +533,7 @@ public class LivePlayActivity extends BaseActivity {
             } else {
                 ((TextView) findViewById(R.id.tv_source)).setText("[线路" + (channel_Name.getSourceIndex() + 1) + "/" + channel_Name.getSourceNum() + "]");
             }
-            tv_right_top_channel_name.setText(channel_Name.getChannelName());
-            tv_right_top_epg_name.setText(channel_Name.getChannelName());
-
-           private void showtv_right_top_tipnetspeed() {
+             private void showtv_right_top_tipnetspeed() {
         tv_right_top_tipnetspeed.setVisibility(View.VISIBLE);
         mHandler.post(mUpdatetv_right_top_tipnetspeedRun);
     }
@@ -550,7 +547,9 @@ public class LivePlayActivity extends BaseActivity {
             mHandler.postDelayed(this, 1000);
         }
     }; 
-            
+            tv_right_top_channel_name.setText(channel_Name.getChannelName());
+            tv_right_top_epg_name.setText(channel_Name.getChannelName());
+
             Handler handler = new Handler(Looper.getMainLooper());
             ll_right_top_loading.setVisibility(View.VISIBLE);
             ((TextView) findViewById(R.id.tv_info_name1)).setVisibility(View.VISIBLE);
