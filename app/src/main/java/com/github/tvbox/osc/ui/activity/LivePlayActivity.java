@@ -134,7 +134,7 @@ public class LivePlayActivity extends BaseActivity {
     private static LiveChannelItem  channel_Name = null;
     private static Hashtable hsEpg = new Hashtable();
     private CountDownTimer countDownTimer;
-//    private CountDownTimer countDownTimerRightTop;
+    private CountDownTimer countDownTimerRightTop;
     private View ll_right_top_loading;
     private View ll_right_top_huikan;
     private View divLoadEpg;
@@ -238,7 +238,7 @@ public class LivePlayActivity extends BaseActivity {
         tv_right_top_tipnetspeed = (TextView)findViewById(R.id.tv_right_top_tipnetspeed);
         tv_right_top_channel_name = (TextView)findViewById(R.id.tv_right_top_channel_name);
         tv_right_top_epg_name = (TextView)findViewById(R.id.tv_right_top_epg_name);
-//        tv_right_top_type = (TextView)findViewById(R.id.tv_right_top_type);
+        tv_right_top_type = (TextView)findViewById(R.id.tv_right_top_type);
         iv_circle_bg = (ImageView) findViewById(R.id.iv_circle_bg);
         iv_back_bg = (ImageView) findViewById(R.id.iv_back_bg);
         tv_shownum = (TextView) findViewById(R.id.tv_shownum);
