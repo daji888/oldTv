@@ -389,15 +389,7 @@ public class LivePlayActivity extends BaseActivity {
         mHandler.post(mUpdatetv_right_top_tipnetspeedRun);
     }
 
-    private Runnable mUpdatetv_right_top_tipnetspeedRun = new Runnable() {
-        @Override
-        public void run() {
-            if (mVideoView == null) return;
-            String speed = PlayerHelper.getDisplaySpeed(mVideoView.getTcpSpeed());
-            tv_right_top_tipnetspeed.setText(speed);
-            mHandler.postDelayed(this, 1000);
-        }
-    };
+    
 
     private void showEpg(Date date, ArrayList<Epginfo> arrayList) {
         if (arrayList != null && arrayList.size() > 0) {
@@ -550,7 +542,15 @@ public class LivePlayActivity extends BaseActivity {
             }
             tv_right_top_channel_name.setText(channel_Name.getChannelName());
             tv_right_top_epg_name.setText(channel_Name.getChannelName());
+            private Runnable mUpdatetv_right_top_tipnetspeedRun = new Runnable() {
+        @Override
+        public void run() {
+            if (mVideoView == null) return;
+            String speed = PlayerHelper.getDisplaySpeed(mVideoView.getTcpSpeed());
             tv_right_top_tipnetspeed.setText(speed);
+            mHandler.postDelayed(this, 1000);
+        }
+    };
                 
             Handler handler = new Handler(Looper.getMainLooper());
             ll_right_top_loading.setVisibility(View.VISIBLE);
