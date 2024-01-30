@@ -538,7 +538,6 @@ public class LivePlayActivity extends BaseActivity {
             
             Handler handler = new Handler(Looper.getMainLooper());
             ll_right_top_loading.setVisibility(View.VISIBLE);
-            tv_right_top_tipnetspeed.setVisibility(View.VISIBLE);
             ((TextView) findViewById(R.id.tv_info_name1)).setVisibility(View.VISIBLE);
             ((TextView) findViewById(R.id.tv_videosize)).setVisibility(View.VISIBLE);
             // 延迟5秒后执行隐藏操作
@@ -546,7 +545,6 @@ public class LivePlayActivity extends BaseActivity {
                 @Override
                 public void run() {
                     ll_right_top_loading.setVisibility(View.GONE);
-                    tv_right_top_tipnetspeed.setVisibility(View.GONE);
                     ll_right_top_huikan.setVisibility(View.GONE);
                     ((TextView) findViewById(R.id.tv_info_name1)).setVisibility(View.GONE);
                     ((TextView) findViewById(R.id.tv_videosize)).setVisibility(View.GONE);
