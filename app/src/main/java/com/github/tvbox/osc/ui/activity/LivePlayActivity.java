@@ -840,7 +840,7 @@ public class LivePlayActivity extends BaseActivity {
         showBottomEpg();
         getEpg(new Date());
         backcontroller.setVisibility(View.GONE);
-        ll_right_top_huikan.setVisibility(View.VISIBLE);
+        // ll_right_top_huikan.setVisibility(View.GONE);
         mVideoView.setUrl(currentLiveChannelItem.getUrl());
        // showChannelInfo();
         mVideoView.start();
@@ -1040,6 +1040,7 @@ public class LivePlayActivity extends BaseActivity {
                     tv_currentpos.setText(durationToString((int)mVideoView.getCurrentPosition()));
                     tv_duration.setText(durationToString(shiyi_time_c*1000));
                     showProgressBars(true);
+                    ll_right_top_huikan.setVisibility(View.VISIBLE);
                     isBack = true;
                 }
             }
@@ -1117,6 +1118,7 @@ public class LivePlayActivity extends BaseActivity {
                     tv_currentpos.setText(durationToString((int)mVideoView.getCurrentPosition()));
                     tv_duration.setText(durationToString(shiyi_time_c*1000));
                     showProgressBars(true);
+                    ll_right_top_huikan.setVisibility(View.VISIBLE);
                     isBack = true;
                 }
             }
