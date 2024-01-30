@@ -144,7 +144,7 @@ public class LivePlayActivity extends BaseActivity {
     TextView tv_channelnum;
     TextView tip_chname;
     TextView tip_epg1;
-    TextView  tip_epg2;
+    TextView tip_epg2;
     TextView tv_srcinfo;
     TextView tv_curepg_left;
     TextView tv_nextepg_left;
@@ -538,6 +538,7 @@ public class LivePlayActivity extends BaseActivity {
             
             Handler handler = new Handler(Looper.getMainLooper());
             ll_right_top_loading.setVisibility(View.VISIBLE);
+            ll_right_top_huikan.setVisibility(View.VISIBLE);
             ((TextView) findViewById(R.id.tv_info_name1)).setVisibility(View.VISIBLE);
             ((TextView) findViewById(R.id.tv_videosize)).setVisibility(View.VISIBLE);
             // 延迟5秒后执行隐藏操作
