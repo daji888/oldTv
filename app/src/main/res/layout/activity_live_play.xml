@@ -670,7 +670,6 @@
 		android:background="@drawable/shape_user_focus"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_marginStart="@dimen/vs_10"
 		android:layout_marginTop="@dimen/vs_10"
 		android:layout_marginRight="@dimen/vs_50" >
 
@@ -696,6 +695,7 @@
 			android:ellipsize="marquee"
 			android:marqueeRepeatLimit="marquee_forever"
 			android:gravity="center"
+			android:layout_gravity="center"
 			android:paddingLeft="10px"			
 			android:paddingRight="10px"
 			android:singleLine="true"
