@@ -64,7 +64,7 @@ import tv.danmaku.ijk.media.player.misc.ITrackInfo;
 import tv.danmaku.ijk.media.player.misc.IjkTrackInfo;
 import tv.danmaku.ijk.media.player.pragma.DebugLog;
 
-import com.github.tvbox.osc.util.FileUtils;
+import com.github.tvbox.osc.util.FileUtils.app;
 
 /**
  * @author bbcallen
