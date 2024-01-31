@@ -668,7 +668,7 @@
 		android:orientation="vertical"
 		android:id="@+id/ll_right_top_huikan"
 		android:visibility="gone"
-		android:background="@drawable/shape_thumb_bottom_name"
+		android:background="@drawable/shape_user_focus"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="10px"
