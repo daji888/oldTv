@@ -6,7 +6,7 @@
 
     <LinearLayout
             android:id="@+id/tv_top_l_container"
-            android:layout_width="720dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:tag="tv_top_container"
 	    android:background="@drawable/shape_user_focus"
