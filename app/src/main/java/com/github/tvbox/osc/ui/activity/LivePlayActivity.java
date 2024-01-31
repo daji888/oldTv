@@ -158,7 +158,6 @@ public class LivePlayActivity extends BaseActivity {
     private ImageView iv_circle_bg;
     private TextView tv_shownum ;
     private TextView txtNoEpg ;
-    private ImageView iv_back_bg;
 
     private ObjectAnimator objectAnimator;
     public String epgStringAddress ="";
@@ -240,7 +239,6 @@ public class LivePlayActivity extends BaseActivity {
         tv_right_top_epg_name = (TextView)findViewById(R.id.tv_right_top_epg_name);
         tv_right_top_type = (TextView)findViewById(R.id.tv_right_top_type);
         iv_circle_bg = (ImageView) findViewById(R.id.iv_circle_bg);
-        iv_back_bg = (ImageView) findViewById(R.id.iv_back_bg);
         tv_shownum = (TextView) findViewById(R.id.tv_shownum);
         txtNoEpg = (TextView) findViewById(R.id.txtNoEpg);
         ll_right_top_loading = findViewById(R.id.ll_right_top_loading);
