@@ -662,7 +662,7 @@
 		android:layout_height="wrap_content" />
 
 	<!--右上角回看状态栏-->
-	<RelativeLayout
+	<LinearLayout
 		android:layout_gravity="right"
 		android:orientation="vertical"
 		android:id="@+id/ll_right_top_huikan"
@@ -702,7 +702,7 @@
 			android:text="回看中"
 			android:textColor="#FFFCFFFF"
 			android:textSize="@dimen/vs_20" />
-	</RelativeLayout>
+	</LinearLayout>
 
 
 	<!--右上角动态状态栏-->
