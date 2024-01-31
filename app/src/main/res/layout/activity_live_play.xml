@@ -663,7 +663,7 @@
 
 	<!--右上角回看状态栏-->
 	<RelativeLayout
-		android:layout_gravity="center|right|top"
+		android:layout_gravity="right"
 		android:orientation="vertical"
 		android:id="@+id/ll_right_top_huikan"
 		android:visibility="gone"
