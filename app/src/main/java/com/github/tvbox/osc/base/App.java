@@ -110,7 +110,7 @@ public class App extends MultiDexApplication {
     public static P2PClass getp2p() {
         try {
             if (p == null) {
-                p = new P2PClass(instance.getExternalCacheDir().getAbsolutePath());
+                p = new P2PClass(FileUtils.getExternalCachePath());
             }
             return p;
         } catch (Exception e) {
