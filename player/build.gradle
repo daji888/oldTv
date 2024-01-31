@@ -34,7 +34,7 @@ android {
 }
 
 dependencies {
-    implementation project(':app')
+    api project(":app")
     implementation "androidx.annotation:annotation:1.3.0"
     api "com.google.android.exoplayer:exoplayer-core:2.14.2"
     api "com.google.android.exoplayer:exoplayer-dash:2.14.2"
