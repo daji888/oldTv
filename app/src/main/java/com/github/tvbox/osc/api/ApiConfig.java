@@ -565,7 +565,7 @@ public class ApiConfig {
                     if (splitText.length > 1)
                         sourceNames.add(splitText[1]);
                     else
-                        sourceNames.add("源" + Integer.toString(sourceIndex));
+                        sourceNames.add("线路" + Integer.toString(sourceIndex));
                     sourceIndex++;
                 }
                 liveChannelItem.setChannelSourceNames(sourceNames);
