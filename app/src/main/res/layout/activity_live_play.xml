@@ -673,15 +673,6 @@
 		android:layout_height="match_parent"
 		android:layout_marginTop="40px"
 		android:layout_marginRight="50px"
-		<ImageView
-			android:id="@+id/iv_back_bg"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginLeft="10px"
-			android:src="@drawable/app_icon"
-			android:layout_alignParentTop="true"
-			android:layout_alignParentLeft="true"
-			android:layout_alignParentBottom="true" />
 
 		<TextView
 			android:id="@+id/tv_right_top_epg_name"
@@ -691,8 +682,6 @@
 			android:layout_marginStart="0dp"
 			android:layout_marginLeft="0dp"
 			android:layout_marginRight="10dp"
-			android:layout_toEndOf="@+id/iv_back_bg"
-			android:layout_toRightOf="@+id/iv_back_bg"
 			android:ellipsize="marquee"
 			android:gravity="center"
 			android:marqueeRepeatLimit="marquee_forever"
