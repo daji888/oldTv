@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-	xmlns:tools="http://schemas.android.com/tools"
-	android:id="@+id/live_root"
-	xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/live_root"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -391,7 +390,7 @@
 
     <TextView
         android:id="@+id/tvTime"
-		android:paddingRight="@dimen/vs_20"
+	android:paddingRight="@dimen/vs_20"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
@@ -404,7 +403,7 @@
         android:visibility="gone" />
     <TextView
         android:id="@+id/tvNetSpeed"
-		android:paddingRight="@dimen/vs_20"
+	android:paddingRight="@dimen/vs_20"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"
@@ -680,6 +679,7 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:ellipsize="marquee"
+			android:gravity="center"
 			android:paddingTop="@dimen/vs_0"
 			android:paddingLeft="10px"
 			android:paddingRight="10px"
@@ -695,7 +695,7 @@
 			android:layout_height="wrap_content"
 			android:ellipsize="marquee"
 			android:marqueeRepeatLimit="marquee_forever"
-			android:layout_gravity="center"
+			android:gravity="center"
 			android:paddingLeft="10px"			
 			android:paddingRight="10px"
 			android:singleLine="true"
