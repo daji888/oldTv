@@ -1,7 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugins {
-    id 'com.android.library'
-}
 
 android {
     compileSdkVersion 33
