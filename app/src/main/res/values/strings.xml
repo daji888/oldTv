@@ -2,6 +2,7 @@
 <resources>
     <!--  app名称   -->
     <string name="app_name">ANT3</string>
+    <string name="app_name">ijkPlayer</string>
     <string name="act_live_play_empty_live_url">直播地址未配置，请前往设置界面配置哦</string>
     <string name="act_live_play_empty_channel">频道列表为空</string>
     <string name="act_live_play_network_error">直播地址网络请求失败</string>
