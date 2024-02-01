@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-plugins {
+apply plugins {
     id 'com.android.library'
 }
 
