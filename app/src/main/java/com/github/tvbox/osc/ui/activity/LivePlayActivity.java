@@ -108,7 +108,7 @@ public class LivePlayActivity extends BaseActivity {
     private TvRecyclerView mLiveChannelView;
     private LiveChannelGroupAdapter liveChannelGroupAdapter;
     private LiveChannelItemAdapter liveChannelItemAdapter;
-
+    
     private LinearLayout tvRightSettingLayout;
     private TvRecyclerView mSettingGroupView;
     private TvRecyclerView mSettingItemView;
@@ -134,7 +134,7 @@ public class LivePlayActivity extends BaseActivity {
     private static LiveChannelItem  channel_Name = null;
     private static Hashtable hsEpg = new Hashtable();
     private CountDownTimer countDownTimer;
-    private CountDownTimer countDownTimerRightTop;
+  //  private CountDownTimer countDownTimerRightTop;
     private View ll_right_top_loading;
     private View ll_right_top_huikan;
     private View divLoadEpg;
@@ -472,6 +472,7 @@ public class LivePlayActivity extends BaseActivity {
         if (isSHIYI)
             return;
         if (channel_Name.getChannelName() != null) {
+            // tv_videosize.setText("分辨率：" + mVideoView.getVideoSize()[0] + " x " + mVideoView.getVideoSize()[1]);
             ((TextView) findViewById(R.id.tv_info_name1)).setText(channel_Name.getChannelName());
             ((TextView) findViewById(R.id.tv_channel_bar_name)).setText(channel_Name.getChannelName());
             ((TextView) findViewById(R.id.tv_channel_bottom_number)).setText("" + channel_Name.getChannelNum());
@@ -536,15 +537,15 @@ public class LivePlayActivity extends BaseActivity {
                 
             Handler handler = new Handler(Looper.getMainLooper());
             ll_right_top_loading.setVisibility(View.VISIBLE);
-            ((TextView) findViewById(R.id.tv_info_name1)).setVisibility(View.VISIBLE);
-            ((TextView) findViewById(R.id.tv_videosize)).setVisibility(View.VISIBLE);
+            tv_info_name1.setVisibility(View.VISIBLE);
+            tv_videosize.setVisibility(View.VISIBLE);
             // 延迟5秒后执行隐藏操作
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     ll_right_top_loading.setVisibility(View.GONE);
-                    ((TextView) findViewById(R.id.tv_info_name1)).setVisibility(View.GONE);
-                    ((TextView) findViewById(R.id.tv_videosize)).setVisibility(View.GONE);
+                    tv_info_name1.setVisibility(View.GONE);
+                    tv_videosize.setVisibility(View.GONE);
                 }
             }, 5000);
         }
@@ -1663,6 +1664,7 @@ public class LivePlayActivity extends BaseActivity {
         showTime();
         showNetSpeed();
         showtv_right_top_tipnetspeed();
+        showtv_videosize();
         
         tvLeftChannelListLayout.setVisibility(View.INVISIBLE);
         tvRightSettingLayout.setVisibility(View.INVISIBLE);
@@ -1743,6 +1745,21 @@ public class LivePlayActivity extends BaseActivity {
         }
     };
 
+    private void showtv_videosize() {
+       tv_videosize.setVisibility(View.VISIBLE);
+       mHandler.post(mUpdatetv_videosizeRun);
+    }
+
+    private Runnable mUpdatetv_videosizeRun = new Runnable() {
+        @Override
+        public void run() {
+            String width = Integer.toString(mVideoView.getVideoSize()[0]);
+            String height = Integer.toString(mVideoView.getVideoSize()[1]);
+            tv_videosize.setText("分辨率：" + width + " X " + height);
+            mHandler.postDelayed(this, 1000);
+        }
+    };
+    
     private void showtv_right_top_tipnetspeed() {
         tv_right_top_tipnetspeed.setVisibility(View.VISIBLE);
         mHandler.post(mUpdatetv_right_top_tipnetspeedRun);
