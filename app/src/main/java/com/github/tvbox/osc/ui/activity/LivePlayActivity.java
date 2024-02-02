@@ -1753,6 +1753,7 @@ public class LivePlayActivity extends BaseActivity {
     private Runnable mUpdatetv_videosizeRun = new Runnable() {
         @Override
         public void run() {
+            if (mVideoView == null) return;
             String width = Integer.toString(mVideoView.getVideoSize()[0]);
             String height = Integer.toString(mVideoView.getVideoSize()[1]);
             tv_videosize.setText("分辨率：" + width + " X " + height);
