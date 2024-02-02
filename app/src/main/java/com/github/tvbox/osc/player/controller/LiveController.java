@@ -25,17 +25,6 @@ public class LiveController extends BaseController {
     public LiveController(@NotNull Context context) {
         super(context);
     }
-    TextView tv_videosize;
-    private Runnable myRunnable2 = new Runnable() {
-        @Override
-        public void run() {
-            Date date = new Date();
-            String width = Integer.toString(mControlWrapper.getVideoSize()[0]);
-            String height = Integer.toString(mControlWrapper.getVideoSize()[1]);
-            tv_videosize.setText("分辨率：" + width + " X " + height);
-            mHandler.postDelayed(this, 1000);
-        }
-    };
 
     @Override
     protected int getLayoutId() {
@@ -46,13 +35,6 @@ public class LiveController extends BaseController {
     protected void initView() {
         super.initView();
         mLoading = findViewById(R.id.loading);
-        tv_videosize = findViewById(R.id.tv_videosize);
-        tv_videosize.post(new Runnable() {
-            @Override
-            public void run() {
-                mHandler.post(myRunnable2);
-            }
-        });
     }
 
     public interface LiveControlListener {
