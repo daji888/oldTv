@@ -42,6 +42,8 @@ import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -51,6 +53,8 @@ import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import tv.danmaku.ijk.media.player.annotations.AccessedByNative;
 import tv.danmaku.ijk.media.player.annotations.CalledByNative;
@@ -59,6 +63,8 @@ import tv.danmaku.ijk.media.player.misc.IMediaDataSource;
 import tv.danmaku.ijk.media.player.misc.ITrackInfo;
 import tv.danmaku.ijk.media.player.misc.IjkTrackInfo;
 import tv.danmaku.ijk.media.player.pragma.DebugLog;
+
+import com.github.tvbox.osc.util.FileUtils;
 
 /**
  * @author bbcallen
@@ -403,19 +409,39 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
      *             want to play
      * @throws IllegalStateException if it is called in an invalid state
      *
-     *                               <p>
-     *                               When <code>path</code> refers to a local file, the file may
-     *                               actually be opened by a process other than the calling
-     *                               application. This implies that the pathname should be an
-     *                               absolute path (as any other process runs with unspecified
-     *                               current working directory), and that the pathname should
-     *                               reference a world-readable file.
+     * <p>
+     * When <code>path</code> refers to a local file, the file may
+     * actually be opened by a process other than the calling
+     * application. This implies that the pathname should be an
+     * absolute path (as any other process runs with unspecified
+     * current working directory), and that the pathname should
+     * reference a world-readable file.
      */
     @Override
     public void setDataSource(String path)
             throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
         mDataSource = path;
         _setDataSource(path, null, null);
+    }
+    public static String xml2ffconcat(String str) {
+        String str2 = FileUtils.getExternalCachePath() + "/" + System.currentTimeMillis() + ".ffconcat";
+        try {
+            File file = new File(str2);
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            Matcher matcher = Pattern.compile("<file><!\\[CDATA\\[(.*?)]]></file><seconds>(.*?)</seconds>").matcher(str);
+            String str3 = "ffconcat version 1.0\n";
+            fileOutputStream.write("ffconcat version 1.0\n".getBytes());
+            while (matcher.find()) {
+                str3 = str3 + "file '" + matcher.group(1) + "'\nduration " + matcher.group(2) + "\n";
+                fileOutputStream.write(("file '" + matcher.group(1) + "'\nduration " + matcher.group(2) + "\n").getBytes());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return str2;
     }
 
     /**
