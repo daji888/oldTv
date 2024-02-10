@@ -68,6 +68,7 @@ public class ApiDialog extends BaseDialog {
                         history.add(1, "http://www.饭太硬.top/tv");
                         history.add(2, "https://agit.ai/Yoursmile7/TVBox/raw/branch/master/XC.json");
                         history.add(3, "http://cdn.qiaoji8.com/tvbox.json");
+                        history.add(4, "https://ghproxy.net/raw.githubusercontent.com/daji888/ys/master/ys99.txt");
                     if (history.size() > 30)
                         history.remove(30);
                     Hawk.put(HawkConfig.API_HISTORY, history);
