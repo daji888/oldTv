@@ -65,7 +65,6 @@ public class ApiDialog extends BaseDialog {
                     ArrayList<String> history = Hawk.get(HawkConfig.API_HISTORY, new ArrayList<String>());
                     if (!history.contains(newApi))
                         history.add(0, newApi);
-                    if (!history.contains("http://www.饭太硬.top/tv"))
                         history.add(1, "http://www.饭太硬.top/tv");
                         history.add(2, "https://agit.ai/Yoursmile7/TVBox/raw/branch/master/XC.json");
                         history.add(3, "http://cdn.qiaoji8.com/tvbox.json");
