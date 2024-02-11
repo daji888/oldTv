@@ -938,7 +938,7 @@ public class LivePlayActivity extends BaseActivity {
                     public void onAnimationEnd(Animator animation) {
                         super.onAnimationEnd(animation);
                         tvRightSettingLayout.setVisibility(View.INVISIBLE);
-                        tv_info_name1.setVisibility(View.VISIBLE);
+                        tv_info_name1.setVisibility(View.GONE);
                         tv_videosize.setVisibility(View.GONE);
                         liveSettingGroupAdapter.setSelectedGroupIndex(-1);
                     }
