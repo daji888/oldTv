@@ -640,6 +640,7 @@ public class LivePlayActivity extends BaseActivity {
             int keyCode = event.getKeyCode();
             if (keyCode == KeyEvent.KEYCODE_MENU) {
                 showSettingGroup();
+                showtv_videosize();
             } else if (!isListOrSettingLayoutVisible()) {
                 switch (keyCode) {
                     case KeyEvent.KEYCODE_DPAD_UP:
@@ -659,6 +660,7 @@ public class LivePlayActivity extends BaseActivity {
                             showProgressBars(true);
                         }else{
                             showSettingGroup();
+                            showtv_videosize();
                         }
                         break;
                     case KeyEvent.KEYCODE_DPAD_RIGHT:
@@ -1217,6 +1219,7 @@ public class LivePlayActivity extends BaseActivity {
             @Override
             public void longPress() {
                 showSettingGroup();
+                showtv_videosize();
             }
 
             @Override
@@ -1747,7 +1750,7 @@ public class LivePlayActivity extends BaseActivity {
 
     private void showtv_videosize() {
        tv_videosize.setVisibility(View.VISIBLE);
-       mHandler.post(mUpdatetv_videosizeRun);
+       mHandler.postDelayed(mUpdatetv_videosizeRun, 5000);
     }
 
     private Runnable mUpdatetv_videosizeRun = new Runnable() {
