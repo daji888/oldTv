@@ -2071,7 +2071,7 @@ public class LivePlayActivity extends BaseActivity {
             iv_playpause.setBackground(ContextCompat.getDrawable(LivePlayActivity.context, R.drawable.icon_play));
         }
         if(countDownTimer3==null){
-            countDownTimer3 = new CountDownTimer(36000, 1000) {
+            countDownTimer3 = new CountDownTimer(6000, 1000) {
 
                 @Override
                 public void onTick(long arg0) {
