@@ -640,6 +640,8 @@ public class LivePlayActivity extends BaseActivity {
             int keyCode = event.getKeyCode();
             if (keyCode == KeyEvent.KEYCODE_MENU) {
                 showSettingGroup();
+                ((TextView) findViewById(R.id.tv_info_name1)).setText(channel_Name.getChannelName());
+                showtv_videosize();
             } else if (!isListOrSettingLayoutVisible()) {
                 switch (keyCode) {
                     case KeyEvent.KEYCODE_DPAD_UP:
@@ -659,6 +661,8 @@ public class LivePlayActivity extends BaseActivity {
                             showProgressBars(true);
                         }else{
                             showSettingGroup();
+                            ((TextView) findViewById(R.id.tv_info_name1)).setText(channel_Name.getChannelName());
+                            showtv_videosize();
                         }
                         break;
                     case KeyEvent.KEYCODE_DPAD_RIGHT:
@@ -901,6 +905,8 @@ public class LivePlayActivity extends BaseActivity {
                 if (holder != null)
                     holder.itemView.requestFocus();
                 tvRightSettingLayout.setVisibility(View.VISIBLE);
+                tv_info_name1.setVisibility(View.VISIBLE);
+                tv_videosize.setVisibility(View.VISIBLE);
                 ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) tvRightSettingLayout.getLayoutParams();
                 if (tvRightSettingLayout.getVisibility() == View.VISIBLE) {
                     ViewObj viewObj = new ViewObj(tvRightSettingLayout, params);
@@ -932,6 +938,8 @@ public class LivePlayActivity extends BaseActivity {
                     public void onAnimationEnd(Animator animation) {
                         super.onAnimationEnd(animation);
                         tvRightSettingLayout.setVisibility(View.INVISIBLE);
+                        tv_info_name1.setVisibility(View.GONE);
+                        tv_videosize.setVisibility(View.GONE);
                         liveSettingGroupAdapter.setSelectedGroupIndex(-1);
                     }
                 });
@@ -1217,6 +1225,8 @@ public class LivePlayActivity extends BaseActivity {
             @Override
             public void longPress() {
                 showSettingGroup();
+                ((TextView) findViewById(R.id.tv_info_name1)).setText(channel_Name.getChannelName());
+                showtv_videosize();
             }
 
             @Override
@@ -1757,7 +1767,7 @@ public class LivePlayActivity extends BaseActivity {
             String width = Integer.toString(mVideoView.getVideoSize()[0]);
             String height = Integer.toString(mVideoView.getVideoSize()[1]);
             tv_videosize.setText("分辨率：" + width + " X " + height);
-            mHandler.postDelayed(this, 1000);
+            mHandler.post(this);
         }
     };
     
