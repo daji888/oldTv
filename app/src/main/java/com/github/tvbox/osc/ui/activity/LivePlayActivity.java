@@ -1750,7 +1750,7 @@ public class LivePlayActivity extends BaseActivity {
 
     private void showtv_videosize() {
        tv_videosize.setVisibility(View.VISIBLE);
-       mHandler.postDelayed(mUpdatetv_videosizeRun, 5000);
+       mHandler.post(mUpdatetv_videosizeRun);
     }
 
     private Runnable mUpdatetv_videosizeRun = new Runnable() {
@@ -1760,7 +1760,7 @@ public class LivePlayActivity extends BaseActivity {
             String width = Integer.toString(mVideoView.getVideoSize()[0]);
             String height = Integer.toString(mVideoView.getVideoSize()[1]);
             tv_videosize.setText("分辨率：" + width + " X " + height);
-            mHandler.postDelayed(this, 1000);
+            mHandler.post(this);
         }
     };
     
