@@ -816,7 +816,7 @@ public class VodController extends BaseController {
             simSeekPosition = simStartPosition;
         }
         // 每次10秒
-        simSeekPosition += (80000.0f * dir);
+        simSeekPosition += (30000.0f * dir);
         if (simSeekPosition > duration) simSeekPosition = duration;
         if (simSeekPosition < 0) simSeekPosition = 0;
         updateSeekUI(simStartPosition, simSeekPosition, duration);
@@ -846,13 +846,15 @@ public class VodController extends BaseController {
             case VideoView.STATE_IDLE:
                 break;
             case VideoView.STATE_PLAYING:
+                mTopRoot1.setVisibility(GONE);
+                mTopRoot2.setVisibility(GONE);
                 initLandscapePortraitBtnInfo();
                 startProgress();
                 break;
             case VideoView.STATE_PAUSED:
-                mTopRoot1.setVisibility(GONE);
-                mTopRoot2.setVisibility(GONE);
-                mPlayTitle.setVisibility(VISIBLE);
+                mTopRoot1.setVisibility(VISIBLE);
+                mTopRoot2.setVisibility(VISIBLE);
+                mPlayTitle.setVisibility(GONE);
                 break;
             case VideoView.STATE_ERROR:
                 listener.errReplay();
