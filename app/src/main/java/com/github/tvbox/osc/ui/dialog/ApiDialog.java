@@ -65,9 +65,12 @@ public class ApiDialog extends BaseDialog {
                     ArrayList<String> history = Hawk.get(HawkConfig.API_HISTORY, new ArrayList<String>());
                     if (!history.contains(newApi))
                         history.add(0, newApi);
-                        history.add(1, "https://agit.ai/Yoursmile7/TVBox/raw/branch/master/XC.json");
-                        history.add(2, "http://cdn.qiaoji8.com/tvbox.json");
-                        history.add(3, "https://ghproxy.net/raw.githubusercontent.com/daji888/ys/master/ys99.txt");
+                    if (!history.contains("https://agit.ai/Yoursmile7/TVBox/raw/branch/master/XC.json"))
+                        history.add("https://agit.ai/Yoursmile7/TVBox/raw/branch/master/XC.json");
+                    if (!history.contains("http://cdn.qiaoji8.com/tvbox.json"))
+                        history.add("http://cdn.qiaoji8.com/tvbox.json");
+                    if (!history.contains("https://ghproxy.net/raw.githubusercontent.com/daji888/ys/master/ys99.txt"))
+                        history.add("https://ghproxy.net/raw.githubusercontent.com/daji888/ys/master/ys99.txt");
                     if (history.size() > 30)
                         history.remove(30);
                     Hawk.put(HawkConfig.API_HISTORY, history);
