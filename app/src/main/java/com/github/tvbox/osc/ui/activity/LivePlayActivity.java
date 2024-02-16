@@ -709,7 +709,7 @@ public class LivePlayActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         if (mVideoView != null) {
-            if (isBack) {
+            if (mVideoView.isPlaying()) {
                 // Pause playback
                 mVideoView.pause();
             } else {
