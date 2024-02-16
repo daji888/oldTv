@@ -675,7 +675,11 @@ public class LivePlayActivity extends BaseActivity {
                     case KeyEvent.KEYCODE_DPAD_CENTER:
                     case KeyEvent.KEYCODE_ENTER:
                     case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
-                        showChannelList();
+                        if(isBack){
+                            onPause();
+                        }else{
+                            showChannelList();
+                        }
                         break;
                     default:
                         if (keyCode >= KeyEvent.KEYCODE_0 && keyCode <= KeyEvent.KEYCODE_9) {
@@ -701,12 +705,17 @@ public class LivePlayActivity extends BaseActivity {
         }
     }
 
-
     @Override
     protected void onPause() {
         super.onPause();
         if (mVideoView != null) {
-            mVideoView.pause();
+            if (mVideoView.isPlaying()) {
+                // Pause playback
+                mVideoView.pause();
+            } else {
+                // Continue playback
+                mVideoView.resume();
+            }
         }
     }
 
