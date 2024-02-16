@@ -710,11 +710,11 @@ public class LivePlayActivity extends BaseActivity {
         super.onPause();
         if (mVideoView != null) {
             if (isBack) {
-                // Continue playback
-                mVideoView.resume();
-            } else {
                 // Pause playback
                 mVideoView.pause();
+            } else {
+                // Continue playback
+                mVideoView.resume();
             }
         }
     }
