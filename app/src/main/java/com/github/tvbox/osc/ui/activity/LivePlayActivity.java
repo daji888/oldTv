@@ -1227,7 +1227,11 @@ public class LivePlayActivity extends BaseActivity {
         controller.setListener(new LiveController.LiveControlListener() {
             @Override
             public boolean singleTap() {
-                showChannelList();
+                if(isBack){
+                   onPause();
+                 }else{
+                    showChannelList();
+                 }
                 return true;
             }
 
