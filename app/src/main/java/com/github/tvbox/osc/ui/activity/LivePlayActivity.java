@@ -676,7 +676,7 @@ public class LivePlayActivity extends BaseActivity {
                     case KeyEvent.KEYCODE_ENTER:
                     case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
                         if(isBack){
-                            onPause();
+                            showProgressBars(true);
                         }else{
                             showChannelList();
                         }
@@ -705,17 +705,11 @@ public class LivePlayActivity extends BaseActivity {
         }
     }
 
-    @Override
+   @Override
     protected void onPause() {
         super.onPause();
         if (mVideoView != null) {
-            if (mVideoView.isPlaying()) {
-                // Pause playback
-                mVideoView.pause();
-            } else {
-                // Continue playback
-                mVideoView.resume();
-            }
+            mVideoView.pause();
         }
     }
 
