@@ -832,7 +832,6 @@ public class LivePlayActivity extends BaseActivity {
         if ((channelGroupIndex == currentChannelGroupIndex && liveChannelIndex == currentLiveChannelIndex && !changeSource)
                 || (changeSource && currentLiveChannelItem.getSourceNum() == 1)) {
          //   showChannelInfo();
-            showBottomEpg();
             return true;
         }
         mVideoView.release();
