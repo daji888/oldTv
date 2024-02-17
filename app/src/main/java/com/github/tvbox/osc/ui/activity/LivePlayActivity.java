@@ -831,7 +831,8 @@ public class LivePlayActivity extends BaseActivity {
     private boolean playChannel(int channelGroupIndex, int liveChannelIndex, boolean changeSource) {
         if ((channelGroupIndex == currentChannelGroupIndex && liveChannelIndex == currentLiveChannelIndex && !changeSource)
                 || (changeSource && currentLiveChannelItem.getSourceNum() == 1)) {
-            showChannelInfo();
+         //   showChannelInfo();
+            showBottomEpg();
             return true;
         }
         mVideoView.release();
@@ -856,7 +857,7 @@ public class LivePlayActivity extends BaseActivity {
         backcontroller.setVisibility(View.GONE);
         ll_right_top_huikan.setVisibility(View.GONE);
         mVideoView.setUrl(currentLiveChannelItem.getUrl());
-        showChannelInfo();
+        //showChannelInfo();
         mVideoView.start();
         return true;
     }
