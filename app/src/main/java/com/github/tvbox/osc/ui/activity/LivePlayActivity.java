@@ -409,6 +409,14 @@ public class LivePlayActivity extends BaseActivity {
                     }
                 });
             }
+        }else {
+
+            Epginfo epgbcinfo = new Epginfo(date, "暂无节目信息", date, "00:00", "23:59", 0);
+            arrayList.add(epgbcinfo);
+            epgdata = arrayList;
+            epgListAdapter.setNewData(epgdata);
+
+            //  mEpgInfoGridView.setAdapter(epgListAdapter);
         }
     }
 
@@ -462,10 +470,6 @@ public class LivePlayActivity extends BaseActivity {
                 String savedEpgKey = channelName + "_" + liveEpgDateAdapter.getItem(liveEpgDateAdapter.getSelectedIndex()).getDatePresented();
                 if (!hsEpg.contains(savedEpgKey))
                     hsEpg.put(savedEpgKey, arrayList);
-                showBottomEpg();
-            }
-            public void onFailure(int i, String str) {
-                showEpg(date, new ArrayList());
                 showBottomEpg();
             }
         });
