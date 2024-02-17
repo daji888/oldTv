@@ -526,7 +526,7 @@ public class LivePlayActivity extends BaseActivity {
 
        //     if (countDownTimer != null) {
        //        countDownTimer.cancel();
-            }
+       //     }
        //     if(!tip_epg1.getText().equals("暂无节目信息")){
                 ll_epg.setVisibility(View.VISIBLE);
                 countDownTimer = new CountDownTimer(5000, 1000) {//底部epg隐藏时间设定
