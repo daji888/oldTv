@@ -409,6 +409,14 @@ public class LivePlayActivity extends BaseActivity {
                     }
                 });
             }
+        }else {
+
+            Epginfo epgbcinfo = new Epginfo(date, "暂无节目信息", date, "00:00", "23:59", 0);
+            arrayList.add(epgbcinfo);
+            epgdata = arrayList;
+            epgListAdapter.setNewData(epgdata);
+
+            //  mEpgInfoGridView.setAdapter(epgListAdapter);
         }
     }
 
@@ -435,7 +443,7 @@ public class LivePlayActivity extends BaseActivity {
         UrlHttpUtil.get(url, new CallBackUtil.CallBackString() {
             public void onFailure(int i, String str) {
                 showEpg(date, new ArrayList());
-//                showBottomEpg();
+           //     showBottomEpg();
             }
 
             public void onResponse(String paramString) {
@@ -462,7 +470,7 @@ public class LivePlayActivity extends BaseActivity {
                 String savedEpgKey = channelName + "_" + liveEpgDateAdapter.getItem(liveEpgDateAdapter.getSelectedIndex()).getDatePresented();
                 if (!hsEpg.contains(savedEpgKey))
                     hsEpg.put(savedEpgKey, arrayList);
-//                showBottomEpg();
+                showBottomEpg();
             }
         });
     }
@@ -476,9 +484,9 @@ public class LivePlayActivity extends BaseActivity {
             ((TextView) findViewById(R.id.tv_info_name1)).setText(channel_Name.getChannelName());
             ((TextView) findViewById(R.id.tv_channel_bar_name)).setText(channel_Name.getChannelName());
             ((TextView) findViewById(R.id.tv_channel_bottom_number)).setText("" + channel_Name.getChannelNum());
-            tip_epg1.setText("暂无信息");
+            tip_epg1.setText("暂无节目信息");
             ((TextView) findViewById(R.id.tv_current_program_name)).setText("");
-            tip_epg2.setText("暂无信息");
+            tip_epg2.setText("暂无节目信息");
             ((TextView) findViewById(R.id.tv_next_program_name)).setText("");
             String savedEpgKey = channel_Name.getChannelName() + "_" + liveEpgDateAdapter.getItem(liveEpgDateAdapter.getSelectedIndex()).getDatePresented();
             if (hsEpg.containsKey(savedEpgKey)) {
@@ -486,14 +494,19 @@ public class LivePlayActivity extends BaseActivity {
                 updateChannelIcon(channel_Name.getChannelName(), epgInfo == null ? null : epgInfo[0]);
                 ArrayList arrayList = (ArrayList) hsEpg.get(savedEpgKey);
                 if (arrayList != null && arrayList.size() > 0) {
+                    Date date = new Date();
                     int size = arrayList.size() - 1;
                     while (size >= 0) {
-                        if (new Date().compareTo(((Epginfo) arrayList.get(size)).startdateTime) >= 0) {
+                        if (date.after(((Epginfo) arrayList.get(size)).startdateTime) & date.before(((Epginfo) arrayList.get(size)).enddateTime)) {
+                     //   if (new Date().compareTo(((Epginfo) arrayList.get(size)).startdateTime) >= 0) {
                             tip_epg1.setText(((Epginfo) arrayList.get(size)).start + "--" + ((Epginfo) arrayList.get(size)).end);
                             ((TextView) findViewById(R.id.tv_current_program_name)).setText(((Epginfo) arrayList.get(size)).title);
                             if (size != arrayList.size() - 1) {
                                 tip_epg2.setText(((Epginfo) arrayList.get(size + 1)).start + "--" + ((Epginfo) arrayList.get(size)).end);
                                 ((TextView) findViewById(R.id.tv_next_program_name)).setText(((Epginfo) arrayList.get(size + 1)).title);
+                            }else {
+                                tip_epg2.setText("暂无节目信息");
+                                ((TextView) findViewById(R.id.tv_next_program_name)).setText("");
                             }
                             break;
                         } else {
@@ -512,9 +525,9 @@ public class LivePlayActivity extends BaseActivity {
             }
 
             if (countDownTimer != null) {
-                countDownTimer.cancel();
+               countDownTimer.cancel();
             }
-            if(!tip_epg1.getText().equals("暂无信息")){
+       //     if(!tip_epg1.getText().equals("暂无节目信息")){
                 ll_epg.setVisibility(View.VISIBLE);
                 countDownTimer = new CountDownTimer(5000, 1000) {//底部epg隐藏时间设定
                     public void onTick(long j) {
@@ -524,9 +537,9 @@ public class LivePlayActivity extends BaseActivity {
                     }
                 };
                 countDownTimer.start();
-            }else {
-                ll_epg.setVisibility(View.GONE);
-            }
+         //   }else {
+         //      ll_epg.setVisibility(View.GONE);
+         //   }
             if (channel_Name == null || channel_Name.getSourceNum() <= 0) {
                 ((TextView) findViewById(R.id.tv_source)).setText("1/1");
             } else {
@@ -676,7 +689,7 @@ public class LivePlayActivity extends BaseActivity {
                     case KeyEvent.KEYCODE_ENTER:
                     case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
                         if(isBack){
-                            onPause();
+                            showProgressBars(true);
                         }else{
                             showChannelList();
                         }
@@ -705,17 +718,11 @@ public class LivePlayActivity extends BaseActivity {
         }
     }
 
-    @Override
+   @Override
     protected void onPause() {
         super.onPause();
         if (mVideoView != null) {
-            if (mVideoView.isPlaying()) {
-                // Pause playback
-                mVideoView.pause();
-            } else {
-                // Continue playback
-                mVideoView.resume();
-            }
+            mVideoView.pause();
         }
     }
 
@@ -829,7 +836,7 @@ public class LivePlayActivity extends BaseActivity {
     private boolean playChannel(int channelGroupIndex, int liveChannelIndex, boolean changeSource) {
         if ((channelGroupIndex == currentChannelGroupIndex && liveChannelIndex == currentLiveChannelIndex && !changeSource)
                 || (changeSource && currentLiveChannelItem.getSourceNum() == 1)) {
-           // showChannelInfo();
+         //   showChannelInfo();
             return true;
         }
         mVideoView.release();
@@ -854,7 +861,7 @@ public class LivePlayActivity extends BaseActivity {
         backcontroller.setVisibility(View.GONE);
         ll_right_top_huikan.setVisibility(View.GONE);
         mVideoView.setUrl(currentLiveChannelItem.getUrl());
-       // showChannelInfo();
+        //showChannelInfo();
         mVideoView.start();
         return true;
     }
@@ -1228,7 +1235,13 @@ public class LivePlayActivity extends BaseActivity {
             @Override
             public boolean singleTap() {
                 if(isBack){
-                   onPause();
+                   if (mVideoView.isPlaying()) {
+                       // Pause playback
+                       mVideoView.pause();
+                   } else {
+                       // Continue playback
+                       mVideoView.resume();
+                   }   
                  }else{
                     showChannelList();
                  }
@@ -2007,9 +2020,9 @@ public class LivePlayActivity extends BaseActivity {
             ll_epg.setVisibility(View.GONE);
         }else{
             backcontroller.setVisibility(View.GONE);
-            if(!tip_epg1.getText().equals("暂无信息")){
+         //   if(!tip_epg1.getText().equals("暂无节目信息")){
                 ll_epg.setVisibility(View.VISIBLE);
-            }
+         //   }
         }
 
 
