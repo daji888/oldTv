@@ -494,9 +494,11 @@ public class LivePlayActivity extends BaseActivity {
                 updateChannelIcon(channel_Name.getChannelName(), epgInfo == null ? null : epgInfo[0]);
                 ArrayList arrayList = (ArrayList) hsEpg.get(savedEpgKey);
                 if (arrayList != null && arrayList.size() > 0) {
+                    Date date = new Date();
                     int size = arrayList.size() - 1;
                     while (size >= 0) {
-                        if (new Date().compareTo(((Epginfo) arrayList.get(size)).startdateTime) >= 0) {
+                        if (date.after(((Epginfo) arrayList.get(size)).startdateTime) & date.before(((Epginfo) arrayList.get(size)).enddateTime)) {
+                     //   if (new Date().compareTo(((Epginfo) arrayList.get(size)).startdateTime) >= 0) {
                             tip_epg1.setText(((Epginfo) arrayList.get(size)).start + "--" + ((Epginfo) arrayList.get(size)).end);
                             ((TextView) findViewById(R.id.tv_current_program_name)).setText(((Epginfo) arrayList.get(size)).title);
                             if (size != arrayList.size() - 1) {
@@ -525,7 +527,7 @@ public class LivePlayActivity extends BaseActivity {
             if (countDownTimer != null) {
                 countDownTimer.cancel();
             }
-            if(!tip_epg1.getText().equals("暂无信息")){
+            if(!tip_epg1.getText().equals("暂无节目信息")){
                 ll_epg.setVisibility(View.VISIBLE);
                 countDownTimer = new CountDownTimer(5000, 1000) {//底部epg隐藏时间设定
                     public void onTick(long j) {
@@ -2018,7 +2020,7 @@ public class LivePlayActivity extends BaseActivity {
             ll_epg.setVisibility(View.GONE);
         }else{
             backcontroller.setVisibility(View.GONE);
-            if(!tip_epg1.getText().equals("暂无信息")){
+            if(!tip_epg1.getText().equals("暂无节目信息")){
                 ll_epg.setVisibility(View.VISIBLE);
             }
         }
