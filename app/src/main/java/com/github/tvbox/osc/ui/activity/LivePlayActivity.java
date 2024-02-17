@@ -435,7 +435,7 @@ public class LivePlayActivity extends BaseActivity {
         UrlHttpUtil.get(url, new CallBackUtil.CallBackString() {
             public void onFailure(int i, String str) {
                 showEpg(date, new ArrayList());
-//                showBottomEpg();
+                showBottomEpg();
             }
 
             public void onResponse(String paramString) {
@@ -462,7 +462,7 @@ public class LivePlayActivity extends BaseActivity {
                 String savedEpgKey = channelName + "_" + liveEpgDateAdapter.getItem(liveEpgDateAdapter.getSelectedIndex()).getDatePresented();
                 if (!hsEpg.contains(savedEpgKey))
                     hsEpg.put(savedEpgKey, arrayList);
-//                showBottomEpg();
+                showBottomEpg();
             }
         });
     }
