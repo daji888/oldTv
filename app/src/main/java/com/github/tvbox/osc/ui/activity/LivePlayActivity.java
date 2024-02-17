@@ -1222,7 +1222,12 @@ public class LivePlayActivity extends BaseActivity {
             @Override
             public boolean singleTap() {
                 if(isBack){
-                   showProgressBars(true);
+                   if (mVideoView.isPlaying()) {
+                       // Pause playback
+                       mVideoView.pause();
+                   } else {
+                       // Continue playback
+                       mVideoView.resume();
                  }else{
                     showChannelList();
                  }
