@@ -464,6 +464,10 @@ public class LivePlayActivity extends BaseActivity {
                     hsEpg.put(savedEpgKey, arrayList);
                 showBottomEpg();
             }
+            public void onFailure(int i, String str) {
+                showEpg(date, new ArrayList());
+                showBottomEpg();
+            }
         });
     }
 
