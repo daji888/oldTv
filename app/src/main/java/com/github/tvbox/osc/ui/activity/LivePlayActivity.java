@@ -1228,6 +1228,7 @@ public class LivePlayActivity extends BaseActivity {
                    } else {
                        // Continue playback
                        mVideoView.resume();
+                   }   
                  }else{
                     showChannelList();
                  }
