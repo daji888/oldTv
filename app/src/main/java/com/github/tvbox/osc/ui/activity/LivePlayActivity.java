@@ -1222,7 +1222,7 @@ public class LivePlayActivity extends BaseActivity {
             @Override
             public boolean singleTap() {
                 if(isBack){
-                   onPause();
+                   showProgressBars(true);
                  }else{
                     showChannelList();
                  }
