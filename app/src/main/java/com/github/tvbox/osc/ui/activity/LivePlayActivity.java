@@ -2025,9 +2025,9 @@ public class LivePlayActivity extends BaseActivity {
             ll_epg.setVisibility(View.GONE);
         }else{
             backcontroller.setVisibility(View.GONE);
-         //   if(!tip_epg1.getText().equals("暂无节目信息")){
+            if(!tip_epg1.getText().equals("暂无节目信息")){
                 ll_epg.setVisibility(View.VISIBLE);
-         //   }
+            }
         }
 
 
