@@ -2,6 +2,7 @@ package com.github.tvbox.osc.player.controller;
 
 import static xyz.doikki.videoplayer.util.PlayerUtils.stringForTime;
 import xyz.doikki.videoplayer.util.PlayerUtils;
+import android.widget.SeekBar;
 import android.content.Context;
 import android.view.MotionEvent;
 import android.widget.ProgressBar;
