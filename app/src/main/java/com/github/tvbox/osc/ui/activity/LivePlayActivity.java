@@ -279,7 +279,6 @@ public class LivePlayActivity extends BaseActivity {
         iv_play = findViewById(R.id.iv_play);
 
         tv_pause_progress_text = findViewById(R.id.tv_pause_progress_text);
-        tv_pause_progress_text.setText(tv_currentpos.setText(durationToString((int)mVideoView.getCurrentPosition())) + " / " + tv_duration.setText(durationToString(shiyi_time_c*1000)));
 
 
         if(show){
@@ -488,6 +487,7 @@ public class LivePlayActivity extends BaseActivity {
             return;
         if (channel_Name.getChannelName() != null) {
             // tv_videosize.setText("分辨率：" + mVideoView.getVideoSize()[0] + " x " + mVideoView.getVideoSize()[1]);
+            ((TextView) findViewById(R.id.tv_pause_progress_text)).setText(tv_currentpos.setText(durationToString((int)mVideoView.getCurrentPosition())) + " / " + tv_duration.setText(durationToString(shiyi_time_c*1000)));
             ((TextView) findViewById(R.id.tv_info_name1)).setText(channel_Name.getChannelName());
             ((TextView) findViewById(R.id.tv_channel_bar_name)).setText(channel_Name.getChannelName());
             ((TextView) findViewById(R.id.tv_channel_bottom_number)).setText("" + channel_Name.getChannelNum());
