@@ -198,6 +198,8 @@ public class LivePlayActivity extends BaseActivity {
     private View iv_play;
     private  boolean show = false;
 
+    TextView tv_pause_progress_text;
+
     @Override
     protected int getLayoutResID() {
         return R.layout.activity_live_play;
@@ -275,6 +277,8 @@ public class LivePlayActivity extends BaseActivity {
         tv_duration = (TextView) findViewById(R.id.tv_duration);
         iv_playpause = findViewById(R.id.iv_playpause);
         iv_play = findViewById(R.id.iv_play);
+
+        tv_pause_progress_text = findViewById(R.id.tv_pause_progress_text);
 
 
         if(show){
@@ -1058,6 +1062,7 @@ public class LivePlayActivity extends BaseActivity {
                     sBar.setProgress((int)  mVideoView.getCurrentPosition());
                     tv_currentpos.setText(durationToString((int)mVideoView.getCurrentPosition()));
                     tv_duration.setText(durationToString(shiyi_time_c*1000));
+                    ((TextView) findViewById(R.id.tv_pause_progress_text)).setText((durationToString((int)mVideoView.getCurrentPosition())) + " / " + (durationToString(shiyi_time_c*1000)));
                     showProgressBars(true);
                     ll_right_top_huikan.setVisibility(View.VISIBLE);
                     isBack = true;
@@ -1136,6 +1141,7 @@ public class LivePlayActivity extends BaseActivity {
                    // long dd = mVideoView.getDuration();
                     tv_currentpos.setText(durationToString((int)mVideoView.getCurrentPosition()));
                     tv_duration.setText(durationToString(shiyi_time_c*1000));
+                    ((TextView) findViewById(R.id.tv_pause_progress_text)).setText((durationToString((int)mVideoView.getCurrentPosition())) + " / " + (durationToString(shiyi_time_c*1000)));
                     showProgressBars(true);
                     ll_right_top_huikan.setVisibility(View.VISIBLE);
                     isBack = true;
@@ -2115,6 +2121,8 @@ public class LivePlayActivity extends BaseActivity {
                     if(mVideoView != null){
                         sBar.setProgress((int) mVideoView.getCurrentPosition());
                         tv_currentpos.setText(durationToString((int) mVideoView.getCurrentPosition()));
+                        ((TextView) findViewById(R.id.tv_pause_progress_text)).setText((durationToString((int)mVideoView.getCurrentPosition())) + " / " + (durationToString(shiyi_time_c*1000)));
+
                     }
 
                 }
