@@ -1243,7 +1243,7 @@ public class LivePlayActivity extends BaseActivity {
                        tv_videosize.setVisibility(View.VISIBLE);
                    } else {
                        // Continue playback
-                       mVideoView.resume();
+                       mVideoView.start();
                        tv_info_name1.setVisibility(View.INVISIBLE);
                        tv_videosize.setVisibility(View.INVISIBLE);
                    }   
