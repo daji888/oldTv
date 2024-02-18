@@ -2121,6 +2121,8 @@ public class LivePlayActivity extends BaseActivity {
                     if(mVideoView != null){
                         sBar.setProgress((int) mVideoView.getCurrentPosition());
                         tv_currentpos.setText(durationToString((int) mVideoView.getCurrentPosition()));
+                        ((TextView) findViewById(R.id.tv_pause_progress_text)).setText((durationToString((int)mVideoView.getCurrentPosition())) + " / " + (durationToString(shiyi_time_c*1000)));
+
                     }
 
                 }
