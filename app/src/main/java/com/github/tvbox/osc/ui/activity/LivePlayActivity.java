@@ -2091,14 +2091,12 @@ public class LivePlayActivity extends BaseActivity {
                         if(mVideoView.isPlaying()){
                             mVideoView.pause();
                             countDownTimer.cancel();
-                            tv_info_name1.setVisibility(View.VISIBLE);
-                            tv_videosize.setVisibility(View.VISIBLE);
+                            tv_top_l_container.setVisibility(View.VISIBLE);
                             iv_play.setVisibility(View.VISIBLE);
                             iv_playpause.setBackground(ContextCompat.getDrawable(LivePlayActivity.context, R.drawable.icon_play));
                         }else{
                             mVideoView.start();
-                            tv_info_name1.setVisibility(View.INVISIBLE);
-                            tv_videosize.setVisibility(View.INVISIBLE);
+                            tv_top_l_container.setVisibility(View.INVISIBLE);
                             iv_play.setVisibility(View.INVISIBLE);
                             countDownTimer.start();
                             iv_playpause.setBackground(ContextCompat.getDrawable(LivePlayActivity.context, R.drawable.vod_pause));
