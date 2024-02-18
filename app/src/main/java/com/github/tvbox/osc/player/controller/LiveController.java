@@ -78,6 +78,14 @@ public class LiveController extends BaseController {
     }
 
     @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (!fromUser) {
+                    return;
+                }
+                long duration = mControlWrapper.getDuration();
+            }
+
+    @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
         if (e1.getX() - e2.getX() > minFlingDistance && Math.abs(velocityX) > minFlingVelocity) {
             listener.changeSource(-1);          //左滑
