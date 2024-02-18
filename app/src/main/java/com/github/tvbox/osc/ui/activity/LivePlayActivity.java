@@ -279,7 +279,7 @@ public class LivePlayActivity extends BaseActivity {
         iv_play = findViewById(R.id.iv_play);
 
         tv_pause_progress_text = findViewById(R.id.tv_pause_progress_text);
-        tv_pause_progress_text.setText(PlayerUtils.stringForTime(seekTo) + " / " + PlayerUtils.stringForTime(duration));
+        tv_pause_progress_text.setText(tv_currentpos.setText(durationToString((int)mVideoView.getCurrentPosition())) + " / " + tv_duration.setText(durationToString(shiyi_time_c*1000)));
 
 
         if(show){
