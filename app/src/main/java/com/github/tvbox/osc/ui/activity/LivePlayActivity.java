@@ -653,8 +653,7 @@ public class LivePlayActivity extends BaseActivity {
             int keyCode = event.getKeyCode();
             if (keyCode == KeyEvent.KEYCODE_MENU) {
                 showSettingGroup();
-                ((TextView) findViewById(R.id.tv_info_name1)).setText(channel_Name.getChannelName());
-                showtv_videosize();
+                showtv_top_l_container()
             } else if (!isListOrSettingLayoutVisible()) {
                 switch (keyCode) {
                     case KeyEvent.KEYCODE_DPAD_UP:
@@ -674,8 +673,7 @@ public class LivePlayActivity extends BaseActivity {
                             showProgressBars(true);
                         }else{
                             showSettingGroup();
-                            ((TextView) findViewById(R.id.tv_info_name1)).setText(channel_Name.getChannelName());
-                            showtv_videosize();
+                            showtv_top_l_container()
                         }
                         break;
                     case KeyEvent.KEYCODE_DPAD_RIGHT:
@@ -1252,8 +1250,7 @@ public class LivePlayActivity extends BaseActivity {
             @Override
             public void longPress() {
                 showSettingGroup();
-                ((TextView) findViewById(R.id.tv_info_name1)).setText(channel_Name.getChannelName());
-                showtv_videosize();
+                showtv_top_l_container()
             }
 
             @Override
@@ -1701,7 +1698,7 @@ public class LivePlayActivity extends BaseActivity {
         showTime();
         showNetSpeed();
         showtv_right_top_tipnetspeed();
-        showttv_top_l_container();
+        showtv_top_l_container()
         
         tvLeftChannelListLayout.setVisibility(View.INVISIBLE);
         tvRightSettingLayout.setVisibility(View.INVISIBLE);
