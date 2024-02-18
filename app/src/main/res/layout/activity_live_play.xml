@@ -333,6 +333,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:tag="tv_top_container"
+	    android:visibility="gone"
+            tools:visibility="visible"
 	    android:background="@drawable/shape_user_focus"
             android:layout_marginStart="@dimen/vs_20"
             android:layout_marginLeft="@dimen/vs_20"
@@ -575,7 +577,7 @@
 					android:ellipsize='marquee'
 					android:singleLine="true"
 					android:textColor="@android:color/white"
-					android:textSize="@dimen/vs_60"
+					android:textSize="@dimen/vs_50"
 					android:textStyle="bold"
 					tools:ignore="EllipsizeMaxLines" />
 				<ImageView
@@ -631,7 +633,7 @@
 			android:id="@+id/tv_current_program_time"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="暂无信息"
+			android:text="暂无节目信息"
 			android:singleLine="true"
 			android:layout_toRightOf="@+id/tv_current_program"
 			android:layout_alignTop="@+id/tv_current_program" />
@@ -680,7 +682,7 @@
 			android:id="@+id/tv_next_program_time"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="暂无信息"
+			android:text="暂无节目信息"
 			android:singleLine="true"
 			android:ellipsize="marquee"
 			android:layout_toRightOf="@+id/tv_next_program"
