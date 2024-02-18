@@ -552,15 +552,13 @@ public class LivePlayActivity extends BaseActivity {
                 
             Handler handler = new Handler(Looper.getMainLooper());
             ll_right_top_loading.setVisibility(View.VISIBLE);
-            tv_info_name1.setVisibility(View.VISIBLE);
-            tv_videosize.setVisibility(View.VISIBLE);
+            tv_top_l_container.setVisibility(View.VISIBLE);
             // 延迟5秒后执行隐藏操作
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     ll_right_top_loading.setVisibility(View.GONE);
-                    tv_info_name1.setVisibility(View.GONE);
-                    tv_videosize.setVisibility(View.GONE);
+                    tv_top_l_container.setVisibility(View.GONE);
                 }
             }, 5000);
         }
@@ -923,8 +921,7 @@ public class LivePlayActivity extends BaseActivity {
                 if (holder != null)
                     holder.itemView.requestFocus();
                 tvRightSettingLayout.setVisibility(View.VISIBLE);
-                tv_info_name1.setVisibility(View.VISIBLE);
-                tv_videosize.setVisibility(View.VISIBLE);
+                tv_top_l_container.setVisibility(View.VISIBLE);
                 ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) tvRightSettingLayout.getLayoutParams();
                 if (tvRightSettingLayout.getVisibility() == View.VISIBLE) {
                     ViewObj viewObj = new ViewObj(tvRightSettingLayout, params);
@@ -956,8 +953,7 @@ public class LivePlayActivity extends BaseActivity {
                     public void onAnimationEnd(Animator animation) {
                         super.onAnimationEnd(animation);
                         tvRightSettingLayout.setVisibility(View.INVISIBLE);
-                        tv_info_name1.setVisibility(View.GONE);
-                        tv_videosize.setVisibility(View.GONE);
+                        tv_top_l_container.setVisibility(View.GONE);
                         liveSettingGroupAdapter.setSelectedGroupIndex(-1);
                     }
                 });
@@ -1705,7 +1701,7 @@ public class LivePlayActivity extends BaseActivity {
         showTime();
         showNetSpeed();
         showtv_right_top_tipnetspeed();
-        showtv_videosize();
+        showttv_top_l_container();
         
         tvLeftChannelListLayout.setVisibility(View.INVISIBLE);
         tvRightSettingLayout.setVisibility(View.INVISIBLE);
@@ -1786,12 +1782,12 @@ public class LivePlayActivity extends BaseActivity {
         }
     };
 
-    private void showtv_videosize() {
-       tv_videosize.setVisibility(View.VISIBLE);
-       mHandler.post(mUpdatetv_videosizeRun);
+    private void showtv_top_l_container() {
+       tv_top_l_container.setVisibility(View.VISIBLE);
+       mHandler.post(mUpdatetv_top_l_containerRun);
     }
 
-    private Runnable mUpdatetv_videosizeRun = new Runnable() {
+    private Runnable mUpdatetv_top_l_containerRun = new Runnable() {
         @Override
         public void run() {
             if (mVideoView == null) return;
