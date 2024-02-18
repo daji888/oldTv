@@ -137,6 +137,7 @@ public class LivePlayActivity extends BaseActivity {
   //  private CountDownTimer countDownTimerRightTop;
     private View ll_right_top_loading;
     private View ll_right_top_huikan;
+    private View tv_top_l_container;
     private View divLoadEpg;
     private View divLoadEpgleft;
     private LinearLayout divEpg;
@@ -224,6 +225,7 @@ public class LivePlayActivity extends BaseActivity {
         tvNetSpeed = findViewById(R.id.tvNetSpeed);
         tv_info_name1 = findViewById(R.id.tv_info_name1);
         tv_videosize = findViewById(R.id.tv_videosize);
+        tv_top_l_container = findViewById(R.id.tv_top_l_container);
 
         //EPG  findViewById  by 龍
         tip_chname = (TextView)  findViewById(R.id.tv_channel_bar_name);//底部名称
@@ -1239,13 +1241,11 @@ public class LivePlayActivity extends BaseActivity {
                        // Pause playback
                        mVideoView.pause();
                        showProgressBars(true);
-                       tv_info_name1.setVisibility(View.VISIBLE);
-                       tv_videosize.setVisibility(View.VISIBLE);
+                       tv_top_l_container.setVisibility(View.VISIBLE);
                    } else {
                        // Continue playback
                        mVideoView.start();
-                       tv_info_name1.setVisibility(View.INVISIBLE);
-                       tv_videosize.setVisibility(View.INVISIBLE);
+                       tv_top_l_container.setVisibility(View.INVISIBLE);
                    }   
                  }else{
                     showChannelList();
