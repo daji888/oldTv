@@ -653,7 +653,7 @@ public class LivePlayActivity extends BaseActivity {
             int keyCode = event.getKeyCode();
             if (keyCode == KeyEvent.KEYCODE_MENU) {
                 showSettingGroup();
-                showtv_top_l_container()
+                showtv_top_l_container();
             } else if (!isListOrSettingLayoutVisible()) {
                 switch (keyCode) {
                     case KeyEvent.KEYCODE_DPAD_UP:
@@ -673,7 +673,7 @@ public class LivePlayActivity extends BaseActivity {
                             showProgressBars(true);
                         }else{
                             showSettingGroup();
-                            showtv_top_l_container()
+                            showtv_top_l_container();
                         }
                         break;
                     case KeyEvent.KEYCODE_DPAD_RIGHT:
@@ -1250,7 +1250,7 @@ public class LivePlayActivity extends BaseActivity {
             @Override
             public void longPress() {
                 showSettingGroup();
-                showtv_top_l_container()
+                showtv_top_l_container();
             }
 
             @Override
@@ -1698,7 +1698,7 @@ public class LivePlayActivity extends BaseActivity {
         showTime();
         showNetSpeed();
         showtv_right_top_tipnetspeed();
-        showtv_top_l_container()
+        showtv_top_l_container();
         
         tvLeftChannelListLayout.setVisibility(View.INVISIBLE);
         tvRightSettingLayout.setVisibility(View.INVISIBLE);
