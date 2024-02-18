@@ -137,6 +137,7 @@ public class LivePlayActivity extends BaseActivity {
   //  private CountDownTimer countDownTimerRightTop;
     private View ll_right_top_loading;
     private View ll_right_top_huikan;
+    private View tv_top_l_container;
     private View divLoadEpg;
     private View divLoadEpgleft;
     private LinearLayout divEpg;
@@ -224,6 +225,7 @@ public class LivePlayActivity extends BaseActivity {
         tvNetSpeed = findViewById(R.id.tvNetSpeed);
         tv_info_name1 = findViewById(R.id.tv_info_name1);
         tv_videosize = findViewById(R.id.tv_videosize);
+        tv_top_l_container = findViewById(R.id.tv_top_l_container);
 
         //EPG  findViewById  by 龍
         tip_chname = (TextView)  findViewById(R.id.tv_channel_bar_name);//底部名称
@@ -550,15 +552,13 @@ public class LivePlayActivity extends BaseActivity {
                 
             Handler handler = new Handler(Looper.getMainLooper());
             ll_right_top_loading.setVisibility(View.VISIBLE);
-            tv_info_name1.setVisibility(View.VISIBLE);
-            tv_videosize.setVisibility(View.VISIBLE);
+            tv_top_l_container.setVisibility(View.VISIBLE);
             // 延迟5秒后执行隐藏操作
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     ll_right_top_loading.setVisibility(View.GONE);
-                    tv_info_name1.setVisibility(View.GONE);
-                    tv_videosize.setVisibility(View.GONE);
+                    tv_top_l_container.setVisibility(View.GONE);
                 }
             }, 5000);
         }
@@ -653,8 +653,7 @@ public class LivePlayActivity extends BaseActivity {
             int keyCode = event.getKeyCode();
             if (keyCode == KeyEvent.KEYCODE_MENU) {
                 showSettingGroup();
-                ((TextView) findViewById(R.id.tv_info_name1)).setText(channel_Name.getChannelName());
-                showtv_videosize();
+                showtv_top_l_container();
             } else if (!isListOrSettingLayoutVisible()) {
                 switch (keyCode) {
                     case KeyEvent.KEYCODE_DPAD_UP:
@@ -674,8 +673,7 @@ public class LivePlayActivity extends BaseActivity {
                             showProgressBars(true);
                         }else{
                             showSettingGroup();
-                            ((TextView) findViewById(R.id.tv_info_name1)).setText(channel_Name.getChannelName());
-                            showtv_videosize();
+                            showtv_top_l_container();
                         }
                         break;
                     case KeyEvent.KEYCODE_DPAD_RIGHT:
@@ -921,8 +919,7 @@ public class LivePlayActivity extends BaseActivity {
                 if (holder != null)
                     holder.itemView.requestFocus();
                 tvRightSettingLayout.setVisibility(View.VISIBLE);
-                tv_info_name1.setVisibility(View.VISIBLE);
-                tv_videosize.setVisibility(View.VISIBLE);
+                tv_top_l_container.setVisibility(View.VISIBLE);
                 ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) tvRightSettingLayout.getLayoutParams();
                 if (tvRightSettingLayout.getVisibility() == View.VISIBLE) {
                     ViewObj viewObj = new ViewObj(tvRightSettingLayout, params);
@@ -954,8 +951,7 @@ public class LivePlayActivity extends BaseActivity {
                     public void onAnimationEnd(Animator animation) {
                         super.onAnimationEnd(animation);
                         tvRightSettingLayout.setVisibility(View.INVISIBLE);
-                        tv_info_name1.setVisibility(View.GONE);
-                        tv_videosize.setVisibility(View.GONE);
+                        tv_top_l_container.setVisibility(View.GONE);
                         liveSettingGroupAdapter.setSelectedGroupIndex(-1);
                     }
                 });
@@ -1238,9 +1234,12 @@ public class LivePlayActivity extends BaseActivity {
                    if (mVideoView.isPlaying()) {
                        // Pause playback
                        mVideoView.pause();
+                       showProgressBars(true);
+                       tv_top_l_container.setVisibility(View.VISIBLE);
                    } else {
                        // Continue playback
-                       mVideoView.resume();
+                       mVideoView.start();
+                       tv_top_l_container.setVisibility(View.INVISIBLE);
                    }   
                  }else{
                     showChannelList();
@@ -1251,8 +1250,7 @@ public class LivePlayActivity extends BaseActivity {
             @Override
             public void longPress() {
                 showSettingGroup();
-                ((TextView) findViewById(R.id.tv_info_name1)).setText(channel_Name.getChannelName());
-                showtv_videosize();
+                showtv_top_l_container();
             }
 
             @Override
@@ -1700,7 +1698,7 @@ public class LivePlayActivity extends BaseActivity {
         showTime();
         showNetSpeed();
         showtv_right_top_tipnetspeed();
-        showtv_videosize();
+        showtv_top_l_container();
         
         tvLeftChannelListLayout.setVisibility(View.INVISIBLE);
         tvRightSettingLayout.setVisibility(View.INVISIBLE);
@@ -1781,12 +1779,12 @@ public class LivePlayActivity extends BaseActivity {
         }
     };
 
-    private void showtv_videosize() {
-       tv_videosize.setVisibility(View.VISIBLE);
-       mHandler.post(mUpdatetv_videosizeRun);
+    private void showtv_top_l_container() {
+       tv_top_l_container.setVisibility(View.VISIBLE);
+       mHandler.post(mUpdatetv_top_l_containerRun);
     }
 
-    private Runnable mUpdatetv_videosizeRun = new Runnable() {
+    private Runnable mUpdatetv_top_l_containerRun = new Runnable() {
         @Override
         public void run() {
             if (mVideoView == null) return;
@@ -2020,9 +2018,9 @@ public class LivePlayActivity extends BaseActivity {
             ll_epg.setVisibility(View.GONE);
         }else{
             backcontroller.setVisibility(View.GONE);
-         //   if(!tip_epg1.getText().equals("暂无节目信息")){
+            if(!tip_epg1.getText().equals("暂无节目信息")){
                 ll_epg.setVisibility(View.VISIBLE);
-         //   }
+            }
         }
 
 
@@ -2086,10 +2084,12 @@ public class LivePlayActivity extends BaseActivity {
                         if(mVideoView.isPlaying()){
                             mVideoView.pause();
                             countDownTimer.cancel();
+                            tv_top_l_container.setVisibility(View.VISIBLE);
                             iv_play.setVisibility(View.VISIBLE);
                             iv_playpause.setBackground(ContextCompat.getDrawable(LivePlayActivity.context, R.drawable.icon_play));
                         }else{
                             mVideoView.start();
+                            tv_top_l_container.setVisibility(View.INVISIBLE);
                             iv_play.setVisibility(View.INVISIBLE);
                             countDownTimer.start();
                             iv_playpause.setBackground(ContextCompat.getDrawable(LivePlayActivity.context, R.drawable.vod_pause));
