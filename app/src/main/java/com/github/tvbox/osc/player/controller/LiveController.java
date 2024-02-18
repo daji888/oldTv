@@ -1,5 +1,6 @@
 package com.github.tvbox.osc.player.controller;
 
+import static xyz.doikki.videoplayer.util.PlayerUtils.stringForTime;
 import android.content.Context;
 import android.view.MotionEvent;
 import android.widget.ProgressBar;
@@ -25,6 +26,7 @@ public class LiveController extends BaseController {
     public LiveController(@NotNull Context context) {
         super(context);
     }
+    TextView mProgressText;
 
     @Override
     protected int getLayoutId() {
@@ -35,6 +37,8 @@ public class LiveController extends BaseController {
     protected void initView() {
         super.initView();
         mLoading = findViewById(R.id.loading);
+        mProgressText = findViewById(R.id.tv_pause_progress_text);
+        mProgressText.setText(PlayerUtils.stringForTime(seekTo) + " / " + PlayerUtils.stringForTime(duration));
     }
 
     public interface LiveControlListener {
