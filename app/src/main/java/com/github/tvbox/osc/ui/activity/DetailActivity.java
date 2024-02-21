@@ -58,6 +58,8 @@ import com.github.tvbox.osc.viewmodel.SourceViewModel;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.AbsCallback;
 import com.lzy.okgo.model.Response;
@@ -899,7 +901,7 @@ public class DetailActivity extends BaseActivity {
         quickSearchData.clear();
         quickSearchWord.addAll(SearchHelper.splitWords(searchTitle));
         // 分词
-        OkGo.<String>get("http://api.pullword.com/get.php?source=" + URLEncoder.encode(searchTitle) + "&param1=0&param2=0&json=1")
+        OkGo.<String>get("https://api.yesapi.cn/?service=App.Scws.GetWords&text=" + searchTitle + "&app_key=CEE4B8A091578B252AC4C92FB4E893C3&sign=CB7602F3AC922808AF5D475D8DA33302")
                 .tag("fenci")
                 .execute(new AbsCallback<String>() {
                     @Override
@@ -915,8 +917,11 @@ public class DetailActivity extends BaseActivity {
                     public void onSuccess(Response<String> response) {
                         String json = response.body();
                         try {
-                            for (JsonElement je : new Gson().fromJson(json, JsonArray.class)) {
-                                quickSearchWord.add(je.getAsJsonObject().get("t").getAsString());
+                            JsonObject resJson = JsonParser.parseString(json).getAsJsonObject();
+                            JsonElement wordsJson = resJson.get("data").getAsJsonObject().get("words");
+
+                            for (JsonElement je : wordsJson.getAsJsonArray()) {
+                                quickSearchWord.add(je.getAsJsonObject().get("word").getAsString());
                             }
                         } catch (Throwable th) {
                             th.printStackTrace();
