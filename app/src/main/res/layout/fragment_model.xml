@@ -753,7 +753,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="聚合模式"
+                            android:text="聚搜模式"
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
