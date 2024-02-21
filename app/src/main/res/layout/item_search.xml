@@ -73,6 +73,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/shape_thumb_bottom_name"
                 android:ellipsize="marquee"
+                android:gravity="center"
                 android:marqueeRepeatLimit="marquee_forever"
                 android:padding="@dimen/vs_5"
                 android:singleLine="true"
