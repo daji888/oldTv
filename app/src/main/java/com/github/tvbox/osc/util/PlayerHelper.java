@@ -255,10 +255,10 @@ public class PlayerHelper {
     }
 
     public static String getScaleName(int screenScaleType) {
-        String scaleText = "默认";
+        String scaleText = "正常缩放";
         switch (screenScaleType) {
             case VideoView.SCREEN_SCALE_DEFAULT:
-                scaleText = "默认";
+                scaleText = "正常缩放";
                 break;
             case VideoView.SCREEN_SCALE_16_9:
                 scaleText = "16:9";
