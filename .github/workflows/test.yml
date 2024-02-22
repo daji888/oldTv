@@ -17,7 +17,7 @@ jobs:
           fetch-depth: 0
       - name: Check New Commit
         run: |
-          commit=$(curl -sL https://githubfast.com/daji888/oldTv/commits/main |grep -o "commit/[a-z0-9]\+" |head -1 | cut -d\/ -f5)
+          commit=$(curl -sL https://github.com/daji888/oldTv/commits/main |grep -o "commit/[a-z0-9]\+" |head -1 | cut -d\/ -f5)
           if [ "${{ inputs.rebuild }}" == "true" ]; then
             echo "commit=$commit" >> $GITHUB_ENV
             echo "commitS=${commit:0:7}" >> $GITHUB_ENV
@@ -32,9 +32,9 @@ jobs:
           sed -i "/android:text=/s#。#。\\\\n\\\\n                                                                       ${{ env.tag }}#" app/src/main/res/layout/dialog_about.xml
           echo 'crosswalk源，防挂'
           if grep -q 'crosswalk' build.gradle; then
-            sed -i "/crosswalk/a\        maven { url 'https://daji888.github.io/crosswalk/releases/crosswalk/android/maven2' }" build.gradle
+            sed -i "/crosswalk/a\        maven { url 'https://o0halflife0o.github.io/crosswalk/releases/crosswalk/android/maven2' }" build.gradle
           else
-            sed -i "/jitpack.io/a\        maven { url 'https://daji888.github.io/crosswalk/releases/crosswalk/android/maven2' }" build.gradle
+            sed -i "/jitpack.io/a\        maven { url 'https://o0halflife0o.github.io/crosswalk/releases/crosswalk/android/maven2' }" build.gradle
           fi
       - name: Release Apk Sign
         run: |
