@@ -280,100 +280,6 @@ public class LivePlayActivity extends BaseActivity {
 
         tv_pause_progress_text = findViewById(R.id.tv_pause_progress_text);
 
-
-        if(show){
-            backcontroller.setVisibility(View.VISIBLE);
-            ll_epg.setVisibility(View.GONE);
-
-        }else{
-            backcontroller.setVisibility(View.GONE);
-            ll_epg.setVisibility(View.VISIBLE);
-        }
-
-
-        iv_play.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View arg0) {
-                mVideoView.start();
-                iv_play.setVisibility(View.INVISIBLE);
-                countDownTimer.start();
-                iv_playpause.setBackground(ContextCompat.getDrawable(LivePlayActivity.context, R.drawable.vod_pause));
-            }
-        });
-
-        iv_playpause.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                if(mVideoView.isPlaying()){
-                    mVideoView.pause();
-                    countDownTimer.cancel();
-                    iv_play.setVisibility(View.VISIBLE);
-                    iv_playpause.setBackground(ContextCompat.getDrawable(LivePlayActivity.context, R.drawable.icon_play));
-                }else{
-                    mVideoView.start();
-                    iv_play.setVisibility(View.INVISIBLE);
-                    countDownTimer.start();
-                    iv_playpause.setBackground(ContextCompat.getDrawable(LivePlayActivity.context, R.drawable.vod_pause));
-                }
-            }
-        });
-        sBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-
-
-            @Override
-            public void onStopTrackingTouch(SeekBar arg0) {
-
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar arg0) {
-
-            }
-
-            @Override
-            public void onProgressChanged(SeekBar sb, int progress, boolean fromuser) {
-                if (!fromuser) {
-                    return;
-                }
-                if(fromuser){
-                    if(countDownTimer!=null){
-                        mVideoView.seekTo(progress);
-                        countDownTimer.cancel();
-                        countDownTimer.start();
-                    }
-/*
-                    long duration = mControlWrapper.getDuration();
-                    long newPosition = (duration * progress) / seekBar.getMax();
-                    if (mCurrentTime != null)
-                        mCurrentTime.setText(stringForTime((int) newPosition));*/
-
-                }
-            }
-
-
-        });
-        sBar.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View arg0, int keycode, KeyEvent event) {
-                if(event.getAction()==KeyEvent.ACTION_DOWN){
-                    if(keycode==KeyEvent.KEYCODE_DPAD_CENTER||keycode==KeyEvent.KEYCODE_ENTER){
-                        if(mVideoView.isPlaying()){
-                            mVideoView.pause();
-                            countDownTimer.cancel();
-                            iv_play.setVisibility(View.VISIBLE);
-                            iv_playpause.setBackground(ContextCompat.getDrawable(LivePlayActivity.context, R.drawable.icon_play));
-                        }else{
-                            mVideoView.start();
-                            iv_play.setVisibility(View.INVISIBLE);
-                            countDownTimer.start();
-                            iv_playpause.setBackground(ContextCompat.getDrawable(LivePlayActivity.context, R.drawable.vod_pause));
-                        }
-                    }
-                }
-                return false;
-            }
-        });
         initEpgDateView();
         initEpgListView();
         initDayList();
@@ -533,7 +439,7 @@ public class LivePlayActivity extends BaseActivity {
             if (countDownTimer != null) {
                countDownTimer.cancel();
             }
-       //     if(!tip_epg1.getText().equals("暂无节目信息")){
+            if(!tip_epg1.getText().equals("暂无节目信息")){
                 ll_epg.setVisibility(View.VISIBLE);
                 countDownTimer = new CountDownTimer(5000, 1000) {//底部epg隐藏时间设定
                     public void onTick(long j) {
@@ -543,9 +449,9 @@ public class LivePlayActivity extends BaseActivity {
                     }
                 };
                 countDownTimer.start();
-         //   }else {
-         //      ll_epg.setVisibility(View.GONE);
-         //   }
+            }else {
+               ll_epg.setVisibility(View.GONE);
+            }
             if (channel_Name == null || channel_Name.getSourceNum() <= 0) {
                 ((TextView) findViewById(R.id.tv_source)).setText("1/1");
             } else {
@@ -2025,9 +1931,9 @@ public class LivePlayActivity extends BaseActivity {
             ll_epg.setVisibility(View.GONE);
         }else{
             backcontroller.setVisibility(View.GONE);
-        //    if(!tip_epg1.getText().equals("暂无节目信息")){
+            if(!tip_epg1.getText().equals("暂无节目信息")){
                 ll_epg.setVisibility(View.VISIBLE);
-         //   }
+            }
         }
 
 
@@ -2072,8 +1978,11 @@ public class LivePlayActivity extends BaseActivity {
 
             }
 
-            @Override
+           @Override
             public void onProgressChanged(SeekBar sb, int progress, boolean fromuser) {
+                if (!fromuser) {
+                    return;
+                }
                 if(fromuser){
                     if(countDownTimer!=null){
                         mVideoView.seekTo(progress);
