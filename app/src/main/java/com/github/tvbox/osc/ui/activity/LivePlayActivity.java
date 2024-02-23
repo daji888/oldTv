@@ -151,6 +151,7 @@ public class LivePlayActivity extends BaseActivity {
     TextView tv_nextepg_left;
     private MyEpgAdapter myAdapter;
     private TextView tv_info_name1;
+    private TextView tv_source1;
     private TextView tv_videosize;
     private TextView tv_right_top_tipnetspeed;
     private TextView tv_right_top_channel_name;
@@ -226,6 +227,7 @@ public class LivePlayActivity extends BaseActivity {
         tvTime = findViewById(R.id.tvTime);
         tvNetSpeed = findViewById(R.id.tvNetSpeed);
         tv_info_name1 = findViewById(R.id.tv_info_name1);
+        tv_source1 = findViewById(R.id.tv_source1);
         tv_videosize = findViewById(R.id.tv_videosize);
         tv_top_l_container = findViewById(R.id.tv_top_l_container);
 
@@ -394,6 +396,7 @@ public class LivePlayActivity extends BaseActivity {
         if (channel_Name.getChannelName() != null) {
             // tv_videosize.setText("分辨率：" + mVideoView.getVideoSize()[0] + " x " + mVideoView.getVideoSize()[1]);
             ((TextView) findViewById(R.id.tv_info_name1)).setText(channel_Name.getChannelName());
+            ((TextView) findViewById(R.id.tv_source1)).setText(channel_Name.getSourceNum());
             ((TextView) findViewById(R.id.tv_channel_bar_name)).setText(channel_Name.getChannelName());
             ((TextView) findViewById(R.id.tv_channel_bottom_number)).setText("" + channel_Name.getChannelNum());
             tip_epg1.setText("暂无节目信息");
