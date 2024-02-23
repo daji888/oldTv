@@ -151,6 +151,7 @@ public class LivePlayActivity extends BaseActivity {
     TextView tv_nextepg_left;
     private MyEpgAdapter myAdapter;
     private TextView tv_info_name1;
+    private TextView tv_source1;
     private TextView tv_videosize;
     private TextView tv_right_top_tipnetspeed;
     private TextView tv_right_top_channel_name;
@@ -226,6 +227,7 @@ public class LivePlayActivity extends BaseActivity {
         tvTime = findViewById(R.id.tvTime);
         tvNetSpeed = findViewById(R.id.tvNetSpeed);
         tv_info_name1 = findViewById(R.id.tv_info_name1);
+        tv_source1 = findViewById(R.id.tv_source1);
         tv_videosize = findViewById(R.id.tv_videosize);
         tv_top_l_container = findViewById(R.id.tv_top_l_container);
 
@@ -455,7 +457,12 @@ public class LivePlayActivity extends BaseActivity {
             if (channel_Name == null || channel_Name.getSourceNum() <= 0) {
                 ((TextView) findViewById(R.id.tv_source)).setText("1/1");
             } else {
-                ((TextView) findViewById(R.id.tv_source)).setText("[线路" + (channel_Name.getSourceIndex() + 1) + "/" + channel_Name.getSourceNum() + "]");
+                ((TextView) findViewById(R.id.tv_source)).setText("[线路：" + (channel_Name.getSourceIndex() + 1) + "/" + channel_Name.getSourceNum() + "]");
+            }
+            if (channel_Name == null || channel_Name.getSourceNum() <= 0) {
+                ((TextView) findViewById(R.id.tv_source1)).setText("1/1");
+            } else {
+                ((TextView) findViewById(R.id.tv_source1)).setText("线路：" + (channel_Name.getSourceIndex() + 1) + "/" + channel_Name.getSourceNum());
             }
             tv_right_top_channel_name.setText(channel_Name.getChannelName());
             tv_right_top_epg_name.setText(channel_Name.getChannelName());
