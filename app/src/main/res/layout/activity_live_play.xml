@@ -336,7 +336,6 @@
 	    android:visibility="gone"
             tools:visibility="visible"
 	    android:background="@drawable/shape_user_focus"
-            android:layout_marginStart="@dimen/vs_20"
             android:layout_marginLeft="@dimen/vs_20"
             android:layout_marginTop="@dimen/vs_0"
             android:orientation="vertical">
@@ -344,8 +343,9 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+	    android:visibility="gone"
+            tools:visibility="visible"
 	    android:layout_gravity="left"
-            android:layout_marginStart="@dimen/vs_20"
             android:layout_marginLeft="@dimen/vs_20"
             android:layout_marginTop="@dimen/vs_0"
             android:orientation="horizontal">
