@@ -344,7 +344,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 	    android:layout_gravity="left"
-            android:layout_marginLeft="@dimen/vs_20"
+            android:layout_marginLeft="@dimen/vs_0"
             android:layout_marginTop="@dimen/vs_0"
             android:orientation="horizontal">
 
