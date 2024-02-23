@@ -396,7 +396,7 @@ public class LivePlayActivity extends BaseActivity {
         if (channel_Name.getChannelName() != null) {
             // tv_videosize.setText("分辨率：" + mVideoView.getVideoSize()[0] + " x " + mVideoView.getVideoSize()[1]);
             ((TextView) findViewById(R.id.tv_info_name1)).setText(channel_Name.getChannelName());
-            ((TextView) findViewById(R.id.tv_source1)).setText(channel_Name.getSourceNum());
+            ((TextView) findViewById(R.id.tv_source1)).setText("[线路" + (channel_Name.getSourceIndex() + 1) + "/" + channel_Name.getSourceNum() + "]");
             ((TextView) findViewById(R.id.tv_channel_bar_name)).setText(channel_Name.getChannelName());
             ((TextView) findViewById(R.id.tv_channel_bottom_number)).setText("" + channel_Name.getChannelNum());
             tip_epg1.setText("暂无节目信息");
