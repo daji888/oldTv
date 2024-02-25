@@ -212,23 +212,17 @@
 
 -keep class com.github.catvod.crawler.*{*;}
 
+# 迅雷下载模块
 # magnet：解决模拟器推送 磁力链接 闪退
 -keep class com.xunlei.downloadlib.** {*;}
 
 # quickjs引擎
--keep class com.whl.quickjs.** {*;}
+-keep class com.github.tvbox.quickjs.** {*;}
 
 # 支持影视的ali相关的jar
 -keep class com.google.gson.**{*;}
 # 某些类会反射调用zxing导致生成阿里云二维码报错
 -keep class com.google.zxing.** {*;}
-#阿里云播放器
--keep class com.alivc.**{*;}
--keep class com.aliyun.**{*;}
--keep class com.cicada.**{*;}
--dontwarn com.alivc.**
--dontwarn com.aliyun.**
--dontwarn com.cicada.**
 
 # from app -> build -> outputs -> mapping -> your_app_name -> missing_rules.txt
 # Please add these rules to your existing keep rules in order to suppress warnings.
