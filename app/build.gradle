@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
+
 
 android {
     compileSdkVersion 33
@@ -82,7 +82,6 @@ dependencies {
     implementation files('libs/thunder.jar')
     implementation files('libs/commons-lang3-3.12.0.jar')
 
-    kapt 'androidx.room:room-compiler:2.5.1'
     implementation 'com.squareup.okhttp3:okhttp:3.12.11'
     implementation 'androidx.room:room-runtime:2.5.1'
     annotationProcessor 'androidx.room:room-compiler:2.5.1'
