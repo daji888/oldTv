@@ -36,11 +36,10 @@ import xyz.doikki.videoplayer.util.L;
 import xyz.doikki.videoplayer.util.PlayerUtils;
 
 /**
- * 播放器
+ * 带泛型的播放器，可继承 AbstractPlayer 扩展自己的播放器
  * Created by Doikki on 2017/4/7.
  */
-
-public class VideoView<P extends AbstractPlayer> extends FrameLayout
+public class BaseVideoView<P extends AbstractPlayer> extends FrameLayout
         implements MediaPlayerControl, AbstractPlayer.PlayerEventListener {
 
     protected P mMediaPlayer;//播放器
@@ -125,17 +124,17 @@ public class VideoView<P extends AbstractPlayer> extends FrameLayout
     /**
      * {@link #mPlayerContainer}背景色，默认黑色
      */
-    private int mPlayerBackgroundColor;
+    private final int mPlayerBackgroundColor;
 
-    public VideoView(@NonNull Context context) {
+    public BaseVideoView(@NonNull Context context) {
         this(context, null);
     }
 
-    public VideoView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public BaseVideoView(@NonNull Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public VideoView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public BaseVideoView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
         //读取全局配置
@@ -147,11 +146,11 @@ public class VideoView<P extends AbstractPlayer> extends FrameLayout
         mRenderViewFactory = config.mRenderViewFactory;
 
         //读取xml中的配置，并综合全局配置
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.VideoView);
-        mEnableAudioFocus = a.getBoolean(R.styleable.VideoView_enableAudioFocus, mEnableAudioFocus);
-        mIsLooping = a.getBoolean(R.styleable.VideoView_looping, false);
-        mCurrentScreenScaleType = a.getInt(R.styleable.VideoView_screenScaleType, mCurrentScreenScaleType);
-        mPlayerBackgroundColor = a.getColor(R.styleable.VideoView_playerBackgroundColor, Color.BLACK);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.BaseVideoView);
+        mEnableAudioFocus = a.getBoolean(R.styleable.BaseVideoView_enableAudioFocus, mEnableAudioFocus);
+        mIsLooping = a.getBoolean(R.styleable.BaseVideoView_looping, false);
+        mCurrentScreenScaleType = a.getInt(R.styleable.BaseVideoView_screenScaleType, mCurrentScreenScaleType);
+        mPlayerBackgroundColor = a.getColor(R.styleable.BaseVideoView_playerBackgroundColor, Color.BLACK);
         a.recycle();
 
         initView();
@@ -191,7 +190,6 @@ public class VideoView<P extends AbstractPlayer> extends FrameLayout
 
     /**
      * 第一次播放
-     *
      * @return 是否成功开始播放
      */
     protected boolean startPlay() {
@@ -300,7 +298,6 @@ public class VideoView<P extends AbstractPlayer> extends FrameLayout
 
     /**
      * 设置播放数据
-     *
      * @return 播放数据是否设置成功
      */
     protected boolean prepareDataSource() {
@@ -693,7 +690,7 @@ public class VideoView<P extends AbstractPlayer> extends FrameLayout
     /**
      * 自定义播放核心，继承{@link PlayerFactory}实现自己的播放核心
      */
-    public void setPlayerFactory(PlayerFactory<P> playerFactory) {
+    public void setPlayerFactory(PlayerFactory playerFactory) {
         if (playerFactory == null) {
             throw new IllegalArgumentException("PlayerFactory can not be null!");
         }
@@ -737,9 +734,7 @@ public class VideoView<P extends AbstractPlayer> extends FrameLayout
 
     private void hideSysBar(ViewGroup decorView) {
         int uiOptions = decorView.getSystemUiVisibility();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            uiOptions |= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-        }
+        uiOptions |= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             uiOptions |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
         }
@@ -784,9 +779,7 @@ public class VideoView<P extends AbstractPlayer> extends FrameLayout
 
     private void showSysBar(ViewGroup decorView) {
         int uiOptions = decorView.getSystemUiVisibility();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            uiOptions &= ~View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-        }
+        uiOptions &= ~View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             uiOptions &= ~View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
         }
@@ -1009,7 +1002,6 @@ public class VideoView<P extends AbstractPlayer> extends FrameLayout
      */
     public interface OnStateChangeListener {
         void onPlayerStateChanged(int playerState);
-
         void onPlayStateChanged(int playState);
     }
 
@@ -1018,12 +1010,9 @@ public class VideoView<P extends AbstractPlayer> extends FrameLayout
      */
     public static class SimpleOnStateChangeListener implements OnStateChangeListener {
         @Override
-        public void onPlayerStateChanged(int playerState) {
-        }
-
+        public void onPlayerStateChanged(int playerState) {}
         @Override
-        public void onPlayStateChanged(int playState) {
-        }
+        public void onPlayStateChanged(int playState) {}
     }
 
     /**
