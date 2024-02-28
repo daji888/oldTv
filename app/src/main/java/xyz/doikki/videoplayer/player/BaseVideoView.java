@@ -679,7 +679,6 @@ public class BaseVideoView<P extends AbstractPlayer> extends FrameLayout
         }
     }
 
-
     /**
      * 是否开启AudioFocus监听， 默认开启，用于监听其它地方是否获取音频焦点，如果有其它地方获取了
      * 音频焦点，此播放器将做出相应反应，具体实现见{@link AudioFocusHelper}
@@ -691,7 +690,7 @@ public class BaseVideoView<P extends AbstractPlayer> extends FrameLayout
     /**
      * 自定义播放核心，继承{@link PlayerFactory}实现自己的播放核心
      */
-    public void setPlayerFactory(PlayerFactory<P> playerFactory) {
+    public void setPlayerFactory(PlayerFactory playerFactory) {
         if (playerFactory == null) {
             throw new IllegalArgumentException("PlayerFactory can not be null!");
         }
@@ -735,9 +734,7 @@ public class BaseVideoView<P extends AbstractPlayer> extends FrameLayout
 
     private void hideSysBar(ViewGroup decorView) {
         int uiOptions = decorView.getSystemUiVisibility();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            uiOptions |= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-        }
+        uiOptions |= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             uiOptions |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
         }
@@ -782,9 +779,7 @@ public class BaseVideoView<P extends AbstractPlayer> extends FrameLayout
 
     private void showSysBar(ViewGroup decorView) {
         int uiOptions = decorView.getSystemUiVisibility();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            uiOptions &= ~View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-        }
+        uiOptions &= ~View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             uiOptions &= ~View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
         }
