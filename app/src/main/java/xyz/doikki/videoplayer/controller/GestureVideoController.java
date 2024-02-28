@@ -15,7 +15,7 @@ import androidx.annotation.Nullable;
 
 import java.util.Map;
 
-import xyz.doikki.videoplayer.player.VideoView;
+import xyz.doikki.videoplayer.player.BaseVideoView;
 import xyz.doikki.videoplayer.util.PlayerUtils;
 
 /**
@@ -33,7 +33,7 @@ public abstract class GestureVideoController extends BaseVideoController impleme
     private boolean mIsGestureEnabled = true;
     private int mStreamVolume;
     private float mBrightness;
-    private int mSeekPosition;
+    private int mSeekPosition = -1;
     private boolean mFirstTouch;
     private boolean mChangePosition;
     private boolean mChangeBrightness;
@@ -101,9 +101,9 @@ public abstract class GestureVideoController extends BaseVideoController impleme
     @Override
     public void setPlayerState(int playerState) {
         super.setPlayerState(playerState);
-        if (playerState == VideoView.PLAYER_NORMAL) {
+        if (playerState == BaseVideoView.PLAYER_NORMAL) {
             mCanSlide = mEnableInNormal;
-        } else if (playerState == VideoView.PLAYER_FULL_SCREEN) {
+        } else if (playerState == BaseVideoView.PLAYER_FULL_SCREEN) {
             mCanSlide = true;
         }
     }
@@ -116,12 +116,12 @@ public abstract class GestureVideoController extends BaseVideoController impleme
 
     private boolean isInPlaybackState() {
         return mControlWrapper != null
-                && mCurPlayState != VideoView.STATE_ERROR
-                && mCurPlayState != VideoView.STATE_IDLE
-                && mCurPlayState != VideoView.STATE_PREPARING
-                && mCurPlayState != VideoView.STATE_PREPARED
-                && mCurPlayState != VideoView.STATE_START_ABORT
-                && mCurPlayState != VideoView.STATE_PLAYBACK_COMPLETED;
+                && mCurPlayState != BaseVideoView.STATE_ERROR
+                && mCurPlayState != BaseVideoView.STATE_IDLE
+                && mCurPlayState != BaseVideoView.STATE_PREPARING
+                && mCurPlayState != BaseVideoView.STATE_PREPARED
+                && mCurPlayState != BaseVideoView.STATE_START_ABORT
+                && mCurPlayState != BaseVideoView.STATE_PLAYBACK_COMPLETED;
     }
 
     @Override
@@ -246,7 +246,7 @@ public abstract class GestureVideoController extends BaseVideoController impleme
         WindowManager.LayoutParams attributes = window.getAttributes();
         int height = getMeasuredHeight();
         if (mBrightness == -1.0f) mBrightness = 0.5f;
-        float brightness = deltaY * 2 / height * 1.0f + mBrightness;
+        float brightness = deltaY * 2 / height + mBrightness;
         if (brightness < 0) {
             brightness = 0f;
         }
@@ -287,14 +287,14 @@ public abstract class GestureVideoController extends BaseVideoController impleme
             switch (action) {
                 case MotionEvent.ACTION_UP:
                     stopSlide();
-                    if (mSeekPosition > 0) {
+                    if (mSeekPosition >= 0) {
                         mControlWrapper.seekTo(mSeekPosition);
-                        mSeekPosition = 0;
+                        mSeekPosition = -1;
                     }
                     break;
                 case MotionEvent.ACTION_CANCEL:
                     stopSlide();
-                    mSeekPosition = 0;
+                    mSeekPosition = -1;
                     break;
             }
         }

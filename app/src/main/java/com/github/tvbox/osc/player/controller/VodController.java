@@ -45,7 +45,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import xyz.doikki.videoplayer.player.VideoView;
+import xyz.doikki.videoplayer.player.BaseVideoView;
 import xyz.doikki.videoplayer.util.PlayerUtils;
 
 public class VodController extends BaseController {
@@ -843,35 +843,35 @@ public class VodController extends BaseController {
         super.onPlayStateChanged(playState);
         videoPlayState = playState;
         switch (playState) {
-            case VideoView.STATE_IDLE:
+            case BaseVideoView.STATE_IDLE:
                 break;
-            case VideoView.STATE_PLAYING:
+            case BaseVideoView.STATE_PLAYING:
                 mTopRoot1.setVisibility(GONE);
                 mTopRoot2.setVisibility(GONE);
                 initLandscapePortraitBtnInfo();
                 startProgress();
                 break;
-            case VideoView.STATE_PAUSED:
+            case BaseVideoView.STATE_PAUSED:
                 mTopRoot1.setVisibility(VISIBLE);
                 mTopRoot2.setVisibility(VISIBLE);
                 mPlayTitle.setVisibility(GONE);
                 break;
-            case VideoView.STATE_ERROR:
+            case BaseVideoView.STATE_ERROR:
                 listener.errReplay();
                 break;
-            case VideoView.STATE_PREPARED:
+            case BaseVideoView.STATE_PREPARED:
                 mPlayLoadNetSpeed.setVisibility(GONE);
                 hideLiveAboutBtn();
                 listener.prepared();
                 break;
-            case VideoView.STATE_BUFFERED:
+            case BaseVideoView.STATE_BUFFERED:
                 mPlayLoadNetSpeed.setVisibility(GONE);
                 break;
-            case VideoView.STATE_PREPARING:
-            case VideoView.STATE_BUFFERING:
+            case BaseVideoView.STATE_PREPARING:
+            case BaseVideoView.STATE_BUFFERING:
                 if(mProgressRoot.getVisibility()==GONE)mPlayLoadNetSpeed.setVisibility(VISIBLE);
                 break;
-            case VideoView.STATE_PLAYBACK_COMPLETED:
+            case BaseVideoView.STATE_PLAYBACK_COMPLETED:
                 listener.playNext(true);
                 break;
         }
@@ -941,7 +941,7 @@ public class VodController extends BaseController {
     private float speed_old = 1.0f;
     @Override
     public void onLongPress(MotionEvent e) {
-        if (videoPlayState!=VideoView.STATE_PAUSED) {
+        if (videoPlayState!=BaseVideoView.STATE_PAUSED) {
             fromLongPress = true;
             try {
                 speed_old = (float) mPlayerConfig.getDouble("sp");

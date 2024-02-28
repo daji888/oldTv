@@ -33,7 +33,7 @@ import com.github.tvbox.osc.util.FileUtils;
 
 public final class ExoMediaSourceHelper {
 
-    private static ExoMediaSourceHelper sInstance;
+    private static volatile ExoMediaSourceHelper sInstance;
 
     private final String mUserAgent;
     private final Context mAppContext;

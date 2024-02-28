@@ -3,7 +3,7 @@
     <attr name="fontPath" format="string" />
     <attr name="textFieldStyle" format="reference" />
 
-    <declare-styleable name="VideoView">
+    <declare-styleable name="BaseVideoView">
         <attr name="looping" format="boolean"/>
         <attr name="enableAudioFocus" format="boolean"/>
         <attr name="screenScaleType" format="dimension">
