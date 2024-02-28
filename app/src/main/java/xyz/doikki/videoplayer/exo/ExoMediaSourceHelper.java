@@ -6,7 +6,7 @@ import android.text.TextUtils;
 
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.MediaItem;
-import com.google.android.exoplayer2.database.StandaloneDatabaseProvider;
+import com.google.android.exoplayer2.database.ExoDatabaseProvider;
 import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSource;
 import com.google.android.exoplayer2.ext.rtmp.RtmpDataSource;
 import com.google.android.exoplayer2.source.MediaSource;
@@ -127,7 +127,7 @@ public final class ExoMediaSourceHelper {
         return new SimpleCache(
                 new File(FileUtils.getExternalCachePath(), "exo-video-cache"),//缓存目录
                 new LeastRecentlyUsedCacheEvictor(512 * 1024 * 1024),//缓存大小，默认512M，使用LRU算法实现
-                new StandaloneDatabaseProvider(mAppContext));
+                new ExoDatabaseProvider(mAppContext));
     }
 
     /**
