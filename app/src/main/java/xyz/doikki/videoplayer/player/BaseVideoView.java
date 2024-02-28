@@ -120,7 +120,6 @@ public class BaseVideoView<P extends AbstractPlayer> extends FrameLayout
      * 循环播放
      */
     protected boolean mIsLooping;
-    protected boolean mPlayFromZeroPosition = false;
 
     /**
      * {@link #mPlayerContainer}背景色，默认黑色
@@ -204,14 +203,9 @@ public class BaseVideoView<P extends AbstractPlayer> extends FrameLayout
         if (mEnableAudioFocus) {
             mAudioFocusHelper = new AudioFocusHelper(this);
         }
-        if (!mPlayFromZeroPosition) {
-            //读取播放进度
-            if (mProgressManager != null) {
-                mCurrentPosition = mProgressManager.getSavedProgress(mProgressKey == null ? mUrl : mProgressKey);
-            }
-        } else {
-            mCurrentPosition = 0;
-            mPlayFromZeroPosition = false;
+        //读取播放进度
+        if (mProgressManager != null) {
+            mCurrentPosition = mProgressManager.getSavedProgress(mProgressKey == null ? mUrl : mProgressKey);
         }
         initPlayer();
         addDisplay();
@@ -685,9 +679,6 @@ public class BaseVideoView<P extends AbstractPlayer> extends FrameLayout
         }
     }
 
-    public void setPlayFromZeroPositionOnce(boolean mPlayFromZeroPosition) {
-        this.mPlayFromZeroPosition = mPlayFromZeroPosition;
-    }
 
     /**
      * 是否开启AudioFocus监听， 默认开启，用于监听其它地方是否获取音频焦点，如果有其它地方获取了
@@ -700,7 +691,7 @@ public class BaseVideoView<P extends AbstractPlayer> extends FrameLayout
     /**
      * 自定义播放核心，继承{@link PlayerFactory}实现自己的播放核心
      */
-    public void setPlayerFactory(PlayerFactory playerFactory) {
+    public void setPlayerFactory(PlayerFactory<P> playerFactory) {
         if (playerFactory == null) {
             throw new IllegalArgumentException("PlayerFactory can not be null!");
         }
@@ -744,7 +735,9 @@ public class BaseVideoView<P extends AbstractPlayer> extends FrameLayout
 
     private void hideSysBar(ViewGroup decorView) {
         int uiOptions = decorView.getSystemUiVisibility();
-        uiOptions |= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            uiOptions |= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             uiOptions |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
         }
@@ -789,7 +782,9 @@ public class BaseVideoView<P extends AbstractPlayer> extends FrameLayout
 
     private void showSysBar(ViewGroup decorView) {
         int uiOptions = decorView.getSystemUiVisibility();
-        uiOptions &= ~View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            uiOptions &= ~View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             uiOptions &= ~View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
         }
