@@ -51,8 +51,7 @@
                 android:layout_height="@dimen/vs_50"
                 android:layout_gravity="center"
                 android:layout_marginRight="@dimen/vs_10"
-                android:clipChildren="false"
-                android:clipToPadding="false"
+                android:gravity="center"
                 android:focusable="true"
                 android:orientation="horizontal">
                 
@@ -87,8 +86,7 @@
                 android:layout_height="@dimen/vs_50"
                 android:layout_gravity="center"
                 android:layout_marginRight="@dimen/vs_10"
-                android:clipChildren="false"
-                android:clipToPadding="false"
+                android:gravity="center"
                 android:focusable="true"
                 android:orientation="horizontal">
                 
