@@ -33,8 +33,8 @@ import java.util.List;
  * @description:
  */
 public class HistoryActivity extends BaseActivity {
-    private ImageView tvDelete;
-    private ImageView tvClear;
+    private View tvDelete;
+    private View tvClear;
     private TextView tvDelTip;
     private TvRecyclerView mGridView;
     public static HistoryAdapter historyAdapter;
