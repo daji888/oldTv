@@ -51,6 +51,7 @@
                 android:layout_height="@dimen/vs_50"
                 android:layout_gravity="center"
                 android:layout_marginRight="@dimen/vs_10"
+                android:background="@drawable/shape_user_focus"
                 android:gravity="center"
                 android:focusable="true"
                 android:orientation="horizontal">
@@ -75,6 +76,7 @@
             android:gravity="center"
             android:paddingLeft="@dimen/vs_5"
             android:text="单删"
+            android:textAlignment="gravity"
             android:textColor="@color/color_CCFFFFFF"
             android:textSize="@dimen/ts_30" 
             android:textStyle="bold" />
@@ -86,6 +88,7 @@
                 android:layout_height="@dimen/vs_50"
                 android:layout_gravity="center"
                 android:layout_marginRight="@dimen/vs_10"
+                android:background="@drawable/shape_user_focus"
                 android:gravity="center"
                 android:focusable="true"
                 android:orientation="horizontal">
@@ -110,6 +113,7 @@
             android:gravity="center"
             android:paddingLeft="@dimen/vs_5"
             android:text="全删"
+            android:textAlignment="gravity"
             android:textColor="@color/color_CCFFFFFF"
             android:textSize="@dimen/ts_30" 
             android:textStyle="bold" />
