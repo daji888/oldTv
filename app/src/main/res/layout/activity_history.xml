@@ -55,15 +55,12 @@
                 android:gravity="center"
                 android:focusable="true"
                 android:orientation="horizontal">
-                
 
         <ImageView
             android:layout_width="@dimen/vs_50"
             android:layout_height="@dimen/vs_50"
             android:layout_gravity="center"
             android:background="@drawable/button_dialog_vod"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
             android:paddingRight="@dimen/vs_5"
             android:src="@drawable/icon_delete" />
 
@@ -92,15 +89,12 @@
                 android:gravity="center"
                 android:focusable="true"
                 android:orientation="horizontal">
-                
 
         <ImageView
             android:layout_width="@dimen/vs_50"
             android:layout_height="@dimen/vs_50"
             android:layout_gravity="center"
             android:background="@drawable/button_dialog_vod"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
             android:paddingRight="@dimen/vs_5"
             android:src="@drawable/icon_clear" />
         
