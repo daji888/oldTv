@@ -94,7 +94,7 @@ public class HomeActivity extends BaseActivity {
         public void run() {
             Date date = new Date();
             @SuppressLint("SimpleDateFormat")
-            SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy年M月d日 EEEE H:mm:ss");
+            SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy年M月d日  EEEE  H:mm:ss");
             tvDate.setText(timeFormat.format(date));
             mHandler.postDelayed(this, 1000);
         }

@@ -786,7 +786,7 @@
 			android:marqueeRepeatLimit="marquee_forever"
 			android:singleLine="true"
 			android:text="测试频道"
-			android:textColor="#FFFCFFFF"
+			android:textColor="#CCFFFFFF"
 			android:textSize="@dimen/vs_20" />
 
 		<TextView
@@ -801,7 +801,7 @@
 			android:paddingRight="10px"
 			android:singleLine="true"
 			android:text="回看中"
-			android:textColor="#FFFCFFFF"
+			android:textColor="#CCFFFFFF"
 			android:textSize="@dimen/vs_20" />
 	</LinearLayout>
 
