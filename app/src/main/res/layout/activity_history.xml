@@ -22,7 +22,7 @@
             android:drawablePadding="@dimen/vs_10"
             android:gravity="center"
             android:text="历史记录"
-            android:textColor="@android:color/white"
+            android:textColor="@color/color_CCFFFFFF"
             android:textSize="@dimen/ts_34"
             android:textStyle="bold" />
 
@@ -41,7 +41,7 @@
             android:focusableInTouchMode="false"
             android:gravity="center"
             android:text="选1个记录按确定键删除"
-            android:textColor="@android:color/white"
+            android:textColor="@color/color_CCFFFFFF"
             android:textSize="@dimen/ts_24"
             android:visibility="gone" />
 
@@ -74,9 +74,8 @@
             android:text="单删"
             android:paddingRight="@dimen/vs_5"
             android:textAlignment="gravity"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/ts_30" 
-            android:textStyle="bold" />
+            android:textColor="@color/color_CCFFFFFF"
+            android:textSize="@dimen/ts_30" />
         </LinearLayout>
         
       <LinearLayout
@@ -108,9 +107,8 @@
             android:text="全删"
             android:paddingRight="@dimen/vs_5"
             android:textAlignment="gravity"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/ts_30" 
-            android:textStyle="bold" />
+            android:textColor="@color/color_CCFFFFFF"
+            android:textSize="@dimen/ts_30" />
         </LinearLayout>
         
     </LinearLayout>
