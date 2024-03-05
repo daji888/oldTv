@@ -106,13 +106,14 @@ dependencies {
     implementation 'com.lzy.net:okgo:3.0.4'
     // implementation 'com.tencent.bugly:crashreport_upgrade:latest.release'
     implementation 'com.owen:tv-recyclerview:3.0.0'
-
+    implementation 'com.blankj:utilcodex:1.31.0'
     implementation 'com.github.getActivity:XXPermissions:18.5'
     implementation 'org.jsoup:jsoup:1.16.1'
     implementation 'com.github.hedzr:android-file-chooser:v1.2.0-final'
     implementation 'commons-io:commons-io:2.11.0'
     implementation 'com.googlecode.juniversalchardet:juniversalchardet:1.0.3'
-
+    
+    implementation 'androidx.core:core-ktx:1.6.0'
     implementation 'androidx.annotation:annotation:1.6.0'
     implementation "com.google.android.exoplayer:exoplayer-core:2.14.2"
     implementation "com.google.android.exoplayer:exoplayer-dash:2.14.2"

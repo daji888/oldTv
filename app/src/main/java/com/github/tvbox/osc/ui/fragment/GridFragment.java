@@ -308,7 +308,9 @@ public class GridFragment extends BaseLazyFragment {
 
     public void scrollTop() {
         isTop = true;
-        mGridView.scrollToPosition(0);
+        if (mGridView != null) {
+            mGridView.scrollToPosition(0);
+        }
     }
 
     public void showFilter() {
