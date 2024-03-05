@@ -75,8 +75,7 @@
             android:paddingRight="@dimen/vs_5"
             android:textAlignment="gravity"
             android:textColor="@color/color_CCFFFFFF"
-            android:textSize="@dimen/ts_30" 
-            android:textStyle="bold" />
+            android:textSize="@dimen/ts_30" />
         </LinearLayout>
         
       <LinearLayout
@@ -109,8 +108,7 @@
             android:paddingRight="@dimen/vs_5"
             android:textAlignment="gravity"
             android:textColor="@color/color_CCFFFFFF"
-            android:textSize="@dimen/ts_30" 
-            android:textStyle="bold" />
+            android:textSize="@dimen/ts_30" />
         </LinearLayout>
         
     </LinearLayout>
