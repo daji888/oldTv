@@ -62,6 +62,7 @@
             android:layout_width="@dimen/vs_50"
             android:layout_height="@dimen/vs_50"
             android:layout_gravity="center"
+            android:alpha="0.75"
             android:src="@drawable/icon_delete" />
 
         <TextView
@@ -95,6 +96,7 @@
             android:layout_width="@dimen/vs_50"
             android:layout_height="@dimen/vs_50"
             android:layout_gravity="center"
+            android:alpha="0.75"
             android:src="@drawable/icon_clear" />
         
         <TextView
