@@ -43,24 +43,30 @@ import xyz.doikki.videoplayer.player.VideoViewManager;
 public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
 
     protected Context mAppContext;
-    protected SimpleExoPlayer mInternalPlayer;
+    protected ExoPlayer mMediaPlayer;
     protected MediaSource mMediaSource;
     protected ExoMediaSourceHelper mMediaSourceHelper;
-
+    protected ExoTrackNameProvider trackNameProvider;
+    protected TrackSelectionArray mTrackSelections;
     private PlaybackParameters mSpeedPlaybackParameters;
-
     private boolean mIsPreparing;
 
     private LoadControl mLoadControl;
-    private RenderersFactory mRenderersFactory;
-    private TrackSelector mTrackSelector;
+    private DefaultRenderersFactory mRenderersFactory;
+    private DefaultTrackSelector mTrackSelector;
+
+    private int errorCode = -100;
+    private String path;
+    private Map<String, String> headers;
+    private long lastTotalRxBytes = 0;
+    private long lastTimeStamp = 0;
 
     public ExoMediaPlayer(Context context) {
         mAppContext = context.getApplicationContext();
         mMediaSourceHelper = ExoMediaSourceHelper.getInstance(context);
     }
 
-    @Override
+    @SuppressLint("UnsafeOptInUsageError")
     @Override
     public void initPlayer() {
         if (mRenderersFactory == null) {
@@ -90,30 +96,19 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
 
         setOptions();
 
-
-        //播放器日志
-        if (VideoViewManager.getConfig().mIsEnableLog && mTrackSelector instanceof MappingTrackSelector) {
-            mInternalPlayer.addAnalyticsListener(new EventLogger((MappingTrackSelector) mTrackSelector, "ExoPlayer"));
-        }
-
-        mInternalPlayer.addListener(this);
+        mMediaPlayer.addListener(this);
     }
 
-    public void setTrackSelector(TrackSelector trackSelector) {
-        mTrackSelector = trackSelector;
-    }
-
-    public void setRenderersFactory(RenderersFactory renderersFactory) {
-        mRenderersFactory = renderersFactory;
-    }
-
-    public void setLoadControl(LoadControl loadControl) {
-        mLoadControl = loadControl;
+    public DefaultTrackSelector getTrackSelector() {
+        return mTrackSelector;
     }
 
     @Override
     public void setDataSource(String path, Map<String, String> headers) {
+        this.path = path;
+        this.headers = headers;
         mMediaSource = mMediaSourceHelper.getMediaSource(path, headers);
+        errorCode = -1;
     }
 
     @Override
@@ -123,57 +118,58 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
 
     @Override
     public void start() {
-        if (mInternalPlayer == null)
+        if (mMediaPlayer == null)
             return;
-        mInternalPlayer.setPlayWhenReady(true);
+        mMediaPlayer.setPlayWhenReady(true);
     }
 
     @Override
     public void pause() {
-        if (mInternalPlayer == null)
+        if (mMediaPlayer == null)
             return;
-        mInternalPlayer.setPlayWhenReady(false);
+        mMediaPlayer.setPlayWhenReady(false);
     }
 
     @Override
     public void stop() {
-        if (mInternalPlayer == null)
+        if (mMediaPlayer == null)
             return;
-        mInternalPlayer.stop();
+        mMediaPlayer.stop();
     }
 
+    @SuppressLint("UnsafeOptInUsageError")
     @Override
     public void prepareAsync() {
-        if (mInternalPlayer == null)
+        if (mMediaPlayer == null)
             return;
         if (mMediaSource == null) return;
         if (mSpeedPlaybackParameters != null) {
-            mInternalPlayer.setPlaybackParameters(mSpeedPlaybackParameters);
+            mMediaPlayer.setPlaybackParameters(mSpeedPlaybackParameters);
         }
         mIsPreparing = true;
-        mInternalPlayer.setMediaSource(mMediaSource);
-        mInternalPlayer.prepare();
+        mMediaPlayer.setMediaSource(mMediaSource);
+        mMediaPlayer.prepare();
     }
 
     @Override
     public void reset() {
-        if (mInternalPlayer != null) {
-            mInternalPlayer.stop();
-            mInternalPlayer.clearMediaItems();
-            mInternalPlayer.setVideoSurface(null);
+        if (mMediaPlayer != null) {
+            mMediaPlayer.stop();
+            mMediaPlayer.clearMediaItems();
+            mMediaPlayer.setVideoSurface(null);
             mIsPreparing = false;
         }
     }
 
     @Override
     public boolean isPlaying() {
-        if (mInternalPlayer == null)
+        if (mMediaPlayer == null)
             return false;
-        int state = mInternalPlayer.getPlaybackState();
+        int state = mMediaPlayer.getPlaybackState();
         switch (state) {
             case Player.STATE_BUFFERING:
             case Player.STATE_READY:
-                return mInternalPlayer.getPlayWhenReady();
+                return mMediaPlayer.getPlayWhenReady();
             case Player.STATE_IDLE:
             case Player.STATE_ENDED:
             default:
@@ -183,46 +179,47 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
 
     @Override
     public void seekTo(long time) {
-        if (mInternalPlayer == null)
+        if (mMediaPlayer == null)
             return;
-        mInternalPlayer.seekTo(time);
+        mMediaPlayer.seekTo(time);
     }
 
     @Override
     public void release() {
-        if (mInternalPlayer != null) {
-            mInternalPlayer.removeListener(this);
-            mInternalPlayer.release();
-            mInternalPlayer = null;
+        if (mMediaPlayer != null) {
+            mMediaPlayer.removeListener(this);
+            mMediaPlayer.release();
+            mMediaPlayer = null;
         }
-
+        lastTotalRxBytes = 0;
+        lastTimeStamp = 0;
         mIsPreparing = false;
         mSpeedPlaybackParameters = null;
     }
 
     @Override
     public long getCurrentPosition() {
-        if (mInternalPlayer == null)
+        if (mMediaPlayer == null)
             return 0;
-        return mInternalPlayer.getCurrentPosition();
+        return mMediaPlayer.getCurrentPosition();
     }
 
     @Override
     public long getDuration() {
-        if (mInternalPlayer == null)
+        if (mMediaPlayer == null)
             return 0;
-        return mInternalPlayer.getDuration();
+        return mMediaPlayer.getDuration();
     }
 
     @Override
     public int getBufferedPercentage() {
-        return mInternalPlayer == null ? 0 : mInternalPlayer.getBufferedPercentage();
+        return mMediaPlayer == null ? 0 : mMediaPlayer.getBufferedPercentage();
     }
 
     @Override
     public void setSurface(Surface surface) {
-        if (mInternalPlayer != null) {
-            mInternalPlayer.setVideoSurface(surface);
+        if (mMediaPlayer != null) {
+            mMediaPlayer.setVideoSurface(surface);
         }
     }
 
@@ -236,29 +233,20 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
 
     @Override
     public void setVolume(float leftVolume, float rightVolume) {
-        if (mInternalPlayer != null)
-            mInternalPlayer.setVolume((leftVolume + rightVolume) / 2);
+        if (mMediaPlayer != null)
+            mMediaPlayer.setVolume((leftVolume + rightVolume) / 2);
     }
 
     @Override
     public void setLooping(boolean isLooping) {
-        if (mInternalPlayer != null)
-            mInternalPlayer.setRepeatMode(isLooping ? Player.REPEAT_MODE_ALL : Player.REPEAT_MODE_OFF);
+        if (mMediaPlayer != null)
+            mMediaPlayer.setRepeatMode(isLooping ? Player.REPEAT_MODE_ALL : Player.REPEAT_MODE_OFF);
     }
 
     @Override
     public void setOptions() {
         //准备好就开始播放
-        mInternalPlayer.setPlayWhenReady(true);
-    }
-
-    @Override
-    public void setSpeed(float speed) {
-        PlaybackParameters playbackParameters = new PlaybackParameters(speed);
-        mSpeedPlaybackParameters = playbackParameters;
-        if (mInternalPlayer != null) {
-            mInternalPlayer.setPlaybackParameters(playbackParameters);
-        }
+        mMediaPlayer.setPlayWhenReady(true);
     }
 
     @Override
@@ -270,8 +258,30 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     }
 
     @Override
+    public void setSpeed(float speed) {
+        PlaybackParameters playbackParameters = new PlaybackParameters(speed);
+        mSpeedPlaybackParameters = playbackParameters;
+        if (mMediaPlayer != null) {
+            mMediaPlayer.setPlaybackParameters(playbackParameters);
+        }
+    }
+
+    private boolean unsupported() {
+        return TrafficStats.getUidRxBytes(App.getInstance().getApplicationInfo().uid) == TrafficStats.UNSUPPORTED;
+    }
+
+    @Override
     public long getTcpSpeed() {
+        if (mAppContext == null || unsupported()) {
+            return 0;
+        }
         return PlayerUtils.getNetSpeed(mAppContext);
+    }
+
+    @Override
+    public void onTracksChanged(Tracks tracks) {
+        if (trackNameProvider == null)
+            trackNameProvider = new ExoTrackNameProvider(mAppContext.getResources());
     }
 
     @Override
@@ -295,6 +305,8 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
             case Player.STATE_ENDED:
                 mPlayerEventListener.onCompletion();
                 break;
+            case Player.STATE_IDLE:
+                break;
         }
     }
 
@@ -315,7 +327,7 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     }
 
     @Override
-    public void onVideoSizeChanged(VideoSize videoSize) {
+    public void onVideoSizeChanged(@NonNull VideoSize videoSize) {
         if (mPlayerEventListener != null) {
             mPlayerEventListener.onVideoSizeChanged(videoSize.width, videoSize.height);
             if (videoSize.unappliedRotationDegrees > 0) {
