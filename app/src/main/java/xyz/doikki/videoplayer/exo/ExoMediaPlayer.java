@@ -1,6 +1,5 @@
 package xyz.doikki.videoplayer.exo;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.net.TrafficStats;
@@ -10,35 +9,25 @@ import android.view.SurfaceHolder;
 
 import androidx.annotation.NonNull;
 
+import com.github.tvbox.osc.base.App;
+import com.github.tvbox.osc.util.LOG;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
-import com.google.android.exoplayer2.ExoPlaybackException;
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.LoadControl;
+import com.google.android.exoplayer2.PlaybackException;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
-import com.google.android.exoplayer2.RenderersFactory;
-import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.analytics.AnalyticsCollector;
-import com.google.android.exoplayer2.source.DefaultMediaSourceFactory;
+import com.google.android.exoplayer2.Tracks;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.MappingTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelector;
-import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
-import com.google.android.exoplayer2.util.Clock;
-import com.google.android.exoplayer2.util.EventLogger;
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.video.VideoSize;
 
-import com.github.tvbox.osc.base.App;
-import com.github.tvbox.osc.util.HawkConfig;
-import com.github.tvbox.osc.util.LOG;
-import com.orhanobut.hawk.Hawk;
-import java.util.Locale;
 import java.util.Map;
-import xyz.doikki.videoplayer.player.AbstractPlayer;
-import xyz.doikki.videoplayer.util.PlayerUtils;
 
-import xyz.doikki.videoplayer.player.VideoViewManager;
+import xyz.doikki.videoplayer.player.AbstractPlayer;
 
 public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
 
@@ -58,15 +47,12 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     private int errorCode = -100;
     private String path;
     private Map<String, String> headers;
-    private long lastTotalRxBytes = 0;
-    private long lastTimeStamp = 0;
 
     public ExoMediaPlayer(Context context) {
         mAppContext = context.getApplicationContext();
         mMediaSourceHelper = ExoMediaSourceHelper.getInstance(context);
     }
 
-    @SuppressLint("UnsafeOptInUsageError")
     @Override
     public void initPlayer() {
         if (mRenderersFactory == null) {
@@ -79,8 +65,8 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
         if (mLoadControl == null) {
             mLoadControl = new DefaultLoadControl();
         }
-        mTrackSelector.setParameters(mTrackSelector.getParameters().buildUpon().setPreferredTextLanguage(Locale.getDefault().getISO3Language()).setTunnelingEnabled(true));
-        /*mMediaPlayer = new ExoPlayer.Builder(
+        mTrackSelector.setParameters(mTrackSelector.getParameters().buildUpon().setTunnelingEnabled(true));
+        /*mMediaPlayer = new SimpleExoPlayer.Builder(
                 mAppContext,
                 mRenderersFactory,
                 mTrackSelector,
@@ -107,7 +93,7 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     public void setDataSource(String path, Map<String, String> headers) {
         this.path = path;
         this.headers = headers;
-        mMediaSource = mMediaSourceHelper.getMediaSource(path, headers);
+        mMediaSource = mMediaSourceHelper.getMediaSource(path, headers, false, errorCode);
         errorCode = -1;
     }
 
@@ -137,7 +123,6 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
         mMediaPlayer.stop();
     }
 
-    @SuppressLint("UnsafeOptInUsageError")
     @Override
     public void prepareAsync() {
         if (mMediaPlayer == null)
@@ -250,14 +235,6 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     }
 
     @Override
-    public float getSpeed() {
-        if (mSpeedPlaybackParameters != null) {
-            return mSpeedPlaybackParameters.speed;
-        }
-        return 1f;
-    }
-
-    @Override
     public void setSpeed(float speed) {
         PlaybackParameters playbackParameters = new PlaybackParameters(speed);
         mSpeedPlaybackParameters = playbackParameters;
@@ -265,6 +242,18 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
             mMediaPlayer.setPlaybackParameters(playbackParameters);
         }
     }
+
+    @Override
+    public float getSpeed() {
+        if (mSpeedPlaybackParameters != null) {
+            return mSpeedPlaybackParameters.speed;
+        }
+        return 1f;
+    }
+
+    private long lastTotalRxBytes = 0;
+
+    private long lastTimeStamp = 0;
 
     private boolean unsupported() {
         return TrafficStats.getUidRxBytes(App.getInstance().getApplicationInfo().uid) == TrafficStats.UNSUPPORTED;
@@ -275,7 +264,19 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
         if (mAppContext == null || unsupported()) {
             return 0;
         }
-        return PlayerUtils.getNetSpeed(mAppContext);
+        //使用getUidRxBytes方法获取该进程总接收量
+        long total = TrafficStats.getTotalRxBytes();
+        //记录当前的时间
+        long time = System.currentTimeMillis();
+        //数据接收量除以数据接收的时间，就计算网速了。
+        long diff = total - lastTotalRxBytes;
+        long speed = diff / Math.max(time - lastTimeStamp, 1);
+        //当前时间存到上次时间这个变量，供下次计算用
+        lastTimeStamp = time;
+        //当前总接收量存到上次接收总量这个变量，供下次计算用
+        lastTotalRxBytes = total;
+        LOG.e("TcpSpeed", speed * 1024 + "");
+        return speed * 1024;
     }
 
     @Override
@@ -283,7 +284,7 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
         if (trackNameProvider == null)
             trackNameProvider = new ExoTrackNameProvider(mAppContext.getResources());
     }
-
+    
     @Override
     public void onPlaybackStateChanged(int playbackState) {
         if (mPlayerEventListener == null) return;
@@ -335,4 +336,5 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
             }
         }
     }
+
 }
