@@ -51,17 +51,35 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     }
 
     @Override
+    @Override
     public void initPlayer() {
-        mInternalPlayer = new SimpleExoPlayer.Builder(
+        if (mRenderersFactory == null) {
+            mRenderersFactory = new DefaultRenderersFactory(mAppContext);
+        }
+        mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER);
+        if (mTrackSelector == null) {
+            mTrackSelector = new DefaultTrackSelector(mAppContext);
+        }
+        if (mLoadControl == null) {
+            mLoadControl = new DefaultLoadControl();
+        }
+        mTrackSelector.setParameters(mTrackSelector.getParameters().buildUpon().setPreferredTextLanguage(Locale.getDefault().getISO3Language()).setTunnelingEnabled(true));
+        /*mMediaPlayer = new ExoPlayer.Builder(
                 mAppContext,
-                mRenderersFactory == null ? mRenderersFactory = new DefaultRenderersFactory(mAppContext) : mRenderersFactory,
-                mTrackSelector == null ? mTrackSelector = new DefaultTrackSelector(mAppContext) : mTrackSelector,
+                mRenderersFactory,
+                mTrackSelector,
                 new DefaultMediaSourceFactory(mAppContext),
-                mLoadControl == null ? mLoadControl = new DefaultLoadControl() : mLoadControl,
+                mLoadControl,
                 DefaultBandwidthMeter.getSingletonInstance(mAppContext),
                 new AnalyticsCollector(Clock.DEFAULT))
-                .build();
+                .build();*/
+        mMediaPlayer = new ExoPlayer.Builder(mAppContext)
+                .setLoadControl(mLoadControl)
+                .setRenderersFactory(mRenderersFactory)
+                .setTrackSelector(mTrackSelector).build();
+
         setOptions();
+
 
         //播放器日志
         if (VideoViewManager.getConfig().mIsEnableLog && mTrackSelector instanceof MappingTrackSelector) {
@@ -271,9 +289,18 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     }
 
     @Override
-    public void onPlayerError(ExoPlaybackException error) {
-        if (mPlayerEventListener != null) {
-            mPlayerEventListener.onError();
+    public void onPlayerError(@NonNull PlaybackException error) {
+        errorCode = error.errorCode;
+        Log.e("tag--", "" + error.errorCode);
+        if (path != null) {
+            setDataSource(path, headers);
+            path = null;
+            prepareAsync();
+            start();
+        } else {
+            if (mPlayerEventListener != null) {
+                mPlayerEventListener.onError();
+            }
         }
     }
 
