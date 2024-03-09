@@ -387,7 +387,7 @@ public class PlayFragment extends BaseLazyFragment {
                         ((IjkMediaPlayer)mediaPlayer).setTrack(value.index);
                      }   
                     if (mediaPlayer instanceof EXOmPlayer) {
-                        ((EXOmPlayer) mediaPlayer).setTrack(value.index);
+                        ((EXOmPlayer) mediaPlayer).selectExoTrack(value);
                     }    
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -470,7 +470,7 @@ public class PlayFragment extends BaseLazyFragment {
                         mController.mSubtitleView.destroy();
                         mController.mSubtitleView.clearSubtitleCache();
                         mController.mSubtitleView.isInternal = true;
-                        ((EXOmPlayer) mediaPlayer).setTrack(value.index);
+                        ((EXOmPlayer) mediaPlayer).selectExoTrack(value);
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
