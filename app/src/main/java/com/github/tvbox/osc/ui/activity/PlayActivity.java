@@ -368,7 +368,7 @@ public class PlayActivity extends BaseActivity {
                         ((IjkMediaPlayer)mediaPlayer).setTrack(value.index);
                     }
                     if (mediaPlayer instanceof EXOmPlayer) {
-                        ((EXOmPlayer) mediaPlayer).selectExoTrack(value);
+                        ((EXOmPlayer) mediaPlayer).setTrack(value.index);
                     }
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -449,7 +449,7 @@ public class PlayActivity extends BaseActivity {
                         mController.mSubtitleView.destroy();
                         mController.mSubtitleView.clearSubtitleCache();
                         mController.mSubtitleView.isInternal = true;
-                        ((EXOmPlayer) mediaPlayer).selectExoTrack(value);
+                        ((EXOmPlayer) mediaPlayer).setTrack(value.index);
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
