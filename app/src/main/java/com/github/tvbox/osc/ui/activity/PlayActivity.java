@@ -599,7 +599,7 @@ public class PlayActivity extends BaseActivity {
                     if (cues.size() > 0) {
                         CharSequence ss = cues.get(0).text;
                         if (ss != null && mController.mSubtitleView.isInternal) {
-                            Subtitle subtitle = new Subtitle();
+                            com.github.tvbox.osc.subtitle.model.Subtitle subtitle = new com.github.tvbox.osc.subtitle.model.Subtitle();
                             subtitle.content = ss.toString();
                             mController.mSubtitleView.onSubtitleChanged(subtitle);
                         }
