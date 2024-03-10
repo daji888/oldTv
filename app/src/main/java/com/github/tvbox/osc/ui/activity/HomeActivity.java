@@ -469,11 +469,6 @@ public class HomeActivity extends BaseActivity {
                 exit();
             }
         }
-        if(dataInitOk && jarInitOk){
-            initView();
-        }else {
-            jumpActivity(SettingActivity.class);
-        }
     }
 
     private void exit() {
@@ -486,6 +481,7 @@ public class HomeActivity extends BaseActivity {
             super.onBackPressed();
         } else {
             mExitTime = System.currentTimeMillis();
+            jumpActivity(SettingActivity.class);
             Toast.makeText(mContext, "再按一次返回键退出应用", Toast.LENGTH_SHORT).show();            
         }
     }
