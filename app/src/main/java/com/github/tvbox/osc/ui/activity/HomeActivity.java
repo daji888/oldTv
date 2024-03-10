@@ -470,7 +470,7 @@ public class HomeActivity extends BaseActivity {
             }
         }
         if(dataInitOk && jarInitOk){
-            initData();
+            initView();
         }else {
             jumpActivity(SettingActivity.class);
         }
