@@ -469,8 +469,8 @@ public class HomeActivity extends BaseActivity {
                 exit();
             }
         }
-        if(dataInitOk && !jarInitOk){
-            showSiteSwitch();
+        if(mExitTime = System.currentTimeMillis()){
+            initData();
         }else {
             jumpActivity(SettingActivity.class);
         }
