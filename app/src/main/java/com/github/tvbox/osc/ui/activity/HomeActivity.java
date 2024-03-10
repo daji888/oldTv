@@ -469,7 +469,7 @@ public class HomeActivity extends BaseActivity {
                 exit();
             }
         }
-        if(dataInitOk && jarInitOk){
+        if(dataInitOk && !jarInitOk){
             showSiteSwitch();
         }else {
             jumpActivity(SettingActivity.class);
