@@ -469,6 +469,11 @@ public class HomeActivity extends BaseActivity {
                 exit();
             }
         }
+        if(dataInitOk && jarInitOk){
+            showSiteSwitch();
+        }else {
+            jumpActivity(SettingActivity.class);
+        }
     }
 
     private void exit() {
