@@ -469,7 +469,7 @@ public class HomeActivity extends BaseActivity {
                 exit();
             }
         }
-        if(mExitTime = System.currentTimeMillis()){
+        if(dataInitOk && jarInitOk){
             initData();
         }else {
             jumpActivity(SettingActivity.class);
