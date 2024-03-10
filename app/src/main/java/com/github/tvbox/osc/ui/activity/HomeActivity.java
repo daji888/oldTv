@@ -482,7 +482,6 @@ public class HomeActivity extends BaseActivity {
         } else {
             mExitTime = System.currentTimeMillis();
             if(dataInitOk && jarInitOk){
-                    showSiteSwitch();
                 }else {
                     jumpActivity(SettingActivity.class);
                 }
