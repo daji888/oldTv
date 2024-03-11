@@ -25,15 +25,15 @@ import tv.danmaku.ijk.media.player.IjkLibLoader;
 import xyz.doikki.videoplayer.exo.ExoMediaPlayerFactory;
 import xyz.doikki.videoplayer.player.AndroidMediaPlayerFactory;
 import xyz.doikki.videoplayer.player.PlayerFactory;
-import xyz.doikki.videoplayer.player.BaseVideoView;
+import xyz.doikki.videoplayer.player.VideoView;
 import xyz.doikki.videoplayer.render.RenderViewFactory;
 import xyz.doikki.videoplayer.render.TextureRenderViewFactory;
 
 public class PlayerHelper {
-    public static void updateCfg(BaseVideoView videoView, JSONObject playerCfg) {
+    public static void updateCfg(VideoView videoView, JSONObject playerCfg) {
         updateCfg(videoView,playerCfg,-1);
     }
-    public static void updateCfg(BaseVideoView videoView, JSONObject playerCfg,int forcePlayerType) {
+    public static void updateCfg(VideoView videoView, JSONObject playerCfg,int forcePlayerType) {
         int playerType = Hawk.get(HawkConfig.PLAY_TYPE, 0);
         int renderType = Hawk.get(HawkConfig.PLAY_RENDER, 0);
         String ijkCode = Hawk.get(HawkConfig.IJK_CODEC, "软解码");
@@ -90,7 +90,7 @@ public class PlayerHelper {
         videoView.setScreenScaleType(scale);
     }
 
-    public static void updateCfg(BaseVideoView videoView) {
+    public static void updateCfg(VideoView videoView) {
         int playType = Hawk.get(HawkConfig.PLAY_TYPE, 0);
         PlayerFactory playerFactory;
         if (playType == 1) {
@@ -257,22 +257,22 @@ public class PlayerHelper {
     public static String getScaleName(int screenScaleType) {
         String scaleText = "默认缩放";
         switch (screenScaleType) {
-            case BaseVideoView.SCREEN_SCALE_DEFAULT:
+            case VideoView.SCREEN_SCALE_DEFAULT:
                 scaleText = "默认缩放";
                 break;
-            case BaseVideoView.SCREEN_SCALE_16_9:
+            case VideoView.SCREEN_SCALE_16_9:
                 scaleText = "16:9";
                 break;
-            case BaseVideoView.SCREEN_SCALE_4_3:
+            case VideoView.SCREEN_SCALE_4_3:
                 scaleText = "4:3";
                 break;
-            case BaseVideoView.SCREEN_SCALE_MATCH_PARENT:
+            case VideoView.SCREEN_SCALE_MATCH_PARENT:
                 scaleText = "填充";
                 break;
-            case BaseVideoView.SCREEN_SCALE_ORIGINAL:
+            case VideoView.SCREEN_SCALE_ORIGINAL:
                 scaleText = "原始";
                 break;
-            case BaseVideoView.SCREEN_SCALE_CENTER_CROP:
+            case VideoView.SCREEN_SCALE_CENTER_CROP:
                 scaleText = "裁剪";
                 break;
         }
