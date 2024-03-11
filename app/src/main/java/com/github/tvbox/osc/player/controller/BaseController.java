@@ -24,7 +24,7 @@ import java.util.Map;
 import xyz.doikki.videoplayer.controller.BaseVideoController;
 import xyz.doikki.videoplayer.controller.IControlComponent;
 import xyz.doikki.videoplayer.controller.IGestureComponent;
-import xyz.doikki.videoplayer.player.BaseVideoView;
+import xyz.doikki.videoplayer.player.VideoView;
 import xyz.doikki.videoplayer.util.PlayerUtils;
 
 public abstract class BaseController extends BaseVideoController implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener, View.OnTouchListener {
@@ -117,27 +117,27 @@ public abstract class BaseController extends BaseVideoController implements Gest
     protected void onPlayStateChanged(int playState) {
         super.onPlayStateChanged(playState);
         switch (playState) {
-            case BaseVideoView.STATE_IDLE:
+            case VideoView.STATE_IDLE:
                 mLoading.setVisibility(GONE);
                 break;
-            case BaseVideoView.STATE_PLAYING:
+            case VideoView.STATE_PLAYING:
                 mPauseRoot.setVisibility(GONE);
                 mLoading.setVisibility(GONE);
                 break;
-            case BaseVideoView.STATE_PAUSED:
+            case VideoView.STATE_PAUSED:
                 mPauseRoot.setVisibility(VISIBLE);
                 mLoading.setVisibility(GONE);
                 break;
-            case BaseVideoView.STATE_PREPARED:
-            case BaseVideoView.STATE_ERROR:
-            case BaseVideoView.STATE_BUFFERED:
+            case VideoView.STATE_PREPARED:
+            case VideoView.STATE_ERROR:
+            case VideoView.STATE_BUFFERED:
                 mLoading.setVisibility(GONE);
                 break;
-            case BaseVideoView.STATE_PREPARING:
-            case BaseVideoView.STATE_BUFFERING:
+            case VideoView.STATE_PREPARING:
+            case VideoView.STATE_BUFFERING:
                 mLoading.setVisibility(VISIBLE);
                 break;
-            case BaseVideoView.STATE_PLAYBACK_COMPLETED:
+            case VideoView.STATE_PLAYBACK_COMPLETED:
                 mLoading.setVisibility(GONE);
                 mPauseRoot.setVisibility(GONE);
                 break;
@@ -175,9 +175,9 @@ public abstract class BaseController extends BaseVideoController implements Gest
     @Override
     public void setPlayerState(int playerState) {
         super.setPlayerState(playerState);
-        if (playerState == BaseVideoView.PLAYER_NORMAL) {
+        if (playerState == VideoView.PLAYER_NORMAL) {
             mCanSlide = mEnableInNormal;
-        } else if (playerState == BaseVideoView.PLAYER_FULL_SCREEN) {
+        } else if (playerState == VideoView.PLAYER_FULL_SCREEN) {
             mCanSlide = true;
         }
     }
@@ -190,12 +190,12 @@ public abstract class BaseController extends BaseVideoController implements Gest
 
     protected boolean isInPlaybackState() {
         return mControlWrapper != null
-                && mCurPlayState != BaseVideoView.STATE_ERROR
-                && mCurPlayState != BaseVideoView.STATE_IDLE
-                && mCurPlayState != BaseVideoView.STATE_PREPARING
-                && mCurPlayState != BaseVideoView.STATE_PREPARED
-                && mCurPlayState != BaseVideoView.STATE_START_ABORT
-                && mCurPlayState != BaseVideoView.STATE_PLAYBACK_COMPLETED;
+                && mCurPlayState != VideoView.STATE_ERROR
+                && mCurPlayState != VideoView.STATE_IDLE
+                && mCurPlayState != VideoView.STATE_PREPARING
+                && mCurPlayState != VideoView.STATE_PREPARED
+                && mCurPlayState != VideoView.STATE_START_ABORT
+                && mCurPlayState != VideoView.STATE_PLAYBACK_COMPLETED;
     }
 
     @Override
