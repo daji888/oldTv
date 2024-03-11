@@ -941,7 +941,7 @@ public class VodController extends BaseController {
     private float speed_old = 1.0f;
     @Override
     public void onLongPress(MotionEvent e) {
-        if (videoPlayState!=BaseVideoView.STATE_PAUSED) {
+        if (videoPlayState!=VideoView.STATE_PAUSED) {
             fromLongPress = true;
             try {
                 speed_old = (float) mPlayerConfig.getDouble("sp");
