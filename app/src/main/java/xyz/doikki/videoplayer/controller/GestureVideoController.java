@@ -15,7 +15,7 @@ import androidx.annotation.Nullable;
 
 import java.util.Map;
 
-import xyz.doikki.videoplayer.player.BaseVideoView;
+import xyz.doikki.videoplayer.player.VideoView;
 import xyz.doikki.videoplayer.util.PlayerUtils;
 
 /**
@@ -101,9 +101,9 @@ public abstract class GestureVideoController extends BaseVideoController impleme
     @Override
     public void setPlayerState(int playerState) {
         super.setPlayerState(playerState);
-        if (playerState == BaseVideoView.PLAYER_NORMAL) {
+        if (playerState == VideoView.PLAYER_NORMAL) {
             mCanSlide = mEnableInNormal;
-        } else if (playerState == BaseVideoView.PLAYER_FULL_SCREEN) {
+        } else if (playerState == VideoView.PLAYER_FULL_SCREEN) {
             mCanSlide = true;
         }
     }
@@ -116,12 +116,12 @@ public abstract class GestureVideoController extends BaseVideoController impleme
 
     private boolean isInPlaybackState() {
         return mControlWrapper != null
-                && mCurPlayState != BaseVideoView.STATE_ERROR
-                && mCurPlayState != BaseVideoView.STATE_IDLE
-                && mCurPlayState != BaseVideoView.STATE_PREPARING
-                && mCurPlayState != BaseVideoView.STATE_PREPARED
-                && mCurPlayState != BaseVideoView.STATE_START_ABORT
-                && mCurPlayState != BaseVideoView.STATE_PLAYBACK_COMPLETED;
+                && mCurPlayState != VideoView.STATE_ERROR
+                && mCurPlayState != VideoView.STATE_IDLE
+                && mCurPlayState != VideoView.STATE_PREPARING
+                && mCurPlayState != VideoView.STATE_PREPARED
+                && mCurPlayState != VideoView.STATE_START_ABORT
+                && mCurPlayState != VideoView.STATE_PLAYBACK_COMPLETED;
     }
 
     @Override
