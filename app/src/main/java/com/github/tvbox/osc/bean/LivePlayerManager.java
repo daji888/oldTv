@@ -14,13 +14,13 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Objects;
 
-import xyz.doikki.videoplayer.player.BaseVideoView;
+import xyz.doikki.videoplayer.player.VideoView;
 
 public class LivePlayerManager {
     JSONObject defaultPlayerConfig = new JSONObject();
     JSONObject currentPlayerConfig;
 
-    public void init(BaseVideoView videoView) {
+    public void init(VideoView videoView) {
         try {
             defaultPlayerConfig.put("pl", Hawk.get(HawkConfig.PLAY_TYPE, 0));
             defaultPlayerConfig.put("ijk", Hawk.get(HawkConfig.IJK_CODEC, "软解码"));
@@ -32,7 +32,7 @@ public class LivePlayerManager {
         getDefaultLiveChannelPlayer(videoView);
     }
 
-    public void getDefaultLiveChannelPlayer(BaseVideoView videoView) {
+    public void getDefaultLiveChannelPlayer(VideoView videoView) {
         PlayerHelper.updateCfg(videoView, defaultPlayerConfig);
         try {
             currentPlayerConfig = new JSONObject(defaultPlayerConfig.toString());
@@ -41,7 +41,7 @@ public class LivePlayerManager {
         }
     }
 
-    public void getLiveChannelPlayer(BaseVideoView videoView, String channelName) {
+    public void getLiveChannelPlayer(VideoView videoView, String channelName) {
         JSONObject playerConfig = Hawk.get(channelName, null);
         if (playerConfig == null) {
             if (!currentPlayerConfig.toString().equals(defaultPlayerConfig.toString()))
@@ -100,7 +100,7 @@ public class LivePlayerManager {
         return 0;
     }
 
-    public void changeLivePlayerType(BaseVideoView videoView, int playerType, String channelName) {
+    public void changeLivePlayerType(VideoView videoView, int playerType, String channelName) {
         JSONObject playerConfig = currentPlayerConfig;
         try {
             switch (playerType) {
@@ -134,7 +134,7 @@ public class LivePlayerManager {
         currentPlayerConfig = playerConfig;
     }
 
-    public void changeLivePlayerScale(@NonNull BaseVideoView videoView, int playerScale, String channelName){
+    public void changeLivePlayerScale(@NonNull VideoView videoView, int playerScale, String channelName){
         videoView.setScreenScaleType(playerScale);
 
         JSONObject playerConfig = currentPlayerConfig;

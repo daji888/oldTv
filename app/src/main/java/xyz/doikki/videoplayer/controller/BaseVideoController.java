@@ -20,7 +20,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import xyz.doikki.videoplayer.player.BaseVideoView;
+import xyz.doikki.videoplayer.player.VideoView;
 import xyz.doikki.videoplayer.player.VideoViewManager;
 import xyz.doikki.videoplayer.util.CutoutUtil;
 import xyz.doikki.videoplayer.util.L;
@@ -113,7 +113,7 @@ public abstract class BaseVideoController extends FrameLayout
     protected abstract int getLayoutId();
 
     /**
-     * 重要：此方法用于将{@link BaseVideoView} 和控制器绑定
+     * 重要：此方法用于将{@link VideoView} 和控制器绑定
      */
     @CallSuper
     public void setMediaPlayer(MediaPlayerControl mediaPlayer) {
@@ -196,7 +196,7 @@ public abstract class BaseVideoController extends FrameLayout
     }
 
     /**
-     * {@link BaseVideoView}调用此方法向控制器设置播放状态
+     * {@link VideoView}调用此方法向控制器设置播放状态
      */
     @CallSuper
     public void setPlayState(int playState) {
@@ -204,7 +204,7 @@ public abstract class BaseVideoController extends FrameLayout
     }
 
     /**
-     * {@link BaseVideoView}调用此方法向控制器设置播放器状态
+     * {@link VideoView}调用此方法向控制器设置播放器状态
      */
     @CallSuper
     public void setPlayerState(final int playerState) {
@@ -519,7 +519,7 @@ public abstract class BaseVideoController extends FrameLayout
     protected void onOrientationLandscape(Activity activity) {
         activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         if (mControlWrapper.isFullScreen()) {
-            handlePlayerStateChanged(BaseVideoView.PLAYER_FULL_SCREEN);
+            handlePlayerStateChanged(VideoView.PLAYER_FULL_SCREEN);
         } else {
             mControlWrapper.startFullScreen();
         }
@@ -531,7 +531,7 @@ public abstract class BaseVideoController extends FrameLayout
     protected void onOrientationReverseLandscape(Activity activity) {
         activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
         if (mControlWrapper.isFullScreen()) {
-            handlePlayerStateChanged(BaseVideoView.PLAYER_FULL_SCREEN);
+            handlePlayerStateChanged(VideoView.PLAYER_FULL_SCREEN);
         } else {
             mControlWrapper.startFullScreen();
         }
@@ -575,7 +575,7 @@ public abstract class BaseVideoController extends FrameLayout
     @CallSuper
     protected void onPlayStateChanged(int playState) {
         switch (playState) {
-            case BaseVideoView.STATE_IDLE:
+            case VideoView.STATE_IDLE:
                 mOrientationHelper.disable();
                 mOrientation = 0;
                 mIsLocked = false;
@@ -584,11 +584,11 @@ public abstract class BaseVideoController extends FrameLayout
                 //所以在播放器release的时候需要移除
                 removeAllDissociateComponents();
                 break;
-            case BaseVideoView.STATE_PLAYBACK_COMPLETED:
+            case VideoView.STATE_PLAYBACK_COMPLETED:
                 mIsLocked = false;
                 mShowing = false;
                 break;
-            case BaseVideoView.STATE_ERROR:
+            case VideoView.STATE_ERROR:
                 mShowing = false;
                 break;
         }
@@ -609,7 +609,7 @@ public abstract class BaseVideoController extends FrameLayout
     @CallSuper
     protected void onPlayerStateChanged(int playerState) {
         switch (playerState) {
-            case BaseVideoView.PLAYER_NORMAL:
+            case VideoView.PLAYER_NORMAL:
                 if (mEnableOrientation) {
                     mOrientationHelper.enable();
                 } else {
@@ -619,14 +619,14 @@ public abstract class BaseVideoController extends FrameLayout
                     CutoutUtil.adaptCutoutAboveAndroidP(getContext(), true);
                 }
                 break;
-            case BaseVideoView.PLAYER_FULL_SCREEN:
+            case VideoView.PLAYER_FULL_SCREEN:
                 //在全屏时强制监听设备方向
                 mOrientationHelper.enable();
                 if (hasCutout()) {
                     CutoutUtil.adaptCutoutAboveAndroidP(getContext(), true);
                 }
                 break;
-            case BaseVideoView.PLAYER_TINY_SCREEN:
+            case VideoView.PLAYER_TINY_SCREEN:
                 mOrientationHelper.disable();
                 break;
         }
