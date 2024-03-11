@@ -90,7 +90,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import xyz.doikki.videoplayer.player.BaseVideoView;
+import xyz.doikki.videoplayer.player.VideoView;
 
 /**
  * @author pj567
@@ -99,7 +99,7 @@ import xyz.doikki.videoplayer.player.BaseVideoView;
  */
 public class LivePlayActivity extends BaseActivity {
     public static Context context;
-    private BaseVideoView mVideoView;
+    private VideoView mVideoView;
     private TextView tvChannelInfo;
     private TextView tvTime;
     private TextView tvNetSpeed;
@@ -1176,22 +1176,22 @@ public class LivePlayActivity extends BaseActivity {
             @Override
             public void playStateChanged(int playState) {
                 switch (playState) {
-                    case BaseVideoView.STATE_IDLE:
-                    case BaseVideoView.STATE_PAUSED:
+                    case VideoView.STATE_IDLE:
+                    case VideoView.STATE_PAUSED:
                         break;
-                    case BaseVideoView.STATE_PREPARED:
-                    case BaseVideoView.STATE_BUFFERED:
-                    case BaseVideoView.STATE_PLAYING:
+                    case VideoView.STATE_PREPARED:
+                    case VideoView.STATE_BUFFERED:
+                    case VideoView.STATE_PLAYING:
                         currentLiveChangeSourceTimes = 0;
                         mHandler.removeCallbacks(mConnectTimeoutChangeSourceRun);
                         break;
-                    case BaseVideoView.STATE_ERROR:
-                    case BaseVideoView.STATE_PLAYBACK_COMPLETED:
+                    case VideoView.STATE_ERROR:
+                    case VideoView.STATE_PLAYBACK_COMPLETED:
                         mHandler.removeCallbacks(mConnectTimeoutChangeSourceRun);
                         mHandler.postDelayed(mConnectTimeoutChangeSourceRun, 2000);
                         break;
-                    case BaseVideoView.STATE_PREPARING:
-                    case BaseVideoView.STATE_BUFFERING:
+                    case VideoVieww.STATE_PREPARING:
+                    case VideoView.STATE_BUFFERING:
                         mHandler.removeCallbacks(mConnectTimeoutChangeSourceRun);
                         mHandler.postDelayed(mConnectTimeoutChangeSourceRun, (Hawk.get(HawkConfig.LIVE_CONNECT_TIMEOUT, 1) + 1) * 5000);
                         break;
