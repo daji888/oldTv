@@ -277,12 +277,7 @@ public class PlayFragment extends BaseLazyFragment {
 
     void selectMySubtitle() throws Exception {
         SubtitleDialog subtitleDialog = new SubtitleDialog(getActivity());
-        int playerType = mVodPlayerCfg.getInt("pl");
-        if (mController.mSubtitleView.hasInternal && playerType == 1) {
-            subtitleDialog.selectInternal.setVisibility(View.VISIBLE);
-        } else {
-            subtitleDialog.selectInternal.setVisibility(View.GONE);
-        }
+        
         subtitleDialog.setSubtitleViewListener(new SubtitleDialog.SubtitleViewListener() {
             @Override
             public void setTextSize(int size) {
@@ -446,6 +441,7 @@ public class PlayFragment extends BaseLazyFragment {
         dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<TrackInfoBean>() {
             @Override
             public void click(TrackInfoBean value, int pos) {
+                mController.mSubtitleView.setVisibility(View.VISIBLE);
                 try {
                     for (TrackInfoBean subtitle : bean) {
                         subtitle.selected = subtitle.index == value.index;
@@ -949,20 +945,8 @@ public class PlayFragment extends BaseLazyFragment {
         //重新播放清除现有进度
         if (reset) {
             CacheManager.delete(MD5.string2MD5(progressKey), 0);
-            CacheManager.delete(MD5.string2MD5(subtitleCacheKey), 0);
-        }else{
-            try{
-                int playerType = mVodPlayerCfg.getInt("pl");
-                if(playerType==1){
-                    mController.mSubtitleView.setVisibility(View.VISIBLE);
-                }else {
-                    mController.mSubtitleView.setVisibility(View.GONE);
-                }
-            }catch (JSONException e) {
-                e.printStackTrace();
-            }
+            CacheManager.delete(MD5.string2MD5(subtitleCacheKey), "");
         }
-
         if(Jianpian.isJpUrl(vs.url)){//荐片地址特殊判断
             String jp_url= vs.url;
             mController.showParse(false);
