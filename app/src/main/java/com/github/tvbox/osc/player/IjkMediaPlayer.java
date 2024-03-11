@@ -1,6 +1,7 @@
 package com.github.tvbox.osc.player;
 
 import android.content.Context;
+import android.content.res.AssetFileDescriptor;
 import android.text.TextUtils;
 
 import com.github.tvbox.osc.api.ApiConfig;
@@ -11,6 +12,7 @@ import com.github.tvbox.osc.util.MD5;
 import com.orhanobut.hawk.Hawk;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
