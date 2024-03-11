@@ -7,9 +7,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import xyz.doikki.videoplayer.player.AbstractPlayer;
-import xyz.doikki.videoplayer.player.BaseVideoView;
+import xyz.doikki.videoplayer.player.VideoView;
 
-public class MyVideoView extends BaseVideoView {
+public class MyVideoView extends VideoView {
     public MyVideoView(@NonNull Context context) {
         super(context, null);
     }
