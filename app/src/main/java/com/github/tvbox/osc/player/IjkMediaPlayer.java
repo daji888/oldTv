@@ -1,6 +1,7 @@
 package com.github.tvbox.osc.player;
 
 import android.content.Context;
+import android.content.res.AssetFileDescriptor;
 import android.text.TextUtils;
 
 import com.github.tvbox.osc.api.ApiConfig;
@@ -11,13 +12,18 @@ import com.github.tvbox.osc.util.MD5;
 import com.orhanobut.hawk.Hawk;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.misc.ITrackInfo;
 import tv.danmaku.ijk.media.player.misc.IjkTrackInfo;
 import xyz.doikki.videoplayer.ijk.IjkPlayer;
+import xyz.doikki.videoplayer.ijk.RawDataSourceProvider;
 
 public class IjkMediaPlayer extends IjkPlayer {
 
@@ -58,9 +64,10 @@ public class IjkMediaPlayer extends IjkPlayer {
 
         //开启内置字幕
         mMediaPlayer.setOption(tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_PLAYER, "subtitle", 1);
-
         mMediaPlayer.setOption(tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT, "dns_cache_clear", 1);
         mMediaPlayer.setOption(tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT, "dns_cache_timeout", -1);
+        mMediaPlayer.setOption(tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT,"safe",0);
+        super.setOptions();
     }
 
     @Override
@@ -92,11 +99,29 @@ public class IjkMediaPlayer extends IjkPlayer {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            mPlayerEventListener.onError();
         }
         setDataSourceHeader(headers);
-        mMediaPlayer.setOption(tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT, "protocol_whitelist", "ijkio,ffio,async,cache,crypto,file,dash,http,https,ijkhttphook,ijkinject,ijklivehook,ijklongurl,ijksegment,ijktcphook,pipe,rtp,tcp,tls,udp,ijkurlhook,data");
-        super.setDataSource(path, null);
+        mMediaPlayer.setOption(tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT, "protocol_whitelist", "ijkio,ffio,async,cache,crypto,file,dash,http,https,ijkhttphook,ijkinject,ijklivehook,ijklongurl,ijksegment,ijktcphook,pipe,rtp,tcp,tls,udp,ijkurlhook,data,concat,subfile,ffconcat");
+        super.setDataSource(path, headers);
+    }
+
+    private String encodeSpaceChinese(String str) throws UnsupportedEncodingException {
+        Pattern p = Pattern.compile("[\u4e00-\u9fa5 ]+");
+        Matcher m = p.matcher(str);
+        StringBuffer b = new StringBuffer();
+        while (m.find()) m.appendReplacement(b, URLEncoder.encode(m.group(0), "UTF-8"));
+        m.appendTail(b);
+        return b.toString();
+    }
+
+    @Override
+    public void setDataSource(AssetFileDescriptor fd) {
+        try {
+            mMediaPlayer.setDataSource(new RawDataSourceProvider(fd));
+        } catch (Exception e) {
+            mPlayerEventListener.onError();
+        }
     }
 
     private void setDataSourceHeader(Map<String, String> headers) {
