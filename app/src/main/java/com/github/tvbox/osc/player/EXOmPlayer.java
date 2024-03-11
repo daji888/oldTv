@@ -65,7 +65,6 @@ public class EXOmPlayer extends ExoMediaPlayer {
         return data;
     }
 
-
     @SuppressLint("UnsafeOptInUsageError")
     private void getExoSelectedTrack() {
         audioId = "";
