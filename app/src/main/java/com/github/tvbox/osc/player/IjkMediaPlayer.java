@@ -93,11 +93,29 @@ public class IjkMediaPlayer extends IjkPlayer {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            mPlayerEventListener.onError();
         }
         setDataSourceHeader(headers);
         mMediaPlayer.setOption(tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_FORMAT, "protocol_whitelist", "ijkio,ffio,async,cache,crypto,file,dash,http,https,ijkhttphook,ijkinject,ijklivehook,ijklongurl,ijksegment,ijktcphook,pipe,rtp,tcp,tls,udp,ijkurlhook,data,concat,subfile,ffconcat");
-        super.setDataSource(path, null);
+        super.setDataSource(path, headers);
+    }
+
+    private String encodeSpaceChinese(String str) throws UnsupportedEncodingException {
+        Pattern p = Pattern.compile("[\u4e00-\u9fa5 ]+");
+        Matcher m = p.matcher(str);
+        StringBuffer b = new StringBuffer();
+        while (m.find()) m.appendReplacement(b, URLEncoder.encode(m.group(0), "UTF-8"));
+        m.appendTail(b);
+        return b.toString();
+    }
+
+    @Override
+    public void setDataSource(AssetFileDescriptor fd) {
+        try {
+            mMediaPlayer.setDataSource(new RawDataSourceProvider(fd));
+        } catch (Exception e) {
+            mPlayerEventListener.onError();
+        }
     }
 
     private void setDataSourceHeader(Map<String, String> headers) {
