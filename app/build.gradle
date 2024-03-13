@@ -57,6 +57,9 @@ android {
     buildFeatures {
         dataBinding = true
     }
+    lint {
+        disable 'UnsafeOptInUsageError'
+    }
 }
 
 dependencies {
