@@ -1746,6 +1746,7 @@ public class PlayFragment extends BaseLazyFragment {
             }
 
             if (!ad) {
+                if (yxdm(url, headers)) return null;
                 if (checkVideoFormat(url)) {
                     loadFoundVideoUrls.add(url);
                     loadFoundVideoUrlsHeader.put(url, headers);
@@ -1920,7 +1921,7 @@ public class PlayFragment extends BaseLazyFragment {
                 ad = Boolean.TRUE.equals(loadedUrls.get(url));
             }
             if (!ad ) {
-                if (yxdm(url, headers)) return null;
+                
                 if (checkVideoFormat(url)) {
                     HashMap<String, String> webHeaders = new HashMap<>();
                     Map<String, String> hds = request.getRequestHeaders();
