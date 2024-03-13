@@ -124,7 +124,9 @@ public class PlayActivity extends BaseActivity {
     private SourceViewModel sourceViewModel;
     private Handler mHandler;
 
+    private String videoURL;
     private long videoDuration = -1;
+    private List<String> videoSegmentationURL = new ArrayList<>();
 
     @Override
     protected int getLayoutResID() {
