@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -127,6 +128,20 @@ public class SearchActivity extends BaseActivity {
         imm.showSoftInput(this.getCurrentFocus(), InputMethodManager.SHOW_FORCED);
     }
 
+    public void hideSystemKeyBoard() {
+        InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if(imm.isActive()){
+            imm.hideSoftInputFromWindow(etSearch.getApplicationWindowToken(), InputMethodManager.RESULT_UNCHANGED_SHOWN);
+        }
+    }
+
+    private boolean isKeyboardHidden() {
+        final View rootView = getWindow().getDecorView().findViewById(android.R.id.content);
+        Rect r = new Rect();
+        rootView.getWindowVisibleDisplayFrame(r);
+        return rootView.getBottom() == r.bottom;
+    }
+
     private List<Runnable> pauseRunnable = null;
 
     @Override
@@ -245,6 +260,33 @@ public class SearchActivity extends BaseActivity {
 //                SearchActivity.this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 //            }
 //        });
+        etSearch.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
+                if (isKeyboardHidden()) {
+                    if (keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
+                        if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
+                            ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
+                                    .showSoftInput(etSearch, 0);
+                            return false;
+                        }
+                    } else if (keyEvent.getAction() == KeyEvent.ACTION_UP) {
+                        int len = etSearch.getText().length();
+                        if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
+                            // Avoid show ime keyboard bug
+                            return true;
+                        } else if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
+                            etSearch.focusSearch(View.FOCUS_DOWN).requestFocus();
+                            return true;
+                        } else if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT && (len == 0 || etSearch.getSelectionStart() == len)) {
+                            etSearch.focusSearch(View.FOCUS_RIGHT).requestFocus();
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+        });
 
 //        etSearch.setOnFocusChangeListener(tvSearchFocusChangeListener);
         keyboard.setOnSearchKeyListener(new SearchKeyboard.OnSearchKeyListener() {
