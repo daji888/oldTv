@@ -215,15 +215,41 @@ public class PlayFragment extends BaseLazyFragment {
         mController.setListener(new VodController.VodControlListener() {
             @Override
             public void playNext(boolean rmProgress) {
-                String preProgressKey = progressKey;
-                PlayFragment.this.playNext(rmProgress);
-                if (rmProgress && preProgressKey != null)
-                    CacheManager.delete(MD5.string2MD5(preProgressKey), 0);
+                if (videoSegmentationURL.size() > 0) {
+                    for (int i=0; i<videoSegmentationURL.size()-1; i++) {
+                        if (videoSegmentationURL.get(i).equals(videoURL)) {
+                            mVideoView.setPlayFromZeroPositionOnce(true);
+                            startPlayUrl(videoSegmentationURL.get(i+1), new HashMap<>());//todo header
+                            return;
+                        }
+                    }
+                }
+                if (mVodInfo.reverseSort) {
+                    PlayFragment.this.playPrevious();
+                } else {
+                    String preProgressKey = progressKey;
+                    PlayFragment.this.playNext(rmProgress);
+                    if (rmProgress && preProgressKey != null)
+                        CacheManager.delete(MD5.string2MD5(preProgressKey), 0);
+                }
             }
 
-            @Override
+           @Override
             public void playPre() {
-                PlayFragment.this.playPrevious();
+                if (videoSegmentationURL.size() > 0) {
+                    for (int i=1; i<videoSegmentationURL.size(); i++) {
+                        if (videoSegmentationURL.get(i).equals(videoURL)) {
+                            mVideoView.setPlayFromZeroPositionOnce(true);
+                            startPlayUrl(videoSegmentationURL.get(i-1), new HashMap<>());//todo header
+                            return;
+                        }
+                    }
+                }
+                if (mVodInfo.reverseSort) {
+                    PlayFragment.this.playNext(false);
+                } else {
+                    PlayFragment.this.playPrevious();
+                }
             }
 
             @Override

@@ -121,6 +121,7 @@ public class BaseVideoView<P extends AbstractPlayer> extends FrameLayout
      * 循环播放
      */
     protected boolean mIsLooping;
+    protected boolean mPlayFromZeroPosition = false;            
 
     /**
      * {@link #mPlayerContainer}背景色，默认黑色
@@ -208,6 +209,15 @@ public class BaseVideoView<P extends AbstractPlayer> extends FrameLayout
         if (mProgressManager != null) {
             mCurrentPosition = mProgressManager.getSavedProgress(mProgressKey == null ? mUrl : mProgressKey);
         }
+         if (!mPlayFromZeroPosition) {
+            //读取播放进度
+            if (mProgressManager != null) {
+                mCurrentPosition = mProgressManager.getSavedProgress(mProgressKey == null ? mUrl : mProgressKey);
+            }
+        } else {
+            mCurrentPosition = 0;
+            mPlayFromZeroPosition = false;
+        }   
         initPlayer();
         addDisplay();
         startPrepare(false);
@@ -700,6 +710,10 @@ public class BaseVideoView<P extends AbstractPlayer> extends FrameLayout
             mMediaPlayer.setLooping(looping);
         }
     }
+
+     public void setPlayFromZeroPositionOnce(boolean mPlayFromZeroPosition) {
+        this.mPlayFromZeroPosition = mPlayFromZeroPosition;
+    }           
 
     /**
      * 是否开启AudioFocus监听， 默认开启，用于监听其它地方是否获取音频焦点，如果有其它地方获取了

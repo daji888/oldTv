@@ -196,15 +196,41 @@ public class PlayActivity extends BaseActivity {
         mController.setListener(new VodController.VodControlListener() {
             @Override
             public void playNext(boolean rmProgress) {
-                String preProgressKey = progressKey;
-                PlayActivity.this.playNext(rmProgress);
-                if (rmProgress && preProgressKey != null)
-                    CacheManager.delete(MD5.string2MD5(preProgressKey), 0);
+                if (videoSegmentationURL.size() > 0) {
+                    for (int i = 0; i < videoSegmentationURL.size() - 1; i++) {
+                        if (videoSegmentationURL.get(i).equals(videoURL)) {
+                            mVideoView.setPlayFromZeroPositionOnce(true);
+                            startPlayUrl(videoSegmentationURL.get(i + 1), new HashMap<>());//todo header
+                            return;
+                        }
+                    }
+                }
+                if (mVodInfo.reverseSort) {
+                    PlayActivity.this.playPrevious();
+                } else {
+                    String preProgressKey = progressKey;
+                    PlayActivity.this.playNext(rmProgress);
+                    if (rmProgress && preProgressKey != null)
+                        CacheManager.delete(MD5.string2MD5(preProgressKey), 0);
+                }
             }
 
             @Override
             public void playPre() {
-                PlayActivity.this.playPrevious();
+                if (videoSegmentationURL.size() > 0) {
+                    for (int i = 1; i < videoSegmentationURL.size(); i++) {
+                        if (videoSegmentationURL.get(i).equals(videoURL)) {
+                            mVideoView.setPlayFromZeroPositionOnce(true);
+                            startPlayUrl(videoSegmentationURL.get(i - 1), new HashMap<>());//todo header
+                            return;
+                        }
+                    }
+                }
+                if (mVodInfo.reverseSort) {
+                    PlayActivity.this.playNext(false);
+                } else {
+                    PlayActivity.this.playPrevious();
+                }
             }
 
             @Override
