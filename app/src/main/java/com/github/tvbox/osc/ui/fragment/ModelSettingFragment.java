@@ -628,7 +628,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
         findViewById(R.id.llVideoPurify).setOnClickListener(v -> {
             FastClickCheckUtil.check(v);
             Hawk.put(HawkConfig.VIDEO_PURIFY, !Hawk.get(HawkConfig.VIDEO_PURIFY, true));
-            tvVideoPurifyText.setText(Hawk.get(HawkConfig.VIDEO_PURIFY, true) ? "开启" : "关闭");
+            tvVideoPurifyText.setText(Hawk.get(HawkConfig.VIDEO_PURIFY, true) ? "已开启" : "已关闭");
         });
         findViewById(R.id.llSearchTv).setOnClickListener(new View.OnClickListener() {
             @Override
