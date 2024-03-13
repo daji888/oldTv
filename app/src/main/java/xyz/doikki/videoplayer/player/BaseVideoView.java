@@ -701,6 +701,10 @@ public class BaseVideoView<P extends AbstractPlayer> extends FrameLayout
         }
     }
 
+     public void setPlayFromZeroPositionOnce(boolean mPlayFromZeroPosition) {
+        this.mPlayFromZeroPosition = mPlayFromZeroPosition;
+    }           
+
     /**
      * 是否开启AudioFocus监听， 默认开启，用于监听其它地方是否获取音频焦点，如果有其它地方获取了
      * 音频焦点，此播放器将做出相应反应，具体实现见{@link AudioFocusHelper}
