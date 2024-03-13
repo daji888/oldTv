@@ -126,7 +126,9 @@ public class PlayFragment extends BaseLazyFragment {
     private SourceViewModel sourceViewModel;
     private Handler mHandler;
 
-    private final long videoDuration = -1;
+    private String videoURL;
+    private long videoDuration = -1;
+    private List<String> videoSegmentationURL = new ArrayList<>();
 
     @Override
     protected int getLayoutResID() {
