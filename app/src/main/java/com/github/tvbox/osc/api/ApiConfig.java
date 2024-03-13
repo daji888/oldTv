@@ -19,6 +19,7 @@ import com.github.tvbox.osc.util.AES;
 import com.github.tvbox.osc.util.AdBlocker;
 import com.github.tvbox.osc.util.DefaultConfig;
 import com.github.tvbox.osc.util.HawkConfig;
+import com.github.tvbox.osc.util.M3U8;
 import com.github.tvbox.osc.util.MD5;
 import com.github.tvbox.osc.util.VideoParseRuler;
 import com.google.gson.Gson;
@@ -467,15 +468,19 @@ public class ApiConfig {
                 }
                 if (obj.has("hosts") && obj.has("regex")) {
                     ArrayList<String> rule = new ArrayList<>();
+                    ArrayList<String> ads = new ArrayList<>();
                     JsonArray regexArray = obj.getAsJsonArray("regex");
                     for (JsonElement one : regexArray) {
-                        rule.add(one.getAsString());
+                        String regex = one.getAsString();
+                        if (M3U8.isAd(regex)) ads.add(regex);
+                        else rule.add(regex);
                     }
 
                     JsonArray array = obj.getAsJsonArray("hosts");
                     for (JsonElement one : array) {
                         String host = one.getAsString();
                         VideoParseRuler.addHostRule(host, rule);
+                        VideoParseRuler.addHostRegex(host, ads);
                     }
                 }
             }

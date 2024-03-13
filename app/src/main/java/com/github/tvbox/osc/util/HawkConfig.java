@@ -39,5 +39,6 @@ public class HawkConfig {
     public static final String REMOTE_TVBOX = "remote_tvbox_host";
     public static final String IJK_CACHE_PLAY = "ijk_cache_play";
     public static final String HOME_DEFAULT_SHOW = "home_default_show";  //启动时直接进直播的开关
+    public static final String VIDEO_PURIFY = "video_purify";
     public static boolean hotVodDelete;
 }

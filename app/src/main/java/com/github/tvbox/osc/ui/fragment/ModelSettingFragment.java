@@ -75,6 +75,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
     private TextView tvFastSearchText;
     private TextView tvRecStyleText;
     private TextView tvIjkCachePlay;
+    private TextView tvVideoPurifyText;
 
     public static ModelSettingFragment newInstance() {
         return new ModelSettingFragment().setArguments();
@@ -124,6 +125,8 @@ public class ModelSettingFragment extends BaseLazyFragment {
         tvScale.setText(PlayerHelper.getScaleName(Hawk.get(HawkConfig.PLAY_SCALE, 0)));
         tvPlay.setText(PlayerHelper.getPlayerName(Hawk.get(HawkConfig.PLAY_TYPE, 0)));
         tvRender.setText(PlayerHelper.getRenderName(Hawk.get(HawkConfig.PLAY_RENDER, 0)));
+        tvVideoPurifyText = findViewById(R.id.tvVideoPurifyText);
+        tvVideoPurifyText.setText(Hawk.get(HawkConfig.VIDEO_PURIFY, true) ? "已开启" : "已关闭");
         tvIjkCachePlay.setText(Hawk.get(HawkConfig.IJK_CACHE_PLAY, false) ? "已开启" : "已关闭");
         findViewById(R.id.llDebug).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -621,6 +624,11 @@ public class ModelSettingFragment extends BaseLazyFragment {
                ResetDialog dialog = new ResetDialog(mActivity);
                 dialog.show();
             }
+        });
+        findViewById(R.id.llVideoPurify).setOnClickListener(v -> {
+            FastClickCheckUtil.check(v);
+            Hawk.put(HawkConfig.VIDEO_PURIFY, !Hawk.get(HawkConfig.VIDEO_PURIFY, true));
+            tvVideoPurifyText.setText(Hawk.get(HawkConfig.VIDEO_PURIFY, true) ? "已开启" : "已关闭");
         });
         findViewById(R.id.llSearchTv).setOnClickListener(new View.OnClickListener() {
             @Override
