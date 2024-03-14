@@ -51,4 +51,11 @@
         <item name="android:drawablePadding">10.0dip</item>
         <item name="android:radius">10dp</item>
     </style>
+
+    <style name="surfaceType_surface">
+        <item name="surface_type">surface_view</item>
+    </style>
+    <style name="surfaceType_texture">
+        <item name="surface_type">texture_view</item>
+    </style>
 </resources>

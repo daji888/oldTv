@@ -4,15 +4,15 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 
 import androidx.annotation.Nullable;
-import com.google.android.exoplayer2.C;
-import com.google.android.exoplayer2.Format;
-import com.google.android.exoplayer2.util.MimeTypes;
-import com.google.android.exoplayer2.Player;
-import com.google.android.exoplayer2.source.TrackGroup;
-import com.google.android.exoplayer2.Tracks;
-import com.google.android.exoplayer2.source.TrackGroupArray;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.MappingTrackSelector;
+import androidx.media3.common.C;
+import androidx.media3.common.Format;
+import androidx.media3.common.MimeTypes;
+import androidx.media3.common.Player;
+import androidx.media3.common.TrackGroup;
+import androidx.media3.common.Tracks;
+import androidx.media3.exoplayer.source.TrackGroupArray;
+import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
+import androidx.media3.exoplayer.trackselection.MappingTrackSelector;
 import com.github.tvbox.osc.util.StringUtils;
 import xyz.doikki.videoplayer.exo.ExoMediaPlayer;
 
