@@ -45,7 +45,7 @@ public class SearchSubtitleDialog extends BaseDialog {
     private int maxPage = 5;
     private String searchWord = "";
 
-    private List<Subtitle> zipSubtitles = new ArrayList<>();
+    private List<SubtitleBean> zipSubtitles = new ArrayList<>();
     private boolean isSearchPag = true;
 
 
@@ -187,7 +187,7 @@ public class SearchSubtitleDialog extends BaseDialog {
         });
     }
 
-    private void loadSubtitle(Subtitle subtitle) {
+    private void loadSubtitle(SubtitleBean subtitle) {
         subtitleViewModel.getSubtitleUrl(subtitle, mSubtitleLoader);
     }
 
@@ -196,7 +196,7 @@ public class SearchSubtitleDialog extends BaseDialog {
     }
 
     public interface SubtitleLoader {
-        void loadSubtitle(Subtitle subtitle);
+        void loadSubtitle(SubtitleBean subtitle);
     }
 
     @Override
