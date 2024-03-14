@@ -4,7 +4,7 @@ import android.text.TextUtils;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.github.tvbox.osc.bean.Subtitle;
+import com.github.tvbox.osc.bean.SubtitleBean;
 import com.github.tvbox.osc.bean.SubtitleData;
 import com.github.tvbox.osc.ui.dialog.SearchSubtitleDialog;
 import com.lzy.okgo.OkGo;
@@ -41,15 +41,15 @@ public class SubtitleViewModel extends ViewModel {
         searchResultFromAssrt(title, page);
     }
 
-    public void getSearchResultSubtitleUrls(Subtitle subtitle) {
+    public void getSearchResultSubtitleUrls(SubtitleBean subtitle) {
         getSearchResultSubtitleUrlsFromAssrt(subtitle);
     }
 
-    public void getSubtitleUrl(Subtitle subtitle, SearchSubtitleDialog.SubtitleLoader subtitleLoader) {
+    public void getSubtitleUrl(SubtitleBean subtitle, SearchSubtitleDialog.SubtitleLoader subtitleLoader) {
         getSubtitleUrlFromAssrt(subtitle, subtitleLoader);
     }
 
-    private void setSearchListData(List<Subtitle> data, boolean isNew, boolean isZip) {
+    private void setSearchListData(List<SubtitleBean> data, boolean isNew, boolean isZip) {
         try {
             SubtitleData subtitleData = new SubtitleData();
             subtitleData.setSubtitleList(data);
@@ -126,7 +126,7 @@ public class SubtitleViewModel extends ViewModel {
 
     Pattern regexShooterFileOnclick = Pattern.compile("onthefly\\(\"(\\d+)\",\"(\\d+)\",\"([\\s\\S]*)\"\\)");
 
-    private void getSearchResultSubtitleUrlsFromAssrt(Subtitle subtitle) {
+    private void getSearchResultSubtitleUrlsFromAssrt(SubtitleBean subtitle) {
         try {
             String url = subtitle.getUrl();
             OkGo.<String>get(url).execute(new AbsCallback<String>() {
@@ -192,7 +192,7 @@ public class SubtitleViewModel extends ViewModel {
         }
     }
 
-    private void getSubtitleUrlFromAssrt(Subtitle subtitle, SearchSubtitleDialog.SubtitleLoader subtitleLoader) {
+    private void getSubtitleUrlFromAssrt(SubtitleBean subtitle, SearchSubtitleDialog.SubtitleLoader subtitleLoader) {
         String ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.54 Safari/537.36";
         Request request = new Request.Builder()
                 .url(subtitle.getUrl())
