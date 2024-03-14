@@ -283,11 +283,6 @@ public class PlayFragment extends BaseLazyFragment {
             }
 
             @Override
-            public void openVideo() {
-                openMyVideo();
-            }
-
-            @Override
             public void prepared() {
                 initSubtitleView();
             }
@@ -543,15 +538,6 @@ public class PlayFragment extends BaseLazyFragment {
             }
         }, bean, trackInfo.getAudioSelected(false));
         dialog.show();
-    }
-
-    void openMyVideo() {
-        Intent i = new Intent();
-        i.addCategory(Intent.CATEGORY_DEFAULT);
-        i.setAction(android.content.Intent.ACTION_VIEW);
-        if (videoURL == null) return;
-        i.setDataAndType(Uri.parse(videoURL), "video/*");
-        startActivity(Intent.createChooser(i, "Open Video with ..."));
     }
 
     void setTip(String msg, boolean loading, boolean err) {
