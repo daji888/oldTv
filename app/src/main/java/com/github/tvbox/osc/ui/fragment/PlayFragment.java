@@ -50,19 +50,16 @@ import com.github.tvbox.osc.base.App;
 import com.github.tvbox.osc.base.BaseLazyFragment;
 import com.github.tvbox.osc.bean.ParseBean;
 import com.github.tvbox.osc.bean.SourceBean;
-import com.github.tvbox.osc.bean.SubtitleBean;
+import com.github.tvbox.osc.bean.Subtitle;
 import com.github.tvbox.osc.bean.VodInfo;
 import com.github.tvbox.osc.cache.CacheManager;
 import com.github.tvbox.osc.event.RefreshEvent;
 import com.github.tvbox.osc.player.EXOmPlayer;
-import com.github.tvbox.osc.player.IjkmPlayer;
+import com.github.tvbox.osc.player.IjkMediaPlayer;
 import com.github.tvbox.osc.player.MyVideoView;
 import com.github.tvbox.osc.player.TrackInfo;
 import com.github.tvbox.osc.player.TrackInfoBean;
 import com.github.tvbox.osc.player.controller.VodController;
-import com.github.tvbox.osc.player.thirdparty.Kodi;
-import com.github.tvbox.osc.player.thirdparty.MXPlayer;
-import com.github.tvbox.osc.player.thirdparty.ReexPlayer;
 import com.github.tvbox.osc.server.ControlManager;
 import com.github.tvbox.osc.server.RemoteServer;
 import com.github.tvbox.osc.subtitle.model.Subtitle;
@@ -333,13 +330,13 @@ public class PlayFragment extends BaseLazyFragment {
                 SearchSubtitleDialog searchSubtitleDialog = new SearchSubtitleDialog(getActivity());
                 searchSubtitleDialog.setSubtitleLoader(new SearchSubtitleDialog.SubtitleLoader() {
                 	@Override
-                    public void loadSubtitle(SubtitleBean subtitle) {
+                    public void loadSubtitle(Subtitle subtitle) {
                     	if (!isAdded()) return;
                         requireActivity().runOnUiThread(new Runnable() {
                         	@Override
                             public void run() {
                                 String zimuUrl = subtitle.getUrl();
-                                LOG.i("Remote SubtitleBean Url: " + zimuUrl);
+                                LOG.i("Remote Subtitle Url: " + zimuUrl);
                                 setSubtitle(zimuUrl); //设置字幕
                                 if (searchSubtitleDialog != null) {
                                     searchSubtitleDialog.dismiss();
@@ -372,7 +369,7 @@ public class PlayFragment extends BaseLazyFragment {
                     .withChosenListener(new ChooserDialog.Result() {
 	                    @Override
 	                    public void onChoosePath(String path, File pathFile) {
-	                        LOG.i("Local SubtitleBean Path: " + path);
+	                        LOG.i("Local Subtitle Path: " + path);
 	                        setSubtitle(path); //设置字幕
 	                    }
 	                })
@@ -401,7 +398,7 @@ public class PlayFragment extends BaseLazyFragment {
             trackInfo = ((EXOmPlayer) mediaPlayer).getTrackInfo();
         }
         if (mediaPlayer instanceof IjkmPlayer) {
-            trackInfo = ((IjkmPlayer) mediaPlayer).getTrackInfo();
+            trackInfo = ((IjkMediaPlayer) mediaPlayer).getTrackInfo();
         }
 
         if (trackInfo == null) {
@@ -411,11 +408,11 @@ public class PlayFragment extends BaseLazyFragment {
 
         List<TrackInfoBean> bean = trackInfo.getSubtitle();
         if (bean.size() < 1) {
-            Toast.makeText(mContext, getString(R.string.vod_sub_na), Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "没有内置字幕", Toast.LENGTH_SHORT).show();
             return;
         }
         SelectDialog<TrackInfoBean> dialog = new SelectDialog<>(getActivity());
-        dialog.setTip(getString(R.string.vod_sub_sel));
+        dialog.setTip("切换内置字幕");
         dialog.setAdapter(null, new SelectDialogAdapter.SelectDialogInterface<TrackInfoBean>() {
             @Override
             public void click(TrackInfoBean value, int pos) {
@@ -426,11 +423,11 @@ public class PlayFragment extends BaseLazyFragment {
                     }
                     mediaPlayer.pause();
                     long progress = mediaPlayer.getCurrentPosition();//保存当前进度，ijk 切换轨道 会有快进几秒
-                    if (mediaPlayer instanceof IjkmPlayer) {
+                    if (mediaPlayer instanceof IjkMediaPlayer) {
                         mController.mSubtitleView.destroy();
                         mController.mSubtitleView.clearSubtitleCache();
                         mController.mSubtitleView.isInternal = true;
-                        ((IjkmPlayer) mediaPlayer).setTrack(value.trackId);
+                        ((IjkMediaPlayer) mediaPlayer).setTrack(value.trackId);
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -482,22 +479,22 @@ public class PlayFragment extends BaseLazyFragment {
         AbstractPlayer mediaPlayer = mVideoView.getMediaPlayer();
 
         TrackInfo trackInfo = null;
-        if (mediaPlayer instanceof IjkmPlayer) {
-            trackInfo = ((IjkmPlayer) mediaPlayer).getTrackInfo();
+        if (mediaPlayer instanceof IjkMediaPlayer) {
+            trackInfo = ((IjkMediaPlayer) mediaPlayer).getTrackInfo();
         }
         if (mediaPlayer instanceof EXOmPlayer) {
             trackInfo = ((EXOmPlayer) mediaPlayer).getTrackInfo();
         }
 
         if (trackInfo == null) {
-            Toast.makeText(mContext, getString(R.string.vod_no_audio), Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "没有音轨", Toast.LENGTH_SHORT).show();
             return;
         }
 
         List<TrackInfoBean> bean = trackInfo.getAudio();
         if (bean.size() < 1) return;
         SelectDialog<TrackInfoBean> dialog = new SelectDialog<>(getActivity());
-        dialog.setTip(getString(R.string.vod_audio));
+        dialog.setTip("切换音轨");
         dialog.setAdapter(null, new SelectDialogAdapter.SelectDialogInterface<TrackInfoBean>() {
             @Override
             public void click(TrackInfoBean value, int pos) {
@@ -507,8 +504,8 @@ public class PlayFragment extends BaseLazyFragment {
                     }
                     mediaPlayer.pause();
                     long progress = mediaPlayer.getCurrentPosition();//保存当前进度，ijk 切换轨道 会有快进几秒
-                    if (mediaPlayer instanceof IjkmPlayer) {
-                        ((IjkmPlayer) mediaPlayer).setTrack(value.trackId);
+                    if (mediaPlayer instanceof IjkMediaPlayer) {
+                        ((IjkMediaPlayer) mediaPlayer).setTrack(value.trackId);
                     }
                     if (mediaPlayer instanceof EXOmPlayer) {
                         ((EXOmPlayer) mediaPlayer).selectExoTrack(value);
@@ -754,23 +751,8 @@ public class PlayFragment extends BaseLazyFragment {
                                 String playTitle = mVodInfo.name + " : " + vs.name;
                                 setTip("调用外部播放器" + PlayerHelper.getPlayerName(playerType) + "进行播放", true, false);
                                 boolean callResult = false;
-                                switch (playerType) {
-                                    case 10: {
-                                        extPlay = true;
-                                        callResult = MXPlayer.run(requireActivity(), url, playTitle, playSubtitle, headers);
-                                        break;
-                                    }
-                                    case 11: {
-                                        extPlay = true;
-                                        callResult = ReexPlayer.run(requireActivity(), url, playTitle, playSubtitle, headers);
-                                        break;
-                                    }
-                                    case 12: {
-                                        extPlay = true;
-                                        callResult = Kodi.run(requireActivity(), url, playTitle, playSubtitle, headers);
-                                        break;
-                                    }
-                                }
+                                long progress = getSavedProgress(progressKey);
+                                callResult = PlayerHelper.runExternalPlayer(playerType, requireActivity(), url, playTitle, playSubtitle, headers, progress);
                                 setTip("调用外部播放器" + PlayerHelper.getPlayerName(playerType) + (callResult ? "成功" : "失败"), callResult, !callResult);
                                 return;
                             }
@@ -804,12 +786,12 @@ public class PlayFragment extends BaseLazyFragment {
     private void initSubtitleView() {
     	AbstractPlayer mediaPlayer = mVideoView.getMediaPlayer();
         TrackInfo trackInfo = null;
-        if (mVideoView.getMediaPlayer() instanceof IjkmPlayer) {
-            trackInfo = ((IjkmPlayer) (mVideoView.getMediaPlayer())).getTrackInfo();
+        if (mVideoView.getMediaPlayer() instanceof IjkMediaPlayer) {
+            trackInfo = ((IjkMediaPlayer) (mVideoView.getMediaPlayer())).getTrackInfo();
             if (trackInfo != null && trackInfo.getSubtitle().size() > 0) {
                 mController.mSubtitleView.hasInternal = true;
             }
-            ((IjkmPlayer) (mVideoView.getMediaPlayer())).setOnTimedTextListener(new IMediaPlayer.OnTimedTextListener() {
+            ((IjkMediaPlayer) (mVideoView.getMediaPlayer())).setOnTimedTextListener(new IMediaPlayer.OnTimedTextListener() {
                 @Override
                 public void onTimedText(IMediaPlayer mp, IjkTimedText text) {
                     if (mController.mSubtitleView.isInternal) {
@@ -836,6 +818,10 @@ public class PlayFragment extends BaseLazyFragment {
                             subtitle.content = ss.toString();
                             mController.mSubtitleView.onSubtitleChanged(subtitle);
                         }
+		       }else{
+                        com.github.tvbox.osc.subtitle.model.Subtitle subtitle = new com.github.tvbox.osc.subtitle.model.Subtitle();
+                        subtitle.content = "";
+                        mController.mSubtitleView.onSubtitleChanged(subtitle);    
                     }
                 }
             });
@@ -852,7 +838,7 @@ public class PlayFragment extends BaseLazyFragment {
             } else {
                 if (mController.mSubtitleView.hasInternal) {
                     mController.mSubtitleView.isInternal = true;
-                    if (mediaPlayer instanceof IjkmPlayer) {
+                    if (mediaPlayer instanceof IjkMediaPlayer) {
                         if (trackInfo != null && trackInfo.getSubtitle()
                             .size() > 0) {
                             List < TrackInfoBean > subtitleTrackList = trackInfo.getSubtitle();
@@ -863,13 +849,13 @@ public class PlayFragment extends BaseLazyFragment {
                                 if (lowerLang.contains("zh") || lowerLang.contains("ch")) {
                                     hasCh = true;
                                     if (selectedIndex != subtitleTrackInfoBean.trackId) {
-                                        ((IjkmPlayer)(mVideoView.getMediaPlayer()))
+                                        ((IjkMediaPlayer)(mVideoView.getMediaPlayer()))
                                             .setTrack(subtitleTrackInfoBean.trackId);
                                         break;
                                     }
                                 }
                             }
-                            if (!hasCh)((IjkmPlayer)(mVideoView.getMediaPlayer()))
+                            if (!hasCh)((IjkMediaPlayer)(mVideoView.getMediaPlayer()))
                                 .setTrack(subtitleTrackList.get(0)
                                 .trackId);
                         }
