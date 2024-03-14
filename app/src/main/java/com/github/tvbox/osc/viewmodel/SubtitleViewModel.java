@@ -84,12 +84,12 @@ public class SubtitleViewModel extends ViewModel {
                                 String content = response.body();
                                 Document doc = Jsoup.parse(content);
                                 Elements items = doc.select(".resultcard .sublist_box_title a.introtitle");
-                                List<Subtitle> data = new ArrayList<>();
+                                List<SubtitleBean> data = new ArrayList<>();
                                 for (Element item : items) {
                                     String title = item.attr("title");
                                     String href = item.attr("href");
                                     if (TextUtils.isEmpty(href)) continue;
-                                    Subtitle one = new Subtitle();
+                                    SubtitleBean one = new SubtitleBean();
                                     one.setName(title);
                                     one.setUrl("https://assrt.net" + href);
                                     one.setIsZip(true);
@@ -134,7 +134,7 @@ public class SubtitleViewModel extends ViewModel {
                 public void onSuccess(com.lzy.okgo.model.Response<String> response) {
                     try {
                         String content = response.body();
-                        List<Subtitle> data = new ArrayList<>();
+                        List<SubtitleBean> data = new ArrayList<>();
                         Document doc = Jsoup.parse(content);
                         Elements items = doc.select("#detail-filelist .waves-effect");
                         if (items.size() > 0) {//压缩包里面的字幕
@@ -144,7 +144,7 @@ public class SubtitleViewModel extends ViewModel {
                                 Matcher matcher = regexShooterFileOnclick.matcher(onclick);
                                 if (matcher.find()) {
                                     String url = String.format("https://secure.assrt.net/download/%s/-/%s/%s", matcher.group(1), matcher.group(2), matcher.group(3));
-                                    Subtitle one = new Subtitle();
+                                    SubtitleBean one = new SubtitleBean();
                                     Element name = item.selectFirst("#filelist-name");
                                     one.setName(name == null ? matcher.group(3) : name.text());
                                     one.setUrl(url);
@@ -160,7 +160,7 @@ public class SubtitleViewModel extends ViewModel {
                             String h2 = href.toLowerCase();
                             if (h2.endsWith("srt") || h2.endsWith("ass") || h2.endsWith("scc") || h2.endsWith("ttml")) {
                                 String url = "https://assrt.net" + href;
-                                Subtitle one = new Subtitle();
+                                SubtitleBean one = new SubtitleBean();
                                 String title = href.substring(href.lastIndexOf("/") + 1);
                                 one.setName(URLDecoder.decode(title));
                                 one.setUrl(url);
