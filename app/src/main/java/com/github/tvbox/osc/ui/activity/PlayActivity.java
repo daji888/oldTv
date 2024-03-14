@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.PendingIntent;
-import android.app.PictureInPictureParams;
 import android.app.RemoteAction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -57,7 +56,7 @@ import com.github.tvbox.osc.base.App;
 import com.github.tvbox.osc.base.BaseActivity;
 import com.github.tvbox.osc.bean.ParseBean;
 import com.github.tvbox.osc.bean.SourceBean;
-import com.github.tvbox.osc.bean.Subtitle;
+import com.github.tvbox.osc.bean.SubtitleBean;
 import com.github.tvbox.osc.bean.VodInfo;
 import com.github.tvbox.osc.cache.CacheManager;
 import com.github.tvbox.osc.event.RefreshEvent;
@@ -143,12 +142,6 @@ public class PlayActivity extends BaseActivity {
     private String videoURL;
     private long videoDuration = -1;
     private List<String> videoSegmentationURL = new ArrayList<>();
-
-    private BroadcastReceiver pipActionReceiver;
-    public static final String BROADCAST_ACTION = "VOD_CONTROL";
-    public static final int BROADCAST_ACTION_PREV = 0;
-    public static final int BROADCAST_ACTION_PLAYPAUSE = 1;
-    public static final int BROADCAST_ACTION_NEXT = 2;
 
     @Override
     protected int getLayoutResID() {
