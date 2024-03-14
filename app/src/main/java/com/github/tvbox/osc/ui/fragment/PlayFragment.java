@@ -397,7 +397,7 @@ public class PlayFragment extends BaseLazyFragment {
         if (mediaPlayer instanceof EXOmPlayer) {
             trackInfo = ((EXOmPlayer) mediaPlayer).getTrackInfo();
         }
-        if (mediaPlayer instanceof IjkmPlayer) {
+        if (mediaPlayer instanceof IjkMediaPlayer) {
             trackInfo = ((IjkMediaPlayer) mediaPlayer).getTrackInfo();
         }
 
