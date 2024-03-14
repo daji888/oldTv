@@ -73,7 +73,7 @@ public class SearchSubtitleDialog extends BaseDialog {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 FastClickCheckUtil.check(view);
-                Subtitle subtitle = searchAdapter.getData().get(position);
+                SubtitleBean subtitle = searchAdapter.getData().get(position);
                 //加载字幕
                 if (mSubtitleLoader != null) {
                     if (subtitle.getIsZip()) {
@@ -138,7 +138,7 @@ public class SearchSubtitleDialog extends BaseDialog {
         subtitleViewModel.searchResult.observe((LifecycleOwner) mContext, new Observer<SubtitleData>() {
             @Override
             public void onChanged(SubtitleData subtitleData) {
-                List<Subtitle> data = subtitleData.getSubtitleList();
+                List<SubtitleBean> data = subtitleData.getSubtitleList();
                 loadingBar.setVisibility(View.GONE);
                 mGridView.setVisibility(View.VISIBLE);
                 if (data == null) {
