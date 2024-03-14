@@ -330,13 +330,13 @@ public class PlayFragment extends BaseLazyFragment {
                 SearchSubtitleDialog searchSubtitleDialog = new SearchSubtitleDialog(getActivity());
                 searchSubtitleDialog.setSubtitleLoader(new SearchSubtitleDialog.SubtitleLoader() {
                 	@Override
-                    public void loadSubtitle(Subtitle subtitle) {
+                    public void loadSubtitle(SubtitleBean subtitle) {
                     	if (!isAdded()) return;
                         requireActivity().runOnUiThread(new Runnable() {
                         	@Override
                             public void run() {
                                 String zimuUrl = subtitle.getUrl();
-                                LOG.i("Remote Subtitle Url: " + zimuUrl);
+                                LOG.i("Remote SubtitleBean Url: " + zimuUrl);
                                 setSubtitle(zimuUrl); //设置字幕
                                 if (searchSubtitleDialog != null) {
                                     searchSubtitleDialog.dismiss();
@@ -369,7 +369,7 @@ public class PlayFragment extends BaseLazyFragment {
                     .withChosenListener(new ChooserDialog.Result() {
 	                    @Override
 	                    public void onChoosePath(String path, File pathFile) {
-	                        LOG.i("Local Subtitle Path: " + path);
+	                        LOG.i("Local SubtitleBean Path: " + path);
 	                        setSubtitle(path); //设置字幕
 	                    }
 	                })
