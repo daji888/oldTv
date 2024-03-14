@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TrackInfo {
-    private List<TrackInfoBean> audio;
-    private List<TrackInfoBean> subtitle;
+    private final List<TrackInfoBean> audio;
+    private final List<TrackInfoBean> subtitle;
 
     public TrackInfo() {
         audio = new ArrayList<>();
