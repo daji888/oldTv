@@ -156,10 +156,6 @@ public class PlayActivity extends BaseActivity {
     }
 
     private void initView() {
-
-        // takagen99 : Hide only when video playing
-        hideSystemUI(false);
-
         mHandler = new Handler(new Handler.Callback() {
             @Override
             public boolean handleMessage(@NonNull Message msg) {
