@@ -17,7 +17,7 @@ import androidx.lifecycle.ViewModelStoreOwner;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.github.tvbox.osc.R;
-import com.github.tvbox.osc.bean.Subtitle;
+import com.github.tvbox.osc.bean.SubtitleBean;
 import com.github.tvbox.osc.bean.SubtitleData;
 import com.github.tvbox.osc.ui.adapter.SearchSubtitleAdapter;
 import com.github.tvbox.osc.util.FastClickCheckUtil;
