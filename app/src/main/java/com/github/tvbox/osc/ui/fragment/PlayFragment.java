@@ -402,7 +402,7 @@ public class PlayFragment extends BaseLazyFragment {
         }
 
         if (trackInfo == null) {
-            Toast.makeText(mContext, getString(R.string.vod_sub_na), Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "没有内置字幕", Toast.LENGTH_SHORT).show();
             return;
         }
 
