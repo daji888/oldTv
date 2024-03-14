@@ -729,8 +729,6 @@ public class PlayFragment extends BaseLazyFragment {
                         videoURL = url;                        
                         try {
                             int playerType = mVodPlayerCfg.getInt("pl");
-                            // takagen99: Check for External Player
-                            extPlay = false;
                             if (playerType >= 10) {
                                 VodInfo.VodSeries vs = mVodInfo.seriesMap.get(mVodInfo.playFlag).get(mVodInfo.playIndex);
                                 String playTitle = mVodInfo.name + " : " + vs.name;
@@ -992,9 +990,6 @@ public class PlayFragment extends BaseLazyFragment {
         return false;
     }
 
-    // takagen99 : Picture-in-Picture support
-    public boolean extPlay;
-    
     @Override
     public void onPause() {
         super.onPause();
