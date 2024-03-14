@@ -38,8 +38,8 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DiffUtil;
-import com.google.android.exoplayer2.Player;
-import com.google.android.exoplayer2.text.Cue;
+import androidx.media3.common.Player;
+import androidx.media3.common.text.Cue;
 
 import com.github.catvod.crawler.Spider;
 import com.github.tvbox.osc.R;
