@@ -63,7 +63,6 @@ import com.github.tvbox.osc.player.controller.VodController;
 import com.github.tvbox.osc.server.ControlManager;
 import com.github.tvbox.osc.server.RemoteServer;
 import com.github.tvbox.osc.subtitle.model.Subtitle;
-import com.github.tvbox.osc.ui.activity.DetailActivity;
 import com.github.tvbox.osc.ui.adapter.SelectDialogAdapter;
 import com.github.tvbox.osc.ui.dialog.SearchSubtitleDialog;
 import com.github.tvbox.osc.ui.dialog.SelectDialog;
@@ -737,8 +736,6 @@ public class PlayFragment extends BaseLazyFragment {
                                 String playTitle = mVodInfo.name + " : " + vs.name;
                                 setTip("调用外部播放器" + PlayerHelper.getPlayerName(playerType) + "进行播放", true, false);
                                 boolean callResult = false;
-                                long progress = getSavedProgress(progressKey);
-                                callResult = PlayerHelper.runExternalPlayer(playerType, requireActivity(), url, playTitle, playSubtitle, headers, progress);
                                 setTip("调用外部播放器" + PlayerHelper.getPlayerName(playerType) + (callResult ? "成功" : "失败"), callResult, !callResult);
                                 return;
                             }
@@ -1066,11 +1063,6 @@ public class PlayFragment extends BaseLazyFragment {
                 Toast.makeText(requireContext(), "已经是第一集了", Toast.LENGTH_SHORT).show();
             }else {
                 Toast.makeText(requireContext(), "已经是最后一集了", Toast.LENGTH_SHORT).show();
-            }
-            // takagen99: To auto go back to Detail Page after last episode
-            if (inProgress && ((DetailActivity) mActivity).fullWindows) {
-                ((DetailActivity) mActivity).toggleFullPreview();
-//                ((DetailActivity) mActivity).setScreenOff();
             }
             return;
         }
