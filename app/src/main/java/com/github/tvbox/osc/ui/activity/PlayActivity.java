@@ -730,8 +730,6 @@ public class PlayActivity extends BaseActivity {
                         videoURL = url;
                         try {
                             int playerType = mVodPlayerCfg.getInt("pl");
-                            // takagen99: Check for External Player
-                            extPlay = false;
                             if (playerType >= 10) {
                                 VodInfo.VodSeries vs = mVodInfo.seriesMap.get(mVodInfo.playFlag).get(mVodInfo.playIndex);
                                 String playTitle = mVodInfo.name + " : " + vs.name;
