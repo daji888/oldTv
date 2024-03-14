@@ -9,14 +9,14 @@ import com.github.tvbox.osc.util.FileUtils;
 import com.github.tvbox.osc.util.LOG;
 import com.github.tvbox.osc.util.MD5;
 
-import com.github.quickjs.tvbox.android.QuickJSLoader;
-import com.github.quickjs.tvbox.wrapper.Function;
-import com.github.quickjs.tvbox.wrapper.JSArray;
+import com.github.tvbox.quickjs.android.QuickJSLoader;
+import com.github.tvbox.quickjs.wrapper.Function;
+import com.github.tvbox.quickjs.wrapper.JSArray;
 
-import com.github.quickjs.tvbox.wrapper.JSCallFunction;
-import com.github.quickjs.tvbox.wrapper.JSObject;
-import com.github.quickjs.tvbox.wrapper.JSUtils;
-import com.github.quickjs.tvbox.wrapper.QuickJSContext;
+import com.github.tvbox.quickjs.wrapper.JSCallFunction;
+import com.github.tvbox.quickjs.wrapper.JSObject;
+import com.github.tvbox.quickjs.wrapper.JSUtils;
+import com.github.tvbox.quickjs.wrapper.QuickJSContext;
 
 import org.json.JSONArray;
 
