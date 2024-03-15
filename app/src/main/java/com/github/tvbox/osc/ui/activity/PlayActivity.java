@@ -790,7 +790,8 @@ public class PlayActivity extends BaseActivity {
             } else {
                 if (mController.mSubtitleView.hasInternal) {
                     mController.mSubtitleView.isInternal = true;
-                    if (trackInfo != null && trackInfo.getSubtitle().size()>0) {
+                    if (mediaPlayer instanceof IjkMediaPlayer) {
+                        if (trackInfo != null && trackInfo.getSubtitle().size()>0) {
                         List<TrackInfoBean> subtitleTrackList = trackInfo.getSubtitle();
                         int selectedIndex = trackInfo.getSubtitleSelected(true);
                         boolean hasCh =false;
@@ -805,7 +806,8 @@ public class PlayActivity extends BaseActivity {
                             }
                         }
                         if(!hasCh)((IjkMediaPlayer)(mVideoView.getMediaPlayer())).setTrack(subtitleTrackList.get(0).trackId);
-                    }
+                     }
+                   }     
                 }
             }
         }
