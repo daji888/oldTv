@@ -48,7 +48,7 @@ import com.github.tvbox.osc.base.App;
 import com.github.tvbox.osc.base.BaseLazyFragment;
 import com.github.tvbox.osc.bean.ParseBean;
 import com.github.tvbox.osc.bean.SourceBean;
-import com.github.tvbox.osc.bean.Subtitle;
+import com.github.tvbox.osc.bean.SubtitleBean;
 import com.github.tvbox.osc.bean.VodInfo;
 import com.github.tvbox.osc.cache.CacheManager;
 import com.github.tvbox.osc.event.RefreshEvent;
@@ -335,13 +335,13 @@ public class PlayFragment extends BaseLazyFragment {
                 SearchSubtitleDialog searchSubtitleDialog = new SearchSubtitleDialog(getActivity());
                 searchSubtitleDialog.setSubtitleLoader(new SearchSubtitleDialog.SubtitleLoader() {
                     @Override
-                    public void loadSubtitle(Subtitle subtitle) {
+                    public void loadSubtitle(SubtitleBean subtitle) {
                         if (!isAdded()) return;
                         requireActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 String zimuUrl = subtitle.getUrl();
-                                LOG.i("Remote Subtitle Url: " + zimuUrl);
+                                LOG.i("Remote SubtitleBean Url: " + zimuUrl);
                                 setSubtitle(zimuUrl);//设置字幕
                                 searchSubtitleDialog.dismiss();
                             }
@@ -365,7 +365,7 @@ public class PlayFragment extends BaseLazyFragment {
                         .withChosenListener(new ChooserDialog.Result() {
                             @Override
                             public void onChoosePath(String path, File pathFile) {
-                                LOG.i("Local Subtitle Path: " + path);
+                                LOG.i("Local SubtitleBean Path: " + path);
                                 setSubtitle(path);//设置字幕
                             }
                         })

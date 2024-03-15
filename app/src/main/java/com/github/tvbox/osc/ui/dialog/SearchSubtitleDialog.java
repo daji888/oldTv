@@ -17,7 +17,7 @@ import androidx.lifecycle.ViewModelStoreOwner;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.github.tvbox.osc.R;
-import com.github.tvbox.osc.bean.Subtitle;
+import com.github.tvbox.osc.bean.SubtitleBean;
 import com.github.tvbox.osc.bean.SubtitleData;
 import com.github.tvbox.osc.ui.adapter.SearchSubtitleAdapter;
 import com.github.tvbox.osc.util.FastClickCheckUtil;
@@ -45,7 +45,7 @@ public class SearchSubtitleDialog extends BaseDialog {
     private int maxPage = 5;
     private String searchWord = "";
 
-    private List<Subtitle> zipSubtitles = new ArrayList<>();
+    private List<SubtitleBean> zipSubtitles = new ArrayList<>();
     private boolean isSearchPag = true;
 
 
@@ -73,7 +73,7 @@ public class SearchSubtitleDialog extends BaseDialog {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 FastClickCheckUtil.check(view);
-                Subtitle subtitle = searchAdapter.getData().get(position);
+                SubtitleBean subtitle = searchAdapter.getData().get(position);
                 //加载字幕
                 if (mSubtitleLoader != null) {
                     if (subtitle.getIsZip()) {
@@ -138,7 +138,7 @@ public class SearchSubtitleDialog extends BaseDialog {
         subtitleViewModel.searchResult.observe((LifecycleOwner) mContext, new Observer<SubtitleData>() {
             @Override
             public void onChanged(SubtitleData subtitleData) {
-                List<Subtitle> data = subtitleData.getSubtitleList();
+                List<SubtitleBean> data = subtitleData.getSubtitleList();
                 loadingBar.setVisibility(View.GONE);
                 mGridView.setVisibility(View.VISIBLE);
                 if (data == null) {
@@ -187,7 +187,7 @@ public class SearchSubtitleDialog extends BaseDialog {
         });
     }
 
-    private void loadSubtitle(Subtitle subtitle) {
+    private void loadSubtitle(SubtitleBean subtitle) {
         subtitleViewModel.getSubtitleUrl(subtitle, mSubtitleLoader);
     }
 
@@ -196,7 +196,7 @@ public class SearchSubtitleDialog extends BaseDialog {
     }
 
     public interface SubtitleLoader {
-        void loadSubtitle(Subtitle subtitle);
+        void loadSubtitle(SubtitleBean subtitle);
     }
 
     @Override
