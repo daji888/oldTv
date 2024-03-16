@@ -152,6 +152,10 @@ public class PlayFragment extends BaseLazyFragment {
         initData();
     }
 
+    public VodController getVodController() {
+        return mController;
+    }
+
     public long getSavedProgress(String url) {
         int st = 0;
         try {
