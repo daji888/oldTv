@@ -922,6 +922,8 @@ public class VodController extends BaseController {
         mHandler.sendEmptyMessage(1003);
     }
 
+    private boolean isPaused = false;
+
     @Override
     public boolean onKeyEvent(KeyEvent event) {
         myHandle.removeCallbacks(myRunnable);
