@@ -108,9 +108,9 @@ public class VodController extends BaseController {
     TextView mTotalTime;
     boolean mIsDragging;
     public FrameLayout mProgressTop;
-    LinearLayout mProgressRoot;
     ImageView mPauseIcon;
     LinearLayout mTapSeek;
+    LinearLayout mProgressRoot;
     TextView mProgressText;
     ImageView mProgressIcon;
     SeekBar mProgressSeekBar;
@@ -186,6 +186,8 @@ public class VodController extends BaseController {
         mPlayLoadNetSpeedRightTop = findViewById(R.id.tv_play_load_net_speed_right_top);
         mSeekBar = findViewById(R.id.seekBar);
         mProgressTop = findViewById(R.id.tv_pause_container);
+        mPauseIcon = findViewById(R.id.tv_pause_icon);
+        mTapSeek = findViewById(R.id.ll_ddtap);
         mProgressRoot = findViewById(R.id.tv_progress_container);
         mProgressIcon = findViewById(R.id.tv_progress_icon);
         mProgressText = findViewById(R.id.tv_progress_text);
