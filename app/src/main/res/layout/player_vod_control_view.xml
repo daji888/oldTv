@@ -469,6 +469,7 @@
             android:orientation="vertical">
 
             <ImageView
+                android:id="@+id/tv_pause_icon"
                 android:layout_width="@dimen/vs_60"
                 android:layout_height="@dimen/vs_60"
                 android:layout_gravity="center"
@@ -607,5 +608,15 @@
         android:paddingHorizontal="@dimen/vs_20"
         android:src="@drawable/icon_unlock"
         android:visibility="invisible" />
+
+    <LinearLayout
+        android:id="@+id/ll_ddtap"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/shape_player_tap"
+        android:orientation="horizontal"
+        android:visibility="invisible" >
+
+    </LinearLayout>
 
 </FrameLayout>
