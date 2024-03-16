@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.FrameLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -57,10 +58,16 @@ public class VodController extends BaseController {
                 switch (msg.what) {
                     case 1000: { // seek 刷新
                         mProgressRoot.setVisibility(VISIBLE);
+                        if (isPaused) {
+                            mProgressTop.setVisibility(GONE);
+                        }
                         break;
                     }
                     case 1001: { // seek 关闭
                         mProgressRoot.setVisibility(GONE);
+                        if (isPaused) {
+                            mProgressTop.setVisibility(VISIBLE);
+                        }
                         break;
                     }
                     case 1002: { // 显示底部菜单
@@ -101,6 +108,9 @@ public class VodController extends BaseController {
     TextView mCurrentTime;
     TextView mTotalTime;
     boolean mIsDragging;
+    public FrameLayout mProgressTop;
+    ImageView mPauseIcon;
+    LinearLayout mTapSeek;
     LinearLayout mProgressRoot;
     TextView mProgressText;
     ImageView mProgressIcon;
@@ -176,6 +186,9 @@ public class VodController extends BaseController {
         mPlayTitle1 = findViewById(R.id.tv_info_name1);
         mPlayLoadNetSpeedRightTop = findViewById(R.id.tv_play_load_net_speed_right_top);
         mSeekBar = findViewById(R.id.seekBar);
+        mProgressTop = findViewById(R.id.tv_pause_container);
+        mPauseIcon = findViewById(R.id.tv_pause_icon);
+        mTapSeek = findViewById(R.id.ll_ddtap);
         mProgressRoot = findViewById(R.id.tv_progress_container);
         mProgressIcon = findViewById(R.id.tv_progress_icon);
         mProgressText = findViewById(R.id.tv_progress_text);
@@ -355,6 +368,18 @@ public class VodController extends BaseController {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+            }
+        });
+        mPlayerScaleBtn.setOnLongClickListener(new OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                int checkOrientation = mActivity.getRequestedOrientation();
+                if (checkOrientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE || checkOrientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE || checkOrientation == ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE) {
+                    mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+                } else if (checkOrientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT || checkOrientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT || checkOrientation == ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT) {
+                    mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+                }
+                return true;
             }
         });
         mPlayerSpeedBtn.setOnClickListener(new OnClickListener() {
@@ -897,6 +922,8 @@ public class VodController extends BaseController {
         mHandler.sendEmptyMessage(1003);
     }
 
+    private boolean isPaused = false;
+
     @Override
     public boolean onKeyEvent(KeyEvent event) {
         myHandle.removeCallbacks(myRunnable);
@@ -951,6 +978,7 @@ public class VodController extends BaseController {
             fromLongPress = true;
             try {
                 speed_old = (float) mPlayerConfig.getDouble("sp");
+                mProgressTop.setVisibility(VISIBLE);
                 float speed = 3.0f;
                 mPlayerConfig.put("sp", speed);
                 updatePlayerCfgView();
@@ -967,6 +995,7 @@ public class VodController extends BaseController {
     public boolean onTouchEvent(MotionEvent e) {
         if (e.getAction() == MotionEvent.ACTION_UP) {
             if (fromLongPress) {
+                mProgressTop.setVisibility(GONE);
                 fromLongPress =false;
                 try {
                     float speed = speed_old;

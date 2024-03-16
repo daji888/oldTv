@@ -152,6 +152,10 @@ public class PlayFragment extends BaseLazyFragment {
         initData();
     }
 
+    public VodController getVodController() {
+        return mController;
+    }
+
     public long getSavedProgress(String url) {
         int st = 0;
         try {
@@ -1004,6 +1008,7 @@ public class PlayFragment extends BaseLazyFragment {
     public void onPause() {
         super.onPause();
         if (mVideoView != null) {
+            getVodController().mProgressTop.setAlpha(0);
             mVideoView.pause();
         }
     }
@@ -1012,6 +1017,7 @@ public class PlayFragment extends BaseLazyFragment {
     public void onResume() {
         super.onResume();
         if (mVideoView != null) {
+            getVodController().mProgressTop.setAlpha(1);
             mVideoView.resume();
         }
     }
