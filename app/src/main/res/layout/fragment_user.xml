@@ -268,7 +268,7 @@
         <com.owen.tvrecyclerview.widget.TvRecyclerView
             android:id="@+id/tvHotList2"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/vs_440"
+            android:layout_height="wrap_content"
             android:clipChildren="false"
             android:clipToPadding="false"
             android:layout_below="@+id/tvUserHome"
