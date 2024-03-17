@@ -8,7 +8,7 @@
 
     <FrameLayout
         android:id="@+id/mItemFrame"
-        android:layout_width="@dimen/vs_228"
+        android:layout_width="@dimen/vs_226"
         android:layout_height="@dimen/vs_296">
 
         <ImageView
