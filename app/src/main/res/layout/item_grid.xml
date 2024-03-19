@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/shape_grid_focus"
     android:focusable="true"
-    android:padding="@dimen/vs_2">
+    android:padding="@dimen/vs_5">
 
     <FrameLayout
         android:layout_width="@dimen/vs_226"
