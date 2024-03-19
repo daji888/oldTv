@@ -16,7 +16,7 @@
         <clip>
             <shape>
 <!--                进度条颜色-->
-                <solid android:color="@color/color_F0AD03" />
+                <solid android:color="@color/color_BC8802" />
             </shape>
         </clip>
     </item>
