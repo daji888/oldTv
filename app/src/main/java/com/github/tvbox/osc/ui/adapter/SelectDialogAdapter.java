@@ -85,7 +85,7 @@ public class SelectDialogAdapter<T> extends ListAdapter<T, SelectDialogAdapter.S
         String name = dialogInterface.getDisplay(value);
         TextView view = holder.itemView.findViewById(R.id.tvName);
         if (position == select) {
-            view.setTextColor(0xff02f8e1);
+            view.setTextColor(0xffFF9900);
             view .setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
         }else {
             view.setTextColor(Color.WHITE);
