@@ -9,8 +9,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/vs_50"
-                android:layout_marginTop="@dimen/vs_10"
-                android:layout_marginBottom="@dimen/vs_10"
+        android:layout_marginTop="@dimen/vs_10"
+        android:layout_marginBottom="@dimen/vs_10"
         android:paddingLeft="20mm"
        >
 
@@ -67,10 +67,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:paddingLeft="20mm"
-            android:paddingBottom="@dimen/vs_20"
-            android:paddingRight="20mm" >
-
+            android:padding="@dimen/vs_20">
 
             <com.owen.tvrecyclerview.widget.TvRecyclerView
                 android:id="@+id/mGridView"
