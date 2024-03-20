@@ -36,7 +36,7 @@ public class QuickSearchAdapter extends BaseQuickAdapter<Movie.Video, BaseViewHo
                     .load(item.pic)
                     .transform(new RoundTransformation(MD5.string2MD5(item.pic + "position=" + helper.getLayoutPosition()))
                             .centerCorp(true)
-                            .override(AutoSizeUtils.mm2px(mContext, 228), AutoSizeUtils.mm2px(mContext, 296))
+                            .override(AutoSizeUtils.mm2px(mContext, 214), AutoSizeUtils.mm2px(mContext, 280))
                             .roundRadius(AutoSizeUtils.mm2px(mContext, 10), RoundTransformation.RoundType.ALL))
                     .placeholder(R.drawable.error_loading)
                     .error(R.drawable.error_loading)
