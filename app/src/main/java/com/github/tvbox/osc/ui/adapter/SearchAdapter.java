@@ -41,7 +41,7 @@ public class SearchAdapter extends BaseQuickAdapter<Movie.Video, BaseViewHolder>
                         .load(item.pic)
                         .transform(new RoundTransformation(MD5.string2MD5(item.pic))
                                 .centerCorp(true)
-                                .override(AutoSizeUtils.mm2px(mContext, 210), AutoSizeUtils.mm2px(mContext, 280))
+                                .override(AutoSizeUtils.mm2px(mContext, 200), AutoSizeUtils.mm2px(mContext, 270))
                                 .roundRadius(AutoSizeUtils.mm2px(mContext, 10), RoundTransformation.RoundType.ALL))
                         .placeholder(R.drawable.img_loading_placeholder)
                         .noFade()
