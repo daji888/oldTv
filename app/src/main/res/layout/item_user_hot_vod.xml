@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:orientation="vertical"
-            android:padding="@dimen/vs_1">
+            android:padding="@dimen/vs_0">
 
             <TextView
                 android:id="@+id/tvNote"
