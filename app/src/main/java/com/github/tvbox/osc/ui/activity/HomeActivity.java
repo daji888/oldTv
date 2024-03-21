@@ -170,7 +170,7 @@ public class HomeActivity extends BaseActivity {
                     textView.setTextColor(HomeActivity.this.getResources().getColor(R.color.color_FFFFFF_85));
                     textView.invalidate();
                     if (position == 0) {
-                        textView.setTextColor(HomeActivity.this.getResources().getColor(R.color.color_DC2209));
+                        textView.setTextColor(HomeActivity.this.getResources().getColor(R.color.color_E6C200));
                     }
                     if (position == -1) {
                         position = 0;
