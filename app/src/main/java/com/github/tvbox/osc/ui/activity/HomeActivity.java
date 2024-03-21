@@ -169,6 +169,9 @@ public class HomeActivity extends BaseActivity {
                     textView.getPaint().setFakeBoldText(true);
                     textView.setTextColor(HomeActivity.this.getResources().getColor(R.color.color_FFFFFF));
                     textView.invalidate();
+                    if (position == 0) {
+                        textView.setTextColor(HomeActivity.this.getResources().getColor(R.color.color_BBFFFFFF));
+                    }
                     if (position == -1) {
                         position = 0;
                         HomeActivity.this.mGridView.setSelection(0);
