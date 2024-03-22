@@ -126,7 +126,7 @@
                     android:gravity="center"
                     android:padding="@dimen/vs_10"
                     android:text="字幕样式一"
-                    android:textColor="@color/color_FFFFFF"
+                    android:textColor="@color/color_BBFFFFFF"
                     android:shadowColor="@color/color_CC000000"
                     android:shadowRadius="2"
                     android:shadowDx="1"
@@ -154,8 +154,8 @@
                     android:padding="@dimen/vs_10"
                     android:text="字幕样式二"
                     android:textStyle="bold"
-                    android:textColor="@color/color_FFB6C1"
-                    android:shadowColor="@color/color_FFFFFF"
+                    android:textColor="@color/color_FF9900"
+                    android:shadowColor="@color/color_CC000000"
                     android:shadowRadius="2"
                     android:shadowDx="1"
                     android:shadowDy="1"
@@ -177,7 +177,7 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:text="字幕延时仅对外挂字幕有效"
-                    android:textColor="@color/color_6C3D3D3D"
+                    android:textColor="@color/color_CC000000"
                     android:textSize="@dimen/ts_20" />
 
             </LinearLayout>
