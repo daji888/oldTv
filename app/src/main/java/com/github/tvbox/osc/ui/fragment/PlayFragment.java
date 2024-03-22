@@ -383,9 +383,9 @@ public class PlayFragment extends BaseLazyFragment {
     @SuppressLint("UseCompatLoadingForColorStateLists")
     void setSubtitleViewTextStyle(int style) {
         if (style == 0) {
-            mController.mSubtitleView.setTextColor(getContext().getResources().getColorStateList(R.color.color_FFFFFF));
+            mController.mSubtitleView.setTextColor(getContext().getResources().getColorStateList(R.color.color_BBFFFFFF));
         } else if (style == 1) {
-            mController.mSubtitleView.setTextColor(getContext().getResources().getColorStateList(R.color.color_FFB6C1));
+            mController.mSubtitleView.setTextColor(getContext().getResources().getColorStateList(R.color.color_BC8802));
         }
     }
 
