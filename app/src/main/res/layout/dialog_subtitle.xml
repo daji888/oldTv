@@ -154,7 +154,7 @@
                     android:padding="@dimen/vs_10"
                     android:text="字幕样式二"
                     android:textStyle="bold"
-                    android:textColor="@color/color_BC8802"
+                    android:textColor="@color/color_FF9900"
                     android:shadowColor="@color/color_CC000000"
                     android:shadowRadius="2"
                     android:shadowDx="1"
