@@ -177,7 +177,7 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:text="字幕延时仅对外挂字幕有效"
-                    android:textColor="@color/color_6C3D3D3D"
+                    android:textColor="@color/color_CC000000"
                     android:textSize="@dimen/ts_20" />
 
             </LinearLayout>
