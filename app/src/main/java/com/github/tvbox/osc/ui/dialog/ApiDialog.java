@@ -77,10 +77,8 @@ public class ApiDialog extends BaseDialog {
             @Override
             public void onClick(View v) {
                 ArrayList<String> history = Hawk.get(HawkConfig.API_HISTORY, new ArrayList<String>());
-                if (history.isEmpty())
-                    return;
-                if (!history.contains("http://饭太硬.top/tv"))
-                    history.add("http://饭太硬.top/tv");
+                if (!history.contains("http://www.饭太硬.top/tv/"))
+                    history.add("http://www.饭太硬.top/tv/");
                 if (!history.contains("http://tv.nxog.top/m/"))
                     history.add("http://tv.nxog.top/m/");
                 if (!history.contains("https://agit.ai/Yoursmile7/TVBox/raw/branch/master/XC.json"))
