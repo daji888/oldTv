@@ -447,7 +447,7 @@ public class DetailActivity extends BaseActivity {
             @Override
             public void onItemPreSelected(TvRecyclerView parent, View itemView, int position) {
                 TextView txtView = itemView.findViewById(R.id.tvSeriesGroup);
-                txtView.setTextColor(Color.WHITE);
+                txtView.setTextColor(0xD9FFFFFF);
 //                currentSeriesGroupView = null;
             }
 
@@ -479,7 +479,7 @@ public class DetailActivity extends BaseActivity {
                 }
                 if(currentSeriesGroupView != null) {
                     TextView txtView = currentSeriesGroupView.findViewById(R.id.tvSeriesGroup);
-                    txtView.setTextColor(Color.WHITE);
+                    txtView.setTextColor(0xD9FFFFFF);
                 }
                 currentSeriesGroupView = view;
                 currentSeriesGroupView.isSelected();
