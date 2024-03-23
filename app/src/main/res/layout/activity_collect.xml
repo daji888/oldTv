@@ -86,7 +86,7 @@
                 android:layout_height="@dimen/vs_50"
                 android:layout_gravity="center"
                 android:layout_marginLeft="@dimen/vs_10"
-                android:background="@button_home_sort_focus"
+                android:background="@drawable/button_home_sort_focus"
                 android:gravity="center"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
