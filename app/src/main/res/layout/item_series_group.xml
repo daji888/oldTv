@@ -20,6 +20,6 @@
         android:gravity="center"
         android:singleLine="true"
         android:text=""
-        android:textColor="@android:color/white"
+        android:textColor="@color/color_CCFFFFFF"
         android:textSize="@dimen/ts_20" />
 </LinearLayout>
