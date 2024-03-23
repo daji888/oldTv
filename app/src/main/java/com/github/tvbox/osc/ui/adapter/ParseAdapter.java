@@ -23,7 +23,7 @@ public class ParseAdapter extends BaseQuickAdapter<ParseBean, BaseViewHolder> {
         if (item.isDefault()) {
             tvParse.setTextColor(mContext.getResources().getColor(R.color.color_FF9900));
         } else {
-            tvParse.setTextColor(Color.WHITE);
+            tvParse.setTextColor(0xD9FFFFFF);
         }
         tvParse.setText(item.getName());
     }
