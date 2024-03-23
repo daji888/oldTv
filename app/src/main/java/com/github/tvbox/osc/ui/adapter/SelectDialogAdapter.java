@@ -88,7 +88,7 @@ public class SelectDialogAdapter<T> extends ListAdapter<T, SelectDialogAdapter.S
             view.setTextColor(0xffE6C200);
             view .setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
         }else {
-            view.setTextColor(#D9FFFFFF);
+            view.setTextColor(0xD9FFFFFF);
             view .setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
         }
         view.setText(name);
