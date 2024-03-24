@@ -28,7 +28,7 @@ public class QRCodeGen {
             for (int i = 0; i < height; i++) {
                 for (int j = 0; j < width; j++) {
                     if (encode.get(j, i)) {
-                        pixels[i * width + j] = 0xffA51F1F;
+                        pixels[i * width + j] = 0xffBC3F00;
                     } else {
                         pixels[i * width + j] = 0xff6CEE6C;
                     }
