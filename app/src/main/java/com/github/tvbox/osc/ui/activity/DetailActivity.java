@@ -774,7 +774,7 @@ public class DetailActivity extends BaseActivity {
         scrollView.addView(messageText);
         LinearLayout layout = new LinearLayout(DetailActivity.this);
         layout.setOrientation(LinearLayout.VERTICAL);
-        layout.setBackground(R.drawable.shape_dialog_bg_main);
+        layout.setBackgroundColor(0xff6CEE6C);
         layout.setPadding(20, 20, 20, 20);
         layout.addView(titleText);
         layout.addView(scrollView);
