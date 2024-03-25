@@ -761,7 +761,7 @@ public class DetailActivity extends BaseActivity {
         TextView titleText = new TextView(DetailActivity.this);
         titleText.setText(title);
         titleText.setTextColor(0xCC000000);
-        titleText.setTextSize(20);
+        titleText.setTextSize(22);
         titleText.setGravity(Gravity.CENTER);
         TextView messageText = new TextView(DetailActivity.this);
         messageText.setText(message);
@@ -774,7 +774,8 @@ public class DetailActivity extends BaseActivity {
         scrollView.addView(messageText);
         LinearLayout layout = new LinearLayout(DetailActivity.this);
         layout.setOrientation(LinearLayout.VERTICAL);
-        layout.setPadding(20, 0, 20, 20);
+        layout.setBackground(@drawable/shape_dialog_bg_main);
+        layout.setPadding(20, 20, 20, 20);
         layout.addView(titleText);
         layout.addView(scrollView);
         builder.setView(layout);
