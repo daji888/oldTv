@@ -6,8 +6,9 @@
         <layer-list>
             <item android:bottom="@dimen/vs_5" android:left="@dimen/vs_20_" android:right="@dimen/vs_20_" android:top="@dimen/vs_20_">
                 <shape android:shape="rectangle">
+                    <corners android:radius="@dimen/vs_5" />
                     <stroke android:width="@dimen/vs_2" android:color="@color/color_CC000000" />
-                    <solid android:color="@color/color_CCFFFFFF" />
+                    <solid android:color="@color/color_BFA100" />
                 </shape>
             </item>
         </layer-list>
