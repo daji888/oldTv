@@ -29,7 +29,7 @@ public class RemoteDialog extends BaseDialog {
 
     private void refreshQRCode() {
         String address = ControlManager.get().getAddress(false);
-        tvAddress.setText(String.format("手机/电脑扫描上方二维码或者直接浏览器访问地址\n%s", address));
+        tvAddress.setText(String.format("手机、电脑扫描二维码或者浏览器直接访问以下网址：\n%s", address));
         ivQRCode.setImageBitmap(QRCodeGen.generateBitmap(address, AutoSizeUtils.mm2px(getContext(), 240), AutoSizeUtils.mm2px(getContext(), 240)));
     }
 }
