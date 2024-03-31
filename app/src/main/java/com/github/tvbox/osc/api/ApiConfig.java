@@ -415,13 +415,21 @@ public class ApiConfig {
                     loadLives(infoJson.get("lives").getAsJsonArray());
                 }else {
                     JsonObject fengMiLives = infoJson.get("lives").getAsJsonArray().get(0).getAsJsonObject();
-                    String type=fengMiLives.get("type").getAsString();
+                    Hawk.put(HawkConfig.LIVE_PLAYER_TYPE, DefaultConfig.safeJsonInt(fengMiLives, "playerType", -1));
+                    String type = fengMiLives.get("type").getAsString();
                     if(type.equals("0")){
-                        String url =fengMiLives.get("url").getAsString();
+                        String url = fengMiLives.get("url").getAsString();
                         //设置epg
-                        if(fengMiLives.has("epg")){
-                            String epg =fengMiLives.get("epg").getAsString();
-                            Hawk.put(HawkConfig.EPG_URL,epg);
+                        if (fengMiLives.has("epg")) {
+                            String epg = fengMiLives.get("epg").getAsString();
+                            System.out.println("EPG URL :" + epg);
+                            putEPGHistory(epg);
+                            // Overwrite with EPG URL from Settings
+                            if (StringUtils.isBlank(epgURL)) {
+                                Hawk.put(HawkConfig.EPG_URL, epg);
+                            } else {
+                                    Hawk.put(HawkConfig.EPG_URL, epgURL);
+                            }
                         }
 
                         if(url.startsWith("http")){
