@@ -4,11 +4,10 @@ import android.content.Context;
 import android.view.MotionEvent;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-import android.widget.TextView;
+
 import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.base.App;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
