@@ -53,7 +53,7 @@ import com.github.tvbox.osc.bean.VodInfo;
 import com.github.tvbox.osc.cache.CacheManager;
 import com.github.tvbox.osc.event.RefreshEvent;
 import com.github.tvbox.osc.player.EXOmPlayer;
-import com.github.tvbox.osc.player.IjkMediaPlayer;
+import com.github.tvbox.osc.player.IjkmPlayer;
 import com.github.tvbox.osc.player.MyVideoView;
 import com.github.tvbox.osc.player.TrackInfo;
 import com.github.tvbox.osc.player.TrackInfoBean;
@@ -375,8 +375,8 @@ public class PlayActivity extends BaseActivity {
     void selectMyAudioTrack() {
         AbstractPlayer mediaPlayer = mVideoView.getMediaPlayer();
         TrackInfo trackInfo = null;
-        if (mediaPlayer instanceof IjkMediaPlayer) {
-            trackInfo = ((IjkMediaPlayer)mediaPlayer).getTrackInfo();
+        if (mediaPlayer instanceof IjkmPlayer) {
+            trackInfo = ((IjkmPlayer)mediaPlayer).getTrackInfo();
         }
         if (mediaPlayer instanceof EXOmPlayer) {
             trackInfo = ((EXOmPlayer) mediaPlayer).getTrackInfo();
@@ -398,8 +398,8 @@ public class PlayActivity extends BaseActivity {
                     }
                     mediaPlayer.pause();
                     long progress = mediaPlayer.getCurrentPosition();//保存当前进度，ijk 切换轨道 会有快进几秒
-                    if (mediaPlayer instanceof IjkMediaPlayer) {
-                        ((IjkMediaPlayer)mediaPlayer).setTrack(value.trackId);
+                    if (mediaPlayer instanceof IjkmPlayer) {
+                        ((IjkmPlayer)mediaPlayer).setTrack(value.trackId);
                     }
                     if (mediaPlayer instanceof EXOmPlayer) {
                         ((EXOmPlayer) mediaPlayer).selectExoTrack(value);
@@ -445,8 +445,8 @@ public class PlayActivity extends BaseActivity {
         if (mediaPlayer instanceof EXOmPlayer) {
             trackInfo = ((EXOmPlayer) mediaPlayer).getTrackInfo();
         }
-        if (mediaPlayer instanceof IjkMediaPlayer) {
-            trackInfo = ((IjkMediaPlayer) mediaPlayer).getTrackInfo();
+        if (mediaPlayer instanceof IjkmPlayer) {
+            trackInfo = ((IjkmPlayer) mediaPlayer).getTrackInfo();
         }
         
         if (trackInfo == null) {
@@ -467,11 +467,11 @@ public class PlayActivity extends BaseActivity {
                     }
                     mediaPlayer.pause();
                     long progress = mediaPlayer.getCurrentPosition();//保存当前进度，ijk 切换轨道 会有快进几秒
-                    if (mediaPlayer instanceof IjkMediaPlayer) {
+                    if (mediaPlayer instanceof IjkmPlayer) {
                         mController.mSubtitleView.destroy();
                         mController.mSubtitleView.clearSubtitleCache();
                         mController.mSubtitleView.isInternal = true;
-                        ((IjkMediaPlayer)mediaPlayer).setTrack(value.trackId);
+                        ((IjkmPlayer)mediaPlayer).setTrack(value.trackId);
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
@@ -747,12 +747,12 @@ public class PlayActivity extends BaseActivity {
     private void initSubtitleView() {
         AbstractPlayer mediaPlayer = mVideoView.getMediaPlayer();
         TrackInfo trackInfo = null;
-        if (mVideoView.getMediaPlayer() instanceof IjkMediaPlayer) {
-            trackInfo = ((IjkMediaPlayer)(mVideoView.getMediaPlayer())).getTrackInfo();
+        if (mVideoView.getMediaPlayer() instanceof IjkmPlayer) {
+            trackInfo = ((IjkmPlayer)(mVideoView.getMediaPlayer())).getTrackInfo();
             if (trackInfo != null && trackInfo.getSubtitle().size() > 0) {
                 mController.mSubtitleView.hasInternal = true;
             }
-            ((IjkMediaPlayer)(mVideoView.getMediaPlayer())).setOnTimedTextListener(new IMediaPlayer.OnTimedTextListener() {
+            ((IjkmPlayer)(mVideoView.getMediaPlayer())).setOnTimedTextListener(new IMediaPlayer.OnTimedTextListener() {
                 @Override
                 public void onTimedText(IMediaPlayer mp, IjkTimedText text) {
                     if (mController.mSubtitleView.isInternal) {
@@ -797,7 +797,7 @@ public class PlayActivity extends BaseActivity {
             } else {
                 if (mController.mSubtitleView.hasInternal) {
                     mController.mSubtitleView.isInternal = true;
-                    if (mediaPlayer instanceof IjkMediaPlayer) {
+                    if (mediaPlayer instanceof IjkmPlayer) {
                         if (trackInfo != null && trackInfo.getSubtitle().size()>0) {
                         List<TrackInfoBean> subtitleTrackList = trackInfo.getSubtitle();
                         int selectedIndex = trackInfo.getSubtitleSelected(true);
@@ -807,12 +807,12 @@ public class PlayActivity extends BaseActivity {
                             if (lowerLang.startsWith("zh") || lowerLang.startsWith("ch")) {
                                 hasCh=true;
                                 if (selectedIndex != subtitleTrackInfoBean.trackId) {
-                                    ((IjkMediaPlayer)(mVideoView.getMediaPlayer())).setTrack(subtitleTrackInfoBean.trackId);
+                                    ((IjkmPlayer)(mVideoView.getMediaPlayer())).setTrack(subtitleTrackInfoBean.trackId);
                                     break;
                                 }
                             }
                         }
-                        if(!hasCh)((IjkMediaPlayer)(mVideoView.getMediaPlayer())).setTrack(subtitleTrackList.get(0).trackId);
+                        if(!hasCh)((IjkmPlayer)(mVideoView.getMediaPlayer())).setTrack(subtitleTrackList.get(0).trackId);
                      }
                    }     
                 }
