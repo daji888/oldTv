@@ -26,11 +26,11 @@ import tv.danmaku.ijk.media.player.misc.IjkTrackInfo;
 import xyz.doikki.videoplayer.ijk.IjkPlayer;
 import xyz.doikki.videoplayer.ijk.RawDataSourceProvider;
 
-public class IjkMediaPlayer extends IjkPlayer {
+public class IjkmPlayer extends IjkPlayer {
 
     private IJKCode codec = null;
 
-    public IjkMediaPlayer(Context context, IJKCode codec) {
+    public IjkmPlayer(Context context, IJKCode codec) {
         super(context);
         this.codec = codec;
     }
