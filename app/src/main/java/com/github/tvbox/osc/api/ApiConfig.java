@@ -31,6 +31,8 @@ import com.lzy.okgo.callback.AbsCallback;
 import com.lzy.okgo.model.Response;
 import com.orhanobut.hawk.Hawk;
 
+import org.apache.commons.lang3.StringUtils;
+
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -310,7 +312,8 @@ public class ApiConfig {
         wallpaper = DefaultConfig.safeJsonString(infoJson, "wallpaper", "");
         // 远端站点源
         SourceBean firstSite = null;
-        for (JsonElement opt : infoJson.get("sites").getAsJsonArray()) {
+        JsonArray sites = infoJson.has("video") ? infoJson.getAsJsonObject("video").getAsJsonArray("sites") : infoJson.get("sites").getAsJsonArray();
+        for (JsonElement opt : sites) {
             JsonObject obj = (JsonObject) opt;
             SourceBean sb = new SourceBean();
             String siteKey = obj.get("key").getAsString().trim();
@@ -373,6 +376,7 @@ public class ApiConfig {
         }
         // 直播源
         liveChannelGroupList.clear();           //修复从后台切换重复加载频道列表
+        String epgURL  = Hawk.get(HawkConfig.EPG_URL, "");
         try {
             JsonObject livesOBJ = infoJson.get("lives").getAsJsonArray().get(0).getAsJsonObject();
             String lives = livesOBJ.toString();
@@ -414,13 +418,21 @@ public class ApiConfig {
                     loadLives(infoJson.get("lives").getAsJsonArray());
                 }else {
                     JsonObject fengMiLives = infoJson.get("lives").getAsJsonArray().get(0).getAsJsonObject();
-                    String type=fengMiLives.get("type").getAsString();
+                    Hawk.put(HawkConfig.LIVE_PLAYER_TYPE, DefaultConfig.safeJsonInt(fengMiLives, "playerType", -1));
+                    String type = fengMiLives.get("type").getAsString();
                     if(type.equals("0")){
-                        String url =fengMiLives.get("url").getAsString();
+                        String url = fengMiLives.get("url").getAsString();
                         //设置epg
-                        if(fengMiLives.has("epg")){
-                            String epg =fengMiLives.get("epg").getAsString();
-                            Hawk.put(HawkConfig.EPG_URL,epg);
+                        if (fengMiLives.has("epg")) {
+                            String epg = fengMiLives.get("epg").getAsString();
+                            System.out.println("EPG URL :" + epg);
+                            putEPGHistory(epg);
+                            // Overwrite with EPG URL from Settings
+                            if (StringUtils.isBlank(epgURL)) {
+                                Hawk.put(HawkConfig.EPG_URL, epg);
+                            } else {
+                                    Hawk.put(HawkConfig.EPG_URL, epgURL);
+                            }
                         }
 
                         if(url.startsWith("http")){
@@ -534,6 +546,17 @@ public class ApiConfig {
             if (!foundOldSelect && ijkCodes.size() > 0) {
                 ijkCodes.get(0).selected(true);
             }
+        }
+    }
+
+    public static void putEPGHistory(String url) {
+        if (!url.isEmpty()) {
+            ArrayList<String> epgHistory = Hawk.get(HawkConfig.EPG_HISTORY, new ArrayList<String>());
+            if (!epgHistory.contains(url))
+                epgHistory.add(0, url);
+            if (epgHistory.size() > 20)
+                epgHistory.remove(20);
+            Hawk.put(HawkConfig.EPG_HISTORY, epgHistory);
         }
     }
 

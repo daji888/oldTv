@@ -37,7 +37,7 @@ public class PlayerHelper {
     public static void updateCfg(VideoView videoView, JSONObject playerCfg, int forcePlayerType) {
         int playerType = Hawk.get(HawkConfig.PLAY_TYPE, 0);
         int renderType = Hawk.get(HawkConfig.PLAY_RENDER, 0);
-        String ijkCode = Hawk.get(HawkConfig.IJK_CODEC, "软解码");
+        String ijkCode = Hawk.get(HawkConfig.IJK_CODEC, "硬解码");
         int scale = Hawk.get(HawkConfig.PLAY_SCALE, 0);
         try {
             playerType = playerCfg.getInt("pl");
@@ -293,6 +293,14 @@ public class PlayerHelper {
                 break;
         }
         return scaleText;
+    }
+
+    public static String getRootCauseMessage(Throwable th) {
+        for (int i=0; i<10; i++) {
+            if (th.getCause() == null) return th.getLocalizedMessage();
+            else th = th.getCause();
+        }
+        return th.getLocalizedMessage();
     }
 
     public static String getDisplaySpeed(long speed) {
