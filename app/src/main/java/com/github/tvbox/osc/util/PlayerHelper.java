@@ -6,7 +6,7 @@ import android.content.Context;
 import com.github.tvbox.osc.api.ApiConfig;
 import com.github.tvbox.osc.bean.IJKCode;
 import com.github.tvbox.osc.player.EXOmPlayer;
-import com.github.tvbox.osc.player.IjkMediaPlayer;
+import com.github.tvbox.osc.player.IjkmPlayer;
 import com.github.tvbox.osc.player.render.SurfaceRenderViewFactory;
 import com.github.tvbox.osc.player.thirdparty.Kodi;
 import com.github.tvbox.osc.player.thirdparty.MXPlayer;
@@ -52,10 +52,10 @@ public class PlayerHelper {
         IJKCode codec = ApiConfig.get().getIJKCodec(ijkCode);
         PlayerFactory playerFactory;
         if (playerType == 1) {
-            playerFactory = new PlayerFactory<IjkMediaPlayer>() {
+            playerFactory = new PlayerFactory<IjkmPlayer>() {
                 @Override
-                public IjkMediaPlayer createPlayer(Context context) {
-                    return new IjkMediaPlayer(context, codec);
+                public IjkmPlayer createPlayer(Context context) {
+                    return new IjkmPlayer(context, codec);
                 }
             };
             try {
@@ -105,10 +105,10 @@ public class PlayerHelper {
         int playType = Hawk.get(HawkConfig.PLAY_TYPE, 0);
         PlayerFactory playerFactory;
         if (playType == 1) {
-            playerFactory = new PlayerFactory<IjkMediaPlayer>() {
+            playerFactory = new PlayerFactory<IjkmPlayer>() {
                 @Override
-                public IjkMediaPlayer createPlayer(Context context) {
-                    return new IjkMediaPlayer(context, null);
+                public IjkmPlayer createPlayer(Context context) {
+                    return new IjkmPlayer(context, null);
                 }
             };
             try {
