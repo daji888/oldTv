@@ -6,9 +6,8 @@ public class TrackInfoBean {
     public int renderId;
     //分组ID（exo）
     public int trackGroupId;
-    
+
     public String name;
     public String language;
-    public int index;
     public boolean selected;
 }
