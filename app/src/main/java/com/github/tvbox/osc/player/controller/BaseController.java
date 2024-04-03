@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -66,9 +67,24 @@ public abstract class BaseController extends BaseVideoController implements Gest
                         mSlideInfo.setText(msg.obj.toString());
                         break;
                     }
-
                     case 101: { // 亮度+音量调整 关闭
                         mSlideInfo.setVisibility(GONE);
+                        break;
+                    }
+                    case 201: { // Show Volume Dialog
+                        mDialogVolume.setVisibility(VISIBLE);
+                        break;
+                    }
+                    case 202: { // Hide Volume Dialog
+                        mDialogVolume.setVisibility(GONE);
+                        break;
+                    }
+                    case 203: { // Show Volume Dialog
+                        mDialogBrightness.setVisibility(VISIBLE);
+                        break;
+                    }
+                    case 204: { // Hide Volume Dialog
+                        mDialogBrightness.setVisibility(GONE);
                         break;
                     }
                     default: {
@@ -80,6 +96,7 @@ public abstract class BaseController extends BaseVideoController implements Gest
                 return false;
             }
         });
+        mHandler.post(mRunnable);
     }
 
     public BaseController(@NonNull Context context, @Nullable AttributeSet attrs) {
@@ -92,8 +109,31 @@ public abstract class BaseController extends BaseVideoController implements Gest
 
     private TextView mSlideInfo;
     private ProgressBar mLoading;
+    private ProgressBar mLoadingHide;
     private ViewGroup mPauseRoot;
     private TextView mPauseTime;
+    private TextView mSpeedTextTop;
+    private TextView mSpeedTextTopr;
+    private TextView mSpeedTextHide;
+    private LinearLayout mSpeedTop;
+
+    private LinearLayout mDialogVolume;
+    private LinearLayout mDialogBrightness;
+    private ProgressBar mDialogVolumeProgressBar;
+    private ProgressBar mDialogBrightnessProgressBar;
+    private ProgressBar mDialogVideoProgressBar;
+    private ProgressBar mDialogVideoPauseBar;
+
+    private final Runnable mRunnable = new Runnable() {
+        @Override
+        public void run() {
+            String format = String.format("%.2f", (float) mControlWrapper.getTcpSpeed() / 1024.0 / 1024.0);
+            mSpeedTextTop.setText(format);
+            mSpeedTextTopr.setText(format);
+            mSpeedTextHide.setText(format);
+            mHandler.postDelayed(this, 1000);
+        }
+    };
 
     @Override
     protected void initView() {
@@ -103,14 +143,30 @@ public abstract class BaseController extends BaseVideoController implements Gest
         setOnTouchListener(this);
         mSlideInfo = findViewWithTag("vod_control_slide_info");
         mLoading = findViewWithTag("vod_control_loading");
+        mLoadingHide = findViewWithTag("vod_control_loading_hide");
         mPauseRoot = findViewWithTag("vod_control_pause");
         mPauseTime = findViewWithTag("vod_control_pause_t");
+        mSpeedTextTop = findViewWithTag("play_speed_top");
+        mSpeedTextTopr = findViewWithTag("play_speed_topr");
+        mSpeedTextHide = findViewWithTag("play_speed_top_hide");
+        mSpeedTop = findViewWithTag("top_container_hide");
+
+        mDialogVolume = findViewWithTag("dialog_volume");
+        mDialogBrightness = findViewWithTag("dialog_brightness");
+        mDialogVolumeProgressBar = findViewWithTag("progressbar_volume");
+        mDialogBrightnessProgressBar = findViewWithTag("progressbar_brightness");
+        mDialogVideoProgressBar = findViewWithTag("progressbar_video");
+        mDialogVideoPauseBar = findViewWithTag("pausebar_video");
     }
 
     @Override
     protected void setProgress(int duration, int position) {
         super.setProgress(duration, position);
         mPauseTime.setText(PlayerUtils.stringForTime(position) + " / " + PlayerUtils.stringForTime(duration));
+        // takagen99 : Update mini bar (via touch)
+        int percent = (int) (((double) position / (double) duration) * 100);
+        mDialogVideoProgressBar.setProgress(percent);
+        mDialogVideoPauseBar.setProgress(percent);
     }
 
     @Override
@@ -119,27 +175,39 @@ public abstract class BaseController extends BaseVideoController implements Gest
         switch (playState) {
             case VideoView.STATE_IDLE:
                 mLoading.setVisibility(GONE);
+                mLoadingHide.setVisibility(GONE);
+                mSpeedTop.setVisibility(GONE);
                 break;
             case VideoView.STATE_PLAYING:
                 mPauseRoot.setVisibility(GONE);
                 mLoading.setVisibility(GONE);
+                mLoadingHide.setVisibility(GONE);
+                mSpeedTop.setVisibility(GONE);
                 break;
             case VideoView.STATE_PAUSED:
                 mPauseRoot.setVisibility(VISIBLE);
                 mLoading.setVisibility(GONE);
+                mLoadingHide.setVisibility(GONE);
+                mSpeedTop.setVisibility(GONE);
                 break;
             case VideoView.STATE_PREPARED:
             case VideoView.STATE_ERROR:
             case VideoView.STATE_BUFFERED:
                 mLoading.setVisibility(GONE);
+                mLoadingHide.setVisibility(GONE);
+                mSpeedTop.setVisibility(GONE);
                 break;
             case VideoView.STATE_PREPARING:
             case VideoView.STATE_BUFFERING:
                 mLoading.setVisibility(VISIBLE);
+                mLoadingHide.setVisibility(VISIBLE);
+                mSpeedTop.setVisibility(VISIBLE);
                 break;
             case VideoView.STATE_PLAYBACK_COMPLETED:
                 mLoading.setVisibility(GONE);
+                mLoadingHide.setVisibility(GONE);
                 mPauseRoot.setVisibility(GONE);
+                mSpeedTop.setVisibility(GONE);
                 break;
         }
     }
@@ -324,12 +392,18 @@ public abstract class BaseController extends BaseVideoController implements Gest
         Window window = activity.getWindow();
         WindowManager.LayoutParams attributes = window.getAttributes();
         int height = getMeasuredHeight();
-        if (mBrightness == -1.0f) mBrightness = 0.5f;
-        float brightness = deltaY * 2 / height * 1.0f + mBrightness;
-        if (brightness < 0) {
-            brightness = 0f;
+//        if (mBrightness == -1.0f) mBrightness = 0.5f;
+        if (mBrightness <= 0.00f) {
+            mBrightness = 0.50f;
+        } else if (mBrightness < 0.01f) {
+            mBrightness = 0.01f;
         }
-        if (brightness > 1.0f) brightness = 1.0f;
+        float brightness = deltaY * 2 / height * 1.0f + mBrightness;
+        if (brightness > 1.0f) {
+            brightness = 1.0f;
+        } else if (brightness < 0.01f) {
+            brightness = 0.01f;
+        }
         int percent = (int) (brightness * 100);
         attributes.screenBrightness = brightness;
         window.setAttributes(attributes);
@@ -339,12 +413,13 @@ public abstract class BaseController extends BaseVideoController implements Gest
                 ((IGestureComponent) component).onBrightnessChange(percent);
             }
         }
+        mDialogBrightnessProgressBar.setProgress(percent);
         Message msg = Message.obtain();
-        msg.what = 100;
-        msg.obj = "亮度" + percent + "%";
+        msg.what = 203;
+        msg.obj = "亮度 " + percent + "%";
         mHandler.sendMessage(msg);
-        mHandler.removeMessages(101);
-        mHandler.sendEmptyMessageDelayed(101, 1000);
+        mHandler.removeMessages(204);
+        mHandler.sendEmptyMessageDelayed(204, 600);
     }
 
     protected void slideToChangeVolume(float deltaY) {
@@ -362,12 +437,13 @@ public abstract class BaseController extends BaseVideoController implements Gest
                 ((IGestureComponent) component).onVolumeChange(percent);
             }
         }
+        mDialogVolumeProgressBar.setProgress(percent);
         Message msg = Message.obtain();
-        msg.what = 100;
-        msg.obj = "音量" + percent + "%";
+        msg.what = 201;
+        msg.obj = "音量 " + percent + "%";
         mHandler.sendMessage(msg);
-        mHandler.removeMessages(101);
-        mHandler.sendEmptyMessageDelayed(101, 1000);
+        mHandler.removeMessages(202);
+        mHandler.sendEmptyMessageDelayed(202, 600);
     }
 
     @Override
