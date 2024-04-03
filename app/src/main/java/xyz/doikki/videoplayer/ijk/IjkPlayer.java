@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
@@ -60,7 +61,16 @@ public class IjkPlayer extends AbstractPlayer implements IMediaPlayer.OnErrorLis
                 RawDataSourceProvider rawDataSourceProvider = RawDataSourceProvider.create(mAppContext, uri);
                 mMediaPlayer.setDataSource(rawDataSourceProvider);
             } else {
-                mMediaPlayer.setDataSource(mAppContext, uri);
+                //处理UA问题
+                if (headers != null) {
+                    String userAgent = headers.get("User-Agent");
+                    if (!TextUtils.isEmpty(userAgent)) {
+                        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "user_agent", userAgent);
+                        // 移除header中的User-Agent，防止重复
+                        headers.remove("User-Agent");
+                    }
+                }
+                mMediaPlayer.setDataSource(mAppContext, uri, headers);
             }
         } catch (Exception e) {
             mPlayerEventListener.onError(-1, PlayerHelper.getRootCauseMessage(e));
