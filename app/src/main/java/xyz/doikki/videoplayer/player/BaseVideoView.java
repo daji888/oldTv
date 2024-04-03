@@ -23,6 +23,7 @@ import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.blankj.utilcode.util.ToastUtils;
 import com.github.tvbox.osc.R;
 
 import java.io.IOException;
@@ -212,6 +213,10 @@ public class BaseVideoView<P extends AbstractPlayer> extends FrameLayout
         if (mEnableAudioFocus) {
             mAudioFocusHelper = new AudioFocusHelper(this);
         }
+        //读取播放进度
+        if (mProgressManager != null) {
+            mCurrentPosition = mProgressManager.getSavedProgress(mProgressKey == null ? mUrl : mProgressKey);
+        }    
         if (!mPlayFromZeroPosition) {
             //读取播放进度
             if (mProgressManager != null) {
@@ -255,10 +260,31 @@ public class BaseVideoView<P extends AbstractPlayer> extends FrameLayout
      * 初始化播放器
      */
     protected void initPlayer() {
-        mMediaPlayer = mPlayerFactory.createPlayer(getContext());
-        mMediaPlayer.setPlayerEventListener(this);
-        setInitOptions();
-        mMediaPlayer.initPlayer();
+        try {
+            mMediaPlayer = mPlayerFactory.createPlayer(getContext());
+            mMediaPlayer.setPlayerEventListener(this);
+            setInitOptions();
+            mMediaPlayer.initPlayer();
+        } catch (Throwable e) {
+            if (mMediaPlayer != null) {
+                try {
+                    mMediaPlayer.release();
+                } catch (Throwable ignored) {
+                }
+            }
+            if (!(mPlayerFactory instanceof AndroidMediaPlayerFactory)) {
+                ToastUtils.showShort("播放创建失败!使用系统播放器进行播放!");
+                setPlayerFactory(AndroidMediaPlayerFactory.create());
+            } else {
+                ToastUtils.showShort("播放创建失败!");//一般是不太可能默认播放器也失败的
+                getActivity().finish();
+                return;
+            }
+            mMediaPlayer = mPlayerFactory.createPlayer(getContext());
+            mMediaPlayer.setPlayerEventListener(this);
+            setInitOptions();
+            mMediaPlayer.initPlayer();
+        }
         setOptions();
     }
 
