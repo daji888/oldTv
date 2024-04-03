@@ -5,12 +5,12 @@ import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
 import com.github.tvbox.osc.util.PlayerHelper;
 
+import java.io.IOException;
 import java.util.Map;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
@@ -27,7 +27,7 @@ public class IjkPlayer extends AbstractPlayer implements IMediaPlayer.OnErrorLis
 
     protected IjkMediaPlayer mMediaPlayer;
     private int mBufferedPercent;
-    private final Context mAppContext;
+    protected final Context mAppContext;
 
     public IjkPlayer(Context context) {
         mAppContext = context;
@@ -48,7 +48,6 @@ public class IjkPlayer extends AbstractPlayer implements IMediaPlayer.OnErrorLis
         mMediaPlayer.setOnNativeInvokeListener(this);
     }
 
-
     @Override
     public void setOptions() {
     }
@@ -61,16 +60,7 @@ public class IjkPlayer extends AbstractPlayer implements IMediaPlayer.OnErrorLis
                 RawDataSourceProvider rawDataSourceProvider = RawDataSourceProvider.create(mAppContext, uri);
                 mMediaPlayer.setDataSource(rawDataSourceProvider);
             } else {
-                //处理UA问题
-                if (headers != null) {
-                    String userAgent = headers.get("User-Agent");
-                    if (!TextUtils.isEmpty(userAgent)) {
-                        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "user_agent", userAgent);
-                        // 移除header中的User-Agent，防止重复
-                        headers.remove("User-Agent");
-                    }
-                }
-                mMediaPlayer.setDataSource(mAppContext, uri, headers);
+                mMediaPlayer.setDataSource(mAppContext, uri);
             }
         } catch (Exception e) {
             mPlayerEventListener.onError(-1, PlayerHelper.getRootCauseMessage(e));
@@ -205,7 +195,7 @@ public class IjkPlayer extends AbstractPlayer implements IMediaPlayer.OnErrorLis
 
     @Override
     public float getSpeed() {
-        return mMediaPlayer.getSpeed(0);
+        return mMediaPlayer.getSpeed();
     }
 
     @Override
