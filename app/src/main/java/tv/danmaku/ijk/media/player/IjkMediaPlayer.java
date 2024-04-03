@@ -1139,6 +1139,7 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
                                 text = new IjkTimedText(null, "");
                             }
                             player.notifyOnTimedText(text);
+                        }    
                     }
                     return;
                 case MEDIA_NOP: // interface test message - ignore
