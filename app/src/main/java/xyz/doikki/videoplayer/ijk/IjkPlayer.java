@@ -11,6 +11,7 @@ import android.view.SurfaceHolder;
 
 import com.github.tvbox.osc.util.PlayerHelper;
 
+import java.io.IOException;
 import java.util.Map;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
@@ -27,7 +28,7 @@ public class IjkPlayer extends AbstractPlayer implements IMediaPlayer.OnErrorLis
 
     protected IjkMediaPlayer mMediaPlayer;
     private int mBufferedPercent;
-    private final Context mAppContext;
+    protected final Context mAppContext;
 
     public IjkPlayer(Context context) {
         mAppContext = context;
@@ -47,7 +48,6 @@ public class IjkPlayer extends AbstractPlayer implements IMediaPlayer.OnErrorLis
         mMediaPlayer.setOnVideoSizeChangedListener(this);
         mMediaPlayer.setOnNativeInvokeListener(this);
     }
-
 
     @Override
     public void setOptions() {
@@ -205,7 +205,7 @@ public class IjkPlayer extends AbstractPlayer implements IMediaPlayer.OnErrorLis
 
     @Override
     public float getSpeed() {
-        return mMediaPlayer.getSpeed(0);
+        return mMediaPlayer.getSpeed();
     }
 
     @Override

@@ -123,15 +123,15 @@ public class BaseVideoView<P extends AbstractPlayer> extends FrameLayout
      * 循环播放
      */
     protected boolean mIsLooping;
-    protected boolean mPlayFromZeroPosition = false;            
+    protected boolean mPlayFromZeroPosition = false;
 
     /**
      * {@link #mPlayerContainer}背景色，默认黑色
      */
     private final int mPlayerBackgroundColor;
-                
+
     private Handler mHandler;
-                
+
     public BaseVideoView(@NonNull Context context) {
         this(context, null);
     }
@@ -216,8 +216,8 @@ public class BaseVideoView<P extends AbstractPlayer> extends FrameLayout
         //读取播放进度
         if (mProgressManager != null) {
             mCurrentPosition = mProgressManager.getSavedProgress(mProgressKey == null ? mUrl : mProgressKey);
-        }
-         if (!mPlayFromZeroPosition) {
+        }    
+        if (!mPlayFromZeroPosition) {
             //读取播放进度
             if (mProgressManager != null) {
                 mCurrentPosition = mProgressManager.getSavedProgress(mProgressKey == null ? mUrl : mProgressKey);
@@ -225,7 +225,7 @@ public class BaseVideoView<P extends AbstractPlayer> extends FrameLayout
         } else {
             mCurrentPosition = 0;
             mPlayFromZeroPosition = false;
-        }   
+        }
         initPlayer();
         addDisplay();
         startPrepare(false);
@@ -596,6 +596,7 @@ public class BaseVideoView<P extends AbstractPlayer> extends FrameLayout
     public void onError(int code, String msg) {
         mPlayerContainer.setKeepScreenOn(false);
         setPlayState(STATE_ERROR);
+
         if (mHandler != null) {
             Message sendmsg = Message.obtain();
             sendmsg.what = 300;
@@ -725,9 +726,9 @@ public class BaseVideoView<P extends AbstractPlayer> extends FrameLayout
         }
     }
 
-     public void setPlayFromZeroPositionOnce(boolean mPlayFromZeroPosition) {
+    public void setPlayFromZeroPositionOnce(boolean mPlayFromZeroPosition) {
         this.mPlayFromZeroPosition = mPlayFromZeroPosition;
-    }           
+    }
 
     /**
      * 是否开启AudioFocus监听， 默认开启，用于监听其它地方是否获取音频焦点，如果有其它地方获取了

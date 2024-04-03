@@ -35,6 +35,7 @@ import java.util.Locale;
  */
 
 public final class PlayerUtils {
+	
 	private static long lastTotalRxBytes;
     private static long lastTimeStamp;
     private PlayerUtils() {
@@ -275,6 +276,14 @@ public final class PlayerUtils {
         }
     }
 
+    public static String stringForTimeVod(int timeMs) {
+        int totalSeconds = timeMs / 1000;
+        int seconds = totalSeconds % 60;
+        int minutes = (totalSeconds / 60) % 60;
+        int hours = totalSeconds / 3600;
+        return String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds);
+    }
+
     /**
      * 获取集合的快照
      */
@@ -304,7 +313,6 @@ public final class PlayerUtils {
         if (calculationTime == 0) {
             return calculationTime;
         }
-
         //两次的数据接收量的差除以两次数据接收的时间，就计算网速了。这边的时间差是毫秒，咱们需要转换成秒。
         long speed = ((nowTotalRxBytes - lastTotalRxBytes) * 1000 / calculationTime);
         //当前时间存到上次时间这个变量，供下次计算用
@@ -313,5 +321,4 @@ public final class PlayerUtils {
         lastTotalRxBytes = nowTotalRxBytes;
         return speed;
     }
-    
 }
