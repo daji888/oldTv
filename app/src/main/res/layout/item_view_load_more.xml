@@ -28,7 +28,7 @@
             android:text="@string/brvah_loading"
             android:shadowColor="@color/color_000000_80"
             android:shadowDx="-5"
-            android:shadowDy="-5"
+            android:shadowDy="5"
             android:shadowRadius="5"
             android:textColor="@android:color/white"
             android:textSize="@dimen/sp_14"/>
@@ -48,7 +48,7 @@
             android:layout_gravity="center"
             android:shadowColor="@color/color_000000_80"
             android:shadowDx="-5"
-            android:shadowDy="-5"
+            android:shadowDy="5"
             android:shadowRadius="5"
             android:text="@string/brvah_load_failed"/>
 
@@ -67,7 +67,7 @@
             android:text="@string/brvah_load_end"
             android:shadowColor="@color/color_000000_80"
             android:shadowDx="-5"
-            android:shadowDy="-5"
+            android:shadowDy="5"
             android:shadowRadius="5"
             android:textColor="@android:color/darker_gray"/>
     </FrameLayout>
