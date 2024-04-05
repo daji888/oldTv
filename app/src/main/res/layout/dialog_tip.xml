@@ -22,7 +22,7 @@
             android:lineSpacingMultiplier="0"
             android:shadowColor="@color/color_000000_80"
             android:shadowDx="-5"
-            android:shadowDy="-5"
+            android:shadowDy="5"
             android:shadowRadius="5"
             android:textAlignment="gravity"
             android:textColor="@color/color_CC000000"
@@ -50,7 +50,7 @@
                 android:text="确定"
                 android:shadowColor="@color/color_000000_80"
                 android:shadowDx="-5"
-                android:shadowDy="-5"
+                android:shadowDy="5"
                 android:shadowRadius="5"
                 android:textColor="@color/color_FFFFFF"
                 android:textSize="@dimen/ts_22" />
@@ -68,7 +68,7 @@
                 android:text="取消"
                 android:shadowColor="@color/color_000000_80"
                 android:shadowDx="5"
-                android:shadowDy="-5"
+                android:shadowDy="5"
                 android:shadowRadius="5"
                 android:textColor="@color/color_FFFFFF"
                 android:textSize="@dimen/ts_22" />
