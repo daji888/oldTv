@@ -31,7 +31,7 @@
                 android:text="http://"
                 android:shadowColor="@color/color_000000_80"
                 android:shadowDx="-5"
-                android:shadowDy="-5"
+                android:shadowDy="5"
                 android:shadowRadius="5"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/ts_20" />
@@ -48,7 +48,7 @@
                 android:text="[ 1024 x 768 ]"
                 android:shadowColor="@color/color_000000_80"
                 android:shadowDx="-5"
-                android:shadowDy="-5"
+                android:shadowDy="5"
                 android:shadowRadius="5"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/ts_20" />
@@ -79,8 +79,8 @@
             android:tag="vod_control_pause_time"
             android:text="00:00:00"
             android:shadowColor="@color/color_000000_80"
-            android:shadowDx="5"
-            android:shadowDy="-5"
+            android:shadowDx="-5"
+            android:shadowDy="5"
             android:shadowRadius="5"
             android:textColor="@android:color/white"
             android:textSize="@dimen/ts_20" />
@@ -96,8 +96,8 @@
             android:tag="vod_control_pause_time"
             android:text="0Kb/s"
             android:shadowColor="@color/color_000000_80"
-            android:shadowDx="5"
-            android:shadowDy="-5"
+            android:shadowDx="-5"
+            android:shadowDy="5"
             android:shadowRadius="5"
             android:textColor="@android:color/white"
             android:textSize="@dimen/ts_20" />
