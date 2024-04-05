@@ -63,7 +63,7 @@ public class HomeHotVodAdapter extends BaseQuickAdapter<Movie.Video, BaseViewHol
                     .load(DefaultConfig.checkReplaceProxy(item.pic))
                     .transform(new RoundTransformation(MD5.string2MD5(item.pic))
                             .centerCorp(true)
-                            .override(AutoSizeUtils.mm2px(mContext, 226), AutoSizeUtils.mm2px(mContext, 296))
+                            .override(AutoSizeUtils.mm2px(mContext, 220), AutoSizeUtils.mm2px(mContext, 296))
                             .roundRadius(AutoSizeUtils.mm2px(mContext, 10), RoundTransformation.RoundType.ALL))
                     .placeholder(R.drawable.img_loading_placeholder)
                     .noFade()
