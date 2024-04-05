@@ -21,6 +21,10 @@
             android:layout_marginTop="@dimen/vs_20"
             android:gravity="center"
             android:text="没找到数据"
+            android:shadowColor="@color/color_000000_80"
+            android:shadowDx="-5"
+            android:shadowDy="5"
+            android:shadowRadius="5"
             android:textColor="@android:color/white"
             android:textSize="@dimen/ts_24" />
     </LinearLayout>
