@@ -29,6 +29,10 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:padding="@dimen/vs_30"
+                android:shadowColor="@color/color_000000_80"
+                android:shadowDx="-5"
+                android:shadowDy="-5"
+                android:shadowRadius="5"
                 android:textColor="@color/color_FFFFFF"
                 android:textSize="@dimen/ts_26"
                 android:text="全选" />
@@ -46,6 +50,10 @@
                 android:focusable="true"
                 android:padding="@dimen/vs_30"
                 android:text="全不选"
+                android:shadowColor="@color/color_000000_80"
+                android:shadowDx="-5"
+                android:shadowDy="-5"
+                android:shadowRadius="5"
                 android:textColor="@color/color_FFFFFF"
                 android:textSize="@dimen/ts_26" />
         </LinearLayout>
