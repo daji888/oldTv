@@ -13,7 +13,7 @@
     android:textAlignment="center"
     android:shadowColor="@color/color_000000_80"
     android:shadowDx="-5"
-    android:shadowDy="-5"
+    android:shadowDy="5"
     android:shadowRadius="5"
     android:textColor="@color/color_FFFFFF"
     android:textSize="@dimen/ts_22" />
