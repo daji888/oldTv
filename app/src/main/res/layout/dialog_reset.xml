@@ -25,7 +25,7 @@
             android:text="@string/dia_reset"
             android:shadowColor="@color/color_000000_80"
             android:shadowDx="-5"
-            android:shadowDy="-5"
+            android:shadowDy="5"
             android:shadowRadius="5"
             android:textColor="@color/color_CC000000"
             android:textSize="24sp"
