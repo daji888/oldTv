@@ -262,7 +262,7 @@
             app:tv_horizontalSpacingWithMargins="@dimen/vs_10"
             app:tv_layoutManager="V7GridLayoutManager"
             app:tv_selectedItemIsCentered="true"
-            app:tv_verticalSpacingWithMargins="@dimen/vs_10"
+            app:tv_verticalSpacingWithMargins="@dimen/vs_15"
             android:visibility="gone" />
 
         <com.owen.tvrecyclerview.widget.TvRecyclerView
@@ -280,7 +280,7 @@
             app:tv_horizontalSpacingWithMargins="@dimen/vs_10"
             app:tv_layoutManager="V7LinearLayoutManager"
             app:tv_selectedItemIsCentered="true"
-            app:tv_verticalSpacingWithMargins="@dimen/vs_10"
+            app:tv_verticalSpacingWithMargins="@dimen/vs_15"
             android:visibility="gone" />
     </RelativeLayout>
 
