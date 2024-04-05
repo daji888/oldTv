@@ -20,6 +20,10 @@
             android:padding="@dimen/vs_20"
             android:singleLine="true"
             android:text="数据备份还原"
+            android:shadowColor="@color/color_000000_80"
+            android:shadowDx="-5"
+            android:shadowDy="5"
+            android:shadowRadius="5"
             android:textColor="@color/color_CC000000"
             android:textSize="@dimen/ts_26"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -49,6 +53,10 @@
                 android:gravity="center"
                 android:padding="@dimen/vs_10"
                 android:text="立即备份"
+                android:shadowColor="@color/color_000000_80"
+                android:shadowDx="-5"
+                android:shadowDy="5"
+                android:shadowRadius="5"
                 android:textColor="@color/color_FFFFFF"
                 android:textSize="@dimen/ts_22" />
 
@@ -65,6 +73,10 @@
                 android:gravity="center"
                 android:padding="@dimen/vs_10"
                 android:text="存储权限"
+                android:shadowColor="@color/color_000000_80"
+                android:shadowDx="-5"
+                android:shadowDy="5"
+                android:shadowRadius="5"
                 android:textColor="@color/color_FFFFFF"
                 android:textSize="@dimen/ts_22" />
         </LinearLayout>
@@ -78,6 +90,10 @@
             android:padding="@dimen/vs_20"
             android:singleLine="true"
             android:text="点击下方数据还原"
+            android:shadowColor="@color/color_000000_80"
+            android:shadowDx="-5"
+            android:shadowDy="5"
+            android:shadowRadius="5"
             android:textColor="@color/color_CC000000"
             android:textSize="@dimen/ts_26"
             app:layout_constraintLeft_toLeftOf="parent"

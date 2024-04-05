@@ -21,6 +21,10 @@
             android:lineSpacingExtra="@dimen/ts_50"
             android:lineSpacingMultiplier="0"
             android:text="下载XWalkView运行组件"
+            android:shadowColor="@color/color_000000_80"
+            android:shadowDx="-5"
+            android:shadowDy="5"
+            android:shadowRadius="5"
             android:textColor="@color/color_CC000000"
             android:textSize="@dimen/ts_24" />
 
@@ -34,6 +38,10 @@
             android:focusable="true"
             android:gravity="center"
             android:text="下载"
+            android:shadowColor="@color/color_000000_80"
+            android:shadowDx="5"
+            android:shadowDy="5"
+            android:shadowRadius="5"
             android:textColor="@color/color_FFFFFF"
             android:textSize="@dimen/ts_26" />
 

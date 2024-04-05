@@ -13,6 +13,10 @@
         android:lineSpacingExtra="@dimen/ts_50"
         android:lineSpacingMultiplier="0"
         android:text="\n        本软件只提供聚合展示功能，没有参与任何资源的制作、上传、下载、储存......，所有资源均来自网络。"
+        android:shadowColor="@color/color_000000_80"
+        android:shadowDx="-2"
+        android:shadowDy="2"
+        android:shadowRadius="5"
         android:textColor="@color/color_CC000000"
         android:textSize="@dimen/ts_24" />
 

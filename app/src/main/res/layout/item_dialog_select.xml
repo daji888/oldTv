@@ -12,6 +12,10 @@
     android:gravity="center"
     android:padding="@dimen/vs_10"
     android:text="@{name}"
+    android:shadowColor="@color/color_000000_80"
+    android:shadowDx="-5"
+    android:shadowDy="5"
+    android:shadowRadius="5"
     android:textColor="@color/color_FFFFFF"
     android:textSize="@dimen/ts_22"
     tools:text="11111111111111" />

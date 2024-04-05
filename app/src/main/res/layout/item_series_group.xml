@@ -20,6 +20,10 @@
         android:gravity="center"
         android:singleLine="true"
         android:text=""
+        android:shadowColor="@color/color_000000_80"
+        android:shadowDx="-5"
+        android:shadowDy="5"
+        android:shadowRadius="5"
         android:textColor="@color/color_FFFFFF_85"
         android:textSize="@dimen/ts_20" />
 </LinearLayout>

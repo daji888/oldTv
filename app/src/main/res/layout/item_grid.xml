@@ -38,6 +38,10 @@
                 android:paddingLeft="@dimen/vs_5"
                 android:paddingRight="@dimen/vs_5"
                 android:singleLine="true"
+                android:shadowColor="@color/color_000000_80"
+                android:shadowDx="-5"
+                android:shadowDy="5"
+                android:shadowRadius="5"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/ts_20" />
 
@@ -53,6 +57,10 @@
                 android:paddingLeft="@dimen/vs_5"
                 android:paddingRight="@dimen/vs_5"
                 android:singleLine="true"
+                android:shadowColor="@color/color_000000_80"
+                android:shadowDx="-5"
+                android:shadowDy="5"
+                android:shadowRadius="5"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/ts_20" />
 
@@ -68,6 +76,10 @@
                 android:paddingLeft="@dimen/vs_5"
                 android:paddingRight="@dimen/vs_5"
                 android:singleLine="true"
+                android:shadowColor="@color/color_000000_80"
+                android:shadowDx="-5"
+                android:shadowDy="5"
+                android:shadowRadius="5"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/ts_20" />
 
@@ -95,6 +107,10 @@
                 android:paddingLeft="@dimen/vs_5"
                 android:paddingRight="@dimen/vs_5"
                 android:singleLine="true"
+                android:shadowColor="@color/color_000000_80"
+                android:shadowDx="-5"
+                android:shadowDy="5"
+                android:shadowRadius="5"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/ts_20" />
 
@@ -109,6 +125,10 @@
                 android:padding="@dimen/vs_5"
                 android:singleLine="true"
                 android:text="Title"
+                android:shadowColor="@color/color_000000_80"
+                android:shadowDx="5"
+                android:shadowDy="5"
+                android:shadowRadius="5"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/ts_22" />
 
@@ -121,6 +141,10 @@
                 android:gravity="top"
                 android:padding="@dimen/vs_5"
                 android:singleLine="true"
+                android:shadowColor="@color/color_000000_80"
+                android:shadowDx="-5"
+                android:shadowDy="5"
+                android:shadowRadius="5"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/ts_16"
                 android:visibility="gone" />
