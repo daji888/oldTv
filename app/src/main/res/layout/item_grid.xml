@@ -40,7 +40,7 @@
                 android:singleLine="true"
                 android:shadowColor="@color/color_000000_80"
                 android:shadowDx="-5"
-                android:shadowDy="-5"
+                android:shadowDy="5"
                 android:shadowRadius="5"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/ts_20" />
@@ -59,7 +59,7 @@
                 android:singleLine="true"
                 android:shadowColor="@color/color_000000_80"
                 android:shadowDx="-5"
-                android:shadowDy="-5"
+                android:shadowDy="5"
                 android:shadowRadius="5"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/ts_20" />
@@ -78,7 +78,7 @@
                 android:singleLine="true"
                 android:shadowColor="@color/color_000000_80"
                 android:shadowDx="-5"
-                android:shadowDy="-5"
+                android:shadowDy="5"
                 android:shadowRadius="5"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/ts_20" />
@@ -143,7 +143,7 @@
                 android:singleLine="true"
                 android:shadowColor="@color/color_000000_80"
                 android:shadowDx="-5"
-                android:shadowDy="-5"
+                android:shadowDy="5"
                 android:shadowRadius="5"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/ts_16"
