@@ -84,6 +84,10 @@
 				android:layout_marginLeft="15dp"
 				android:layout_marginRight="5dp"
 				android:text="00:00:00"
+				android:shadowColor="@color/color_000000_80"
+                                android:shadowDx="-5"
+                                android:shadowDy="5"
+                                android:shadowRadius="5"
 				android:textColor="#fff" />
 			<SeekBar
 				android:id="@+id/pb_progressbar"
@@ -109,6 +113,10 @@
 				android:layout_height="wrap_content"
 				android:layout_marginLeft="5dp"
 				android:text="00:00:00"
+				android:shadowColor="@color/color_000000_80"
+                                android:shadowDx="5"
+                                android:shadowDy="5"
+                                android:shadowRadius="5"
 				android:textColor="#fff" />
 		</LinearLayout>
 
@@ -171,7 +179,8 @@
 					android:onClick="divLoadEpgLeft"
 					android:paddingBottom="5dp"
 					android:shadowColor="#CC000000"
-					android:shadowDx="5.0"
+					android:shadowDx="-5.0"
+					android:shadowDy="5.0"
 					android:shadowRadius="5.0"
 					android:text="更 多"
 					android:textColor="@color/color_FFFFFF"
@@ -196,7 +205,8 @@
 					android:onClick="divLoadEpgLeft"
 					android:paddingTop="5dp"
 					android:shadowColor="#CC000000"
-					android:shadowDx="5.0"
+					android:shadowDx="-5.0"
+					android:shadowDy="5.0"
 					android:shadowRadius="5.0"
 					android:text="节 目"
 					android:textColor="@color/color_FFFFFF"
@@ -245,6 +255,7 @@
 					android:paddingBottom="5dp"
 					android:shadowColor="#CC000000"
 					android:shadowDx="5.0"
+					android:shadowDy="5.0"
 					android:shadowRadius="5.0"
 					android:text="节 目"
 					android:textColor="@color/color_FFFFFF"
@@ -271,6 +282,7 @@
 					android:paddingTop="5dp"
 					android:shadowColor="#CC000000"
 					android:shadowDx="5.0"
+					android:shadowDy="5.0"
 					android:shadowRadius="5.0"
 					android:text="信 息"
 					android:textColor="@color/color_FFFFFF"
@@ -428,6 +440,10 @@
             android:paddingRight="@dimen/vs_20"
             android:tag="vod_control_pause_time"
             android:text="00:00:00"
+	    android:shadowColor="@color/color_000000_80"
+            android:shadowDx="5"
+            android:shadowDy="5"
+            android:shadowRadius="5"
             android:textColor="@android:color/white"
             android:textSize="@dimen/ts_20" />
 
@@ -441,6 +457,10 @@
             android:paddingRight="@dimen/vs_20"
             android:tag="vod_control_pause_time"
             android:text="0Kb/s"
+	    android:shadowColor="@color/color_000000_80"
+            android:shadowDx="5"
+            android:shadowDy="5"
+            android:shadowRadius="5"
             android:textColor="@android:color/white"
             android:textSize="@dimen/ts_20" />
     </LinearLayout>	
@@ -500,6 +520,10 @@
         android:gravity="center"
         android:paddingTop="5mm"
         android:paddingBottom="5mm"
+	android:shadowColor="@color/color_000000_80"
+        android:shadowDx="5"
+        android:shadowDy="5"
+        android:shadowRadius="5"    
         android:textColor="@android:color/white"
         android:textSize="36mm"
         android:textStyle="bold"
@@ -515,6 +539,10 @@
         android:layout_marginRight="10mm"
         android:background="@android:color/transparent"
         android:gravity="center"
+	android:shadowColor="@color/color_000000_80"
+        android:shadowDx="5"
+        android:shadowDy="5"
+        android:shadowRadius="5"
         android:textColor="@android:color/white"
         android:textSize="22mm"
         android:visibility="gone" />
@@ -528,6 +556,10 @@
         android:layout_marginRight="10mm"
         android:background="@android:color/transparent"
         android:gravity="center"
+	android:shadowColor="@color/color_000000_80"
+        android:shadowDx="5"
+        android:shadowDy="5"
+        android:shadowRadius="5"    
         android:textColor="@android:color/white"
         android:textSize="22mm"
         android:visibility="gone" />
@@ -575,6 +607,7 @@
 			android:marqueeRepeatLimit="marquee_forever"
 			android:shadowColor="#CC000000"
 			android:shadowDx="5.0"
+			android:shadowDy="5.0"
 			android:shadowRadius="5.0"
 			android:singleLine="true"
 			android:text="10"
@@ -662,6 +695,10 @@
 			android:layout_toRightOf="@+id/channelinfo"
 			android:gravity="center"
 			android:text=""
+			android:shadowColor="@color/color_000000_80"
+                        android:shadowDx="5"
+                        android:shadowDy="5"
+                        android:shadowRadius="5"
 			android:textColor="@color/color_FFFFFF"
 			android:textSize="@dimen/ts_26" />
 		<com.github.tvbox.osc.ui.tv.widget.MarqueeTextView
