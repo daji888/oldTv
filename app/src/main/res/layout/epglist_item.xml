@@ -27,6 +27,10 @@ android:layout_height="wrap_content">
         android:id="@+id/tv_epg_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+	android:shadowColor="@color/color_000000_80"
+        android:shadowDx="-5"
+        android:shadowDy="5"
+        android:shadowRadius="5"    
         android:textColor="@android:color/white"/>
 		
     <com.github.tvbox.osc.ui.tv.widget.MarqueeTextView

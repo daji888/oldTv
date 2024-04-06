@@ -45,6 +45,10 @@
             android:focusableInTouchMode="false"
             android:gravity="center"
             android:text="选1个记录按确定键删除"
+            android:shadowColor="@color/color_000000_80"
+            android:shadowDx="-5"
+            android:shadowDy="5"
+            android:shadowRadius="5"
             android:textColor="@color/color_CCFFFFFF"
             android:textSize="@dimen/ts_24"
             android:visibility="gone" />

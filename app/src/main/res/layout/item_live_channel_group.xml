@@ -20,6 +20,10 @@
         android:gravity="center"
         android:marqueeRepeatLimit="marquee_forever"
         android:singleLine="true"
+        android:shadowColor="@color/color_000000_80"
+        android:shadowDx="-5"
+        android:shadowDy="5"
+        android:shadowRadius="5"
         android:textColor="@android:color/white"
         android:textSize="22mm"
         tools:text="收藏" />
