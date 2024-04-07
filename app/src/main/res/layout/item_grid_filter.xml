@@ -11,7 +11,7 @@
     <TextView
         android:id="@+id/filterName"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="@dimen/vs_50"
         android:layout_gravity="center"
         android:layout_marginEnd="@dimen/vs_10"
         android:layout_marginRight="@dimen/vs_10"
