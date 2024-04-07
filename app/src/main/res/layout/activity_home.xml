@@ -28,6 +28,7 @@
             android:gravity="left|center_vertical"
             android:text="@string/app_name"
             android:textAlignment="gravity"
+            android:paddingBottom="@dimen/vs_10"
             android:shadowColor="@color/color_000000_80"
             android:shadowDx="5"
             android:shadowDy="5"
