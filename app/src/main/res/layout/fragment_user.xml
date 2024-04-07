@@ -31,8 +31,8 @@
                 android:focusable="true"
                 android:nextFocusLeft="@+id/tvSetting"
                 android:orientation="horizontal"
-                android:paddingLeft="@dimen/vs_15"
-                android:paddingRight="@dimen/vs_15">
+                android:paddingLeft="@dimen/vs_10"
+                android:paddingRight="@dimen/vs_10">
 
 
                 <ImageView
@@ -73,8 +73,8 @@
                 android:clipToPadding="false"
                 android:focusable="true"
                 android:orientation="horizontal"
-                android:paddingLeft="@dimen/vs_15"
-                android:paddingRight="@dimen/vs_15">
+                android:paddingLeft="@dimen/vs_10"
+                android:paddingRight="@dimen/vs_10">
 
 
                 <ImageView
@@ -115,8 +115,8 @@
                 android:clipToPadding="false"
                 android:focusable="true"
                 android:orientation="horizontal"
-                android:paddingLeft="@dimen/vs_15"
-                android:paddingRight="@dimen/vs_15">
+                android:paddingLeft="@dimen/vs_10"
+                android:paddingRight="@dimen/vs_10">
 
 
                 <ImageView
@@ -157,8 +157,8 @@
                 android:clipToPadding="false"
                 android:focusable="true"
                 android:orientation="horizontal"
-                android:paddingLeft="@dimen/vs_15"
-                android:paddingRight="@dimen/vs_15">
+                android:paddingLeft="@dimen/vs_10"
+                android:paddingRight="@dimen/vs_10">
 
 
                 <ImageView
@@ -198,8 +198,8 @@
                 android:clipToPadding="false"
                 android:focusable="true"
                 android:orientation="horizontal"
-                android:paddingLeft="@dimen/vs_15"
-                android:paddingRight="@dimen/vs_15">
+                android:paddingLeft="@dimen/vs_10"
+                android:paddingRight="@dimen/vs_10">
 
                 <ImageView
                     android:layout_width="@dimen/vs_40"
@@ -240,8 +240,8 @@
                 android:focusable="true"
                 android:nextFocusRight="@+id/tvHistory"
                 android:orientation="horizontal"
-                android:paddingLeft="@dimen/vs_15"
-                android:paddingRight="@dimen/vs_15">
+                android:paddingLeft="@dimen/vs_10"
+                android:paddingRight="@dimen/vs_10">
 
 
                 <ImageView
