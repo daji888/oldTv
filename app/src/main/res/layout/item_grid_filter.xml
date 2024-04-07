@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="@dimen/vs_50"
     android:focusable="false"
     android:orientation="horizontal"
     android:padding="@dimen/vs_1">
@@ -22,7 +22,7 @@
         android:shadowRadius="5"
         android:textAlignment="gravity"
         android:textColor="@color/color_FFFFFF"
-        android:textSize="@dimen/ts_24"
+        android:textSize="@dimen/ts_30"
         tools:text="11111111111" />
 
     <com.owen.tvrecyclerview.widget.TvRecyclerView
