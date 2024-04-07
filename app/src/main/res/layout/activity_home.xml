@@ -22,6 +22,7 @@
             android:id="@+id/tvName"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/vs_50"
+            android:paddingLeft="@dimen/vs_10"
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:gravity="left|center"
