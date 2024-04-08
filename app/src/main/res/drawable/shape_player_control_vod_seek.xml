@@ -2,7 +2,7 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@android:id/background">
         <shape>
-            <solid android:color="@color/color_CC0000" />
+            <solid android:color="@color/color_339933" />
         </shape>
     </item>
     <item android:id="@android:id/secondaryProgress">
@@ -16,7 +16,7 @@
         <clip>
             <shape>
 <!--                进度条颜色-->
-                <solid android:color="@color/color_339933" />
+                <solid android:color="@color/color_CC0000" />
             </shape>
         </clip>
     </item>
