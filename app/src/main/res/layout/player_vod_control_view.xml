@@ -303,6 +303,41 @@
                 android:textSize="@dimen/ts_20" />
 
             <TextView
+                android:id="@+id/zimu_select"
+                android:singleLine="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/vs_5"
+                android:layout_marginRight="@dimen/vs_5"
+                android:background="@drawable/button_dialog_main"
+                android:focusable="true"
+                android:padding="@dimen/vs_10"
+                android:text="字幕"
+                android:shadowColor="@color/color_000000_80"
+                android:shadowDx="5"
+                android:shadowDy="5"
+                android:shadowRadius="5"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/ts_20" />
+
+            <TextView
+                android:id="@+id/audio_track_select"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/vs_5"
+                android:layout_marginRight="@dimen/vs_5"
+                android:background="@drawable/button_dialog_main"
+                android:focusable="true"
+                android:padding="@dimen/vs_10"
+                android:text="音轨"
+                android:shadowColor="@color/color_000000_80"
+                android:shadowDx="5"
+                android:shadowDy="5"
+                android:shadowRadius="5"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/ts_20"/>
+
+            <TextView
                 android:id="@+id/play_time_start_end_text"
                 android:singleLine="true"
                 android:layout_width="wrap_content"
@@ -310,7 +345,7 @@
                 android:layout_marginEnd="@dimen/vs_5"
                 android:layout_marginRight="@dimen/vs_5"
                 android:padding="@dimen/vs_10"
-                android:text="片头片尾"
+                android:text="片头"
                 android:shadowColor="@color/color_000000_80"
                 android:shadowDx="-5"
                 android:shadowDy="5"
@@ -334,6 +369,22 @@
                 android:shadowDy="5"
                 android:shadowRadius="5"
                 android:textColor="@android:color/white"
+                android:textSize="@dimen/ts_20" />
+
+            <TextView
+                android:id="@+id/play_time_start_end_text"
+                android:singleLine="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/vs_5"
+                android:layout_marginRight="@dimen/vs_5"
+                android:padding="@dimen/vs_10"
+                android:text="片尾"
+                android:shadowColor="@color/color_000000_80"
+                android:shadowDx="-5"
+                android:shadowDy="5"
+                android:shadowRadius="5"
+                android:textColor="@color/color_FFFFFF"
                 android:textSize="@dimen/ts_20" />
 
             <TextView
@@ -372,42 +423,6 @@
                 android:shadowRadius="5"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/ts_20" />
-
-            <TextView
-                android:id="@+id/zimu_select"
-                android:singleLine="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/vs_5"
-                android:layout_marginRight="@dimen/vs_5"
-                android:background="@drawable/button_dialog_main"
-                android:focusable="true"
-                android:padding="@dimen/vs_10"
-                android:text="字幕"
-                android:shadowColor="@color/color_000000_80"
-                android:shadowDx="5"
-                android:shadowDy="5"
-                android:shadowRadius="5"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/ts_20" />
-
-            <TextView
-                android:id="@+id/audio_track_select"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/vs_5"
-                android:layout_marginRight="@dimen/vs_5"
-                android:background="@drawable/button_dialog_main"
-                android:focusable="true"
-                android:padding="@dimen/vs_10"
-                android:visibility="gone"
-                android:text="音轨"
-                android:shadowColor="@color/color_000000_80"
-                android:shadowDx="5"
-                android:shadowDy="5"
-                android:shadowRadius="5"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/ts_20"/>
 
             <TextView
                 android:id="@+id/landscape_portrait"
