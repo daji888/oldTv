@@ -231,24 +231,6 @@
                 android:textSize="@dimen/ts_20" />
 
             <TextView
-                android:id="@+id/play_scale"
-                android:singleLine="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/vs_5"
-                android:layout_marginRight="@dimen/vs_5"
-                android:background="@drawable/button_dialog_main"
-                android:focusable="true"
-                android:padding="@dimen/vs_10"
-                android:text="16:9"
-                android:shadowColor="@color/color_000000_80"
-                android:shadowDx="-5"
-                android:shadowDy="5"
-                android:shadowRadius="5"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/ts_20" />
-
-            <TextView
                 android:id="@+id/play_speed"
                 android:singleLine="true"
                 android:layout_width="wrap_content"
@@ -259,6 +241,24 @@
                 android:focusable="true"
                 android:padding="@dimen/vs_10"
                 android:text="x1.0"
+                android:shadowColor="@color/color_000000_80"
+                android:shadowDx="-5"
+                android:shadowDy="5"
+                android:shadowRadius="5"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/ts_20" />
+
+            <TextView
+                android:id="@+id/play_scale"
+                android:singleLine="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/vs_5"
+                android:layout_marginRight="@dimen/vs_5"
+                android:background="@drawable/button_dialog_main"
+                android:focusable="true"
+                android:padding="@dimen/vs_10"
+                android:text="16:9"
                 android:shadowColor="@color/color_000000_80"
                 android:shadowDx="-5"
                 android:shadowDy="5"
