@@ -150,7 +150,7 @@ public class VodController extends BaseController {
     private boolean isLock = false;
     Handler myHandle;
     Runnable myRunnable;
-    int myHandleSeconds = 10000;//闲置多少毫秒秒关闭底栏  默认6秒
+    int myHandleSeconds = 8000;//闲置多少毫秒关闭底栏  默认6秒
 
     int videoPlayState = 0;
 
@@ -166,7 +166,6 @@ public class VodController extends BaseController {
             String width = Integer.toString(mControlWrapper.getVideoSize()[0]);
             String height = Integer.toString(mControlWrapper.getVideoSize()[1]);
             mVideoSize.setText("分辨率：" + width + " X " + height);
-
             mHandler.postDelayed(this, 1000);
         }
     };
@@ -737,7 +736,7 @@ public class VodController extends BaseController {
             mPlayerSpeedBtn.setText("x" + mPlayerConfig.getDouble("sp"));
             mPlayerTimeStartBtn.setText(PlayerUtils.stringForTime(mPlayerConfig.getInt("st") * 1000));
             mPlayerTimeSkipBtn.setText(PlayerUtils.stringForTime(mPlayerConfig.getInt("et") * 1000));
-            mAudioTrackBtn.setVisibility((playerType == 1) ? VISIBLE : GONE);
+        //    mAudioTrackBtn.setVisibility((playerType == 1) ? VISIBLE : GONE);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -834,7 +833,7 @@ public class VodController extends BaseController {
             mControlWrapper.start();
         simSlideStart = false;
         simSeekPosition = 0;
-         simStartPosition = 0;
+        simStartPosition = 0;
     }
 
     public void tvSlideStart(int dir) {
