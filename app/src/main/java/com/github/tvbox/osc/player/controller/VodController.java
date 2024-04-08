@@ -150,7 +150,7 @@ public class VodController extends BaseController {
     private boolean isLock = false;
     Handler myHandle;
     Runnable myRunnable;
-    int myHandleSeconds = 10000;//闲置多少毫秒秒关闭底栏  默认6秒
+    int myHandleSeconds = 8000;//闲置多少毫秒关闭底栏  默认6秒
 
     int videoPlayState = 0;
 
@@ -166,7 +166,6 @@ public class VodController extends BaseController {
             String width = Integer.toString(mControlWrapper.getVideoSize()[0]);
             String height = Integer.toString(mControlWrapper.getVideoSize()[1]);
             mVideoSize.setText("分辨率：" + width + " X " + height);
-
             mHandler.postDelayed(this, 1000);
         }
     };
@@ -834,7 +833,7 @@ public class VodController extends BaseController {
             mControlWrapper.start();
         simSlideStart = false;
         simSeekPosition = 0;
-         simStartPosition = 0;
+        simStartPosition = 0;
     }
 
     public void tvSlideStart(int dir) {
