@@ -423,16 +423,9 @@ public class ApiConfig {
                     if(type.equals("0")){
                         String url = fengMiLives.get("url").getAsString();
                         //设置epg
-                        if (fengMiLives.has("epg")) {
-                            String epg = fengMiLives.get("epg").getAsString();
-                            System.out.println("EPG URL :" + epg);
-                            putEPGHistory(epg);
-                            // Overwrite with EPG URL from Settings
-                            if (StringUtils.isBlank(epgURL)) {
-                                Hawk.put(HawkConfig.EPG_URL, epg);
-                            } else {
-                                    Hawk.put(HawkConfig.EPG_URL, epgURL);
-                            }
+                        if(fengMiLives.has("epg")){
+                            String epg =fengMiLives.get("epg").getAsString();
+                            Hawk.put(HawkConfig.EPG_URL,epg);
                         }
 
                         if(url.startsWith("http")){
@@ -546,17 +539,6 @@ public class ApiConfig {
             if (!foundOldSelect && ijkCodes.size() > 0) {
                 ijkCodes.get(0).selected(true);
             }
-        }
-    }
-
-    public static void putEPGHistory(String url) {
-        if (!url.isEmpty()) {
-            ArrayList<String> epgHistory = Hawk.get(HawkConfig.EPG_HISTORY, new ArrayList<String>());
-            if (!epgHistory.contains(url))
-                epgHistory.add(0, url);
-            if (epgHistory.size() > 20)
-                epgHistory.remove(20);
-            Hawk.put(HawkConfig.EPG_HISTORY, epgHistory);
         }
     }
 
