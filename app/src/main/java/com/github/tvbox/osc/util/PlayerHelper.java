@@ -58,20 +58,6 @@ public class PlayerHelper {
                     return new IjkmPlayer(context, codec);
                 }
             };
-            try {
-                tv.danmaku.ijk.media.player.IjkMediaPlayer.loadLibrariesOnce(new IjkLibLoader() {
-                    @Override
-                    public void loadLibrary(String s) throws UnsatisfiedLinkError, SecurityException {
-                        try {
-                            System.loadLibrary(s);
-                        } catch (Throwable th) {
-                            th.printStackTrace();
-                        }
-                    }
-                });
-            } catch (Throwable th) {
-                th.printStackTrace();
-            }
         } else if (playerType == 2) {
             playerFactory = new PlayerFactory<EXOmPlayer>() {
                 @Override
@@ -111,20 +97,6 @@ public class PlayerHelper {
                     return new IjkmPlayer(context, null);
                 }
             };
-            try {
-                tv.danmaku.ijk.media.player.IjkMediaPlayer.loadLibrariesOnce(new IjkLibLoader() {
-                    @Override
-                    public void loadLibrary(String s) throws UnsatisfiedLinkError, SecurityException {
-                        try {
-                            System.loadLibrary(s);
-                        } catch (Throwable th) {
-                            th.printStackTrace();
-                        }
-                    }
-                });
-            } catch (Throwable th) {
-                th.printStackTrace();
-            }
         } else if (playType == 2) {
             playerFactory = new PlayerFactory<EXOmPlayer>() {
                 @Override
@@ -152,20 +124,7 @@ public class PlayerHelper {
 
 
     public static void init() {
-        try {
-            tv.danmaku.ijk.media.player.IjkMediaPlayer.loadLibrariesOnce(new IjkLibLoader() {
-                @Override
-                public void loadLibrary(String s) throws UnsatisfiedLinkError, SecurityException {
-                    try {
-                        System.loadLibrary(s);
-                    } catch (Throwable th) {
-                        th.printStackTrace();
-                    }
-                }
-            });
-        } catch (Throwable th) {
-            th.printStackTrace();
-        }
+        IjkMediaPlayer.loadLibrariesOnce(null);
     }
 
     public static String getPlayerName(int playType) {
