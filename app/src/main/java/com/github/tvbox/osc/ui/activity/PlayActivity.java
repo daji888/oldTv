@@ -89,6 +89,9 @@ import org.greenrobot.eventbus.EventBus;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.xwalk.core.XWalkJavascriptResult;
 import org.xwalk.core.XWalkResourceClient;
 import org.xwalk.core.XWalkSettings;
@@ -930,6 +933,35 @@ public class PlayActivity extends BaseActivity {
         try {
             if (!mVodPlayerCfg.has("pl")) {
                 mVodPlayerCfg.put("pl", (sourceBean.getPlayerType() == -1) ? (int)Hawk.get(HawkConfig.PLAY_TYPE, 1) : sourceBean.getPlayerType() );
+            }
+            if (!mVodPlayerCfg.has("pr")) {
+                mVodPlayerCfg.put("pr", Hawk.get(HawkConfig.PLAY_RENDER, 0));
+            }
+            if (!mVodPlayerCfg.has("ijk")) {
+                mVodPlayerCfg.put("ijk", Hawk.get(HawkConfig.IJK_CODEC, ""));
+            }
+            if (!mVodPlayerCfg.has("sc")) {
+                mVodPlayerCfg.put("sc", Hawk.get(HawkConfig.PLAY_SCALE, 0));
+            }
+            if (!mVodPlayerCfg.has("sp")) {
+                mVodPlayerCfg.put("sp", 1.0f);
+            }
+            if (!mVodPlayerCfg.has("st")) {
+                mVodPlayerCfg.put("st", 0);
+            }
+            if (!mVodPlayerCfg.has("et")) {
+                mVodPlayerCfg.put("et", 0);
+            }
+        } catch (Throwable th) {
+
+        }
+        mController.setPlayerConfig(mVodPlayerCfg);
+    }
+
+    void initPlayerDrive() {
+        try {
+            if (!mVodPlayerCfg.has("pl")) {
+                mVodPlayerCfg.put("pl", Hawk.get(HawkConfig.PLAY_TYPE, 1));
             }
             if (!mVodPlayerCfg.has("pr")) {
                 mVodPlayerCfg.put("pr", Hawk.get(HawkConfig.PLAY_RENDER, 0));
