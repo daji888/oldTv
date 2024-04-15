@@ -1111,7 +1111,6 @@ public class PlayActivity extends BaseActivity {
         if (vs.url.startsWith("tvbox-xg:") && !TextUtils.isEmpty(vs.url.substring(9))) {
             this.mController.showParse(false);
             playUrl(Jianpian.JPUrlDec(vs.url.substring(9)), null);
-            }
             return;
         }
         if (Thunder.play(vs.url, new Thunder.ThunderCallback() {
