@@ -7,14 +7,12 @@ import static okhttp3.ConnectionSpec.MODERN_TLS;
 import static okhttp3.ConnectionSpec.RESTRICTED_TLS;
 import com.github.catvod.net.SSLCompat;
 import com.github.tvbox.osc.base.App;
-import com.github.tvbox.osc.picasso.MyOkhttpDownLoader;
 import com.github.tvbox.osc.util.SSL.SSLSocketFactoryCompat;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.https.HttpsUtils;
 import com.lzy.okgo.interceptor.HttpLoggingInterceptor;
 import com.lzy.okgo.model.HttpHeaders;
 import com.orhanobut.hawk.Hawk;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
@@ -199,16 +197,6 @@ public class OkGoHelper {
 
         initExoOkHttpClient();
         initPicasso(okHttpClient);
-    }
-
-    static void initPicasso(OkHttpClient client) {
-        client.dispatcher().setMaxRequestsPerHost(10);
-        MyOkhttpDownLoader downloader = new MyOkhttpDownLoader(client);
-        Picasso picasso = new Picasso.Builder(App.getInstance())
-                .downloader(downloader)
-                .defaultBitmapConfig(Bitmap.Config.ARGB_8888)
-                .build();
-        Picasso.setSingletonInstance(picasso);
     }
 
     private static synchronized void setOkHttpSsl(OkHttpClient.Builder builder) {
