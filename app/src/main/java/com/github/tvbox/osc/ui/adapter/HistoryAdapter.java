@@ -79,7 +79,7 @@ public class HistoryAdapter extends BaseQuickAdapter<VodInfo, BaseViewHolder> {
         //由于部分电视机使用glide报错
         if (!TextUtils.isEmpty(item.pic)) {
             // takagen99 : Use Glide instead
-            ImgUtil.load(item.pic, ivThumb, 14); 
+            ImgUtil.load(item.pic, ivThumb, 10); 
         } else {
             ivThumb.setImageResource(R.drawable.img_loading_placeholder);
         }
