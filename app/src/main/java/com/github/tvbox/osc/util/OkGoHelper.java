@@ -196,7 +196,6 @@ public class OkGoHelper {
         noRedirectClient = builder.build();
 
         initExoOkHttpClient();
-        initPicasso(okHttpClient);
     }
 
     private static synchronized void setOkHttpSsl(OkHttpClient.Builder builder) {
