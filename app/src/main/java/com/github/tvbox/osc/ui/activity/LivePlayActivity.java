@@ -490,8 +490,14 @@ public class LivePlayActivity extends BaseActivity {
             imgLiveIcon.setVisibility(View.INVISIBLE);
             liveIconNullText.setText("" + channel_Name.getChannelNum());
         } else {
+            RequestOptions options = new RequestOptions();
+            options.diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                    .placeholder(R.drawable.app_banner);
+            Glide.with(App.getInstance())
+                    .load(logoUrl)
+                    .apply(options)
+                    .into(imgLiveIcon);
             imgLiveIcon.setVisibility(View.VISIBLE);
-            Glide.get().load(logoUrl).placeholder(R.drawable.app_banner).into(imgLiveIcon);
             liveIconNullBg.setVisibility(View.INVISIBLE);
             liveIconNullText.setVisibility(View.INVISIBLE);
         }
