@@ -6,10 +6,10 @@ import com.github.catvod.net.OkHttp;
 import com.github.tvbox.osc.util.LOG;
 import com.google.common.net.HttpHeaders;
 import com.lzy.okgo.OkGo;
-import com.whl.quickjs.wrapper.JSArray;
-import com.whl.quickjs.wrapper.JSObject;
-import com.whl.quickjs.wrapper.JSUtils;
-import com.whl.quickjs.wrapper.QuickJSContext;
+import com.github.tvbox.quickjs.wrapper.JSArray;
+import com.github.tvbox.quickjs.wrapper.JSObject;
+import com.github.tvbox.quickjs.wrapper.JSUtils;
+import com.github.tvbox.quickjs.wrapper.QuickJSContext;
 
 import java.util.List;
 import java.util.Map;
