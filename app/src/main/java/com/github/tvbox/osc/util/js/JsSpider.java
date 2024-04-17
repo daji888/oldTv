@@ -9,9 +9,9 @@ import com.github.tvbox.osc.util.FileUtils;
 import com.github.tvbox.osc.util.LOG;
 import com.github.tvbox.osc.util.MD5;
 
-import com.whl.quickjs.android.QuickJSLoader;
-import com.whl.quickjs.wrapper.Function;
-import com.whl.quickjs.wrapper.JSArray;
+import com.github.tvbox.quickjs.android.QuickJSLoader;
+import com.github.tvbox.quickjs.Function;
+import com.github.tvbox.quickjs.JSArray;
 
 import com.github.tvbox.quickjs.JSCallFunction;
 import com.github.tvbox.quickjs.JSObject;
