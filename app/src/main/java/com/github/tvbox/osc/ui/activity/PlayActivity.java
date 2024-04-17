@@ -1558,6 +1558,8 @@ public class PlayActivity extends BaseActivity {
             Spider sp = ApiConfig.get().getCSP(sourceBean);
             if (sp != null && sp.manualVideoCheck())
                 return sp.isVideoFormat(url);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return VideoParseRuler.checkIsVideoForParse(webUrl, url);
     }
