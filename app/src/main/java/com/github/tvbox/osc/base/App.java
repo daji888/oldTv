@@ -20,6 +20,7 @@ import com.kingja.loadsir.core.LoadSir;
 import com.orhanobut.hawk.Hawk;
 import com.p2p.P2PClass;
 import com.github.tvbox.quickjs.android.QuickJSLoader;
+import com.github.catvod.crawler.JsLoader;
 
 import me.jessyan.autosize.AutoSizeConfig;
 import me.jessyan.autosize.unit.Subunits;
@@ -60,7 +61,7 @@ public class App extends MultiDexApplication {
                 .setSupportSP(false)
                 .setSupportSubunits(Subunits.MM);
         PlayerHelper.init();
-        JSEngine.getInstance().create();
+        QuickJSLoader.init();
         FileUtils.cleanPlayerCache();
     }
 
@@ -99,7 +100,7 @@ public class App extends MultiDexApplication {
     @Override
     public void onTerminate() {
         super.onTerminate();
-        JSEngine.getInstance().destroy();
+        JsLoader.load();
     }
 
 
