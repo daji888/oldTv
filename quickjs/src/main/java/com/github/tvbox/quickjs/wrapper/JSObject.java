@@ -1,18 +1,64 @@
 package com.github.tvbox.quickjs;
 
-import java.lang.reflect.InvocationTargetException;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class JSObject {
-
+    private final ConcurrentHashMap<Class<?>, BindingContext> bindingContextMap = new ConcurrentHashMap<>();
     private final QuickJSContext context;
     private final long pointer;
-
     private boolean isReleased;
 
     public JSObject(QuickJSContext context, long pointer) {
         this.context = context;
         this.pointer = pointer;
+    }
+
+    public void setProperty(String name, String value) {
+        context.setProperty(this, name, value);
+    }
+
+    public Object getProperty(String name) {
+        checkReleased();
+        return context.getProperty(this, name);
+    }
+
+    public JSONObject toJSONObject() {
+        JSONObject jsonObject = new JSONObject();
+        String[] keys = getKeys();
+        for (String key : keys) {
+            Object obj = this.getProperty(key);
+            if (obj == null || obj instanceof JSFunction) {
+                continue;
+            }
+            if (obj instanceof Number || obj instanceof String || obj instanceof Boolean) {
+                try {
+                    jsonObject.put(key, obj);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            } else if (obj instanceof JSArray) {
+                try {
+                    jsonObject.put(key, ((JSArray) obj).toJSONArray());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            } else if (obj instanceof JSObject) {
+                try {
+                    jsonObject.put(key, ((JSObject) obj).toJSONObject());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return jsonObject;
     }
 
     public long getPointer() {
@@ -23,171 +69,53 @@ public class JSObject {
         return context;
     }
 
-    public Object getProperty(String name) {
+    public Object get(String name) {
         checkReleased();
-        return context.getProperty(this, name);
+        return context.get(this, name);
     }
 
-    public void setProperty(String name, String value) {
-        context.setProperty(this, name, value);
-    }
-
-    public void setProperty(String name, int value) {
-        context.setProperty(this, name, value);
-    }
-
-    public void setProperty(String name, JSObject value) {
-        context.setProperty(this, name, value);
-    }
-
-    public void setProperty(String name, boolean value) {
-        context.setProperty(this, name, value);
-    }
-
-    public void setProperty(String name, double value) {
-        context.setProperty(this, name, value);
-    }
-
-    public void setProperty(String name, JSCallFunction value) {
-        context.setProperty(this, name, value);
-    }
-
-    /**
-     * Class 添加 {@link JSMethod} 的方法会被注入到 JSContext 中
-     * 注意：该方法暂不支持匿名内部类的注册，因为匿名内部类构造参数不是无参的，newInstance 时会报错
-     * @param name
-     * @param clazz
-     */
-    public void setProperty(String name, Class clazz) {
-        Object javaObj = null;
-        try {
-            javaObj = clazz.newInstance();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        }
-
-        if (javaObj == null) {
-            throw new NullPointerException("The JavaObj cannot be null. An error occurred in newInstance!");
-        }
-
-        JSObject jsObj = context.createNewJSObject();
-        Method[] methods = clazz.getMethods();
-        for (Method method : methods) {
-            if (method.isAnnotationPresent(JSMethod.class)) {
-                Object finalJavaObj = javaObj;
-                jsObj.setProperty(method.getName(), args -> {
-                    try {
-                        return method.invoke(finalJavaObj, args);
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    } catch (InvocationTargetException e) {
-                        e.printStackTrace();
-                    }
-                    return null;
-                });
-            }
-        }
-
-        setProperty(name, jsObj);
+    public void set(String name, Object value) {
+        checkReleased();
+        context.set(this, name, value);
     }
 
     public String getString(String name) {
-        Object value = getProperty(name);
-        return value instanceof String ? (String) value : null;
-    }
-
-    /**
-     * See {@link JSObject#getString(String)}
-     */
-    @Deprecated
-    public String getStringProperty(String name) {
-        Object value = getProperty(name);
+        Object value = get(name);
         return value instanceof String ? (String) value : null;
     }
 
     public Integer getInteger(String name) {
-        Object value = getProperty(name);
-        return value instanceof Integer ? (Integer) value : null;
-    }
-
-    /**
-     * See {@link JSObject#getInteger(String)}
-     */
-    @Deprecated
-    public Integer getIntProperty(String name) {
-        Object value = getProperty(name);
+        Object value = get(name);
         return value instanceof Integer ? (Integer) value : null;
     }
 
     public Boolean getBoolean(String name) {
-        Object value = getProperty(name);
-        return value instanceof Boolean ? (Boolean) value : null;
-    }
-
-    /**
-     * See {@link JSObject#getBoolean(String)}
-     */
-    @Deprecated
-    public Boolean getBooleanProperty(String name) {
-        Object value = getProperty(name);
+        Object value = get(name);
         return value instanceof Boolean ? (Boolean) value : null;
     }
 
     public Double getDouble(String name) {
-        Object value = getProperty(name);
+        Object value = get(name);
         return value instanceof Double ? (Double) value : null;
     }
 
-    /**
-     * See {@link JSObject#getDouble(String)}
-     */
-    @Deprecated
-    public Double getDoubleProperty(String name) {
-        Object value = getProperty(name);
-        return value instanceof Double ? (Double) value : null;
+    public Long getLong(String name) {
+        Object value = get(name);
+        return value instanceof Long ? (Long) value : null;
     }
 
     public JSObject getJSObject(String name) {
-        Object value = getProperty(name);
-        return value instanceof JSObject ? (JSObject) value : null;
-    }
-
-    /**
-     * See {@link JSObject#getJSObject(String)}
-     */
-    @Deprecated
-    public JSObject getJSObjectProperty(String name) {
-        Object value = getProperty(name);
+        Object value = get(name);
         return value instanceof JSObject ? (JSObject) value : null;
     }
 
     public JSFunction getJSFunction(String name) {
-        Object value = getProperty(name);
-        return value instanceof JSFunction ? (JSFunction) value : null;
-    }
-
-    /**
-     * See {@link JSObject#getJSFunction(String)}
-     */
-    @Deprecated
-    public JSFunction getJSFunctionProperty(String name) {
-        Object value = getProperty(name);
+        Object value = get(name);
         return value instanceof JSFunction ? (JSFunction) value : null;
     }
 
     public JSArray getJSArray(String name) {
-        Object value = getProperty(name);
-        return value instanceof JSArray ? (JSArray) value : null;
-    }
-
-    /**
-     * See {@link JSObject#getJSArray(String)}
-     */
-    @Deprecated
-    public JSArray getJSArrayProperty(String name) {
-        Object value = getProperty(name);
+        Object value = get(name);
         return value instanceof JSArray ? (JSArray) value : null;
     }
 
@@ -196,13 +124,9 @@ public class JSObject {
         return (JSArray) getOwnPropertyNames.call(this);
     }
 
-    /**
-     * See {@link JSObject#getNames()}
-     */
-    @Deprecated
-    public JSArray getOwnPropertyNames() {
-        JSFunction getOwnPropertyNames = (JSFunction) context.evaluate("Object.getOwnPropertyNames");
-        return (JSArray) getOwnPropertyNames.call(this);
+    public Boolean getHas(String key) {
+        JSFunction hasOwnProperty = (JSFunction) context.evaluate("Object.hasOwnProperty");
+        return (Boolean) hasOwnProperty.call(key);
     }
 
     /**
@@ -220,20 +144,98 @@ public class JSObject {
         context.hold(this);
     }
 
+    public boolean contains(String key) {
+        checkReleased();
+        return context.contains(this, key);
+    }
+
+    public String[] getKeys() {
+        checkReleased();
+        return context.getKeys(this);
+    }
+
+    /**
+     * 这里与 JavaScript 的 toString 方法保持一致
+     * 返回结果参考：https://262.ecma-international.org/14.0/#sec-tostring
+     *
+     * @return toString in JavaScript.
+     */
     @Override
     public String toString() {
         checkReleased();
 
-        Object formatString = context.evaluate("__format_string;");
-        if (formatString instanceof JSFunction) {
-            return (String) ((JSFunction) formatString).call(this);
-        }
-
-        return super.toString();
+        JSFunction toString = getJSFunction("toString");
+        return (String) toString.call();
     }
 
-    public String stringify() {
+    public String toJsonString() {
         return context.stringify(this);
+    }
+
+    public JSONObject toJsonObject() {
+        return toJsonObject(true);
+    }
+
+    public JSONObject toJsonObject(boolean isNative) {
+        checkReleased();
+        JSONObject jsonObject = new JSONObject();
+        if (isNative) {
+            String[] keys = getKeys();
+            for (String key : keys) {
+                Object obj = this.get(key);
+                if (obj == null || obj instanceof JSFunction) {
+                    continue;
+                }
+                if (obj instanceof Number || obj instanceof String || obj instanceof Boolean) {
+                    try {
+                        jsonObject.put(key, obj);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else if (obj instanceof JSArray) {
+                    try {
+                        jsonObject.put(key, ((JSArray) obj).toJsonArray());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else if (obj instanceof JSObject) {
+                    try {
+                        jsonObject.put(key, ((JSObject) obj).toJsonObject());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } else {
+            JSONArray json = getNames().toJsonArray();
+            for (int i = 0; i < json.length(); i++) {
+                String key = json.optString(i);
+                Object obj = this.get(key);
+                if (obj == null || obj instanceof JSFunction) {
+                    continue;
+                }
+                if (obj instanceof Number || obj instanceof String || obj instanceof Boolean) {
+                    try {
+                        jsonObject.put(key, obj);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else if (obj instanceof JSArray) {
+                    try {
+                        jsonObject.put(key, ((JSArray) obj).toJsonArray());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else if (obj instanceof JSObject) {
+                    try {
+                        jsonObject.put(key, ((JSObject) obj).toJsonObject());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return jsonObject;
     }
 
     final void checkReleased() {
@@ -251,7 +253,92 @@ public class JSObject {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         JSObject jsObject = (JSObject) o;
-        return pointer == jsObject.pointer && isReleased == jsObject.isReleased && context == jsObject.context;
+        return pointer == jsObject.pointer;
     }
 
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(new long[]{pointer});
+    }
+
+    public void bind(final Object callbackReceiver) throws QuickJSException {
+        Objects.requireNonNull(callbackReceiver);
+        checkReleased();
+
+        BindingContext bindingContext = getBindingContext(callbackReceiver.getClass());
+        Map<String, Method> functionMap = bindingContext.getFunctionMap();
+
+        Method contextSetter = bindingContext.getContextSetter();
+        if (contextSetter != null) {
+            try {
+                contextSetter.invoke(callbackReceiver, this.context);
+            } catch (Exception e) {
+                throw new QuickJSException(
+                        e.getMessage());
+            }
+        }
+
+        if (!functionMap.isEmpty()) {
+            for (Map.Entry<String, Method> entry : functionMap.entrySet()) {
+                String functionName = entry.getKey();
+                final Method functionMethod = entry.getValue();
+                try {
+                    set(functionName, new JSCallFunction() {
+                        @Override
+                        public Object call(Object... args) {
+                            try {
+                                return functionMethod.invoke(callbackReceiver, args);
+                            } catch (Exception e) {
+                                throw new QuickJSException(
+                                        e.getMessage());
+                            }
+                        }
+                    });
+                } catch (Exception e) {
+                    throw new QuickJSException(
+                            e.getMessage());
+                }
+            }
+        }
+    }
+
+    BindingContext getBindingContext(Class<?> callbackReceiverClass) throws QuickJSException {
+        Objects.requireNonNull(callbackReceiverClass);
+        BindingContext bindingContext = bindingContextMap.get(callbackReceiverClass);
+        if (bindingContext == null) {
+            bindingContext = new BindingContext();
+            Map<String, Method> functionMap = bindingContext.getFunctionMap();
+            for (Method method : callbackReceiverClass.getMethods()) {
+                boolean methodHandled = false;
+                Function fan = method.getAnnotation(Function.class);
+                if (fan != null) {
+                    Function v8Function = method.getAnnotation(Function.class);
+                    String functionName = v8Function.name();
+                    if (functionName.length() == 0) {
+                        functionName = method.getName();
+                    }
+                    if (!functionMap.containsKey(functionName)) {
+                        functionMap.put(functionName, method);
+                        methodHandled = true;
+                    }
+                }
+                if (!methodHandled) {
+                    ContextSetter can = method.getAnnotation(ContextSetter.class);
+                    if (can != null) {
+                        bindingContext.setContextSetter(method);
+                    }
+                }
+            }
+            bindingContextMap.put(callbackReceiverClass, bindingContext);
+        }
+        return bindingContext;
+    }
+
+    public String stringify() {
+        return context.stringify(this);
+    }
+
+    public void setProperty(String name, JSCallFunction value) {
+        context.setProperty(this, name, value);
+    }
 }
