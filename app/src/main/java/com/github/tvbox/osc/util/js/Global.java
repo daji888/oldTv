@@ -6,13 +6,13 @@ import androidx.annotation.NonNull;
 import com.github.tvbox.osc.server.ControlManager;
 import com.github.tvbox.osc.util.LOG;
 import com.github.tvbox.osc.util.rsa.RSAEncrypt;
-import com.github.tvbox.quickjs.ContextSetter;
-import com.github.tvbox.quickjs.Function;
-import com.github.tvbox.quickjs.JSArray;
-import com.github.tvbox.quickjs.JSFunction;
-import com.github.tvbox.quickjs.JSObject;
-import com.github.tvbox.quickjs.JSUtils;
-import com.github.tvbox.quickjs.QuickJSContext;
+import com.whl.quickjs.wrapper.ContextSetter;
+import com.whl.quickjs.wrapper.Function;
+import com.whl.quickjs.wrapper.JSArray;
+import com.whl.quickjs.wrapper.JSFunction;
+import com.whl.quickjs.wrapper.JSObject;
+import com.whl.quickjs.wrapper.JSUtils;
+import com.whl.quickjs.wrapper.QuickJSContext;
 
 import org.json.JSONObject;
 
