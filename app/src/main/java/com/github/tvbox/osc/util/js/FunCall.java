@@ -1,8 +1,8 @@
 package com.github.tvbox.osc.util.js;
 
-import com.github.tvbox.quickjs.JSCallFunction;
-import com.github.tvbox.quickjs.JSFunction;
-import com.github.tvbox.quickjs.JSObject;
+import com.whl.quickjs.wrapper.JSCallFunction;
+import com.whl.quickjs.wrapper.JSFunction;
+import com.whl.quickjs.wrapper.JSObject;
 
 import java.util.concurrent.Callable;
 
