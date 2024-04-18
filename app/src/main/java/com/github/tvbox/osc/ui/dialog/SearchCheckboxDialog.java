@@ -4,9 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DiffUtil;
 
 import com.github.tvbox.osc.R;
@@ -15,6 +16,7 @@ import com.github.tvbox.osc.ui.adapter.CheckboxSearchAdapter;
 import com.github.tvbox.osc.util.FastClickCheckUtil;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
 import com.owen.tvrecyclerview.widget.V7GridLayoutManager;
+import com.owen.tvrecyclerview.widget.V7LinearLayoutManager;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -28,8 +30,8 @@ public class SearchCheckboxDialog extends BaseDialog{
     private TvRecyclerView mGridView;
     private CheckboxSearchAdapter checkboxSearchAdapter;
     private final List<SourceBean> mSourceList;
-    LinearLayout checkAll;
-    LinearLayout clearAll;
+    TextView checkAll;
+    TextView clearAll;
 
     public HashMap<String, String> mCheckSourcees;
 
