@@ -1,4 +1,4 @@
-package com.github.tvbox.quickjs;
+package com.whl.quickjs.wrapper;
 
 /**
  * Created by Harlon Wang on 2023/8/26.
