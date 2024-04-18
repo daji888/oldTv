@@ -8,30 +8,29 @@ import static okhttp3.ConnectionSpec.RESTRICTED_TLS;
 import com.github.catvod.net.SSLCompat;
 import com.github.tvbox.osc.base.App;
 import com.github.tvbox.osc.picasso.MyOkhttpDownLoader;
-import com.github.tvbox.osc.util.SSL.SSLSocketFactoryCompat;
+
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.https.HttpsUtils;
 import com.lzy.okgo.interceptor.HttpLoggingInterceptor;
 import com.lzy.okgo.model.HttpHeaders;
 import com.orhanobut.hawk.Hawk;
+import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.util.List;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.PriorityBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.security.cert.CertificateException;
 
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.X509TrustManager;
 
 import okhttp3.Cache;
 import okhttp3.ConnectionSpec;
@@ -43,8 +42,9 @@ import okhttp3.internal.Version;
 import xyz.doikki.videoplayer.exo.ExoMediaSourceHelper;
 
 public class OkGoHelper {
-    public static final long DEFAULT_MILLISECONDS = 8000;      //默认的超时时间
+    public static final long DEFAULT_MILLISECONDS = 10000;      //默认的超时时间
 
+    //https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/200
     public static HashMap<Integer, String > httpPhaseMap  = new HashMap<Integer, String>(){{
         put(200,"OK");
         put(301,"Moved Permanently");
@@ -72,7 +72,7 @@ public class OkGoHelper {
             loggingInterceptor.setColorLevel(Level.OFF);
         }
         builder.addInterceptor(loggingInterceptor);
-
+        builder.connectionSpecs(getConnectionSpec());
         builder.retryOnConnectionFailure(true);
         builder.followRedirects(true);
         builder.followSslRedirects(true);
@@ -91,10 +91,11 @@ public class OkGoHelper {
     public static DnsOverHttps dnsOverHttps = null;
 
     public static ArrayList<String> dnsHttpsList = new ArrayList<>();
-    
-     public static List<ConnectionSpec> getConnectionSpec() {
+
+    public static List<ConnectionSpec> getConnectionSpec() {
         return Util.immutableList(RESTRICTED_TLS, MODERN_TLS, COMPATIBLE_TLS, CLEARTEXT);
     }
+
 
     public static String getDohUrl(int type) {
         switch (type) {
@@ -110,7 +111,7 @@ public class OkGoHelper {
             case 4: {
                 // return "https://1.1.1.1/dns-query";   // takagen99 - removed Cloudflare
                 return "https://dns.google/dns-query";
-            }    
+            }
             case 5: {
                 return "https://dns.adguard.com/dns-query";
             }
@@ -144,11 +145,12 @@ public class OkGoHelper {
         } catch (Throwable th) {
             th.printStackTrace();
         }
-        builder.cache(new Cache(new File(App.getInstance().getCacheDir().getAbsolutePath(), "dohcache"), 100 * 1024 * 1024));
+        builder.connectionSpecs(getConnectionSpec());
+        builder.cache(new Cache(new File(App.getInstance().getCacheDir().getAbsolutePath(), "dohcache"), 10 * 1024 * 1024));
         OkHttpClient dohClient = builder.build();
         String dohUrl = getDohUrl(Hawk.get(HawkConfig.DOH_URL, 0));
         dnsOverHttps = new DnsOverHttps.Builder().client(dohClient).url(dohUrl.isEmpty() ? null : HttpUrl.get(dohUrl)).build();
-   }
+    }
 
     static OkHttpClient defaultClient = null;
     static OkHttpClient noRedirectClient = null;
@@ -208,7 +210,7 @@ public class OkGoHelper {
                 .downloader(downloader)
                 .defaultBitmapConfig(Bitmap.Config.ARGB_8888)
                 .build();
-        Picasso.setSingletonInstance(picasso);
+        Picasso.setSingletonInstance(picasso);        
     }
 
     private static synchronized void setOkHttpSsl(OkHttpClient.Builder builder) {
@@ -220,7 +222,7 @@ public class OkGoHelper {
             throw new RuntimeException(e);
         }
     }
-    
+
     private static class Tls12SocketFactory extends SSLSocketFactory {
 
         private static final String[] TLS_SUPPORT_VERSION = {"TLSv1.1", "TLSv1.2"};
@@ -265,7 +267,7 @@ public class OkGoHelper {
         public Socket createSocket(InetAddress address, int port, InetAddress localAddress, int localPort) throws IOException {
             return patch(delegate.createSocket(address, port, localAddress, localPort));
         }
-        
+
         private Socket patch(Socket s) {
             //代理SSLSocketFactory在创建一个Socket连接的时候，会设置Socket的可用的TLS版本。
             if (s instanceof SSLSocket) {
