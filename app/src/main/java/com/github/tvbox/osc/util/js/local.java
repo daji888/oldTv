@@ -2,7 +2,7 @@ package com.github.tvbox.osc.util.js;
 
 import androidx.annotation.Keep;
 import com.orhanobut.hawk.Hawk;
-import com.github.tvbox.quickjs.Function;
+import com.whl.quickjs.wrapper.Function;
 
 public class local {@Keep@Function
     public void delete(String str, String str2) {
