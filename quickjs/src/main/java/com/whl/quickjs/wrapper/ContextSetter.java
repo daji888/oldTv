@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.github.tvbox.quickjs;
+package com.whl.quickjs.wrapper;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
