@@ -1,4 +1,4 @@
-package com.github.tvbox.quickjs;
+package com.whl.quickjs.wrapper;
 
 import java.lang.reflect.Array;
 import java.util.Collection;
