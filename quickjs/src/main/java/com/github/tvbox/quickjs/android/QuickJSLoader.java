@@ -1,4 +1,4 @@
-package com.whl.quickjs.android;
+package com.github.tvbox.quickjs.android;
 
 public final class QuickJSLoader {
     public static void init() {

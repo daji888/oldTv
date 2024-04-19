@@ -15,12 +15,11 @@ import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.LOG;
 import com.github.tvbox.osc.util.OkGoHelper;
 import com.github.tvbox.osc.util.PlayerHelper;
+import com.github.tvbox.osc.util.js.JSEngine;
 import com.hjq.permissions.XXPermissions;
 import com.kingja.loadsir.core.LoadSir;
 import com.orhanobut.hawk.Hawk;
 import com.p2p.P2PClass;
-import com.whl.quickjs.android.QuickJSLoader;
-import com.github.catvod.crawler.JsLoader;
 
 import me.jessyan.autosize.AutoSizeConfig;
 import me.jessyan.autosize.unit.Subunits;
@@ -61,7 +60,7 @@ public class App extends MultiDexApplication {
                 .setSupportSP(false)
                 .setSupportSubunits(Subunits.MM);
         PlayerHelper.init();
-        QuickJSLoader.init();
+        JSEngine.getInstance().create();
         FileUtils.cleanPlayerCache();
     }
 
@@ -100,7 +99,7 @@ public class App extends MultiDexApplication {
     @Override
     public void onTerminate() {
         super.onTerminate();
-        JsLoader.load();
+        JSEngine.getInstance().destroy();
     }
 
 

@@ -1,4 +1,4 @@
-package com.whl.quickjs.wrapper;
+package com.github.tvbox.quickjs;
 
 public interface JSCallFunction {
 
