@@ -1084,8 +1084,8 @@ public class PlayActivity extends BaseActivity {
         stopParse();
         initParseLoadFound();
         if(mVideoView!=null) mVideoView.release();
-        subtitleCacheKey = mVodInfo.sourceKey + "-" + mVodInfo.id + "-" + mVodInfo.playFlag + "-" + mVodInfo.getplayIndex() + "-" + vs.name + "-subt";
-        progressKey = mVodInfo.sourceKey + mVodInfo.id + mVodInfo.playFlag + mVodInfo.getplayIndex();
+        String subtitleCacheKey = mVodInfo.sourceKey + "-" + mVodInfo.id + "-" + mVodInfo.playFlag + "-" + mVodInfo.playIndex+ "-" + vs.name + "-subt";
+        String progressKey = mVodInfo.sourceKey + mVodInfo.id + mVodInfo.playFlag + mVodInfo.playIndex + vs.name;
         //重新播放清除现有进度
         if (reset) {
             CacheManager.delete(MD5.string2MD5(progressKey), 0);
@@ -1554,14 +1554,10 @@ public class PlayActivity extends BaseActivity {
         if (url.contains("url=http") || url.contains(".html")) {
             return false;
         }
-        try {
-            if (sourceBean.getType() == 3) {
-                Spider sp = ApiConfig.get().getCSP(sourceBean);
-                if (sp != null && sp.manualVideoCheck())
-                    return sp.isVideoFormat(url);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (sourceBean.getType() == 3) {
+            Spider sp = ApiConfig.get().getCSP(sourceBean);
+            if (sp != null && sp.manualVideoCheck())
+                return sp.isVideoFormat(url);
         }
         return VideoParseRuler.checkIsVideoForParse(webUrl, url);
     }
