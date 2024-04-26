@@ -1594,7 +1594,7 @@ public class PlayActivity extends BaseActivity {
         });
     }
 
-    bboolean checkVideoFormat(String url) {
+    boolean checkVideoFormat(String url) {
         if (url.contains("url=http") || url.contains(".html")) {
             return false;
         }
