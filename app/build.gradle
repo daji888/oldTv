@@ -70,6 +70,7 @@ dependencies {
         }
     }
     api fileTree(dir: "libs", include: ['*.jar', '*.aar'])
+    implementation 'org.conscrypt:conscrypt-android:2.5.2'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
       
     implementation 'org.nanohttpd:nanohttpd:2.3.1'
@@ -99,7 +100,7 @@ dependencies {
     implementation 'org.greenrobot:eventbus:3.3.1'
     implementation 'com.orhanobut:hawk:2.0.1'
     implementation 'androidx.annotation:annotation:1.6.0'
-     implementation "androidx.media3:media3-exoplayer:1.1.1"
+    implementation "androidx.media3:media3-exoplayer:1.1.1"
     implementation "androidx.media3:media3-exoplayer-dash:1.1.1"
     implementation "androidx.media3:media3-exoplayer-hls:1.1.1"
     implementation "androidx.media3:media3-exoplayer-rtsp:1.1.1"
