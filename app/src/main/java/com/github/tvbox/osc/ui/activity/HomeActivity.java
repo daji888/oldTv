@@ -109,7 +109,6 @@ public class HomeActivity extends BaseActivity {
 
     @Override
     protected void init() {
-        
         EventBus.getDefault().register(this);
         ControlManager.get().startServer();
         initView();
