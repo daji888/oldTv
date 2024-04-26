@@ -6,6 +6,7 @@ import com.bumptech.glide.load.model.ModelLoader
 import com.bumptech.glide.load.model.ModelLoader.LoadData
 import com.bumptech.glide.load.model.ModelLoaderFactory
 import com.bumptech.glide.load.model.MultiModelLoaderFactory
+import com.github.catvod.net.SSLCompat
 import okhttp3.Call
 import okhttp3.OkHttpClient
 import java.io.InputStream
@@ -45,7 +46,11 @@ class OkHttpUrlLoader(
         }
 
         companion object {
-            private val internalClient: Call.Factory = OkHttpClient().newBuilder().followRedirects(false).followSslRedirects(false).build()//modify by muziling
+            private val internalClient: Call.Factory = OkHttpClient().newBuilder().apply {
+                if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.LOLLIPOP) {
+                    sslSocketFactory(SSLCompat(), SSLCompat.TM)
+                }
+            }.followRedirects(false).followSslRedirects(false).build()//modify by muziling
         }
     }
 
