@@ -31,7 +31,7 @@ public final class IjkTimedText {
      * int bitmapY = bitmapData[3];
      * int bitmapWidth = bitmapData[4];
      * int bitmapHeight = bitmapData[5];
-     * Bitmap bitmap = Bitmap.createBitmap(bitmapData, 6, bitmapWidth, bitmapWidth, bitmapHeight, Bitmap.Config.RGB_565);
+     * Bitmap bitmap = Bitmap.createBitmap(bitmapData, 6, bitmapWidth, bitmapWidth, bitmapHeight, Bitmap.Config.ARGB_8888);
      */
     private int[] mBitmapData = null;
 

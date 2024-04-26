@@ -1,5 +1,7 @@
 package com.github.tvbox.osc.bean;
 
+import com.github.tvbox.osc.util.StringUtils;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -131,19 +133,24 @@ public class AbsJson implements Serializable {
                 String[] playFlags = vod_play_from.split("\\$\\$\\$");
                 String[] playUrls = vod_play_url.split("\\$\\$\\$");
                 List<Movie.Video.UrlBean.UrlInfo> infoList = new ArrayList<>();
-                for (int i = 0; i < playFlags.length; i++) {
+                for (int i = 0; i < playUrls.length; i++) {
                     Movie.Video.UrlBean.UrlInfo urlInfo = new Movie.Video.UrlBean.UrlInfo();
-                    urlInfo.flag = playFlags[i];
-                    if (i < playUrls.length)
-                        urlInfo.urls = playUrls[i];
-                    else
-                        urlInfo.urls = "";
+                    if(StringUtils.isEmpty(playUrls[i])){
+                        continue;
+                    }
+                    if(i > playFlags.length){
+                        urlInfo.flag = "线路" + i;
+                    } else {
+                        urlInfo.flag = StringUtils.isEmpty(playFlags[i]) ? "线路" + i : playFlags[i];
+                    }
+                    urlInfo.urls = playUrls[i];
                     infoList.add(urlInfo);
                 }
                 urlBean.infoList = infoList;
             }
             video.urlBean = urlBean;
             video.des = vod_content;// <![CDATA[权来]
+            video.tag = vod_tag;
             return video;
         }
     }
@@ -160,13 +167,16 @@ public class AbsJson implements Serializable {
         }
         movie.recordcount = total;
         List<Movie.Video> videoList = new ArrayList<>();
-        for (AbsJsonVod vod : list) {
-            try {
-                videoList.add(vod.toXmlVideo());
-            } catch (Throwable th) {
-                movie.pagesize = 0;
+        if(list != null){
+            for (AbsJsonVod vod : list) {
+                try {
+                    videoList.add(vod.toXmlVideo());
+                } catch (Throwable th) {
+                    movie.pagesize = 0;
+                }
             }
         }
+
         movie.videoList = videoList;
         xml.movie = movie;
         xml.msg = msg;
