@@ -1135,16 +1135,21 @@ public class PlayFragment extends BaseLazyFragment {
         stopParse();
         initParseLoadFound();
         if(mVideoView!=null) mVideoView.release();
-        String subtitleCacheKey = mVodInfo.sourceKey + "-" + mVodInfo.id + "-" + mVodInfo.playFlag + "-" + mVodInfo.playIndex+ "-" + vs.name + "-subt";
-        String progressKey = mVodInfo.sourceKey + mVodInfo.id + mVodInfo.playFlag + mVodInfo.playIndex + vs.name;
+        subtitleCacheKey = mVodInfo.sourceKey + "-" + mVodInfo.id + "-" + mVodInfo.playFlag + "-" + mVodInfo.getplayIndex() + "-" + vs.name + "-subt";
+        progressKey = mVodInfo.sourceKey + mVodInfo.id + mVodInfo.playFlag + mVodInfo.getplayIndex();
         //重新播放清除现有进度
         if (reset) {
             CacheManager.delete(MD5.string2MD5(progressKey), 0);
             CacheManager.delete(MD5.string2MD5(subtitleCacheKey), "");
         }
-        if (vs.url.startsWith("tvbox-xg:") && !TextUtils.isEmpty(vs.url.substring(9))) {
-            this.mController.showParse(false);
-            playUrl(Jianpian.JPUrlDec(vs.url.substring(9)), null);
+        if(Jianpian.isJpUrl(vs.url)){//荐片地址特殊判断
+            String jp_url= vs.url;
+            mController.showParse(false);
+            if(vs.url.startsWith("tvbox-xg:")){
+                playUrl(Jianpian.JPUrlDec(jp_url.substring(9)), null);
+            }else {
+                playUrl(Jianpian.JPUrlDec(jp_url), null);
+            }
             return;
         }
         if (Thunder.play(vs.url, new Thunder.ThunderCallback() {

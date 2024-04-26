@@ -5,7 +5,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.api.ApiConfig;
 import com.github.tvbox.osc.bean.Movie;
-// import com.github.tvbox.osc.util.ImgUtil;
+
 import java.util.ArrayList;
 
 /**
@@ -32,7 +32,15 @@ public class QuickSearchAdapter extends BaseQuickAdapter<Movie.Video, BaseViewHo
         }
         ImageView ivThumb = helper.getView(R.id.ivThumb);
         if (!TextUtils.isEmpty(item.pic)) {
-            ImgUtil.load(item.pic, ivThumb, 10);
+            Picasso.get()
+                    .load(item.pic)
+                    .transform(new RoundTransformation(MD5.string2MD5(item.pic + "position=" + helper.getLayoutPosition()))
+                            .centerCorp(true)
+                            .override(AutoSizeUtils.mm2px(mContext, 210), AutoSizeUtils.mm2px(mContext, 280))
+                            .roundRadius(AutoSizeUtils.mm2px(mContext, 10), RoundTransformation.RoundType.ALL))
+                    .placeholder(R.drawable.error_loading)
+                    .error(R.drawable.error_loading)
+                    .into(ivThumb);
         } else {
             ivThumb.setImageResource(R.drawable.error_loading);
         }
