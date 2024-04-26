@@ -1594,14 +1594,18 @@ public class PlayActivity extends BaseActivity {
         });
     }
 
-    boolean checkVideoFormat(String url) {
+    bboolean checkVideoFormat(String url) {
         if (url.contains("url=http") || url.contains(".html")) {
             return false;
         }
-        if (sourceBean.getType() == 3) {
-            Spider sp = ApiConfig.get().getCSP(sourceBean);
-            if (sp != null && sp.manualVideoCheck())
-                return sp.isVideoFormat(url);
+        try {
+            if (sourceBean.getType() == 3) {
+                Spider sp = ApiConfig.get().getCSP(sourceBean);
+                if (sp != null && sp.manualVideoCheck())
+                    return sp.isVideoFormat(url);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return VideoParseRuler.checkIsVideoForParse(webUrl, url);
     }
