@@ -291,7 +291,8 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
                 Movie.Video vod = new Movie.Video();
                 vod.name = obj.get("title").getAsString();
                 vod.note = obj.get("rate").getAsString();
-                if(!vod.note.isEmpty())vod.note+=" 分";
+                if(!vod.note.isEmpty())
+                    vod.note = "豆瓣评分：" + vod.note;
                 vod.pic = obj.get("cover").getAsString()+"@User-Agent="+ UA.randomOne()+"@Referer=https://www.douban.com/";
                 result.add(vod);
             }
