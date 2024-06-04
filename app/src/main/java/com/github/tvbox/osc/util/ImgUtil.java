@@ -7,7 +7,6 @@ import android.text.TextUtils;
 import android.widget.ImageView;
 import androidx.annotation.Nullable;
 
-import com.aminography.redirectglide.GlideApp;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.DecodeFormat;
