@@ -8,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.text.TextUtils;
 
-import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.api.ApiConfig;
 import com.github.tvbox.osc.base.App;
 import com.github.tvbox.osc.bean.MovieSort;
@@ -183,10 +182,9 @@ public class DefaultConfig {
         return start > -1 ? fileName.substring(0, start) : fileName;
     }
 
-    // takagen99 : 增加对flv|avi|mkv|rm|wmv|mpg等几种视频格式的支持
     private static final Pattern snifferMatch = Pattern.compile(
-            "http((?!http).){20,}?\\.(m3u8|mp4|flv|avi|mkv|rm|wmv|mpg)\\?.*|" +
-                    "http((?!http).){20,}\\.(m3u8|mp4|flv|avi|mkv|rm|wmv|mpg)|" +
+            "http((?!http).){20,}?\\.(m3u8|mp4|flv|avi|mkv|rm|wmv|mpg|m4a)\\?.*|" +
+                    "http((?!http).){20,}\\.(m3u8|mp4|flv|avi|mkv|rm|wmv|mpg|m4a)|" +
                     "http((?!http).)*?video/tos*|" +
                     "http((?!http).){20,}?/m3u8\\?pt=m3u8.*|" +
                     "http((?!http).)*?default\\.ixigua\\.com/.*|" +
