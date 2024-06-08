@@ -172,12 +172,12 @@
 -keepclassmembers class * extends org.greenrobot.eventbus.util.ThrowableFailureEvent {
     <init>(java.lang.Throwable);
 }
-#bugly
+# bugly
 -dontwarn com.tencent.bugly.**
 -keep public class com.tencent.bugly.**{*;}
 -keep class android.support.**{*;}
 
-#dkplayer
+# dkplayer
 -keep class com.dueeeke.videoplayer.** { *; }
 -dontwarn com.dueeeke.videoplayer.**
 
@@ -188,6 +188,13 @@
 # ExoPlayer
 -keep class com.google.androidx.media3.exoplayer.** { *; }
 -dontwarn com.google.androidx.media3.exoplayer.**
+-dontwarn org.xmlpull.v1.**
+-dontwarn org.kxml2.io.**
+-dontwarn android.content.res.**
+-dontwarn org.slf4j.impl.StaticLoggerBinder
+-keep class org.xmlpull.** { *; }
+-keepclassmembers class org.xmlpull.** { *; }
+-keep class androidx.media3.** { *; }
 
 # sardine webdav
 -keep class com.thegrizzlylabs.sardineandroid.** { *; }
