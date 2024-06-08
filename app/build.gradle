@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 
 
 android {
+    namespace 'com.github.tvbox.osc'
     compileSdkVersion 34
 
     defaultConfig {
@@ -55,6 +56,7 @@ android {
         abortOnError false
     }
     buildFeatures {
+        buildConfig true
         dataBinding = true
     }
 }
