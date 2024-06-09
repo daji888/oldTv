@@ -254,28 +254,26 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
                     }
                 }
             }
-            String doubanUrl = "https://movie.douban.com/j/new_search_subjects?sort=U&range=0,10&tags=&playable=1&start=0&year_range=" + year + "," + year;
-            OkGo.<String>get(doubanUrl)
-                    .headers("User-Agent", UA.randomOne())
-                    .execute(new AbsCallback<String>() {
+            String doubanHotURL = "https://movie.douban.com/j/new_search_subjects?sort=U&range=0,10&tags=&playable=1&start=0&year_range=" + year + "," + year;
+            String userAgent = UA.random();
+            OkGo.<String>get(doubanHotURL).headers("User-Agent", userAgent).execute(new AbsCallback<String>() {
+                @Override
+                public void onSuccess(Response<String> response) {
+                    String netJson = response.body();
+                    Hawk.put("home_hot_day", today);
+                    Hawk.put("home_hot", netJson);
+                    mActivity.runOnUiThread(new Runnable() {
                         @Override
-                        public void onSuccess(Response<String> response) {
-                            String netJson = response.body();
-                            Hawk.put("home_hot_day", today);
-                            Hawk.put("home_hot", netJson);
-                            mActivity.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    adapter.setNewData(loadHots(netJson));
-                                }
-                            });
-                        }
-
-                        @Override
-                        public String convertResponse(okhttp3.Response response) throws Throwable {
-                            return response.body().string();
+                        public void run() {
+                            adapter.setNewData(loadHots(netJson));
                         }
                     });
+                }
+                @Override
+                public String convertResponse(okhttp3.Response response) throws Throwable {
+                    return response.body().string();
+                }
+            });
         } catch (Throwable th) {
             th.printStackTrace();
         }
