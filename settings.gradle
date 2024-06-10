@@ -1,3 +1,28 @@
-rootProject.name = "ANT3"
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+        google()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+        google()
+        maven { url "https://jitpack.io" }
+        maven { url 'https://download.01.org/crosswalk/releases/crosswalk/android/maven2' }
+        maven { url "https://maven.aliyun.com/repository/releases" }
+        flatDir {
+            dirs "$rootDir/app/libs"
+        }
+        maven {
+            url "http://4thline.org/m2"
+            allowInsecureProtocol = true
+        }
+    }
+}
 include ':app'
 include ':quickjs'
+rootProject.name = "ANT3"
