@@ -53,20 +53,22 @@
 
         <activity
             android:name=".ui.activity.LivePlayActivity"
-            android:screenOrientation="sensorLandscape" />
+            android:screenOrientation="sensorLandscape"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation" />
         <activity
             android:name=".ui.activity.DetailActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="sensorLandscape" />
+            android:screenOrientation="sensorLandscape"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation" />
         <activity
             android:name=".ui.activity.PlayActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="sensorLandscape" />
+            android:screenOrientation="sensorLandscape"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation" />
         <activity
             android:name=".ui.activity.PushActivity"
             android:screenOrientation="sensorLandscape" />
         <activity
             android:name=".ui.activity.SearchActivity"
+            android:windowSoftInputMode="stateHidden"
             android:screenOrientation="sensorLandscape" />
         <activity
             android:name=".ui.activity.FastSearchActivity"
