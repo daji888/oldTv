@@ -102,10 +102,7 @@ dependencies {
     implementation "androidx.media3:media3-datasource-rtmp:1.2.1"
     implementation "androidx.media3:media3-ui:1.2.1"
     implementation "androidx.media3:media3-common:1.2.1"
-    
-    implementation 'xyz.doikki.android.dkplayer:dkplayer-ui:3.3.7'
-    implementation 'xyz.doikki.android.dkplayer:videocache:3.3.7'
-    
+        
     implementation('org.xwalk:xwalk_shared_library:23.53.589.4') {
         exclude group: 'com.android.support'
     }
