@@ -8,12 +8,12 @@
 
     <LinearLayout
             android:id="@+id/tv_top_l_container"
-            android:layout_width="720dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:tag="tv_top_container"
             android:visibility="gone"
             tools:visibility="visible"
-            android:layout_marginStart="@dimen/vs_20"
+            android:layout_marginRight="@dimen/vs_120"
             android:layout_marginLeft="@dimen/vs_20"
             android:layout_marginTop="@dimen/vs_10"
             android:orientation="vertical">
@@ -25,7 +25,6 @@
                 android:layout_gravity="left"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:width="680dp"
                 android:paddingTop="@dimen/vs_20"
                 android:paddingLeft="@dimen/vs_20"
                 android:text="http://"
