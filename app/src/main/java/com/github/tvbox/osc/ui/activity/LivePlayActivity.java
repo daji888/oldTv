@@ -1176,22 +1176,22 @@ public class LivePlayActivity extends BaseActivity {
             @Override
             public void playStateChanged(int playState) {
                 switch (playState) {
-                    case VideoView.STATE_IDLE:
-                    case VideoView.STATE_PAUSED:
+                    case MyVideoView.STATE_IDLE:
+                    case MyVideoView.STATE_PAUSED:
                         break;
-                    case VideoView.STATE_PREPARED:
-                    case VideoView.STATE_BUFFERED:
-                    case VideoView.STATE_PLAYING:
+                    case MyVideoView.STATE_PREPARED:
+                    case MyVideoView.STATE_BUFFERED:
+                    case MyVideoView.STATE_PLAYING:
                         currentLiveChangeSourceTimes = 0;
                         mHandler.removeCallbacks(mConnectTimeoutChangeSourceRun);
                         break;
-                    case VideoView.STATE_ERROR:
-                    case VideoView.STATE_PLAYBACK_COMPLETED:
+                    case MyVideoView.STATE_ERROR:
+                    case MyVideoView.STATE_PLAYBACK_COMPLETED:
                         mHandler.removeCallbacks(mConnectTimeoutChangeSourceRun);
                         mHandler.postDelayed(mConnectTimeoutChangeSourceRun, 2000);
                         break;
-                    case VideoView.STATE_PREPARING:
-                    case VideoView.STATE_BUFFERING:
+                    case MyVideoView.STATE_PREPARING:
+                    case MyVideoView.STATE_BUFFERING:
                         mHandler.removeCallbacks(mConnectTimeoutChangeSourceRun);
                         mHandler.postDelayed(mConnectTimeoutChangeSourceRun, (Hawk.get(HawkConfig.LIVE_CONNECT_TIMEOUT, 1) + 1) * 5000);
                         break;
