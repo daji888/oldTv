@@ -90,7 +90,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import xyz.doikki.videoplayer.player.VideoView;
+import com.github.tvbox.osc.player.MyVideoView;
 
 /**
  * @author pj567
