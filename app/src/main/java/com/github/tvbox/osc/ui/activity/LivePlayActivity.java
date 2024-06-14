@@ -99,7 +99,7 @@ import xyz.doikki.videoplayer.player.VideoView;
  */
 public class LivePlayActivity extends BaseActivity {
     public static Context context;
-    private VideoView mVideoView;
+    private MyVideoView mVideoView;
     private TextView tvChannelInfo;
     private TextView tvTime;
     private TextView tvNetSpeed;
