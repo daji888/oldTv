@@ -457,12 +457,12 @@ public class LivePlayActivity extends BaseActivity {
             if (channel_Name == null || channel_Name.getSourceNum() <= 0) {
                 ((TextView) findViewById(R.id.tv_source)).setText("1 / 1");
             } else {
-                ((TextView) findViewById(R.id.tv_source)).setText("线路：" + (channel_Name.getSourceIndex() + 1) + " / " + channel_Name.getSourceNum());
+                ((TextView) findViewById(R.id.tv_source)).setText("线路 : " + (channel_Name.getSourceIndex() + 1) + " / " + channel_Name.getSourceNum());
             }
             if (channel_Name == null || channel_Name.getSourceNum() <= 0) {
                 ((TextView) findViewById(R.id.tv_source1)).setText("1 / 1");
             } else {
-                ((TextView) findViewById(R.id.tv_source1)).setText("线路：" + (channel_Name.getSourceIndex() + 1) + " / " + channel_Name.getSourceNum());
+                ((TextView) findViewById(R.id.tv_source1)).setText("线路 : " + (channel_Name.getSourceIndex() + 1) + " / " + channel_Name.getSourceNum());
             }
             tv_right_top_channel_name.setText(channel_Name.getChannelName());
             tv_right_top_epg_name.setText(channel_Name.getChannelName());
