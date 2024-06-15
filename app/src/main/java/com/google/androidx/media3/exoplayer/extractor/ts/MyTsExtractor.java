@@ -15,6 +15,7 @@
  */
 package com.google.androidx.media3.exoplayer.extractor.ts;
 
+import static androidx.media3.extractor.ts.TsPayloadReader.EsInfo.AUDIO_TYPE_UNDEFINED;
 import static androidx.media3.extractor.ts.TsPayloadReader.FLAG_PAYLOAD_UNIT_START_INDICATOR;
 
 import android.util.SparseArray;
@@ -43,7 +44,9 @@ import androidx.media3.extractor.ts.SectionPayloadReader;
 import androidx.media3.extractor.ts.SectionReader;
 import androidx.media3.extractor.ts.TsPayloadReader;
 import androidx.media3.extractor.ts.TsUtil;
-
+import androidx.media3.extractor.ts.TsPayloadReader.DvbSubtitleInfo;
+import androidx.media3.extractor.ts.TsPayloadReader.EsInfo;
+import androidx.media3.extractor.ts.TsPayloadReader.TrackIdGenerator;
 import java.io.IOException;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -636,13 +639,13 @@ public final class MyTsExtractor implements Extractor {
             if (mode == MODE_HLS && id3Reader == null) {
                 // Setup an ID3 track regardless of whether there's a corresponding entry, in case one
                 // appears intermittently during playback. See [Internal: b/20261500].
-                TsPayloadReader.EsInfo id3EsInfo = new TsPayloadReader.EsInfo(TS_STREAM_TYPE_ID3, null, null, Util.EMPTY_BYTE_ARRAY);
+                EsInfo id3EsInfo = new TsPayloadReader.EsInfo(TS_STREAM_TYPE_ID3, null, AUDIO_TYPE_UNDEFINED, null, Util.EMPTY_BYTE_ARRAY);
                 id3Reader = payloadReaderFactory.createPayloadReader(TS_STREAM_TYPE_ID3, id3EsInfo);
                 if (id3Reader != null) {
                     id3Reader.init(
                             timestampAdjuster,
                             output,
-                            new TsPayloadReader.TrackIdGenerator(programNumber, TS_STREAM_TYPE_ID3, MAX_PID_PLUS_ONE));
+                            new TrackIdGenerator(programNumber, TS_STREAM_TYPE_ID3, MAX_PID_PLUS_ONE));
                 }
             }
 
@@ -656,7 +659,7 @@ public final class MyTsExtractor implements Extractor {
                 int elementaryPid = pmtScratch.readBits(13);
                 pmtScratch.skipBits(4); // reserved
                 int esInfoLength = pmtScratch.readBits(12); // ES_info_length.
-                TsPayloadReader.EsInfo esInfo = readEsInfo(sectionData, esInfoLength);
+                EsInfo esInfo = readEsInfo(sectionData, esInfoLength);
                 if (streamType == 0x06 || streamType == 0x05) {
                     streamType = esInfo.streamType;
                 }
@@ -691,7 +694,7 @@ public final class MyTsExtractor implements Extractor {
                         reader.init(
                                 timestampAdjuster,
                                 output,
-                                new TsPayloadReader.TrackIdGenerator(programNumber, trackId, MAX_PID_PLUS_ONE));
+                                new TrackIdGenerator(programNumber, trackId, MAX_PID_PLUS_ONE));
                     }
                     tsPayloadReaders.put(trackPid, reader);
                 }
@@ -721,12 +724,13 @@ public final class MyTsExtractor implements Extractor {
          * @param length The length of descriptors to read from the current position in {@code data}.
          * @return The stream info read from the available descriptors.
          */
-        private TsPayloadReader.EsInfo readEsInfo(ParsableByteArray data, int length) {
+        private EsInfo readEsInfo(ParsableByteArray data, int length) {
             int descriptorsStartPosition = data.getPosition();
             int descriptorsEndPosition = descriptorsStartPosition + length;
             int streamType = -1;
+            @EsInfo.AudioType int audioType = AUDIO_TYPE_UNDEFINED;
             String language = null;
-            List<TsPayloadReader.DvbSubtitleInfo> dvbSubtitleInfos = null;
+            List<DvbSubtitleInfo> dvbSubtitleInfos = null;
             while (data.getPosition() < descriptorsEndPosition) {
                 int descriptorTag = data.readUnsignedByte();
                 int descriptorLength = data.readUnsignedByte();
@@ -762,6 +766,7 @@ public final class MyTsExtractor implements Extractor {
                 } else if (descriptorTag == TS_PMT_DESC_ISO639_LANG) {
                     language = data.readString(3).trim();
                     // Audio type is ignored.
+                    audioType = data.readUnsignedByte();
                 } else if (descriptorTag == TS_PMT_DESC_DVBSUBS) {
                     streamType = TS_STREAM_TYPE_DVBSUBS;
                     dvbSubtitleInfos = new ArrayList<>();
@@ -771,7 +776,7 @@ public final class MyTsExtractor implements Extractor {
                         byte[] initializationData = new byte[4];
                         data.readBytes(initializationData, 0, 4);
                         dvbSubtitleInfos.add(
-                                new TsPayloadReader.DvbSubtitleInfo(dvbLanguage, dvbSubtitlingType, initializationData));
+                                new DvbSubtitleInfo(dvbLanguage, dvbSubtitlingType, initializationData));
                     }
                 } else if (descriptorTag == TS_PMT_DESC_AIT) {
                     streamType = TS_STREAM_TYPE_AIT;
@@ -780,9 +785,10 @@ public final class MyTsExtractor implements Extractor {
                 data.skipBytes(positionOfNextDescriptor - data.getPosition());
             }
             data.setPosition(descriptorsEndPosition);
-            return new TsPayloadReader.EsInfo(
+            return new EsInfo(
                     streamType,
                     language,
+                    audioType,
                     dvbSubtitleInfos,
                     Arrays.copyOfRange(data.getData(), descriptorsStartPosition, descriptorsEndPosition));
         }
