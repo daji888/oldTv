@@ -394,7 +394,7 @@ public class LivePlayActivity extends BaseActivity {
         if (isSHIYI)
             return;
         if (channel_Name.getChannelName() != null) {
-            // tv_videosize.setText("分辨率：" + mVideoView.getVideoSize()[0] + " x " + mVideoView.getVideoSize()[1]);
+            // tv_videosize.setText("分辨率 : " + mVideoView.getVideoSize()[0] + " x " + mVideoView.getVideoSize()[1]);
             ((TextView) findViewById(R.id.tv_info_name1)).setText(channel_Name.getChannelName());
             ((TextView) findViewById(R.id.tv_channel_bar_name)).setText(channel_Name.getChannelName());
             ((TextView) findViewById(R.id.tv_channel_bottom_number)).setText("" + channel_Name.getChannelNum());
@@ -1710,8 +1710,8 @@ public class LivePlayActivity extends BaseActivity {
             if (mVideoView == null) return;
             String width = Integer.toString(mVideoView.getVideoSize()[0]);
             String height = Integer.toString(mVideoView.getVideoSize()[1]);
-            tv_videosize.setText("分辨率：" + width + " X " + height);
-            mHandler.post(this);
+            tv_videosize.setText("分辨率 : " + width + " X " + height);
+            mHandler.postDelayed(this, 1000);
         }
     };
     
