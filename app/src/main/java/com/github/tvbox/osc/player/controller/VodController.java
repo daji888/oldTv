@@ -165,7 +165,7 @@ public class VodController extends BaseController {
             mPlayLoadNetSpeed.setText(speed);
             String width = Integer.toString(mControlWrapper.getVideoSize()[0]);
             String height = Integer.toString(mControlWrapper.getVideoSize()[1]);
-            mVideoSize.setText("分辨率：" + width + " X " + height);
+            mVideoSize.setText("分辨率 : " + width + " X " + height);
             mHandler.postDelayed(this, 1000);
         }
     };
