@@ -21,6 +21,7 @@ import androidx.media3.datasource.rtmp.RtmpDataSource;
 import androidx.media3.exoplayer.dash.DashMediaSource;
 import androidx.media3.exoplayer.hls.HlsMediaSource;
 import androidx.media3.exoplayer.rtsp.RtspMediaSource;
+import androidx.media3.exoplayer.smoothstreaming.SsMediaSource;
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory;
 import androidx.media3.exoplayer.source.MediaSource;
 import androidx.media3.exoplayer.source.ProgressiveMediaSource;
@@ -123,16 +124,18 @@ public final class ExoMediaSourceHelper {
             return new DefaultMediaSourceFactory(getDataSourceFactory(), getExtractorsFactory()).createMediaSource(getMediaItem(uri, errorCode));
         }
         switch (contentType) {
-            case C.TYPE_DASH:
+            case C.CONTENT_TYPE_DASH:
                 return new DashMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));
-            case C.TYPE_HLS:
+            case C.CONTENT_TYPE_HLS:
                 return new HlsMediaSource.Factory(mHttpDataSourceFactory)
                         .setAllowChunklessPreparation(true)
                         .setExtractorFactory(new MyHlsExtractorFactory())
                         .createMediaSource(MediaItem.fromUri(contentUri));
             //return new HlsMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));
+            case C.CONTENT_TYPE_SS:
+                return new SsMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));    
             default:
-            case C.TYPE_OTHER:
+            case C.CONTENT_TYPE_OTHER:
                 return new ProgressiveMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));
         }
     }
@@ -141,11 +144,13 @@ public final class ExoMediaSourceHelper {
     private int inferContentType(String fileName) {
         fileName = fileName.toLowerCase();
         if (fileName.contains(".mpd") || fileName.contains("type=mpd")) {
-            return C.TYPE_DASH;
+            return C.CONTENT_TYPE_DASH;
         } else if (fileName.contains("m3u8")) {
-            return C.TYPE_HLS;
+            return C.CONTENT_TYPE_HLS;
+        } else if (fileName.contains("isml")) {
+            return C.CONTENT_TYPE_SS;    
         } else {
-            return C.TYPE_OTHER;
+            return C.CONTENT_TYPE_OTHER;
         }
     }
 
