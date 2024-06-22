@@ -109,7 +109,7 @@ public final class ExoMediaSourceHelper {
         } else if ("rtsp".equals(contentUri.getScheme())) {
             return new RtspMediaSource.Factory().createMediaSource(MediaItem.fromUri(contentUri));
         }
-        int contentType = inferContentType(uri);
+        int contentType = Util.inferContentType(uri);
         DataSource.Factory factory;
         if (isCache) {
             factory = getCacheDataSourceFactory();
@@ -140,21 +140,7 @@ public final class ExoMediaSourceHelper {
                 return new ProgressiveMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));
         }
     }
-
-    @SuppressLint("UnsafeOptInUsageError")
-    private int inferContentType(String fileName) {
-        fileName = fileName.toLowerCase();
-        if (fileName.contains(".mpd") || fileName.contains("type=mpd")) {
-            return C.CONTENT_TYPE_DASH;
-        } else if (fileName.contains("m3u8")) {
-            return C.CONTENT_TYPE_HLS;
-        } else if (fileName.contains("isml")) {
-            return C.CONTENT_TYPE_SS;    
-        } else {
-            return C.CONTENT_TYPE_OTHER;
-        }
-    }
-
+    
     @SuppressLint("UnsafeOptInUsageError")
     private DataSource.Factory getCacheDataSourceFactory() {
         if (mCache == null) {
