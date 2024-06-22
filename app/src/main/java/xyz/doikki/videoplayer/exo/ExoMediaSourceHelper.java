@@ -140,9 +140,7 @@ public final class ExoMediaSourceHelper {
                 return new ProgressiveMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));
         }
     }
-
     
-
     @SuppressLint("UnsafeOptInUsageError")
     private DataSource.Factory getCacheDataSourceFactory() {
         if (mCache == null) {
