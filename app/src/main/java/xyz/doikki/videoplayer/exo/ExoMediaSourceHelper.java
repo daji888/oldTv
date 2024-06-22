@@ -109,7 +109,7 @@ public final class ExoMediaSourceHelper {
         } else if ("rtsp".equals(contentUri.getScheme())) {
             return new RtspMediaSource.Factory().createMediaSource(MediaItem.fromUri(contentUri));
         }
-        int contentType = inferContentType(uri);
+        int contentType = Util.inferContentType(uri);
         DataSource.Factory factory;
         if (isCache) {
             factory = getCacheDataSourceFactory();
