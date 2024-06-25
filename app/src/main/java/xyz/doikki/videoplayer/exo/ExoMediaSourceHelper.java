@@ -147,7 +147,7 @@ public final class ExoMediaSourceHelper {
             return C.CONTENT_TYPE_DASH;
         } else if (fileName.contains("m3u8")) {
             return C.CONTENT_TYPE_HLS;
-        } else if (fileName.contains("isml")) {
+        } else if (fileName.contains("ism") || fileName.contains("isml") || fileName.contains("ism/Manifest")) {
             return C.CONTENT_TYPE_SS;    
         } else {
             return C.CONTENT_TYPE_OTHER;
