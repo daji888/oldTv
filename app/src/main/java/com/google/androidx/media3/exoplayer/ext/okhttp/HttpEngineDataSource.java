@@ -41,6 +41,7 @@ import androidx.media3.common.util.Util;
 import androidx.media3.datasource.HttpDataSource.CleartextNotPermittedException;
 import androidx.media3.datasource.HttpDataSource.HttpDataSourceException;
 import androidx.media3.datasource.HttpDataSource.InvalidResponseCodeException;
+import androidx.media3.datasource.DataSpec;
 import com.google.common.base.Ascii;
 import com.google.common.base.Predicate;
 import com.google.common.net.HttpHeaders;
