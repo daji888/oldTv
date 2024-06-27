@@ -20,7 +20,9 @@ import static androidx.media3.datasource.HttpUtil.buildRangeRequestHeader;
 import static java.lang.Math.min;
 
 import android.net.Uri;
+import android.net.http.HttpEngine;
 import android.net.http.UrlRequest;
+import android.net.http.UrlRequest.Status;
 import androidx.annotation.Nullable;
 import androidx.media3.common.C;
 import androidx.media3.common.MediaLibraryInfo;
@@ -38,6 +40,7 @@ import androidx.media3.datasource.HttpDataSource.InvalidContentTypeException;
 import androidx.media3.datasource.HttpDataSource.InvalidResponseCodeException;
 import androidx.media3.datasource.HttpUtil;
 import androidx.media3.datasource.TransferListener;
+import androidx.media3.datasource.ByteArrayUploadDataProvider;
 import com.google.common.base.Predicate;
 import com.google.common.net.HttpHeaders;
 import com.google.common.util.concurrent.SettableFuture;
@@ -49,7 +52,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
 import okhttp3.CacheControl;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -79,6 +84,9 @@ public class OkHttpDataSource extends BaseDataSource implements HttpDataSource {
 
     private final RequestProperties defaultRequestProperties;
     private final Call.Factory callFactory;
+    private final HttpEngine httpEngine;
+    private final Executor executor;
+    private final int requestPriority;
 
     @Nullable private String userAgent;
     @Nullable private TransferListener transferListener;
