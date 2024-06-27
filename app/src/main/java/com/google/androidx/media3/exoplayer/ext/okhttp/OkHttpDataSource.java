@@ -452,13 +452,65 @@ public class OkHttpDataSource extends BaseDataSource implements HttpDataSource {
 
     @Nullable RequestBody requestBody = null;
     if (dataSpec.httpBody != null) {
-      requestBody = RequestBody.create(null, dataSpec.httpBody);
+      requestBody = RequestBody.create(dataSpec.httpBody);
     } else if (dataSpec.httpMethod == DataSpec.HTTP_METHOD_POST) {
       // OkHttp requires a non-null body for POST requests.
-      requestBody = RequestBody.create(null, Util.EMPTY_BYTE_ARRAY);
+      requestBody = RequestBody.create(Util.EMPTY_BYTE_ARRAY);
     }
     builder.method(dataSpec.getHttpMethodString(), requestBody);
     return builder.build();
+  }
+
+  private UrlRequest.Builder buildRequestBuilder(
+      DataSpec dataSpec, UrlRequest.Callback urlRequestCallback) throws IOException {
+    UrlRequest.Builder requestBuilder =
+        httpEngine
+            .newUrlRequestBuilder(dataSpec.uri.toString(), executor, urlRequestCallback)
+            .setPriority(requestPriority)
+            .setDirectExecutorAllowed(true);
+
+    // Set the headers.
+    Map<String, String> requestHeaders = new HashMap<>();
+    if (defaultRequestProperties != null) {
+      requestHeaders.putAll(defaultRequestProperties.getSnapshot());
+    }
+    requestHeaders.putAll(requestProperties.getSnapshot());
+    requestHeaders.putAll(dataSpec.httpRequestHeaders);
+
+    for (Entry<String, String> headerEntry : requestHeaders.entrySet()) {
+      String key = headerEntry.getKey();
+      String value = headerEntry.getValue();
+      requestBuilder.addHeader(key, value);
+    }
+
+    if (dataSpec.httpBody != null && !requestHeaders.containsKey(HttpHeaders.CONTENT_TYPE)) {
+      throw new OpenException(
+          "HTTP request with non-empty body must set Content-Type",
+          dataSpec,
+          PlaybackException.ERROR_CODE_FAILED_RUNTIME_CHECK,
+          Status.IDLE);
+    }
+
+    @Nullable String rangeHeader = buildRangeRequestHeader(dataSpec.position, dataSpec.length);
+    if (rangeHeader != null) {
+      requestBuilder.addHeader(HttpHeaders.RANGE, rangeHeader);
+    }
+    if (userAgent != null) {
+      requestBuilder.addHeader(HttpHeaders.USER_AGENT, userAgent);
+    }
+    // TODO: Uncomment when https://bugs.chromium.org/p/chromium/issues/detail?id=711810 is fixed
+    // (adjusting the code as necessary).
+    // Force identity encoding unless gzip is allowed.
+    // if (!dataSpec.isFlagSet(DataSpec.FLAG_ALLOW_GZIP)) {
+    //   requestBuilder.addHeader("Accept-Encoding", "identity");
+    // }
+    // Set the method and (if non-empty) the body.
+    requestBuilder.setHttpMethod(dataSpec.getHttpMethodString());
+    if (dataSpec.httpBody != null) {
+      requestBuilder.setUploadDataProvider(
+          new ByteArrayUploadDataProvider(dataSpec.httpBody), executor);
+    }
+    return requestBuilder;
   }
 
   /**
