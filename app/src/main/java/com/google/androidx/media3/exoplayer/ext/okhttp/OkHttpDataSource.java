@@ -20,9 +20,6 @@ import static androidx.media3.datasource.HttpUtil.buildRangeRequestHeader;
 import static java.lang.Math.min;
 
 import android.net.Uri;
-import android.net.http.HttpEngine;
-import android.net.http.UrlRequest;
-import android.net.http.UrlRequest.Status;
 import androidx.annotation.Nullable;
 import androidx.media3.common.C;
 import androidx.media3.common.MediaLibraryInfo;
@@ -51,9 +48,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
 import okhttp3.CacheControl;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -83,9 +78,6 @@ public class OkHttpDataSource extends BaseDataSource implements HttpDataSource {
 
     private final RequestProperties defaultRequestProperties;
     private final Call.Factory callFactory;
-    private final HttpEngine httpEngine;
-    private final Executor executor;
-    private final int requestPriority;
 
     @Nullable private String userAgent;
     @Nullable private TransferListener transferListener;
@@ -460,75 +452,13 @@ public class OkHttpDataSource extends BaseDataSource implements HttpDataSource {
 
     @Nullable RequestBody requestBody = null;
     if (dataSpec.httpBody != null) {
-      requestBody = RequestBody.create(dataSpec.httpBody);
+      requestBody = RequestBody.create(null, dataSpec.httpBody);
     } else if (dataSpec.httpMethod == DataSpec.HTTP_METHOD_POST) {
       // OkHttp requires a non-null body for POST requests.
-      requestBody = RequestBody.create(Util.EMPTY_BYTE_ARRAY);
+      requestBody = RequestBody.create(null, Util.EMPTY_BYTE_ARRAY);
     }
     builder.method(dataSpec.getHttpMethodString(), requestBody);
     return builder.build();
-  }
-
-  public Factory(HttpEngine httpEngine, Executor executor) {
-      this.httpEngine = Assertions.checkNotNull(httpEngine);
-      this.executor = executor;
-      defaultRequestProperties = new RequestProperties();
-      requestPriority = REQUEST_PRIORITY_MEDIUM;
-      connectTimeoutMs = DEFAULT_CONNECT_TIMEOUT_MILLIS;
-      readTimeoutMs = DEFAULT_READ_TIMEOUT_MILLIS;
-    }
-  
-
-  private UrlRequest.Builder buildRequestBuilder(
-      DataSpec dataSpec, UrlRequest.Callback urlRequestCallback) throws IOException {
-    UrlRequest.Builder requestBuilder =
-        httpEngine
-            .newUrlRequestBuilder(dataSpec.uri.toString(), executor, urlRequestCallback)
-            .setPriority(requestPriority)
-            .setDirectExecutorAllowed(true);
-
-    // Set the headers.
-    Map<String, String> requestHeaders = new HashMap<>();
-    if (defaultRequestProperties != null) {
-      requestHeaders.putAll(defaultRequestProperties.getSnapshot());
-    }
-    requestHeaders.putAll(requestProperties.getSnapshot());
-    requestHeaders.putAll(dataSpec.httpRequestHeaders);
-
-    for (Entry<String, String> headerEntry : requestHeaders.entrySet()) {
-      String key = headerEntry.getKey();
-      String value = headerEntry.getValue();
-      requestBuilder.addHeader(key, value);
-    }
-
-    if (dataSpec.httpBody != null && !requestHeaders.containsKey(HttpHeaders.CONTENT_TYPE)) {
-      throw new OpenException(
-          "HTTP request with non-empty body must set Content-Type",
-          dataSpec,
-          PlaybackException.ERROR_CODE_FAILED_RUNTIME_CHECK,
-          Status.IDLE);
-    }
-
-    @Nullable String rangeHeader = buildRangeRequestHeader(dataSpec.position, dataSpec.length);
-    if (rangeHeader != null) {
-      requestBuilder.addHeader(HttpHeaders.RANGE, rangeHeader);
-    }
-    if (userAgent != null) {
-      requestBuilder.addHeader(HttpHeaders.USER_AGENT, userAgent);
-    }
-    // TODO: Uncomment when https://bugs.chromium.org/p/chromium/issues/detail?id=711810 is fixed
-    // (adjusting the code as necessary).
-    // Force identity encoding unless gzip is allowed.
-    // if (!dataSpec.isFlagSet(DataSpec.FLAG_ALLOW_GZIP)) {
-    //   requestBuilder.addHeader("Accept-Encoding", "identity");
-    // }
-    // Set the method and (if non-empty) the body.
-    requestBuilder.setHttpMethod(dataSpec.getHttpMethodString());
-    if (dataSpec.httpBody != null) {
-      requestBuilder.setUploadDataProvider(
-          new ByteArrayUploadDataProvider(dataSpec.httpBody), executor);
-    }
-    return requestBuilder;
   }
 
   /**
