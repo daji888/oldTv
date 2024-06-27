@@ -40,7 +40,6 @@ import androidx.media3.datasource.HttpDataSource.InvalidContentTypeException;
 import androidx.media3.datasource.HttpDataSource.InvalidResponseCodeException;
 import androidx.media3.datasource.HttpUtil;
 import androidx.media3.datasource.TransferListener;
-import androidx.media3.datasource.ByteArrayUploadDataProvider;
 import com.google.common.base.Predicate;
 import com.google.common.net.HttpHeaders;
 import com.google.common.util.concurrent.SettableFuture;
