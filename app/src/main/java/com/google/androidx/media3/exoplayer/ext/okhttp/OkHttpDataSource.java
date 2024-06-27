@@ -469,6 +469,16 @@ public class OkHttpDataSource extends BaseDataSource implements HttpDataSource {
     return builder.build();
   }
 
+  public Factory(HttpEngine httpEngine, Executor executor) {
+      this.httpEngine = Assertions.checkNotNull(httpEngine);
+      this.executor = executor;
+      defaultRequestProperties = new RequestProperties();
+      requestPriority = REQUEST_PRIORITY_MEDIUM;
+      connectTimeoutMs = DEFAULT_CONNECT_TIMEOUT_MILLIS;
+      readTimeoutMs = DEFAULT_READ_TIMEOUT_MILLIS;
+    }
+  
+
   private UrlRequest.Builder buildRequestBuilder(
       DataSpec dataSpec, UrlRequest.Callback urlRequestCallback) throws IOException {
     UrlRequest.Builder requestBuilder =
