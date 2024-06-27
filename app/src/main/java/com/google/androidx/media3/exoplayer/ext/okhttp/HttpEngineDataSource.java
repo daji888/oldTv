@@ -45,7 +45,8 @@ import androidx.media3.datasource.DataSpec;
 import androidx.media3.datasource.BaseDataSource;
 import androidx.media3.datasource.HttpDataSource;
 import androidx.media3.datasource.TransferListener;
-
+import androidx.media3.datasource.HttpUtil;
+import androidx.media3.datasource.DataSourceException;
 import com.google.common.base.Ascii;
 import com.google.common.base.Predicate;
 import com.google.common.net.HttpHeaders;
