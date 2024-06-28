@@ -13,6 +13,7 @@ import androidx.media3.common.util.Util;
 import androidx.media3.database.StandaloneDatabaseProvider;
 import androidx.media3.datasource.DataSource;
 import androidx.media3.datasource.DefaultDataSource;
+import androidx.media3.datasource.okhttp.OkHttpDataSource;
 import androidx.media3.datasource.cache.Cache;
 import androidx.media3.datasource.cache.CacheDataSource;
 import androidx.media3.datasource.cache.LeastRecentlyUsedCacheEvictor;
@@ -31,7 +32,7 @@ import androidx.media3.extractor.ts.DefaultTsPayloadReaderFactory;
 import androidx.media3.extractor.ts.TsExtractor;
 
 import com.github.tvbox.osc.util.FileUtils;
-import com.google.androidx.media3.exoplayer.ext.okhttp.OkHttpDataSource;
+
 
 import java.io.File;
 import java.lang.reflect.Field;
