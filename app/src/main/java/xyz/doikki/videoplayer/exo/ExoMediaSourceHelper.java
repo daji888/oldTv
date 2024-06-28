@@ -156,45 +156,30 @@ public final class ExoMediaSourceHelper implements MediaSource.Factory {
     }
 
     @SuppressLint("UnsafeOptInUsageError")
-    public MediaSource getMediaSource(String uri, Map<String, String> headers, boolean isCache, int errorCode) {
-        Uri contentUri = Uri.parse(uri);
-        if ("rtmp".equals(contentUri.getScheme())) {
-            return new ProgressiveMediaSource.Factory(new RtmpDataSource.Factory())
-                    .createMediaSource(MediaItem.fromUri(contentUri));
-        } else if ("rtsp".equals(contentUri.getScheme())) {
-            return new RtspMediaSource.Factory().createMediaSource(MediaItem.fromUri(contentUri));
-        }
-        int contentType = inferContentType(uri);
-        DataSource.Factory factory;
-        if (isCache) {
-            factory = getCacheDataSourceFactory();
-        } else {
-            factory = getDataSourceFactory();
-        }
-        if (mHttpDataSourceFactory != null) {
-            setHeaders(headers);
-        }
-        if (errorCode == PlaybackException.ERROR_CODE_PARSING_CONTAINER_UNSUPPORTED || errorCode == PlaybackException.ERROR_CODE_PARSING_CONTAINER_MALFORMED || errorCode == PlaybackException.ERROR_CODE_IO_UNSPECIFIED) {
-            MediaItem.Builder builder = new MediaItem.Builder().setUri(uri);
-            builder.setMimeType(MimeTypes.APPLICATION_M3U8);
-            return new DefaultMediaSourceFactory(getDataSourceFactory(), getExtractorsFactory()).createMediaSource(getMediaItem(uri, errorCode));
-        }
-        switch (contentType) {
-            case C.CONTENT_TYPE_DASH:
-                return new DashMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));
-            case C.CONTENT_TYPE_HLS:
-                return new HlsMediaSource.Factory(mHttpDataSourceFactory)
-                        .setAllowChunklessPreparation(true)
-                        .setExtractorFactory(new MyHlsExtractorFactory())
-                        .createMediaSource(MediaItem.fromUri(contentUri));
-            //return new HlsMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));
-            case C.CONTENT_TYPE_SS:
-                return new SsMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));    
-            default:
-            case C.CONTENT_TYPE_OTHER:
-                return new ProgressiveMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));
-        }
+    public static MediaItem getMediaItem(Map<String, String> headers, Uri uri, String mimeType, Drm drm, List<Sub> subs, int decode) {
+        boolean m3u8Ad = uri.toString().contains(".m3u8") && (Setting.isRemoveAd() || Sniffer.getRegex(uri).size() > 0);
+        if (m3u8Ad) uri = Uri.parse(Server.get().getAddress(true).concat("/m3u8?url=").concat(URLEncoder.encode(uri.toString())));
+        MediaItem.Builder builder = new MediaItem.Builder().setUri(uri);
+        builder.setRequestMetadata(getRequestMetadata(headers, uri));
+        builder.setSubtitleConfigurations(getSubtitleConfigs(subs));
+        if (drm != null) builder.setDrmConfiguration(drm.get());
+        if (mimeType != null) builder.setMimeType(mimeType);
+        builder.setMediaId(uri.toString());
+        return builder.build();
     }
+
+    private static MediaItem.RequestMetadata getRequestMetadata(Map<String, String> headers, Uri uri) {
+        Bundle extras = new Bundle();
+        for (Map.Entry<String, String> header : headers.entrySet()) extras.putString(header.getKey(), header.getValue());
+        return new MediaItem.RequestMetadata.Builder().setMediaUri(uri).setExtras(extras).build();
+    }
+
+    private static List<MediaItem.SubtitleConfiguration> getSubtitleConfigs(List<Sub> subs) {
+        List<MediaItem.SubtitleConfiguration> configs = new ArrayList<>();
+        for (Sub sub : subs) configs.add(sub.getConfig());
+        return configs;
+    }
+
 
     @SuppressLint("UnsafeOptInUsageError")
     private int inferContentType(String fileName) {
