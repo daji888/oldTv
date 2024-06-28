@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
-
+import androidx.annotation.NonNull;
 import androidx.media3.common.C;
 import androidx.media3.common.MediaItem;
 import androidx.media3.common.MimeTypes;
@@ -157,6 +157,12 @@ public final class ExoMediaSourceHelper {
         } else {
             return C.CONTENT_TYPE_OTHER;
         }
+    }
+
+    @NonNull
+    @Override
+    public @C.ContentType int[] getSupportedTypes() {
+        return defaultMediaSourceFactory.getSupportedTypes();
     }
 
     @SuppressLint("UnsafeOptInUsageError")
