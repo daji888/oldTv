@@ -224,12 +224,12 @@ public class JSEngine {
                             }
                             if (body == null) {
                                 String dataBody = opt.optString("body", "").trim();
-                                if (!dataBody.isEmpty() && headers.get("Content-Type") != null) {
-                                    body = RequestBody.create(MediaType.parse(headers.get("Content-Type")), opt.optString("body", ""));
+                                if (!dataBody.isEmpty() != null) {
+                                    body = RequestBody.create(opt.optString("body", ""));
                                 }
                             }
                             if (body == null) {
-                                body = RequestBody.create(null, "");
+                                body = RequestBody.create("");
                             }
                             request = requestBuilder.post(body).build();
                         } else if (method.equalsIgnoreCase("header")) {
