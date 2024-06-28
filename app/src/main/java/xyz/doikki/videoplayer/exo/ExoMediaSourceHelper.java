@@ -48,7 +48,8 @@ import okhttp3.OkHttpClient;
 public final class ExoMediaSourceHelper implements MediaSource.Factory {
 
     private static volatile ExoMediaSourceHelper sInstance;
-
+    
+    private final String mUserAgent;
     private final Context mAppContext;
     private OkHttpDataSource.Factory mHttpDataSourceFactory;
     private OkHttpClient mOkClient = null;
@@ -61,6 +62,7 @@ public final class ExoMediaSourceHelper implements MediaSource.Factory {
     @SuppressLint("UnsafeOptInUsageError")
     private ExoMediaSourceHelper(Context context) {
         mAppContext = context.getApplicationContext();
+        mUserAgent = Util.getUserAgent(mAppContext, mAppContext.getApplicationInfo().name);
     }
 
     public static ExoMediaSourceHelper getInstance(Context context) {
