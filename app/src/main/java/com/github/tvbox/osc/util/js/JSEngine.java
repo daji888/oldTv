@@ -215,61 +215,7 @@ public class JSEngine {
                         Headers headers = headerBuilder.build();
                         
                         
-                        int redirect = opt.optInt("redirect", 1);
-                        OkHttpClient client = null;
-                        if (redirect == 1) {
-                            client  = OkGoHelper.getDefaultClient();
-                        } else {
-                            client  = OkGoHelper.getNoRedirectClient();
-                        }
-                        OkHttpClient.Builder clientBuilder = client.newBuilder();
-                        int timeout = 10000;
-                        if (opt.has("timeout")) {
-                            timeout = opt.optInt("timeout");
-                        }
-                        clientBuilder.readTimeout(timeout, TimeUnit.MILLISECONDS);
-                        clientBuilder.writeTimeout(timeout, TimeUnit.MILLISECONDS);
-                        clientBuilder.connectTimeout(timeout, TimeUnit.MILLISECONDS);
                         
-
-                        JSObject jsObject = jsContext.createNewJSObject();
-                        Set<String> resHeaders = response.headers().names();
-                        JSObject resHeader = jsContext.createNewJSObject();
-                        for (String header : resHeaders) {
-                            resHeader.setProperty(header, response.header(header));
-                        }
-                        jsObject.setProperty("headers", resHeader);
-                        int returnBuffer = opt.optInt("buffer", 0);
-                        if (returnBuffer == 1) {
-                            JSArray array = jsContext.createNewJSArray();
-                            byte[] bytes = response.body().bytes();
-                            for (int i = 0; i < bytes.length; i++) {
-                                array.set(bytes[i], i);
-                            }
-                            jsObject.setProperty("content", array);
-                        } else if (returnBuffer == 2) {
-                            jsObject.setProperty("content", Base64.encodeToString(response.body().bytes(), Base64.DEFAULT));
-                        } else {
-                            String res;
-                            if(headers.get("Content-Type")!=null && headers.get("Content-Type").contains("=")){
-                                byte[] responseBytes = UTF8BOMFighter.removeUTF8BOM(response.body().bytes());
-                                res=new String(responseBytes,headers.get("Content-Type").split("=")[1].trim());
-                            }else {
-                                res=response.body().string();
-                            }
-                            jsObject.setProperty("content", res);
-                        }
-                        return jsObject;
-                    } catch (Throwable throwable) {
-                        throwable.printStackTrace();
-                    }
-                    JSObject jsObject = jsContext.createNewJSObject();
-                    JSObject resHeader = jsContext.createNewJSObject();
-                    jsObject.setProperty("headers", resHeader);
-                    jsObject.setProperty("content", "");
-                    return jsObject;
-                }
-            });
             jsContext.getGlobalObject().setProperty("joinUrl", new JSCallFunction() {
                 @Override
                 public String call(Object... args) {
