@@ -159,11 +159,48 @@ public final class ExoMediaSourceHelper {
         }
     }
 
+     @NonNull
+    @Override
+    public MediaSource.Factory setDrmSessionManagerProvider(@NonNull DrmSessionManagerProvider drmSessionManagerProvider) {
+        return defaultMediaSourceFactory.setDrmSessionManagerProvider(drmSessionManagerProvider);
+    }
+
+    @NonNull
+    @Override
+    public MediaSource.Factory setLoadErrorHandlingPolicy(@NonNull LoadErrorHandlingPolicy loadErrorHandlingPolicy) {
+        return defaultMediaSourceFactory.setLoadErrorHandlingPolicy(loadErrorHandlingPolicy);
+    }
+
     @NonNull
     @Override
     public @C.ContentType int[] getSupportedTypes() {
         return defaultMediaSourceFactory.getSupportedTypes();
     }
+
+    @NonNull
+    @Override
+    public MediaSource createMediaSource(@NonNull MediaItem mediaItem) {
+        if (mediaItem.mediaId.contains("***") && mediaItem.mediaId.contains("|||")) {
+            return createConcatenatingMediaSource(setHeader(mediaItem));
+        } else {
+            return defaultMediaSourceFactory.createMediaSource(setHeader(mediaItem));
+        }
+    }
+
+    private MediaItem setHeader(MediaItem mediaItem) {
+        Map<String, String> headers = new HashMap<>();
+        for (String key : mediaItem.requestMetadata.extras.keySet()) headers.put(key, mediaItem.requestMetadata.extras.get(key).toString());
+        getHttpDataSourceFactory().setDefaultRequestProperties(headers);
+        return mediaItem;
+    }
+
+    private MediaSource createConcatenatingMediaSource(MediaItem mediaItem) {
+        ConcatenatingMediaSource2.Builder builder = new ConcatenatingMediaSource2.Builder();
+        for (String split : mediaItem.mediaId.split("\\*\\*\\*")) {
+            String[] info = split.split("\\|\\|\\|");
+            if (info.length >= 2) builder.add(defaultMediaSourceFactory.createMediaSource(mediaItem.buildUpon().setUri(Uri.parse(info[0])).build()), Long.parseLong(info[1]));
+        }
+        return builder.build();
 
     @SuppressLint("UnsafeOptInUsageError")
     private DataSource.Factory getCacheDataSourceFactory() {
