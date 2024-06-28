@@ -12,7 +12,8 @@ public class CacheManager {
 
     private SimpleCache cache;
     private final Context mAppContext;
-  
+    private static volatile CacheManager sInstance;
+    
     private static class Loader {
         static volatile CacheManager INSTANCE = new CacheManager();
     }
