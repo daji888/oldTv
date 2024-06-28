@@ -199,9 +199,7 @@ public class JSEngine {
 
 
 
-    private ConcurrentHashMap<String, JSThread> threads = new ConcurrentHashMap<>();
-    static ConcurrentHashMap<String, String> moduleCache = new ConcurrentHashMap<>();
-
+    
     static String loadModule(String name) {
         try {
             String cache = moduleCache.get(name);
