@@ -201,7 +201,8 @@ public final class ExoMediaSourceHelper {
             if (info.length >= 2) builder.add(defaultMediaSourceFactory.createMediaSource(mediaItem.buildUpon().setUri(Uri.parse(info[0])).build()), Long.parseLong(info[1]));
         }
         return builder.build();
-
+    }
+    
     @SuppressLint("UnsafeOptInUsageError")
     private DataSource.Factory getCacheDataSourceFactory() {
         if (mCache == null) {
