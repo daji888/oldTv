@@ -213,16 +213,8 @@ public class JSEngine {
                             }
                         }
                         Headers headers = headerBuilder.build();
-                        String method = opt.optString("get");
-                        Request.Builder requestBuilder = new Request.Builder().url(url).headers(headers).tag("js_okhttp_tag");
-                        Request request = null;
-                        if (method.equalsIgnoreCase("post")) {
-                            RequestBody body = null;
-                            if (body == null) {
-                                body = RequestBody.create("");
-                            }
-                            request = requestBuilder.post(body).build();
-                        } else if (method.equalsIgnoreCase("header")) {
+                        
+                        if (method.equalsIgnoreCase("header")) {
                             request = requestBuilder.head().build();
                         } else {
                             request = requestBuilder.get().build();
