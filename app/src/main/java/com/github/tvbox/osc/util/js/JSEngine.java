@@ -218,9 +218,9 @@ public class JSEngine {
                         Request request = null;
                         if (method.equalsIgnoreCase("post")) {
                             RequestBody body = null;
-                            String data = opt.optString("data", "").trim();
+                            String data = opt.optString("").trim();
                             if (!data.isEmpty()) {
-                                body = RequestBody.create(MediaType.parse("application/json"), data);
+                                body = RequestBody.create(data);
                             }
                             if (body == null) {
                                 String dataBody = opt.optString("").trim();
