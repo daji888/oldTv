@@ -218,16 +218,6 @@ public class JSEngine {
                         Request request = null;
                         if (method.equalsIgnoreCase("post")) {
                             RequestBody body = null;
-                            String data = opt.optString("").trim();
-                            if (!data.isEmpty()) {
-                                body = RequestBody.create(data);
-                            }
-                            if (body == null) {
-                                String dataBody = opt.optString("").trim();
-                                if (!dataBody.isEmpty()) {
-                                    body = RequestBody.create(opt.optString(""));
-                                }
-                            }
                             if (body == null) {
                                 body = RequestBody.create("");
                             }
