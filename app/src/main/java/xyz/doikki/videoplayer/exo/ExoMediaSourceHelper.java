@@ -195,7 +195,7 @@ public final class ExoMediaSourceHelper {
      */
     @SuppressLint("UnsafeOptInUsageError")
     private HttpDataSource.Factory getHttpDataSourceFactory() {
-        if (httpDataSourceFactory == null) httpDataSourceFactory = new OkHttpDataSource.Factory(mOkClient));
+        if (httpDataSourceFactory == null) httpDataSourceFactory = new OkHttpDataSource.Factory(mOkClient);
         return httpDataSourceFactory;
     }
     @SuppressLint("UnsafeOptInUsageError")
