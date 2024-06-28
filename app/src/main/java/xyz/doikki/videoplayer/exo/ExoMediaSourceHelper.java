@@ -45,7 +45,7 @@ import java.util.HashMap;
 
 import okhttp3.OkHttpClient;
 
-public final class ExoMediaSourceHelper implements MediaSource.Factory {
+public final class ExoMediaSourceHelper {
 
     private static volatile ExoMediaSourceHelper sInstance;
     
