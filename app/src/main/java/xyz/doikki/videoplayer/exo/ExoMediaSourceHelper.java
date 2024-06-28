@@ -26,6 +26,7 @@ import androidx.media3.exoplayer.dash.DashMediaSource;
 import androidx.media3.exoplayer.hls.HlsMediaSource;
 import androidx.media3.exoplayer.rtsp.RtspMediaSource;
 import androidx.media3.exoplayer.smoothstreaming.SsMediaSource;
+import androidx.media3.exoplayer.source.ConcatenatingMediaSource2;
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory;
 import androidx.media3.exoplayer.source.MediaSource;
 import androidx.media3.exoplayer.source.ProgressiveMediaSource;
@@ -40,6 +41,7 @@ import com.github.tvbox.osc.util.FileUtils;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.Map;
+import java.util.HashMap;
 
 import okhttp3.OkHttpClient;
 
@@ -55,6 +57,7 @@ public final class ExoMediaSourceHelper {
     private ExtractorsFactory extractorsFactory;
     private DataSource.Factory dataSourceFactory;
     private HttpDataSource.Factory httpDataSourceFactory;
+    private final DefaultMediaSourceFactory defaultMediaSourceFactory;
 
     @SuppressLint("UnsafeOptInUsageError")
     private ExoMediaSourceHelper(Context context) {
