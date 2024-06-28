@@ -230,7 +230,7 @@ public class JSEngine {
                         clientBuilder.readTimeout(timeout, TimeUnit.MILLISECONDS);
                         clientBuilder.writeTimeout(timeout, TimeUnit.MILLISECONDS);
                         clientBuilder.connectTimeout(timeout, TimeUnit.MILLISECONDS);
-                        Response response = clientBuilder.build().newCall(request).execute();
+                        
 
                         JSObject jsObject = jsContext.createNewJSObject();
                         Set<String> resHeaders = response.headers().names();
