@@ -17,8 +17,15 @@ public class CacheManager {
         static volatile CacheManager INSTANCE = new CacheManager();
     }
 
-    private CacheManager(Context context) {
-        mAppContext = context.getApplicationContext();
+    public static CacheManager getInstance(Context context) {
+        if (sInstance == null) {
+            synchronized (CacheManager.class) {
+                if (sInstance == null) {
+                    sInstance = new CacheManager(context);
+                }
+            }
+        }
+        return sInstance;
     }
 
     public static CacheManager get() {
