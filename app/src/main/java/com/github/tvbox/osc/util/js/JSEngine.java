@@ -214,11 +214,7 @@ public class JSEngine {
                         }
                         Headers headers = headerBuilder.build();
                         
-                        if (method.equalsIgnoreCase("header")) {
-                            request = requestBuilder.head().build();
-                        } else {
-                            request = requestBuilder.get().build();
-                        }
+                        
                         int redirect = opt.optInt("redirect", 1);
                         OkHttpClient client = null;
                         if (redirect == 1) {
