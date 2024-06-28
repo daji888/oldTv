@@ -142,21 +142,7 @@ public final class ExoMediaSourceHelper implements MediaSource.Factory {
         mOkClient = client;
     }
 
-    public MediaSource getMediaSource(String uri) {
-        return getMediaSource(uri, null, false);
-    }
-
-    public MediaSource getMediaSource(String uri, Map<String, String> headers) {
-        return getMediaSource(uri, headers, false);
-    }
-
-    public MediaSource getMediaSource(String uri, boolean isCache) {
-        return getMediaSource(uri, null, isCache);
-    }
-
-    public MediaSource getMediaSource(String uri, Map<String, String> headers, boolean isCache) {
-        return getMediaSource(uri, headers, isCache, -1);
-    }
+    
 
     @SuppressLint("UnsafeOptInUsageError")
     public static MediaItem getMediaItem(Map<String, String> headers, Uri uri, String mimeType, int decode) {
