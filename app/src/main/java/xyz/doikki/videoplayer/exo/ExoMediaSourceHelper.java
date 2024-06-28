@@ -13,6 +13,7 @@ import androidx.media3.common.util.Util;
 import androidx.media3.database.StandaloneDatabaseProvider;
 import androidx.media3.datasource.DataSource;
 import androidx.media3.datasource.DefaultDataSource;
+import androidx.media3.datasource.HttpDataSource;
 import androidx.media3.datasource.okhttp.OkHttpDataSource;
 import androidx.media3.datasource.cache.Cache;
 import androidx.media3.datasource.cache.CacheDataSource;
@@ -50,6 +51,8 @@ public final class ExoMediaSourceHelper {
     private OkHttpClient mOkClient = null;
     private Cache mCache;
     private ExtractorsFactory extractorsFactory;
+    private DataSource.Factory dataSourceFactory;
+    private HttpDataSource.Factory httpDataSourceFactory;
 
     @SuppressLint("UnsafeOptInUsageError")
     private ExoMediaSourceHelper(Context context) {
@@ -192,12 +195,9 @@ public final class ExoMediaSourceHelper {
      */
     @SuppressLint("UnsafeOptInUsageError")
     private HttpDataSource.Factory getHttpDataSourceFactory() {
-        if (mHttpDataSourceFactory == null) {
-            mHttpDataSourceFactory = new OkHttpDataSource.Factory(mOkClient)
-        }
-        return mHttpDataSourceFactory;
+        if (httpDataSourceFactory == null) httpDataSourceFactory = new OkHttpDataSource.Factory(mOkClient));
+        return httpDataSourceFactory;
     }
-
     @SuppressLint("UnsafeOptInUsageError")
     private void setHeaders(Map<String, String> headers) {
         if (headers != null && headers.size() > 0) {
