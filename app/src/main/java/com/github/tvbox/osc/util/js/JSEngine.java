@@ -213,7 +213,7 @@ public class JSEngine {
                             }
                         }
                         Headers headers = headerBuilder.build();
-                        String method = opt.optString("method", "get");
+                        String method = opt.optString("get");
                         Request.Builder requestBuilder = new Request.Builder().url(url).headers(headers).tag("js_okhttp_tag");
                         Request request = null;
                         if (method.equalsIgnoreCase("post")) {
