@@ -286,7 +286,7 @@ public class DnsOverHttps implements Dns {
         ByteString query = DnsRecordCodec.encodeQuery(hostname, type);
 
         if (post) {
-            requestBuilder = requestBuilder.url(url).post(RequestBody.create(query));
+            requestBuilder = requestBuilder.url(url).post(RequestBody.create(DNS_MESSAGE, query));
         } else {
             String encoded = query.base64Url().replace("=", "");
             HttpUrl requestUrl = url.newBuilder().addQueryParameter("dns", encoded).build();
