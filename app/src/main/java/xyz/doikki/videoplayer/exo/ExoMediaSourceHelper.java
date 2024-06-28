@@ -154,7 +154,7 @@ public final class ExoMediaSourceHelper implements MediaSource.Factory {
     }
 
     public MediaSource getMediaSource(String uri, Map<String, String> headers, boolean isCache) {
-        return getMediaSource(uri, headers, isCache, -1);
+        return getMediaSource(uri, headers, isCache);
     }
 
     @SuppressLint("UnsafeOptInUsageError")
