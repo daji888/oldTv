@@ -76,9 +76,7 @@ public final class ExoMediaSourceHelper implements MediaSource.Factory {
         return sInstance;
     }
 
-    public MediaSourceFactory() {
-        defaultMediaSourceFactory = new DefaultMediaSourceFactory(getDataSourceFactory(), getExtractorsFactory());
-    }
+    
 
     @NonNull
     @Override
