@@ -44,7 +44,6 @@ import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
-import java.net.URLEncoder;
 
 import okhttp3.OkHttpClient;
 
@@ -160,8 +159,7 @@ public final class ExoMediaSourceHelper implements MediaSource.Factory {
 
     @SuppressLint("UnsafeOptInUsageError")
     public static MediaItem getMediaItem(Map<String, String> headers, Uri uri, String mimeType, int decode) {
-        boolean m3u8Ad = uri.toString().contains(".m3u8") && (Setting.isRemoveAd() || Sniffer.getRegex(uri).size() > 0);
-        if (m3u8Ad) uri = Uri.parse(Server.get().getAddress(true).concat("/m3u8?url=").concat(URLEncoder.encode(uri.toString())));
+        
         MediaItem.Builder builder = new MediaItem.Builder().setUri(uri);
         builder.setRequestMetadata(getRequestMetadata(headers, uri));
         if (mimeType != null) builder.setMimeType(mimeType);
