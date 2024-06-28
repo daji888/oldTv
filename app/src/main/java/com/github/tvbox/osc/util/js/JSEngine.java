@@ -223,9 +223,9 @@ public class JSEngine {
                                 body = RequestBody.create(MediaType.parse("application/json"), data);
                             }
                             if (body == null) {
-                                String dataBody = opt.optString("body", "").trim();
+                                String dataBody = opt.optString("").trim();
                                 if (!dataBody.isEmpty()) {
-                                    body = RequestBody.create(opt.optString("body", ""));
+                                    body = RequestBody.create(opt.optString(""));
                                 }
                             }
                             if (body == null) {
