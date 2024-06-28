@@ -224,7 +224,7 @@ public class JSEngine {
                             }
                             if (body == null) {
                                 String dataBody = opt.optString("body", "").trim();
-                                if (!dataBody.isEmpty() != null) {
+                                if (!dataBody.isEmpty()) {
                                     body = RequestBody.create(opt.optString("body", ""));
                                 }
                             }
