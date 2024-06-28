@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.google.androidx.media3.exoplayer.ext.okhttp;
+package androidx.media3.datasource;
 
 import static java.lang.Math.min;
 
