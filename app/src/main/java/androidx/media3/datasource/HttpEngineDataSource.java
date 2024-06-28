@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.google.androidx.media3.exoplayer.ext.okhttp;
+package androidx.media3.datasource;
 
 import static android.net.http.UrlRequest.REQUEST_PRIORITY_MEDIUM;
 import static androidx.media3.common.util.Util.castNonNull;
