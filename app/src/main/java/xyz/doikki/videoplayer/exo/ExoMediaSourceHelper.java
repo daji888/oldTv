@@ -3,6 +3,7 @@ package xyz.doikki.videoplayer.exo;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Bundle;
 import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.media3.common.C;
@@ -43,6 +44,7 @@ import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
+import java.net.URLEncoder;
 
 import okhttp3.OkHttpClient;
 
