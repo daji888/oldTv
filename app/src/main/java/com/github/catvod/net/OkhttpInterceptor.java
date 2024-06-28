@@ -26,11 +26,7 @@ public class OkhttpInterceptor implements Interceptor {
         if (response.body() == null || encoding == null || !encoding.equals("deflate")) return response;
         InflaterInputStream is = new InflaterInputStream(response.body().byteStream(), new Inflater(true));
         return response.newBuilder().headers(response.headers()).body(new ResponseBody() {
-            @Nullable
-            @Override
-            public MediaType contentType() {
-                return response.body().contentType();
-            }
+            
 
             @Override
             public long contentLength() {
