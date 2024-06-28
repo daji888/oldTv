@@ -12,15 +12,9 @@ public class CacheManager {
 
     private SimpleCache cache;
     private final Context mAppContext;
-    private final String mUserAgent;
     
     private static class Loader {
         static volatile CacheManager INSTANCE = new CacheManager();
-    }
-
-    private CacheManager(Context context) {
-        mAppContext = context.getApplicationContext();
-        mUserAgent = Util.getUserAgent(mAppContext, mAppContext.getApplicationInfo().name);
     }
 
     public static CacheManager get() {
