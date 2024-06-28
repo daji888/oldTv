@@ -199,7 +199,7 @@ public class JSEngine {
             jsContext.getGlobalObject().setProperty("req", new JSCallFunction() {
                 @Override
                 public Object call(Object... args) {
-                    try {
+                   
                         String url = args[0].toString();
                         JSONObject opt = new JSONObject(jsContext.stringify((JSObject) args[1]));
                         Headers.Builder headerBuilder = new Headers.Builder();
