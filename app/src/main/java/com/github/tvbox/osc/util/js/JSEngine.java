@@ -147,7 +147,6 @@ public class JSEngine {
 
         public void init() {
             initConsole();
-            initOkHttp();
             initLocalStorage();
         }
 
