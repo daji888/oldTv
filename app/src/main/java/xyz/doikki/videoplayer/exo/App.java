@@ -13,15 +13,10 @@ import androidx.annotation.Nullable;
 import androidx.core.os.HandlerCompat;
 
 import com.google.gson.Gson;
-import com.orhanobut.logger.AndroidLogAdapter;
-import com.orhanobut.logger.LogAdapter;
-import com.orhanobut.logger.Logger;
-import com.orhanobut.logger.PrettyFormatStrategy;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import cat.ereza.customactivityoncrash.config.CaocConfig;
 
 
 public class App extends Application {
@@ -81,14 +76,6 @@ public class App extends Application {
         this.activity = activity;
     }
 
-    private LogAdapter getLogAdapter() {
-        return new AndroidLogAdapter(PrettyFormatStrategy.newBuilder().methodCount(0).showThreadInfo(false).tag("").build()) {
-            @Override
-            public boolean isLoggable(int priority, String tag) {
-                return true;
-            }
-        };
-    }
 
     @Override
     protected void attachBaseContext(Context base) {
