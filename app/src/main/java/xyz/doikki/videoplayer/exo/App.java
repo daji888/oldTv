@@ -95,3 +95,4 @@ public class App extends Application {
         super.attachBaseContext(base);
         Init.set(base);
     }
+}
