@@ -268,7 +268,12 @@ public final class ExoMediaSourceHelper implements MediaSource.Factory {
      * @return A new DataSource factory.
      */
     private DataSource.Factory getDataSourceFactory() {
-        return new DefaultDataSource.Factory(mAppContext, getHttpDataSourceFactory());
+        if (dataSourceFactory == null) dataSourceFactory = buildReadOnlyCacheDataSource(new DefaultDataSource.Factory(mAppContext, getHttpDataSourceFactory()));
+        return dataSourceFactory;
+    }
+
+    private CacheDataSource.Factory buildReadOnlyCacheDataSource(DataSource.Factory upstreamFactory) {
+        return new CacheDataSource.Factory().setCache(CacheManager.get().getCache()).setUpstreamDataSourceFactory(upstreamFactory).setCacheWriteDataSinkFactory(null).setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
     }
     
     /**
