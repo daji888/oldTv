@@ -8,6 +8,7 @@ import android.util.Base64;
 
 import com.github.catvod.Init;
 import com.google.common.net.HttpHeaders;
+import org.mozilla.universalchardet.UniversalDetector;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,6 +18,7 @@ import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Formatter;
+import java.nio.charset.StandardCharsets;
 
 public class Util {
 
@@ -74,6 +76,17 @@ public class Util {
 
     public static String basic(Uri uri) {
         return "Basic " + base64(uri.getUserInfo());
+    }
+
+    public static byte[] utf8(byte[] bytes) {
+        try {
+            UniversalDetector detector = new UniversalDetector(null);
+            detector.handleData(bytes, 0, bytes.length);
+            detector.dataEnd();
+            return new String(bytes, detector.getDetectedCharset()).getBytes(StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            return bytes;
+        }
     }
 
     public static String md5(String src) {
