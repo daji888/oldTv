@@ -101,8 +101,6 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         Logger.addLogAdapter(getLogAdapter());
-        OkHttp.get().setProxy(Setting.getProxy());
-        OkHttp.get().setDoh(Doh.objectFrom(Setting.getDoh()));
     }
 
     @Override
