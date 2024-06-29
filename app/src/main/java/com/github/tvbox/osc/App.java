@@ -1,4 +1,4 @@
-package xyz.doikki.videoplayer.exo;
+package com.github.tvbox.osc;
 
 import android.app.Activity;
 import android.app.Application;
