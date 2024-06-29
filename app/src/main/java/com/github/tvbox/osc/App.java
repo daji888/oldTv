@@ -108,12 +108,12 @@ public class App extends Application {
     @Override
     public PackageManager getPackageManager() {
         if (!hook) return getBaseContext().getPackageManager();
-        return LiveConfig.get().getHome().getCore();
+        return ApiConfig.get().getHome().getCore();
     }
 
     @Override
     public String getPackageName() {
         if (!hook) return getBaseContext().getPackageName();
-        return LiveConfig.get().getHome().getCore().getPkg();
+        return ApiConfig.get().getHome().getCore().getPkg();
     }
 }
