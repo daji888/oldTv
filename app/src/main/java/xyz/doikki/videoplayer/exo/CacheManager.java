@@ -6,7 +6,7 @@ import androidx.media3.datasource.cache.NoOpCacheEvictor;
 import androidx.media3.datasource.cache.SimpleCache;
 
 import com.github.catvod.utils.Path;
-import com.github.tvbox.osc.App;
+import com.github.tvbox.osc.base.App;
 
 public class CacheManager {
 
@@ -26,6 +26,6 @@ public class CacheManager {
     }
 
     private void create() {
-        cache = new SimpleCache(Path.exo(), new NoOpCacheEvictor(), new StandaloneDatabaseProvider(App.get()));
+        cache = new SimpleCache(Path.exo(), new NoOpCacheEvictor(), new StandaloneDatabaseProvider(App.getInstance()));
     }
 }
