@@ -1,4 +1,4 @@
-package xyz.doikki.videoplayer.exo;
+package com.github.tvbox.osc;
 
 public class Constant {
     //快進時間單位
