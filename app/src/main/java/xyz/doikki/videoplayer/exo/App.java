@@ -25,7 +25,13 @@ import cat.ereza.customactivityoncrash.config.CaocConfig;
 
 
 public class App extends Application {
-  private static App instance;
+  
+  private final ExecutorService executor;
+    private final Handler handler;
+    private static App instance;
+    private Activity activity;
+    private final Gson gson;
+    private boolean hook;
   
   public App() {
         instance = this;
