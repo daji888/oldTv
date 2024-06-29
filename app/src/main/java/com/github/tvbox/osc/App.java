@@ -11,16 +11,20 @@ import android.os.Looper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.os.HandlerCompat;
+import com.github.tvbox.osc.api.ApiConfig;
 import com.github.catvod.Init;
+import com.github.tvbox.osc.bean.Doh;
+import com.github.catvod.net.OkHttp;
 import com.google.gson.Gson;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.LogAdapter;
+import com.orhanobut.logger.Logger;
 import com.orhanobut.logger.PrettyFormatStrategy;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-
+import cat.ereza.customactivityoncrash.config.CaocConfig;
 
 public class App extends Application {
   
@@ -92,5 +96,24 @@ public class App extends Application {
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         Init.set(base);
+    }
+  @Override
+    public void onCreate() {
+        super.onCreate();
+        Logger.addLogAdapter(getLogAdapter());
+        OkHttp.get().setProxy(Setting.getProxy());
+        OkHttp.get().setDoh(Doh.objectFrom(Setting.getDoh()));
+    }
+
+    @Override
+    public PackageManager getPackageManager() {
+        if (!hook) return getBaseContext().getPackageManager();
+        return LiveConfig.get().getHome().getCore();
+    }
+
+    @Override
+    public String getPackageName() {
+        if (!hook) return getBaseContext().getPackageName();
+        return LiveConfig.get().getHome().getCore().getPkg();
     }
 }
