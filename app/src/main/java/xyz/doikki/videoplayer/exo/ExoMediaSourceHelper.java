@@ -52,6 +52,7 @@ public final class ExoMediaSourceHelper implements MediaSource.Factory {
 
     private static volatile ExoMediaSourceHelper sInstance;
     
+    private final String mUserAgent;
     private final Context mAppContext;
     private OkHttpDataSource.Factory mHttpDataSourceFactory;
     private OkHttpClient mOkClient = null;
@@ -64,6 +65,7 @@ public final class ExoMediaSourceHelper implements MediaSource.Factory {
     @SuppressLint("UnsafeOptInUsageError")
     public ExoMediaSourceHelper(Context context) {
         mAppContext = context.getApplicationContext();
+        mUserAgent = Util.getUserAgent(mAppContext, mAppContext.getApplicationInfo().name);
         defaultMediaSourceFactory = new DefaultMediaSourceFactory(getDataSourceFactory(), getExtractorsFactory());
     }
 
@@ -263,7 +265,7 @@ public final class ExoMediaSourceHelper implements MediaSource.Factory {
     @SuppressLint("UnsafeOptInUsageError")
     private Cache newCache() {
         return new SimpleCache(
-                new File(FileUtils.getExternalCachePath(), "exoCache"),//缓存目录
+                new File(FileUtils.getExternalCachePath(), "exo-video-cache"),//缓存目录
                 new LeastRecentlyUsedCacheEvictor(512 * 1024 * 1024),//缓存大小，默认512M，使用LRU算法实现
                 new StandaloneDatabaseProvider(mAppContext));
     }
@@ -287,6 +289,15 @@ public final class ExoMediaSourceHelper implements MediaSource.Factory {
      *
      * @return A new HttpDataSource factory.
      */
+    @SuppressLint("UnsafeOptInUsageError")
+    private DataSource.Factory getHttpDataSourceFactory() {
+        if (mHttpDataSourceFactory == null) {
+            mHttpDataSourceFactory = new OkHttpDataSource.Factory(mOkClient)
+                    .setUserAgent(mUserAgent)/*
+                    .setAllowCrossProtocolRedirects(true)*/;
+        }
+        return mHttpDataSourceFactory;
+    }
     @SuppressLint("UnsafeOptInUsageError")
     private HttpDataSource.Factory getHttpDataSourceFactory() {
         if (httpDataSourceFactory == null) httpDataSourceFactory = new OkHttpDataSource.Factory(mOkClient);
