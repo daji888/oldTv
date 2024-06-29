@@ -290,7 +290,7 @@ public final class ExoMediaSourceHelper implements MediaSource.Factory {
      * @return A new HttpDataSource factory.
      */
     @SuppressLint("UnsafeOptInUsageError")
-    private DataSource.Factory getHttpDataSourceFactory() {
+    private HttpDataSource.Factory getHttpDataSourceFactory() {
         if (mHttpDataSourceFactory == null) {
             mHttpDataSourceFactory = new OkHttpDataSource.Factory(mOkClient)
                     .setUserAgent(mUserAgent)/*
