@@ -1,5 +1,6 @@
 package xyz.doikki.videoplayer.exo;
 
+import androidx.media3.datasource.cache.LeastRecentlyUsedCacheEvictor;
 import androidx.media3.database.StandaloneDatabaseProvider;
 import androidx.media3.datasource.cache.Cache;
 import androidx.media3.datasource.cache.NoOpCacheEvictor;
@@ -7,6 +8,7 @@ import androidx.media3.datasource.cache.SimpleCache;
 
 import android.content.Context;
 import com.github.catvod.utils.Path;
+import com.github.tvbox.osc.util.FileUtils;
 
 public class CacheManager {
 
