@@ -61,11 +61,8 @@ public final class ExoMediaSourceHelper implements MediaSource.Factory {
     private final DefaultMediaSourceFactory defaultMediaSourceFactory;
 
     @SuppressLint("UnsafeOptInUsageError")
-    private ExoMediaSourceHelper(Context context) {
+    public ExoMediaSourceHelper(Context context) {
         mAppContext = context.getApplicationContext();
-    }
-
-    public ExoMediaSourceHelper() {
         defaultMediaSourceFactory = new DefaultMediaSourceFactory(getDataSourceFactory(), getExtractorsFactory());
     }
 
