@@ -299,11 +299,6 @@ public final class ExoMediaSourceHelper implements MediaSource.Factory {
         return mHttpDataSourceFactory;
     }
     @SuppressLint("UnsafeOptInUsageError")
-    private HttpDataSource.Factory getHttpDataSourceFactory() {
-        if (httpDataSourceFactory == null) httpDataSourceFactory = new OkHttpDataSource.Factory(mOkClient);
-        return httpDataSourceFactory;
-    }
-    @SuppressLint("UnsafeOptInUsageError")
     private void setHeaders(Map<String, String> headers) {
         if (headers != null && headers.size() > 0) {
             //如果发现用户通过header传递了UA，则强行将HttpDataSourceFactory里面的userAgent字段替换成用户的
