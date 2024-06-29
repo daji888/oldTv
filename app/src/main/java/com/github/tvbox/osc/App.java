@@ -79,6 +79,14 @@ public class App extends Application {
         this.activity = activity;
     }
 
+    private LogAdapter getLogAdapter() {
+        return new AndroidLogAdapter(PrettyFormatStrategy.newBuilder().methodCount(0).showThreadInfo(false).tag("").build()) {
+            @Override
+            public boolean isLoggable(int priority, String tag) {
+                return true;
+            }
+        };
+    }
 
     @Override
     protected void attachBaseContext(Context base) {
