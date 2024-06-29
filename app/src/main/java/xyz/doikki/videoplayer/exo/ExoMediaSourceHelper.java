@@ -142,7 +142,62 @@ public final class ExoMediaSourceHelper implements MediaSource.Factory {
         mOkClient = client;
     }
 
-    
+    public MediaSource getMediaSource(String uri) {
+        return getMediaSource(uri, null, false);
+    }
+
+    public MediaSource getMediaSource(String uri, Map<String, String> headers) {
+        return getMediaSource(uri, headers, false);
+    }
+
+    public MediaSource getMediaSource(String uri, boolean isCache) {
+        return getMediaSource(uri, null, isCache);
+    }
+
+    public MediaSource getMediaSource(String uri, Map<String, String> headers, boolean isCache) {
+        return getMediaSource(uri, headers, isCache, -1);
+    }
+
+    @SuppressLint("UnsafeOptInUsageError")
+    public MediaSource getMediaSource(String uri, Map<String, String> headers, boolean isCache, int errorCode) {
+        Uri contentUri = Uri.parse(uri);
+        if ("rtmp".equals(contentUri.getScheme())) {
+            return new ProgressiveMediaSource.Factory(new RtmpDataSource.Factory())
+                    .createMediaSource(MediaItem.fromUri(contentUri));
+        } else if ("rtsp".equals(contentUri.getScheme())) {
+            return new RtspMediaSource.Factory().createMediaSource(MediaItem.fromUri(contentUri));
+        }
+        int contentType = inferContentType(uri);
+        DataSource.Factory factory;
+        if (isCache) {
+            factory = getCacheDataSourceFactory();
+        } else {
+            factory = getDataSourceFactory();
+        }
+        if (mHttpDataSourceFactory != null) {
+            setHeaders(headers);
+        }
+        if (errorCode == PlaybackException.ERROR_CODE_PARSING_CONTAINER_UNSUPPORTED || errorCode == PlaybackException.ERROR_CODE_PARSING_CONTAINER_MALFORMED || errorCode == PlaybackException.ERROR_CODE_IO_UNSPECIFIED) {
+            MediaItem.Builder builder = new MediaItem.Builder().setUri(uri);
+            builder.setMimeType(MimeTypes.APPLICATION_M3U8);
+            return new DefaultMediaSourceFactory(getDataSourceFactory(), getExtractorsFactory()).createMediaSource(getMediaItem(uri, errorCode));
+        }
+        switch (contentType) {
+            case C.CONTENT_TYPE_DASH:
+                return new DashMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));
+            case C.CONTENT_TYPE_HLS:
+                return new HlsMediaSource.Factory(mHttpDataSourceFactory)
+                        .setAllowChunklessPreparation(true)
+                        .setExtractorFactory(new MyHlsExtractorFactory())
+                        .createMediaSource(MediaItem.fromUri(contentUri));
+            //return new HlsMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));
+            case C.CONTENT_TYPE_SS:
+                return new SsMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));    
+            default:
+            case C.CONTENT_TYPE_OTHER:
+                return new ProgressiveMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));
+        }
+    }
 
     @SuppressLint("UnsafeOptInUsageError")
     public static MediaItem getMediaItem(Map<String, String> headers, Uri uri, String mimeType, int decode) {
