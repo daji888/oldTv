@@ -76,6 +76,17 @@ public class Util {
         return "Basic " + base64(uri.getUserInfo());
     }
 
+    public static byte[] utf8(byte[] bytes) {
+        try {
+            UniversalDetector detector = new UniversalDetector(null);
+            detector.handleData(bytes, 0, bytes.length);
+            detector.dataEnd();
+            return new String(bytes, detector.getDetectedCharset()).getBytes(StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            return bytes;
+        }
+    }
+
     public static String md5(String src) {
         try {
             if (TextUtils.isEmpty(src)) return "";
