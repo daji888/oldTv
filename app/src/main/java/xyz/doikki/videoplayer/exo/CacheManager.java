@@ -30,6 +30,6 @@ public class CacheManager {
     }
 
     private void create() {
-        cache = new SimpleCache(Path.exo(), new NoOpCacheEvictor(), new StandaloneDatabaseProvider(mAppContext));
+        cache = new SimpleCache(File(FileUtils.getExternalCachePath(), "exo-video-cache"), new new LeastRecentlyUsedCacheEvictor(512 * 1024 * 1024), new StandaloneDatabaseProvider(mAppContext));
     }
 }
