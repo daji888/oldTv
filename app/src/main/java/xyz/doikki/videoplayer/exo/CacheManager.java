@@ -6,6 +6,7 @@ import androidx.media3.datasource.cache.NoOpCacheEvictor;
 import androidx.media3.datasource.cache.SimpleCache;
 
 import com.github.catvod.utils.Path;
+import com.github.tvbox.osc.App;
 
 public class CacheManager {
 
