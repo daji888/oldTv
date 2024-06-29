@@ -37,6 +37,7 @@ import androidx.media3.extractor.ts.DefaultTsPayloadReaderFactory;
 import androidx.media3.extractor.ts.TsExtractor;
 
 import com.github.tvbox.osc.util.FileUtils;
+import com.github.tvbox.osc.bean.Sub;
 
 
 import java.io.File;
@@ -198,10 +199,11 @@ public final class ExoMediaSourceHelper implements MediaSource.Factory {
     }
 
     @SuppressLint("UnsafeOptInUsageError")
-    public static MediaItem getMediaItem(Map<String, String> headers, Uri uri, String mimeType, int decode) {
+    public static MediaItem getMediaItem(Map<String, String> headers, Uri uri, String mimeType, List<Sub> subs,int decode) {
         
         MediaItem.Builder builder = new MediaItem.Builder().setUri(uri);
         builder.setRequestMetadata(getRequestMetadata(headers, uri));
+        builder.setSubtitleConfigurations(getSubtitleConfigs(subs));
         if (mimeType != null) builder.setMimeType(mimeType);
         builder.setMediaId(uri.toString());
         return builder.build();
@@ -211,6 +213,12 @@ public final class ExoMediaSourceHelper implements MediaSource.Factory {
         Bundle extras = new Bundle();
         for (Map.Entry<String, String> header : headers.entrySet()) extras.putString(header.getKey(), header.getValue());
         return new MediaItem.RequestMetadata.Builder().setMediaUri(uri).setExtras(extras).build();
+    }
+
+    private static List<MediaItem.SubtitleConfiguration> getSubtitleConfigs(List<Sub> subs) {
+        List<MediaItem.SubtitleConfiguration> configs = new ArrayList<>();
+        for (Sub sub : subs) configs.add(sub.getConfig());
+        return configs;
     }
 
     public static String getMimeType(String path) {
