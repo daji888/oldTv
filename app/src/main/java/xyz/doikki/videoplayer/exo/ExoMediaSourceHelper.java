@@ -65,6 +65,9 @@ public final class ExoMediaSourceHelper implements MediaSource.Factory {
     private ExoMediaSourceHelper(Context context) {
         mAppContext = context.getApplicationContext();
         mUserAgent = Util.getUserAgent(mAppContext, mAppContext.getApplicationInfo().name);
+    }
+
+    public ExoMediaSourceHelper() {
         defaultMediaSourceFactory = new DefaultMediaSourceFactory(getDataSourceFactory(), getExtractorsFactory());
     }
 
