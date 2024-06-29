@@ -13,6 +13,9 @@ import androidx.annotation.Nullable;
 import androidx.core.os.HandlerCompat;
 import com.github.catvod.Init;
 import com.google.gson.Gson;
+import com.orhanobut.logger.AndroidLogAdapter;
+import com.orhanobut.logger.LogAdapter;
+import com.orhanobut.logger.PrettyFormatStrategy;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
