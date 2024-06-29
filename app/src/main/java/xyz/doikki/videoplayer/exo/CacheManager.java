@@ -11,7 +11,10 @@ import com.github.catvod.utils.Path;
 public class CacheManager {
 
     private SimpleCache cache;
-    private final Context mAppContext;
+    private Context mAppContext;
+    public CacheManager(Context context) {
+        mAppContext = context.getApplicationContext();
+    }
 
     private static class Loader {
         static volatile CacheManager INSTANCE = new CacheManager();
