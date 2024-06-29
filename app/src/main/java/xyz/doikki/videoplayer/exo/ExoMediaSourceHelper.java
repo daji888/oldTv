@@ -108,7 +108,7 @@ public final class ExoMediaSourceHelper implements MediaSource.Factory {
             return defaultMediaSourceFactory.createMediaSource(setHeader(mediaItem));
         }
     }
-
+    
     private MediaItem setHeader(MediaItem mediaItem) {
         Map<String, String> headers = new HashMap<>();
         for (String key : mediaItem.requestMetadata.extras.keySet()) headers.put(key, mediaItem.requestMetadata.extras.get(key).toString());
@@ -213,6 +213,20 @@ public final class ExoMediaSourceHelper implements MediaSource.Factory {
         Bundle extras = new Bundle();
         for (Map.Entry<String, String> header : headers.entrySet()) extras.putString(header.getKey(), header.getValue());
         return new MediaItem.RequestMetadata.Builder().setMediaUri(uri).setExtras(extras).build();
+    }
+
+    public static String getMimeType(String path) {
+        if (TextUtils.isEmpty(path)) return "";
+        if (path.endsWith(".vtt")) return MimeTypes.TEXT_VTT;
+        if (path.endsWith(".ssa") || path.endsWith(".ass")) return MimeTypes.TEXT_SSA;
+        if (path.endsWith(".ttml") || path.endsWith(".xml") || path.endsWith(".dfxp")) return MimeTypes.APPLICATION_TTML;
+        return MimeTypes.APPLICATION_SUBRIP;
+    }
+
+    public static String getMimeType(String format, int errorCode) {
+        if (format != null) return format;
+        if (errorCode == PlaybackException.ERROR_CODE_PARSING_CONTAINER_UNSUPPORTED || errorCode == PlaybackException.ERROR_CODE_PARSING_CONTAINER_MALFORMED || errorCode == PlaybackException.ERROR_CODE_IO_UNSPECIFIED) return MimeTypes.APPLICATION_M3U8;
+        return null;
     }
 
     @SuppressLint("UnsafeOptInUsageError")
