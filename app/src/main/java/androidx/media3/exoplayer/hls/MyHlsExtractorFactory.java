@@ -1,5 +1,4 @@
-package xyz.doikki.videoplayer.exo;
-
+package androidx.media3.exoplayer.hls;
 
 import static androidx.media3.common.util.Assertions.checkNotNull;
 
