@@ -18,6 +18,7 @@ import androidx.media3.exoplayer.analytics.PlayerId;
 import androidx.media3.exoplayer.hls.HlsExtractorFactory;
 import androidx.media3.exoplayer.hls.HlsTrackMetadataEntry;
 import androidx.media3.exoplayer.hls.WebvttExtractor;
+import androidx.media3.exoplayer.hls.BundledHlsMediaChunkExtractor;
 import androidx.media3.extractor.Extractor;
 import androidx.media3.extractor.ExtractorInput;
 import androidx.media3.extractor.mp3.Mp3Extractor;
