@@ -27,7 +27,7 @@ import androidx.media3.extractor.ts.Ac4Extractor;
 import androidx.media3.extractor.ts.AdtsExtractor;
 import androidx.media3.extractor.ts.DefaultTsPayloadReaderFactory;
 
-import com.google.androidx.media3.exoplayer.extractor.ts.MyTsExtractor;
+import androidx.media3.extractor.ts.MyTsExtractor;
 import com.google.common.primitives.Ints;
 
 import java.io.EOFException;
