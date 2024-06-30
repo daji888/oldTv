@@ -18,9 +18,6 @@ package androidx.media3.extractor.ts;
 import static androidx.media3.extractor.ts.TsPayloadReader.EsInfo.AUDIO_TYPE_UNDEFINED;
 import static androidx.media3.extractor.ts.TsPayloadReader.FLAG_PAYLOAD_UNIT_START_INDICATOR;
 
-import androidx.media3.extractor.ts.TsBinarySearchSeeker;
-import androidx.media3.extractor.ts.TsDurationReader;
-
 import android.util.SparseArray;
 import android.util.SparseBooleanArray;
 import android.util.SparseIntArray;
