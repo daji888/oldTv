@@ -17,7 +17,7 @@ import androidx.media3.extractor.ts.Ac3Extractor;
 import androidx.media3.extractor.ts.Ac4Extractor;
 import androidx.media3.extractor.ts.AdtsExtractor;
 
-import com.google.androidx.media3.exoplayer.extractor.ts.MyTsExtractor;
+import androidx.media3.extractor.ts.MyTsExtractor;
 
 import java.io.IOException;
 
