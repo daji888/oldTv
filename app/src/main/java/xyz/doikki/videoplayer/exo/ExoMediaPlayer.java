@@ -42,7 +42,7 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     protected ExoPlayer mMediaPlayer;
     protected MediaSource mMediaSource;
     protected ExoMediaSourceHelper mMediaSourceHelper;
-    protected ExoTrackNameProvider trackNameProvider;
+    protected TrackNameProvider trackNameProvider;
     protected TrackSelectionArray mTrackSelections;
     private PlaybackParameters mSpeedPlaybackParameters;
     private boolean mIsPreparing;
@@ -288,7 +288,7 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     @Override
     public void onTracksChanged(Tracks tracks) {
         if (trackNameProvider == null)
-            trackNameProvider = new ExoTrackNameProvider(mAppContext.getResources());
+            trackNameProvider = new TrackNameProvider(mAppContext.getResources());
     }
 
     @Override
