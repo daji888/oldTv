@@ -31,7 +31,7 @@ import androidx.media3.extractor.ts.DefaultTsPayloadReaderFactory;
 import androidx.media3.extractor.ts.TsExtractor;
 
 import com.github.tvbox.osc.util.FileUtils;
-import com.google.androidx.media3.exoplayer.ext.okhttp.OkHttpDataSource;
+import androidx.media3.datasource.okhttp.OkHttpDataSource;
 
 import java.io.File;
 import java.lang.reflect.Field;
