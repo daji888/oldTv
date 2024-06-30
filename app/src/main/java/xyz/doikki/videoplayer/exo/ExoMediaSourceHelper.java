@@ -20,7 +20,7 @@ import androidx.media3.datasource.cache.SimpleCache;
 import androidx.media3.datasource.rtmp.RtmpDataSource;
 import androidx.media3.exoplayer.dash.DashMediaSource;
 import androidx.media3.exoplayer.hls.HlsMediaSource;
-import androidx.media3.exoplayer.hls.MyHlsExtractorFactory;
+import androidx.media3.exoplayer.hls.DefaultHlsExtractorFactory;
 import androidx.media3.exoplayer.rtsp.RtspMediaSource;
 import androidx.media3.exoplayer.smoothstreaming.SsMediaSource;
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory;
@@ -130,7 +130,7 @@ public final class ExoMediaSourceHelper {
             case C.CONTENT_TYPE_HLS:
                 return new HlsMediaSource.Factory(mHttpDataSourceFactory)
                         .setAllowChunklessPreparation(true)
-                        .setExtractorFactory(new MyHlsExtractorFactory())
+                        .setExtractorFactory(new DefaultHlsExtractorFactory())
                         .createMediaSource(MediaItem.fromUri(contentUri));
             //return new HlsMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));
             case C.CONTENT_TYPE_SS:
