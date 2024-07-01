@@ -70,6 +70,10 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
         mMediaSourceHelper = ExoMediaSourceHelper.getInstance(context);
     }
 
+    public static boolean isHard(int decode) {
+        return decode == HARD;
+    }
+
     @SuppressLint("UnsafeOptInUsageError")
     @Override
     public void initPlayer() {
@@ -183,12 +187,12 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     }
 
     public boolean isExo() {
-        return player == EXO;
+        return mMediaPlayer == EXO;
     }
 
     public void toggleDecode(boolean save) {
         decode = isHard() ? SOFT : HARD;
-        if (save) setDecode(player, decode);
+        if (save) setDecode(mMediaPlayer, decode);
     }
 
     @Override
