@@ -29,6 +29,7 @@ import com.github.tvbox.osc.base.App;
 import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.LOG;
 import com.github.tvbox.osc.util.PlayerHelper;
+import com.github.tvbox.osc.Setting;
 import com.orhanobut.hawk.Hawk;
 
 import java.util.Locale;
