@@ -191,9 +191,28 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
         return player == EXO;
     }
 
+    public int getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(int player) {
+        if (this.player != player) reset();
+        if (this.player != player) stop();
+        this.player = player;
+        this.decode = getDecode(player);
+    }
+
+    public int getDecode(int player) {
+        return Setting.getDecode(player);
+    }
+
     public void toggleDecode(boolean save) {
         decode = isHard() ? SOFT : HARD;
         if (save) setDecode(player, decode);
+    }
+
+    public void setDecode(int player, int decode) {
+        Setting.putDecode(player, decode);
     }
 
     @Override
