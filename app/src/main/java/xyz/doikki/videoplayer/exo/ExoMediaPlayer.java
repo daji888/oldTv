@@ -52,6 +52,10 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     private DefaultRenderersFactory mRenderersFactory;
     private DefaultTrackSelector mTrackSelector;
 
+    public static final int EXO = 2;
+
+    private int decode;
+
     public static final int SOFT = 0;
     public static final int HARD = 1;
     
@@ -180,6 +184,11 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
 
     public boolean isExo() {
         return player == EXO;
+    }
+
+    public void toggleDecode(boolean save) {
+        decode = isHard() ? SOFT : HARD;
+        if (save) setDecode(player, decode);
     }
 
     @Override
