@@ -151,7 +151,7 @@ public class IjkmPlayer extends IjkPlayer {
         int index = 0;
         for (IjkTrackInfo info : trackInfo) {
             if (info.getTrackType() == ITrackInfo.MEDIA_TRACK_TYPE_AUDIO) {//音轨信息
-                String trackName = (data.getAudio().size() + 1) + " : " + info.getInfoInline();
+                String trackName = (data.getAudio().size() + 1) + " ： " + info.getInfoInline();
                 TrackInfoBean t = new TrackInfoBean();
                 t.name = trackName;
                 t.language = info.getLanguage();
@@ -160,7 +160,7 @@ public class IjkmPlayer extends IjkPlayer {
                 data.addAudio(t);
             }
             if (info.getTrackType() == ITrackInfo.MEDIA_TRACK_TYPE_TIMEDTEXT) {//内置字幕
-                String trackName = (data.getSubtitle().size() + 1) + " : " + info.getInfoInline();
+                String trackName = (data.getSubtitle().size() + 1) + " ： " + info.getInfoInline();
                 TrackInfoBean t = new TrackInfoBean();
                 t.name = trackName;
                 t.language = info.getLanguage();
