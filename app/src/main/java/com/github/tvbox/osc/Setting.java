@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.provider.Settings;
 
 import xyz.doikki.videoplayer.exo.ExoMediaPlayer;
-import com.github.tvbox.osc.utils.LanguageUtil;
+import com.github.tvbox.osc.util.LanguageUtil;
 import com.github.catvod.utils.Prefers;
 
 public class Setting {
