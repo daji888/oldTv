@@ -337,9 +337,7 @@ public class Setting {
         return getBackground() == 2;
     }
 
-    public static boolean hasCaption() {
-        return new Intent(Settings.ACTION_CAPTIONING_SETTINGS).resolveActivity(App.get().getPackageManager()) != null;
-    }
+    
 
     public static boolean isDisplayTime() {
         return Prefers.getBoolean("display_time", false);
