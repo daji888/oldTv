@@ -177,6 +177,10 @@ public class Path {
         }
     }
 
+    public static File utf8(File file) {
+        return write(cache(file.getName()), Util.utf8(readToByte(file)));
+    }
+
     public static void move(File in, File out) {
         copy(in, out);
         clear(in);
