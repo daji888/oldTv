@@ -1,4 +1,4 @@
-package com.fongmi.android.tv.bean;
+package com.github.tvbox.osc.bean;
 
 import android.net.Uri;
 import android.text.TextUtils;
