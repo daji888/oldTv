@@ -10,6 +10,14 @@ import android.net.wifi.WifiManager;
 import com.github.catvod.Init;
 import com.google.common.net.HttpHeaders;
 
+import org.mozilla.universalchardet.UniversalDetector;
+
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.nio.charset.StandardCharsets;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.math.BigInteger;
@@ -20,6 +28,8 @@ import java.text.SimpleDateFormat;
 import java.util.Formatter;
 
 public class Util {
+
+    public static final int URL_SAFE = Base64.DEFAULT | Base64.URL_SAFE | Base64.NO_WRAP;
 
     public static final String[] UNITS = new String[]{"bytes", "KB", "MB", "GB", "TB"};
 
@@ -75,6 +85,17 @@ public class Util {
 
     public static String basic(Uri uri) {
         return "Basic " + base64(uri.getUserInfo());
+    }
+
+    public static byte[] utf8(byte[] bytes) {
+        try {
+            UniversalDetector detector = new UniversalDetector(null);
+            detector.handleData(bytes, 0, bytes.length);
+            detector.dataEnd();
+            return new String(bytes, detector.getDetectedCharset()).getBytes(StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            return bytes;
+        }
     }
 
     public static String md5(String src) {
@@ -144,6 +165,19 @@ public class Util {
         } catch (Exception e) {
             return "";
         }
+    }
+    
+    private static String getHostAddress() throws SocketException {
+        for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
+            NetworkInterface interfaces = en.nextElement();
+            for (Enumeration<InetAddress> addresses = interfaces.getInetAddresses(); addresses.hasMoreElements(); ) {
+                InetAddress inetAddress = addresses.nextElement();
+                if (!inetAddress.isLoopbackAddress() && inetAddress instanceof Inet4Address) {
+                    return inetAddress.getHostAddress();
+                }
+            }
+        }
+        return "";
     }
 
     public static String fixUrl(String url) {
