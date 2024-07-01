@@ -3,6 +3,7 @@ package xyz.doikki.videoplayer.exo;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
+import android.os.Bundle;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -39,15 +40,16 @@ import androidx.media3.extractor.ts.TsExtractor;
 
 import com.github.tvbox.osc.util.FileUtils;
 import com.github.tvbox.osc.base.App;
-import com.github.tvbox.osc.base.Sub;
-import com.github.tvbox.osc.base.Drm;
+import com.github.tvbox.osc.bean.Sub;
+import com.github.tvbox.osc.bean.Drm;
 import com.github.catvod.net.OkHttp;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
-
+import java.util.ArrayList;
 
 import okhttp3.OkHttpClient;
 
@@ -154,29 +156,15 @@ public final class ExoMediaSourceHelper implements MediaSource.Factory {
 
     public static MediaItem getMediaItem(Map<String, String> headers, Uri uri, String mimeType, Drm drm, List<Sub> subs, int decode) {
         MediaItem.Builder builder = new MediaItem.Builder().setUri(uri);
-        builder.setAllowChunklessPreparation(decode == Players.HARD);
         builder.setRequestMetadata(getRequestMetadata(headers, uri));
         builder.setSubtitleConfigurations(getSubtitleConfigs(subs));
         if (drm != null) builder.setDrmConfiguration(drm.get());
         if (mimeType != null) builder.setMimeType(mimeType);
         builder.setForceUseRtpTcp(getRtsp() == 1);
-        builder.setAds(getRegex(uri));
         builder.setMediaId(uri.toString());
         return builder.build();
     }
-
-    public static int getRtsp() {
-        return Prefers.getInt("rtsp");
-    }
-
-    public static void putRtsp(int rtsp) {
-        Prefers.put("rtsp", rtsp);
-    }
-
-    public static List<String> getRegex(Uri uri) {
-        return getRule(uri).getRegex();
-    }
-
+    
     private static MediaItem.RequestMetadata getRequestMetadata(Map<String, String> headers, Uri uri) {
         Bundle extras = new Bundle();
         for (Map.Entry<String, String> header : headers.entrySet()) extras.putString(header.getKey(), header.getValue());
