@@ -5,8 +5,8 @@ import android.os.Build;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.content.Context;
 import android.net.wifi.WifiManager;
-import android.text.format.Formatter;
 import com.github.catvod.Init;
 import com.google.common.net.HttpHeaders;
 
@@ -139,7 +139,7 @@ public class Util {
         try {
             WifiManager manager = (WifiManager) Init.context().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
             int address = manager.getConnectionInfo().getIpAddress();
-            if (address != 0) return Formatter.formatIpAddress(address);
+            if (address != 0) return android.text.format.Formatter.formatIpAddress(address);
             return getHostAddress();
         } catch (Exception e) {
             return "";
