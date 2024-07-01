@@ -52,12 +52,8 @@ public class Util {
         return Base64.encodeToString(bytes, Base64.DEFAULT | Base64.NO_WRAP);
     }
 
-    public static String base64(String s) {
-        return base64(s.getBytes());
-    }
-
-     public static String base64(String s, int flags) {
-        return base64(s.getBytes(), flags);
+     public static String base64(String ext, int flags) {
+        return base64(ext.getBytes(), flags);
     }
 
     public static String substring(String text) {
