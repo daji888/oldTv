@@ -157,12 +157,10 @@ public final class ExoMediaSourceHelper implements MediaSource.Factory {
 
     public static MediaItem getMediaItem(Map<String, String> headers, Uri uri, String mimeType, Drm drm, List<Sub> subs, int decode) {
         MediaItem.Builder builder = new MediaItem.Builder().setUri(uri);
-        builder.setAllowChunklessPreparation(decode == ExoMediaPlayer.HARD);
         builder.setRequestMetadata(getRequestMetadata(headers, uri));
         builder.setSubtitleConfigurations(getSubtitleConfigs(subs));
         if (drm != null) builder.setDrmConfiguration(drm.get());
         if (mimeType != null) builder.setMimeType(mimeType);
-        builder.setForceUseRtpTcp(Setting.getRtsp() == 1);
         builder.setMediaId(uri.toString());
         return builder.build();
     }
