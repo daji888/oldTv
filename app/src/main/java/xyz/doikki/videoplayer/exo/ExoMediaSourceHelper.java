@@ -42,6 +42,7 @@ import com.github.tvbox.osc.util.FileUtils;
 import com.github.tvbox.osc.base.App;
 import com.github.tvbox.osc.bean.Sub;
 import com.github.tvbox.osc.bean.Drm;
+import com.github.tvbox.osc.Setting;
 import com.github.catvod.net.OkHttp;
 
 import java.io.File;
