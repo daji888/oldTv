@@ -5,6 +5,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
 import androidx.media3.common.C;
 import androidx.media3.common.MediaItem;
 import androidx.media3.common.MimeTypes;
@@ -38,10 +39,13 @@ import androidx.media3.extractor.ts.TsExtractor;
 
 import com.github.tvbox.osc.util.FileUtils;
 import com.github.tvbox.osc.base.App;
+import com.github.catvod.net.OkHttp;
 
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.Map;
+import java.util.HashMap;
+
 
 import okhttp3.OkHttpClient;
 
