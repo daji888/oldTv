@@ -16,6 +16,10 @@ public class TrackInfo {
         return audio;
     }
 
+    public List<TrackInfoBean> getSubtitle() {
+        return subtitle;
+    }
+
     public int getAudioSelected(boolean track) {
         return getSelected(audio, track);
     }
@@ -35,10 +39,6 @@ public class TrackInfo {
 
     public void addAudio(TrackInfoBean audio) {
         this.audio.add(audio);
-    }
-
-    public List<TrackInfoBean> getSubtitle() {
-        return subtitle;
     }
 
     public void addSubtitle(TrackInfoBean subtitle) {
