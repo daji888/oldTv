@@ -52,6 +52,9 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     private DefaultRenderersFactory mRenderersFactory;
     private DefaultTrackSelector mTrackSelector;
 
+    public static final int SOFT = 0;
+    public static final int HARD = 1;
+    
     private int errorCode = -100;
     private String path;
     private Map<String, String> headers;
@@ -161,6 +164,22 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
             mMediaPlayer.setVideoSurface(null);
             mIsPreparing = false;
         }
+    }
+    
+    public boolean isHard() {
+        return decode == HARD;
+    }
+
+    public boolean isSoft() {
+        return decode == SOFT;
+    }
+
+    public static boolean isExo(int type) {
+        return type == EXO;
+    }
+
+    public boolean isExo() {
+        return player == EXO;
     }
 
     @Override
