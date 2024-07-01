@@ -5,7 +5,6 @@ import com.github.catvod.utils.Util;
 
 public class Server {
 
-    private Nano nano;
     private int port;
 
     private static class Loader {
@@ -38,26 +37,5 @@ public class Server {
 
     public String getAddress(boolean local) {
         return "http://" + (local ? "127.0.0.1" : Util.getIp()) + ":" + getPort();
-    }
-
-    public void start() {
-        if (nano != null) return;
-        do {
-            try {
-                nano = new Nano(port);
-                Proxy.set(port);
-                nano.start();
-                break;
-            } catch (Exception e) {
-                ++port;
-                nano.stop();
-                nano = null;
-            }
-        } while (port < 9999);
-    }
-
-    public void stop() {
-        if (nano != null) nano.stop();
-        nano = null;
     }
 }
