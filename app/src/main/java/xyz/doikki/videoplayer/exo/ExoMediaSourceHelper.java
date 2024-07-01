@@ -39,6 +39,8 @@ import androidx.media3.extractor.ts.TsExtractor;
 
 import com.github.tvbox.osc.util.FileUtils;
 import com.github.tvbox.osc.base.App;
+import com.github.tvbox.osc.base.Sub;
+import com.github.tvbox.osc.base.Drm;
 import com.github.catvod.net.OkHttp;
 
 import java.io.File;
@@ -134,6 +136,57 @@ public final class ExoMediaSourceHelper implements MediaSource.Factory {
         for (String key : mediaItem.requestMetadata.extras.keySet()) headers.put(key, mediaItem.requestMetadata.extras.get(key).toString());
         getHttpDataSourceFactory().setDefaultRequestProperties(headers);
         return mediaItem;
+    }
+
+    public static String getMimeType(String path) {
+        if (TextUtils.isEmpty(path)) return "";
+        if (path.endsWith(".vtt")) return MimeTypes.TEXT_VTT;
+        if (path.endsWith(".ssa") || path.endsWith(".ass")) return MimeTypes.TEXT_SSA;
+        if (path.endsWith(".ttml") || path.endsWith(".xml") || path.endsWith(".dfxp")) return MimeTypes.APPLICATION_TTML;
+        return MimeTypes.APPLICATION_SUBRIP;
+    }
+
+    public static String getMimeType(String format, int errorCode) {
+        if (format != null) return format;
+        if (errorCode == PlaybackException.ERROR_CODE_PARSING_CONTAINER_UNSUPPORTED || errorCode == PlaybackException.ERROR_CODE_PARSING_CONTAINER_MALFORMED || errorCode == PlaybackException.ERROR_CODE_IO_UNSPECIFIED) return MimeTypes.APPLICATION_M3U8;
+        return null;
+    }
+
+    public static MediaItem getMediaItem(Map<String, String> headers, Uri uri, String mimeType, Drm drm, List<Sub> subs, int decode) {
+        MediaItem.Builder builder = new MediaItem.Builder().setUri(uri);
+        builder.setAllowChunklessPreparation(decode == Players.HARD);
+        builder.setRequestMetadata(getRequestMetadata(headers, uri));
+        builder.setSubtitleConfigurations(getSubtitleConfigs(subs));
+        if (drm != null) builder.setDrmConfiguration(drm.get());
+        if (mimeType != null) builder.setMimeType(mimeType);
+        builder.setForceUseRtpTcp(getRtsp() == 1);
+        builder.setAds(getRegex(uri));
+        builder.setMediaId(uri.toString());
+        return builder.build();
+    }
+
+    public static int getRtsp() {
+        return Prefers.getInt("rtsp");
+    }
+
+    public static void putRtsp(int rtsp) {
+        Prefers.put("rtsp", rtsp);
+    }
+
+    public static List<String> getRegex(Uri uri) {
+        return getRule(uri).getRegex();
+    }
+
+    private static MediaItem.RequestMetadata getRequestMetadata(Map<String, String> headers, Uri uri) {
+        Bundle extras = new Bundle();
+        for (Map.Entry<String, String> header : headers.entrySet()) extras.putString(header.getKey(), header.getValue());
+        return new MediaItem.RequestMetadata.Builder().setMediaUri(uri).setExtras(extras).build();
+    }
+
+    private static List<MediaItem.SubtitleConfiguration> getSubtitleConfigs(List<Sub> subs) {
+        List<MediaItem.SubtitleConfiguration> configs = new ArrayList<>();
+        for (Sub sub : subs) configs.add(sub.getConfig());
+        return configs;
     }
 
     private static MediaItem getMediaItem(String uri, int errorCode) {
