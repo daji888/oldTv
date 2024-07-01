@@ -11,6 +11,10 @@ import androidx.media3.common.MimeTypes;
 import androidx.media3.common.PlaybackException;
 import androidx.media3.common.util.Util;
 import androidx.media3.database.StandaloneDatabaseProvider;
+import androidx.media3.datasource.okhttp.OkHttpDataSource;
+import androidx.media3.exoplayer.drm.DrmSessionManagerProvider;
+import androidx.media3.exoplayer.source.ConcatenatingMediaSource2;
+import androidx.media3.datasource.HttpDataSource;
 import androidx.media3.datasource.DataSource;
 import androidx.media3.datasource.DefaultDataSource;
 import androidx.media3.datasource.cache.Cache;
@@ -26,13 +30,14 @@ import androidx.media3.exoplayer.smoothstreaming.SsMediaSource;
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory;
 import androidx.media3.exoplayer.source.MediaSource;
 import androidx.media3.exoplayer.source.ProgressiveMediaSource;
+import androidx.media3.exoplayer.upstream.LoadErrorHandlingPolicy;
 import androidx.media3.extractor.DefaultExtractorsFactory;
 import androidx.media3.extractor.ExtractorsFactory;
 import androidx.media3.extractor.ts.DefaultTsPayloadReaderFactory;
 import androidx.media3.extractor.ts.TsExtractor;
 
 import com.github.tvbox.osc.util.FileUtils;
-import androidx.media3.datasource.okhttp.OkHttpDataSource;
+import com.github.tvbox.osc.base.App;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -40,10 +45,13 @@ import java.util.Map;
 
 import okhttp3.OkHttpClient;
 
-public final class ExoMediaSourceHelper {
+public final class ExoMediaSourceHelper implements MediaSource.Factory {
 
     private static volatile ExoMediaSourceHelper sInstance;
-
+    private final DefaultMediaSourceFactory defaultMediaSourceFactory;
+    private HttpDataSource.Factory httpDataSourceFactory;
+    private DataSource.Factory dataSourceFactory;
+    private ExtractorsFactory extractorsFactory;
     private final String mUserAgent;
     private final Context mAppContext;
     private OkHttpDataSource.Factory mHttpDataSourceFactory;
@@ -54,6 +62,7 @@ public final class ExoMediaSourceHelper {
     private ExoMediaSourceHelper(Context context) {
         mAppContext = context.getApplicationContext();
         mUserAgent = Util.getUserAgent(mAppContext, mAppContext.getApplicationInfo().name);
+        defaultMediaSourceFactory = new DefaultMediaSourceFactory(getDataSourceFactory(), getExtractorsFactory());
     }
 
     public static ExoMediaSourceHelper getInstance(Context context) {
@@ -65,6 +74,64 @@ public final class ExoMediaSourceHelper {
             }
         }
         return sInstance;
+    }
+
+    @NonNull
+    @Override
+    public MediaSource.Factory setDrmSessionManagerProvider(@NonNull DrmSessionManagerProvider drmSessionManagerProvider) {
+        return defaultMediaSourceFactory.setDrmSessionManagerProvider(drmSessionManagerProvider);
+    }
+
+    @NonNull
+    @Override
+    public MediaSource.Factory setLoadErrorHandlingPolicy(@NonNull LoadErrorHandlingPolicy loadErrorHandlingPolicy) {
+        return defaultMediaSourceFactory.setLoadErrorHandlingPolicy(loadErrorHandlingPolicy);
+    }
+
+    @NonNull
+    @Override
+    public @C.ContentType int[] getSupportedTypes() {
+        return defaultMediaSourceFactory.getSupportedTypes();
+    }
+
+    @NonNull
+    @Override
+    public MediaSource createMediaSource(@NonNull MediaItem mediaItem) {
+        if (mediaItem.mediaId.contains("***") && mediaItem.mediaId.contains("|||")) {
+            return createConcatenatingMediaSource(setHeader(mediaItem));
+        } else {
+            return defaultMediaSourceFactory.createMediaSource(setHeader(mediaItem));
+        }
+    }
+
+    private MediaSource createConcatenatingMediaSource(MediaItem mediaItem) {
+        ConcatenatingMediaSource2.Builder builder = new ConcatenatingMediaSource2.Builder();
+        for (String split : mediaItem.mediaId.split("\\*\\*\\*")) {
+            String[] info = split.split("\\|\\|\\|");
+            if (info.length >= 2) builder.add(defaultMediaSourceFactory.createMediaSource(mediaItem.buildUpon().setUri(Uri.parse(info[0])).build()), Long.parseLong(info[1]));
+        }
+        return builder.build();
+    }
+
+    private DataSource.Factory getDataSourceFactory() {
+        if (dataSourceFactory == null) dataSourceFactory = buildReadOnlyCacheDataSource(new DefaultDataSource.Factory(App.get(), getHttpDataSourceFactory()));
+        return dataSourceFactory;
+    }
+
+    private CacheDataSource.Factory buildReadOnlyCacheDataSource(DataSource.Factory upstreamFactory) {
+        return new CacheDataSource.Factory().setCache(mCache).setUpstreamDataSourceFactory(upstreamFactory).setCacheWriteDataSinkFactory(null).setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR);
+    }
+
+    private HttpDataSource.Factory getHttpDataSourceFactory() {
+        if (httpDataSourceFactory == null) httpDataSourceFactory = new OkHttpDataSource.Factory(OkHttp.client());
+        return httpDataSourceFactory;
+    }
+
+    private MediaItem setHeader(MediaItem mediaItem) {
+        Map<String, String> headers = new HashMap<>();
+        for (String key : mediaItem.requestMetadata.extras.keySet()) headers.put(key, mediaItem.requestMetadata.extras.get(key).toString());
+        getHttpDataSourceFactory().setDefaultRequestProperties(headers);
+        return mediaItem;
     }
 
     private static MediaItem getMediaItem(String uri, int errorCode) {
