@@ -56,7 +56,6 @@ public final class ExoMediaSourceHelper implements MediaSource.Factory {
     private HttpDataSource.Factory httpDataSourceFactory;
     private DataSource.Factory dataSourceFactory;
     private ExtractorsFactory extractorsFactory;
-    private final String mUserAgent;
     private final Context mAppContext;
     private OkHttpDataSource.Factory mHttpDataSourceFactory;
     private OkHttpClient mOkClient = null;
@@ -65,7 +64,6 @@ public final class ExoMediaSourceHelper implements MediaSource.Factory {
     @SuppressLint("UnsafeOptInUsageError")
     private ExoMediaSourceHelper(Context context) {
         mAppContext = context.getApplicationContext();
-        mUserAgent = Util.getUserAgent(mAppContext, mAppContext.getApplicationInfo().name);
         defaultMediaSourceFactory = new DefaultMediaSourceFactory(getDataSourceFactory(), getExtractorsFactory());
     }
 
@@ -118,7 +116,7 @@ public final class ExoMediaSourceHelper implements MediaSource.Factory {
     }
 
     private DataSource.Factory getDataSourceFactory() {
-        if (dataSourceFactory == null) dataSourceFactory = buildReadOnlyCacheDataSource(new DefaultDataSource.Factory(App.get(), getHttpDataSourceFactory()));
+        if (dataSourceFactory == null) dataSourceFactory = buildReadOnlyCacheDataSource(new DefaultDataSource.Factory(App.getInstance(), getHttpDataSourceFactory()));
         return dataSourceFactory;
     }
 
@@ -243,30 +241,6 @@ public final class ExoMediaSourceHelper implements MediaSource.Factory {
                 new File(FileUtils.getExternalCachePath(), "exo-video-cache"),//缓存目录
                 new LeastRecentlyUsedCacheEvictor(512 * 1024 * 1024),//缓存大小，默认512M，使用LRU算法实现
                 new StandaloneDatabaseProvider(mAppContext));
-    }
-
-    /**
-     * Returns a new DataSource factory.
-     *
-     * @return A new DataSource factory.
-     */
-    private DataSource.Factory getDataSourceFactory() {
-        return new DefaultDataSource.Factory(mAppContext, getHttpDataSourceFactory());
-    }
-
-    /**
-     * Returns a new HttpDataSource factory.
-     *
-     * @return A new HttpDataSource factory.
-     */
-    @SuppressLint("UnsafeOptInUsageError")
-    private DataSource.Factory getHttpDataSourceFactory() {
-        if (mHttpDataSourceFactory == null) {
-            mHttpDataSourceFactory = new OkHttpDataSource.Factory(mOkClient)
-                    .setUserAgent(mUserAgent)/*
-                    .setAllowCrossProtocolRedirects(true)*/;
-        }
-        return mHttpDataSourceFactory;
     }
 
     @SuppressLint("UnsafeOptInUsageError")
