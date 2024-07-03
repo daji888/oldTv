@@ -5,7 +5,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
 
-import androidx.annotation.NonNull;
 import androidx.media3.common.C;
 import androidx.media3.common.MediaItem;
 import androidx.media3.common.MimeTypes;
@@ -19,8 +18,6 @@ import androidx.media3.datasource.cache.CacheDataSource;
 import androidx.media3.datasource.cache.LeastRecentlyUsedCacheEvictor;
 import androidx.media3.datasource.cache.SimpleCache;
 import androidx.media3.datasource.rtmp.RtmpDataSource;
-import androidx.media3.exoplayer.drm.DrmSessionManagerProvider;
-import androidx.media3.exoplayer.source.ConcatenatingMediaSource2;
 import androidx.media3.exoplayer.dash.DashMediaSource;
 import androidx.media3.exoplayer.hls.HlsMediaSource;
 import androidx.media3.exoplayer.hls.DefaultHlsExtractorFactory;
@@ -43,11 +40,10 @@ import java.util.Map;
 
 import okhttp3.OkHttpClient;
 
-public final class ExoMediaSourceHelper implements MediaSource.Factory {
+public final class ExoMediaSourceHelper {
 
     private static volatile ExoMediaSourceHelper sInstance;
-    
-    private final DefaultMediaSourceFactory defaultMediaSourceFactory;
+
     private final String mUserAgent;
     private final Context mAppContext;
     private OkHttpDataSource.Factory mHttpDataSourceFactory;
@@ -58,7 +54,6 @@ public final class ExoMediaSourceHelper implements MediaSource.Factory {
     private ExoMediaSourceHelper(Context context) {
         mAppContext = context.getApplicationContext();
         mUserAgent = Util.getUserAgent(mAppContext, mAppContext.getApplicationInfo().name);
-        defaultMediaSourceFactory = new DefaultMediaSourceFactory(getDataSourceFactory(), getExtractorsFactory());
     }
 
     public static ExoMediaSourceHelper getInstance(Context context) {
@@ -70,50 +65,6 @@ public final class ExoMediaSourceHelper implements MediaSource.Factory {
             }
         }
         return sInstance;
-    }
-
-    @NonNull
-    @Override
-    public MediaSource.Factory setDrmSessionManagerProvider(@NonNull DrmSessionManagerProvider drmSessionManagerProvider) {
-        return defaultMediaSourceFactory.setDrmSessionManagerProvider(drmSessionManagerProvider);
-    }
-
-    @NonNull
-    @Override
-    public MediaSource.Factory setLoadErrorHandlingPolicy(@NonNull LoadErrorHandlingPolicy loadErrorHandlingPolicy) {
-        return defaultMediaSourceFactory.setLoadErrorHandlingPolicy(loadErrorHandlingPolicy);
-    }
-
-    @NonNull
-    @Override
-    public @C.ContentType int[] getSupportedTypes() {
-        return defaultMediaSourceFactory.getSupportedTypes();
-    }
-
-    @NonNull
-    @Override
-    public MediaSource createMediaSource(@NonNull MediaItem mediaItem) {
-        if (mediaItem.mediaId.contains("***") && mediaItem.mediaId.contains("|||")) {
-            return createConcatenatingMediaSource(setHeader(mediaItem));
-        } else {
-            return defaultMediaSourceFactory.createMediaSource(setHeader(mediaItem));
-        }
-    }
-
-    private MediaItem setHeader(MediaItem mediaItem) {
-        Map<String, String> headers = new HashMap<>();
-        for (String key : mediaItem.requestMetadata.extras.keySet()) headers.put(key, mediaItem.requestMetadata.extras.get(key).toString());
-        getHttpDataSourceFactory().setDefaultRequestProperties(headers);
-        return mediaItem;
-    }
-
-    private MediaSource createConcatenatingMediaSource(MediaItem mediaItem) {
-        ConcatenatingMediaSource2.Builder builder = new ConcatenatingMediaSource2.Builder();
-        for (String split : mediaItem.mediaId.split("\\*\\*\\*")) {
-            String[] info = split.split("\\|\\|\\|");
-            if (info.length >= 2) builder.add(defaultMediaSourceFactory.createMediaSource(mediaItem.buildUpon().setUri(Uri.parse(info[0])).build()), Long.parseLong(info[1]));
-        }
-        return builder.build();
     }
 
     private static MediaItem getMediaItem(String uri, int errorCode) {
