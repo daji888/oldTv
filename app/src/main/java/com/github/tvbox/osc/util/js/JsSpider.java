@@ -300,12 +300,12 @@ public class JsSpider extends Spider {
 
     private Object[] proxy1(Map<String, String> params) throws Exception {
         JSObject object = new JSUtils<String>().toObj(ctx, params);
-        JSONArray array = new JSONArray(((JSArray) jsObject.getJSFunction("proxy").call(object)).stringify());
+        JSONArray array = ((JSArray) jsObject.getJSFunction("proxy").call(object)).toJsonArray();
         Map<String, String> headers = array.length() > 3 ? Json.toMap(array.optString(3)) : null;
         boolean base64 = array.length() > 4 && array.optInt(4) == 1;
         Object[] result = new Object[4];
-        result[0] = array.optInt(0);
-        result[1] = array.optString(1);
+        result[0] = array.opt(0);
+        result[1] = array.opt(1);
         result[2] = getStream(array.opt(2), base64);
         result[3] = headers;
         return result;
@@ -318,10 +318,16 @@ public class JsSpider extends Spider {
         Object object = submit(() -> ctx.parse(header)).get();
         String json = (String) call("proxy", array, object);
         Res res = Res.objectFrom(json);
+        String contentType = res.getContentType();
+        if (TextUtils.isEmpty(contentType)) contentType = "application/octet-stream";
         Object[] result = new Object[3];
-        result[0] = res.getCode();
-        result[1] = res.getContentType();
-        result[2] = res.getStream();
+        result[0] = 200;
+        result[1] = contentType;
+        if (res.getBuffer() == 2) {
+            result[2] = new ByteArrayInputStream(Base64.decode(res.getContent(), Base64.DEFAULT));
+        } else {
+            result[2] = new ByteArrayInputStream(res.getContent().getBytes());
+        }
         return result;
     }
 
@@ -339,16 +345,14 @@ public class JsSpider extends Spider {
         return result;
     }*/
 
-    private ByteArrayInputStream getStream(Object o, boolean base64) {
+    private ByteArrayInputStream getStream(Object o) {
         if (o instanceof JSONArray) {
             JSONArray a = (JSONArray) o;
             byte[] bytes = new byte[a.length()];
             for (int i = 0; i < a.length(); i++) bytes[i] = (byte) a.optInt(i);
             return new ByteArrayInputStream(bytes);
         } else {
-            String content = o.toString();
-            if (base64 && content.contains("base64,")) content = content.split("base64,")[1];
-            return new ByteArrayInputStream(base64 ? Util.decode(content) : content.getBytes());
+            return new ByteArrayInputStream(o.toString().getBytes());
         }
     }
 }
