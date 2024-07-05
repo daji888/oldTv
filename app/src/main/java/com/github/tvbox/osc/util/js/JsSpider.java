@@ -5,14 +5,17 @@ import android.text.TextUtils;
 import android.util.Base64;
 import androidx.media3.common.util.UriUtil;
 import com.github.catvod.crawler.Spider;
+import com.github.catvod.utils.Json;
+import com.github.tvbox.osc.util.js.Res;
+import com.github.catvod.utils.Util;
 import com.github.tvbox.osc.util.FileUtils;
 import com.github.tvbox.osc.util.LOG;
 import com.github.tvbox.osc.util.MD5;
 
 import com.whl.quickjs.android.QuickJSLoader;
+import com.whl.quickjs.utils.JSUtil;
 import com.whl.quickjs.wrapper.Function;
 import com.whl.quickjs.wrapper.JSArray;
-
 import com.whl.quickjs.wrapper.JSCallFunction;
 import com.whl.quickjs.wrapper.JSObject;
 import com.whl.quickjs.wrapper.JSUtils;
@@ -298,34 +301,30 @@ public class JsSpider extends Spider {
         }
     }
 
-    private Object[] proxy1(Map<String, String> params) {
-        JSObject object = new JSUtils<String>().toObj(ctx, params);
-        JSONArray array = ((JSArray) jsObject.getJSFunction("proxy").call(object)).toJsonArray();
-        Object[] result = new Object[3];
-        result[0] = array.opt(0);
-        result[1] = array.opt(1);
-        result[2] = getStream(array.opt(2));
+     private Object[] proxy1(Map<String, String> params) throws Exception {
+        JSObject object = JSUtil.toObj(ctx, params);
+        JSONArray array = new JSONArray(((JSArray) jsObject.getJSFunction("proxy").call(object)).stringify());
+        Map<String, String> headers = array.length() > 3 ? Json.toMap(array.optString(3)) : null;
+        boolean base64 = array.length() > 4 && array.optInt(4) == 1;
+        Object[] result = new Object[4];
+        result[0] = array.optInt(0);
+        result[1] = array.optString(1);
+        result[2] = getStream(array.opt(2), base64);
+        result[3] = headers;
         return result;
     }
 
-    
     private Object[] proxy2(Map<String, String> params) throws Exception {
         String url = params.get("url");
         String header = params.get("header");
-        JSArray array = submit(() -> new JSUtils<String>().toArray(ctx, Arrays.asList(url.split("/")))).get();
+        JSArray array = submit(() -> JSUtil.toArray(ctx, Arrays.asList(url.split("/")))).get();
         Object object = submit(() -> ctx.parse(header)).get();
         String json = (String) call("proxy", array, object);
         Res res = Res.objectFrom(json);
-        String contentType = res.getContentType();
-        if (TextUtils.isEmpty(contentType)) contentType = "application/octet-stream";
         Object[] result = new Object[3];
-        result[0] = 200;
-        result[1] = contentType;
-        if (res.getBuffer() == 2) {
-            result[2] = new ByteArrayInputStream(Base64.decode(res.getContent(), Base64.DEFAULT));
-        } else {
-            result[2] = new ByteArrayInputStream(res.getContent().getBytes());
-        }
+        result[0] = res.getCode();
+        result[1] = res.getContentType();
+        result[2] = res.getStream();
         return result;
     }
 
@@ -343,14 +342,16 @@ public class JsSpider extends Spider {
         return result;
     }*/
 
-    private ByteArrayInputStream getStream(Object o) {
+    private ByteArrayInputStream getStream(Object o, boolean base64) {
         if (o instanceof JSONArray) {
             JSONArray a = (JSONArray) o;
             byte[] bytes = new byte[a.length()];
             for (int i = 0; i < a.length(); i++) bytes[i] = (byte) a.optInt(i);
             return new ByteArrayInputStream(bytes);
         } else {
-            return new ByteArrayInputStream(o.toString().getBytes());
+            String content = o.toString();
+            if (base64 && content.contains("base64,")) content = content.split("base64,")[1];
+            return new ByteArrayInputStream(base64 ? Util.decode(content) : content.getBytes());
         }
     }
 }
