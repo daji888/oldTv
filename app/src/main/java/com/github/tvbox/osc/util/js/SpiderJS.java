@@ -220,7 +220,7 @@ public class SpiderJS extends Spider {
                     }
                     baos = new ByteArrayInputStream(b);
                 } else {
-                    baos = new ByteArrayInputStream(opt.opt(2).toString().getBytes(), base64);
+                    baos = new ByteArrayInputStream(opt.opt(2).toString().getBytes());
                 }
                 result[2] = baos;
                 result[3] = headers;
