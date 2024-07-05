@@ -4,6 +4,7 @@ import android.content.Context;
 import androidx.media3.common.util.UriUtil;
 import com.github.catvod.crawler.Spider;
 import com.github.catvod.utils.Json;
+import com.github.catvod.utils.Util;
 import com.github.tvbox.osc.util.FileUtils;
 import com.github.tvbox.osc.util.LOG;
 import com.github.tvbox.osc.util.MD5;
@@ -220,7 +221,7 @@ public class SpiderJS extends Spider {
                     }
                     baos = new ByteArrayInputStream(b);
                 } else {
-                    baos = new ByteArrayInputStream(opt.opt(2).toString().getBytes());
+                    baos = getStream(opt.opt(2), base64);
                 }
                 result[2] = baos;
                 result[3] = headers;
@@ -231,6 +232,18 @@ public class SpiderJS extends Spider {
             }
         }).get();
     }
+
+    private ByteArrayInputStream getStream(Object o, boolean base64) {
+        if (o instanceof JSONArray) {
+            JSONArray a = (JSONArray) o;
+            byte[] bytes = new byte[a.length()];
+            for (int i = 0; i < a.length(); i++) bytes[i] = (byte) a.optInt(i);
+            return new ByteArrayInputStream(bytes);
+        } else {
+            String content = o.toString();
+            if (base64 && content.contains("base64,")) content = content.split("base64,")[1];
+            return new ByteArrayInputStream(base64 ? Util.decode(content) : content.getBytes());
+        }
 
     @Override
     public boolean manualVideoCheck() throws Exception {
