@@ -31,6 +31,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import com.github.catvod.utils.Json;
+
 import java9.util.concurrent.CompletableFuture;
 
 public class JsSpider extends Spider {
