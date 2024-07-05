@@ -314,20 +314,14 @@ public class JsSpider extends Spider {
     private Object[] proxy2(Map<String, String> params) throws Exception {
         String url = params.get("url");
         String header = params.get("header");
-        JSArray array = submit(() -> new JSUtils<String>().toArray(ctx, Arrays.asList(url.split("/")))).get();
+        JSArray array = submit(() -> JSUtil.toArray(ctx, Arrays.asList(url.split("/")))).get();
         Object object = submit(() -> ctx.parse(header)).get();
         String json = (String) call("proxy", array, object);
         Res res = Res.objectFrom(json);
-        String contentType = res.getContentType();
-        if (TextUtils.isEmpty(contentType)) contentType = "application/octet-stream";
         Object[] result = new Object[3];
-        result[0] = 200;
-        result[1] = contentType;
-        if (res.getBuffer() == 2) {
-            result[2] = new ByteArrayInputStream(Base64.decode(res.getContent(), Base64.DEFAULT));
-        } else {
-            result[2] = new ByteArrayInputStream(res.getContent().getBytes());
-        }
+        result[0] = res.getCode();
+        result[1] = res.getContentType();
+        result[2] = res.getStream();
         return result;
     }
 
@@ -345,14 +339,16 @@ public class JsSpider extends Spider {
         return result;
     }*/
 
-    private ByteArrayInputStream getStream(Object o) {
+    private ByteArrayInputStream getStream(Object o, boolean base64) {
         if (o instanceof JSONArray) {
             JSONArray a = (JSONArray) o;
             byte[] bytes = new byte[a.length()];
             for (int i = 0; i < a.length(); i++) bytes[i] = (byte) a.optInt(i);
             return new ByteArrayInputStream(bytes);
         } else {
-            return new ByteArrayInputStream(o.toString().getBytes());
+            String content = o.toString();
+            if (base64 && content.contains("base64,")) content = content.split("base64,")[1];
+            return new ByteArrayInputStream(base64 ? Util.decode(content) : content.getBytes());
         }
     }
 }
