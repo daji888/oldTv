@@ -75,12 +75,17 @@ public class Connect {
         if (req.getData() != null && req.getPostType().equals("json")) return getJsonBody(req);
         if (req.getData() != null && req.getPostType().equals("form")) return getFormBody(req);
         if (req.getData() != null && req.getPostType().equals("form-data")) return getFormDataBody(req);
+        if (req.getData() != null && req.getPostType().equals("raw")) return getRawBody(req);
         if (req.getBody() != null && contentType != null) return RequestBody.create(MediaType.get(contentType), req.getBody());
         return RequestBody.create(null, "");
     }
 
     private static RequestBody getJsonBody(Req req) {
-        return RequestBody.create(MediaType.get("application/json"), req.getData().toString());
+        return RequestBody.create(MediaType.get("application/json; charset=utf-8"), req.getData().toString());
+    }
+
+    private static RequestBody getRawBody(Req req) {
+        return RequestBody.create(MediaType.get("application/json; charset=utf-8"), req.getData().toString());
     }
 
     private static RequestBody getFormBody(Req req) {
