@@ -306,7 +306,7 @@ public class JsSpider extends Spider {
         Object[] result = new Object[4];
         result[0] = array.opt(0);
         result[1] = array.opt(1);
-        result[2] = getStream(array.opt(2), base64);
+        result[2] = getStream(array.opt(2));
         result[3] = headers;
         return result;
     }
