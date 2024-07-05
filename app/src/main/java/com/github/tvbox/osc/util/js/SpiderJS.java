@@ -244,7 +244,7 @@ public class SpiderJS extends Spider {
             if (base64 && content.contains("base64,")) content = content.split("base64,")[1];
             return new ByteArrayInputStream(base64 ? Util.decode(content) : content.getBytes());
         }
-
+    }
     @Override
     public boolean manualVideoCheck() throws Exception {
         return (Boolean) call("sniffer");
