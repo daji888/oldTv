@@ -72,6 +72,14 @@ public class Util {
         return path == null ? "" : path.trim();
     }
 
+    public static byte[] decode(String s) {
+        return decode(s, Base64.DEFAULT | Base64.NO_WRAP);
+    }
+
+    public static byte[] decode(String s, int flags) {
+        return Base64.decode(s, flags);
+    }
+
     public static String basic(Uri uri) {
         return "Basic " + base64(uri.getUserInfo());
     }
