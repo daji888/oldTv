@@ -3,6 +3,7 @@ package com.github.tvbox.osc.util.js;
 import android.content.Context;
 import androidx.media3.common.util.UriUtil;
 import com.github.catvod.crawler.Spider;
+import com.github.catvod.utils.Json;
 import com.github.tvbox.osc.util.FileUtils;
 import com.github.tvbox.osc.util.LOG;
 import com.github.tvbox.osc.util.MD5;
@@ -204,7 +205,9 @@ public class SpiderJS extends Spider {
                 JSObject o = new JSUtils<String>().toObj(runtime, params);
                 JSFunction jsFunction = jsObject.getJSFunction("proxy");
                 JSONArray opt = new JSONArray(jsFunction.call(null, new Object[]{o}).toString());
-                Object[] result = new Object[3];
+                Map<String, String> headers = opt.length() > 3 ? Json.toMap(opt.optString(3)) : null;
+                boolean base64 = opt.length() > 4 && opt.optInt(4) == 1;
+                Object[] result = new Object[4];
                 result[0] = opt.opt(0);
                 result[1] = opt.opt(1);
                 Object obj = opt.opt(2);
@@ -217,9 +220,10 @@ public class SpiderJS extends Spider {
                     }
                     baos = new ByteArrayInputStream(b);
                 } else {
-                    baos = new ByteArrayInputStream(opt.opt(2).toString().getBytes());
+                    baos = new ByteArrayInputStream(opt.opt(2).toString().getBytes(), base64);
                 }
                 result[2] = baos;
+                result[3] = headers;
                 return result;
             } catch (Throwable throwable) {
                 LOG.e(throwable);
