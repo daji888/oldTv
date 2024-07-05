@@ -270,7 +270,7 @@ public class JSEngine {
                             }
                             jsObject.setProperty("content", array);
                         } else if (returnBuffer == 2) {
-                            jsObject.setProperty("content", Base64.encodeToString(response.body().bytes(), Base64.DEFAULT));
+                            jsObject.setProperty("content", Base64.encodeToString(response.body().bytes(), Base64.DEFAULT | Base64.NO_WRAP));
                         } else {
                             String res;
                             if(headers.get("Content-Type")!=null && headers.get("Content-Type").contains("=")){
