@@ -33,6 +33,7 @@ import okhttp3.Dns;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
+import okhttp3.internal.Util;
 import okhttp3.Protocol;
 import okhttp3.Request;
 import okhttp3.RequestBody;
