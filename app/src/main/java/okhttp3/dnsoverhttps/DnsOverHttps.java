@@ -33,6 +33,7 @@ import okhttp3.Dns;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
+import okhttp3.internal.Util;
 import okhttp3.Protocol;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -142,8 +143,16 @@ public class DnsOverHttps implements Dns {
 
     public byte[] lookupHttpsForwardSync(String hostname) throws Throwable {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        byteArrayOutputStream.write(executeRequestsSync(hostname, DnsRecordCodec.TYPE_A));
-        byteArrayOutputStream.write(executeRequestsSync(hostname, DnsRecordCodec.TYPE_AAAA));
+        try {
+            byteArrayOutputStream.write(executeRequestsSync(hostname, DnsRecordCodec.TYPE_A));
+        } finally {
+
+        }
+        try {
+            byteArrayOutputStream.write(executeRequestsSync(hostname, DnsRecordCodec.TYPE_AAAA));
+        } finally {
+
+        }
         return byteArrayOutputStream.toByteArray();
     }
 
@@ -232,6 +241,27 @@ public class DnsOverHttps implements Dns {
         }
     }
 
+     private List<InetAddress> throwBestFailure(String hostname, List<Exception> failures)
+            throws UnknownHostException {
+        if (failures.size() == 0) {
+            throw new UnknownHostException(hostname);
+        }
+
+        Exception failure = failures.get(0);
+
+        if (failure instanceof UnknownHostException) {
+            throw (UnknownHostException) failure;
+        }
+
+        UnknownHostException unknownHostException = new UnknownHostException(hostname);
+        unknownHostException.initCause(failure);
+
+        Util.withSuppressed(unknownHostException, failures);
+
+        throw unknownHostException;
+    }
+
+
     private @Nullable
     Response getCacheOnlyResponse(Request request) {
         if (!post && client.cache() != null) {
@@ -254,7 +284,7 @@ public class DnsOverHttps implements Dns {
 
     private List<InetAddress> readResponse(String hostname, Response response) throws Exception {
         if (response.cacheResponse() == null && response.protocol() != Protocol.HTTP_2) {
-            Platform.get().log(Platform.WARN, "Incorrect protocol: " + response.protocol(), null);
+            Platform.get().log("Incorrect protocol: " + response.protocol(), Platform.WARN, null);
         }
 
         try {
@@ -298,7 +328,7 @@ public class DnsOverHttps implements Dns {
     }
 
     static boolean isPrivateHost(String host) {
-        return PublicSuffixDatabase.get().getEffectiveTldPlusOne(host) == null;
+        return PublicSuffixDatabase.Companion.get().getEffectiveTldPlusOne(host) == null;
     }
 
     public static final class Builder {
