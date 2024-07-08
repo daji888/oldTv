@@ -32,7 +32,6 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.dnsoverhttps.DnsOverHttps;
 import okhttp3.internal.Util;
-import okhttp3.internal.Version;
 import xyz.doikki.videoplayer.exo.ExoMediaSourceHelper;
 
 public class OkGoHelper {
@@ -87,7 +86,7 @@ public class OkGoHelper {
     public static ArrayList<String> dnsHttpsList = new ArrayList<>();
 
     public static List<ConnectionSpec> getConnectionSpec() {
-        return Util.immutableList(RESTRICTED_TLS, MODERN_TLS, COMPATIBLE_TLS, CLEARTEXT);
+        return Util.immutableListOf(RESTRICTED_TLS, MODERN_TLS, COMPATIBLE_TLS, CLEARTEXT);
     }
 
 
@@ -179,12 +178,12 @@ public class OkGoHelper {
                 .connectTimeout(DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS)
                 .dns(dnsOverHttps);
         try {
-            setOkHttpSsl(builder);
+            builder = setOkHttpSsl(builder);
         } catch (Throwable th) {
             th.printStackTrace();
         }
 
-        HttpHeaders.setUserAgent(Version.userAgent());
+        builder = setOkHttpSsl(builder);
         OkHttpClient okHttpClient = builder.build();
         OkGo.getInstance().setOkHttpClient(okHttpClient);
 
@@ -196,11 +195,12 @@ public class OkGoHelper {
         initExoOkHttpClient();        
     }
 
-    private static synchronized void setOkHttpSsl(OkHttpClient.Builder builder) {
+    private static synchronized OkHttpClient.Builder setOkHttpSsl(OkHttpClient.Builder builder) {
         try {
             final SSLSocketFactory sslSocketFactory = new SSLCompat();
-            builder.sslSocketFactory(sslSocketFactory, SSLCompat.TM);
-            builder.hostnameVerifier(HttpsUtils.UnSafeHostnameVerifier);
+            return builder
+                   .sslSocketFactory(sslSocketFactory, SSLCompat.TM)
+                   .hostnameVerifier(HttpsUtils.UnSafeHostnameVerifier);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
