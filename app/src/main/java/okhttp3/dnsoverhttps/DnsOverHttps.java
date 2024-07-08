@@ -254,7 +254,7 @@ public class DnsOverHttps implements Dns {
 
     private List<InetAddress> readResponse(String hostname, Response response) throws Exception {
         if (response.cacheResponse() == null && response.protocol() != Protocol.HTTP_2) {
-            Platform.get().log(Platform.WARN, "Incorrect protocol: " + response.protocol(), null);
+            Platform.get().log("Incorrect protocol: " + response.protocol(), Platform.WARN, null);
         }
 
         try {
@@ -298,7 +298,7 @@ public class DnsOverHttps implements Dns {
     }
 
     static boolean isPrivateHost(String host) {
-        return PublicSuffixDatabase.get().getEffectiveTldPlusOne(host) == null;
+        return PublicSuffixDatabase.Companion.get().getEffectiveTldPlusOne(host) == null;
     }
 
     public static final class Builder {
