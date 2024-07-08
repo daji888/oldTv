@@ -178,11 +178,12 @@ public class OkGoHelper {
                 .connectTimeout(DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS)
                 .dns(dnsOverHttps);
         try {
-            builder = setOkHttpSsl(builder);
+            setOkHttpSsl(builder);
         } catch (Throwable th) {
             th.printStackTrace();
         }
 
+        builder = setOkHttpSsl(builder);
         HttpHeaders.setUserAgent(Util.userAgent);
         OkGo.getInstance().setOkHttpClient(okHttpClient);
 
@@ -194,12 +195,11 @@ public class OkGoHelper {
         initExoOkHttpClient();        
     }
 
-    private static synchronized OkHttpClient.Builder setOkHttpSsl(OkHttpClient.Builder builder) {
+    private static synchronized void setOkHttpSsl(OkHttpClient.Builder builder) {
         try {
             final SSLSocketFactory sslSocketFactory = new SSLCompat();
-            return builder
-                   .sslSocketFactory(sslSocketFactory, SSLCompat.TM)
-                   .hostnameVerifier(HttpsUtils.UnSafeHostnameVerifier);
+            builder.sslSocketFactory(sslSocketFactory, SSLCompat.TM);
+            builder.hostnameVerifier(HttpsUtils.UnSafeHostnameVerifier);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
