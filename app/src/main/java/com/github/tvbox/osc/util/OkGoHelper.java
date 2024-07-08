@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.security.cert.CertificateException;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -182,7 +183,7 @@ public class OkGoHelper {
                 .connectTimeout(DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS)
                 .dns(dnsOverHttps);
         try {
-            setOkHttpSsl(builder);
+            builder = setOkHttpSsl(builder);
         } catch (Throwable th) {
             th.printStackTrace();
         }
@@ -210,7 +211,7 @@ public class OkGoHelper {
         Picasso.setSingletonInstance(picasso);
     }
 
-    private static synchronized void setOkHttpSsl(OkHttpClient.Builder builder) {
+    private static synchronized OkHttpClient.Builder setOkHttpSsl(OkHttpClient.Builder builder) {
         try {
             final SSLSocketFactory sslSocketFactory = new SSLCompat();
             builder.sslSocketFactory(sslSocketFactory, SSLCompat.TM);
