@@ -184,7 +184,7 @@ public class OkGoHelper {
         }
 
         builder = setOkHttpSsl(builder);
-        OkHttpClient okHttpClient = builder.build();
+        HttpHeaders.setUserAgent(Util.userAgent);
         OkGo.getInstance().setOkHttpClient(okHttpClient);
 
         defaultClient = okHttpClient;
