@@ -214,7 +214,7 @@ public class OkGoHelper {
         try {
             final SSLSocketFactory sslSocketFactory = new SSLCompat();
             return builder
-                   .sslSocketFactory(sslSocketFactory, SSLCompat.TM);
+                   .sslSocketFactory(sslSocketFactory, SSLCompat.TM)
                    .hostnameVerifier(HttpsUtils.UnSafeHostnameVerifier);
         } catch (Exception e) {
             throw new RuntimeException(e);
