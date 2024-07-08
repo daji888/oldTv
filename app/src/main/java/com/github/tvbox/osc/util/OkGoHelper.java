@@ -183,7 +183,6 @@ public class OkGoHelper {
             th.printStackTrace();
         }
 
-        builder = setOkHttpSsl(builder);
         HttpHeaders.setUserAgent(Util.userAgent);
         OkGo.getInstance().setOkHttpClient(okHttpClient);
 
