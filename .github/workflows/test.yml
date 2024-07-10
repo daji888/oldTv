@@ -61,10 +61,10 @@ jobs:
         run: |
           mkdir -p ${{ github.workspace }}/apk/
           for file in `find ~ -name "*.apk" -print`; do
-            mv "$file" ${{ github.workspace }}/apk/
+            mv "$file" ${{ github.workspace }}/apk
           done
       - name: Upload App To Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: com.github.tvbox.osc
+          name: TVBox
           path: ${{ github.workspace }}/apk
