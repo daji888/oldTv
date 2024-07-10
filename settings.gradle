@@ -25,4 +25,4 @@ dependencyResolutionManagement {
 }
 include ':app'
 include ':quickjs'
-rootProject.name = "ANT3"
+rootProject.name = "TVBox"
