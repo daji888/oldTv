@@ -47,6 +47,15 @@ android {
         }
     }
 
+    applicationVariants.configureEach { variant ->
+        variant.outputs.configureEach { output ->
+            def buildTime = variant.versionName
+            // 构建自定义文件名
+            def fileName = "TVBox_${buildTime}.apk"
+            outputFileName = fileName
+        }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
