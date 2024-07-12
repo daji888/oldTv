@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace 'com.github.tvbox.osc'
-    compileSdkVersion 34
+    compileSdkVersion 35
 
     defaultConfig {
         applicationId 'com.github.tvbox.osc.dj'
