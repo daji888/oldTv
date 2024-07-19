@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Gravity;
 import android.view.WindowManager;
+import android.view.animation.BounceInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -177,6 +178,11 @@ public class DetailActivity extends BaseActivity {
         tvCollect = findViewById(R.id.tvCollect);
         tvQuickSearch = findViewById(R.id.tvQuickSearch);
         tvSynopsis = findViewById(R.id.tvSynopsis);
+        tvPlay.setOnFocusChangeListener(focusChangeListener);
+        tvSort.setOnFocusChangeListener(focusChangeListener);
+        tvCollect.setOnFocusChangeListener(focusChangeListener);
+        tvQuickSearch.setOnFocusChangeListener(focusChangeListener);
+        tvSynopsis.setOnFocusChangeListener(focusChangeListener);
         mEmptyPlayList = findViewById(R.id.mEmptyPlaylist);
         mGridView = findViewById(R.id.mGridView);
         mGridView.setHasFixedSize(true);
@@ -484,6 +490,16 @@ public class DetailActivity extends BaseActivity {
 
         setLoadSir(llLayout);
     }
+
+    private View.OnFocusChangeListener focusChangeListener = new View.OnFocusChangeListener() {
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            if (hasFocus)
+                v.animate().scaleX(1.1f).scaleY(1.1f).setDuration(300).setInterpolator(new BounceInterpolator()).start();
+            else
+                v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(300).setInterpolator(new BounceInterpolator()).start();
+        }
+    };
 
     private void onGridViewFocusChange(View view, boolean hasFocus) {
         if (llPlayerFragmentContainerBlock.getVisibility() != View.VISIBLE) return;
