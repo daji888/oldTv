@@ -1,8 +1,10 @@
 package com.github.tvbox.osc.ui.fragment;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 import android.view.animation.BounceInterpolator;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -59,6 +61,12 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
     private LinearLayout tvHistory;
     private LinearLayout tvCollect;
     private LinearLayout tvPush;
+    private TextView tvLive1;
+    private TextView tvSearch1;
+    private TextView tvSetting1;
+    private TextView tvHistory1;
+    private TextView tvCollect1;
+    private TextView tvPush1;
     public static HomeHotVodAdapter homeHotVodAdapter;
     private List<Movie.Video> homeSourceRec;
     public static TvRecyclerView tvHotList1;
@@ -120,6 +128,12 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
         tvCollect = findViewById(R.id.tvFavorite);
         tvHistory = findViewById(R.id.tvHistory);
         tvPush = findViewById(R.id.tvPush);
+        tvLive1 = (TextView) findViewById(R.id.tvLive1);
+        tvSearch1 = (TextView) findViewById(R.id.tvSearch1);
+        tvSetting1 = (TextView) findViewById(R.id.tvSetting1);
+        tvCollect1 = (TextView) findViewById(R.id.tvFavorite1);
+        tvHistory1 = (TextView) findViewById(R.id.tvHistory1);
+        tvPush1 = (TextView) findViewById(R.id.tvPush1);
         tvLive.setOnClickListener(this);
         tvSearch.setOnClickListener(this);
         tvSetting.setOnClickListener(this);
@@ -132,6 +146,12 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
         tvHistory.setOnFocusChangeListener(focusChangeListener);
         tvPush.setOnFocusChangeListener(focusChangeListener);
         tvCollect.setOnFocusChangeListener(focusChangeListener);
+        tvLive1.setOnFocusChangeListener(focusChangeListener);
+        tvSearch1.setOnFocusChangeListener(focusChangeListener);
+        tvSetting1.setOnFocusChangeListener(focusChangeListener);
+        tvHistory1.setOnFocusChangeListener(focusChangeListener);
+        tvPush1.setOnFocusChangeListener(focusChangeListener);
+        tvCollect1.setOnFocusChangeListener(focusChangeListener);
         tvHotList1 = findViewById(R.id.tvHotList1);
         tvHotList2 = findViewById(R.id.tvHotList2);
         homeHotVodAdapter = new HomeHotVodAdapter();
@@ -309,6 +329,48 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
                 v.animate().scaleX(1.1f).scaleY(1.1f).setDuration(300).setInterpolator(new BounceInterpolator()).start();
             else
                 v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(300).setInterpolator(new BounceInterpolator()).start();
+            if (tvLive.hasFocus()) {
+                tvLive1.setTextColor(Color.RED);
+                tvLive1.getPaint().setFakeBoldText(true);
+            } else {
+                tvLive1.setTextColor(Color.GREEN);
+                tvLive1.getPaint().setFakeBoldText(false);
+            }
+            if (tvSearch.hasFocus()) {
+                tvSearch1.setTextColor(Color.RED);
+                tvSearch1.getPaint().setFakeBoldText(true);
+            } else {
+                tvSearch1.setTextColor(Color.GREEN);
+                tvSearch1.getPaint().setFakeBoldText(false);
+            }
+            if (tvSetting.hasFocus()) {
+                tvSetting1.setTextColor(Color.RED);
+                tvSetting1.getPaint().setFakeBoldText(true);
+            } else {
+                tvSetting1.setTextColor(Color.GREEN); 
+                tvSetting1.getPaint().setFakeBoldText(false);
+            }
+            if (tvCollect.hasFocus()) {
+                tvCollect1.setTextColor(Color.RED);
+                tvCollect1.getPaint().setFakeBoldText(true);
+            } else {
+                tvCollect1.setTextColor(Color.GREEN);
+                tvCollect1.getPaint().setFakeBoldText(false);
+            }
+            if (tvHistory.hasFocus()) {
+                tvHistory1.setTextColor(Color.RED);
+                tvHistory1.getPaint().setFakeBoldText(true);
+            } else {
+                tvHistory1.setTextColor(Color.GREEN); 
+                tvHistory1.getPaint().setFakeBoldText(false);
+            }
+            if (tvPush.hasFocus()) {
+                tvPush1.setTextColor(Color.RED);
+                tvPush1.getPaint().setFakeBoldText(true);
+            } else {
+                tvPush1.setTextColor(Color.GREEN);
+                tvPush1.getPaint().setFakeBoldText(false);
+            }
         }
     };
 
