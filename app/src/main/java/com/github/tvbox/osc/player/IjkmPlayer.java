@@ -148,6 +148,7 @@ public class IjkmPlayer extends IjkPlayer {
         TrackInfo data = new TrackInfo();
         int subtitleSelected = mMediaPlayer.getSelectedTrack(ITrackInfo.MEDIA_TRACK_TYPE_TIMEDTEXT);
         int audioSelected = mMediaPlayer.getSelectedTrack(ITrackInfo.MEDIA_TRACK_TYPE_AUDIO);
+        int videoSelected = mMediaPlayer.getSelectedTrack(ITrackInfo.MEDIA_TRACK_TYPE_VIDEO);
         int index = 0;
         for (IjkTrackInfo info : trackInfo) {
             if (info.getTrackType() == ITrackInfo.MEDIA_TRACK_TYPE_AUDIO) {//音轨信息
@@ -158,6 +159,15 @@ public class IjkmPlayer extends IjkPlayer {
                 t.trackId = index;
                 t.selected = index == audioSelected;
                 data.addAudio(t);
+            }
+            if (info.getTrackType() == ITrackInfo.MEDIA_TRACK_TYPE_VIDEO) {//视轨信息
+                String trackName = (data.getVideo().size() + 1) + " 、 " + info.getInfoInline();
+                TrackInfoBean t = new TrackInfoBean();
+                t.name = trackName;
+                t.language = info.getLanguage();
+                t.trackId = index;
+                t.selected = index == videoSelected;
+                data.addVideo(t);
             }
             if (info.getTrackType() == ITrackInfo.MEDIA_TRACK_TYPE_TIMEDTEXT) {//内置字幕
                 String trackName = (data.getSubtitle().size() + 1) + " 、 " + info.getInfoInline();
