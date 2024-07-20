@@ -142,6 +142,7 @@ public class VodController extends BaseController {
     public SimpleSubtitleView mSubtitleView;
     TextView mZimuBtn;
     TextView mAudioTrackBtn;
+    TextView mVideoTrackBtn;
     public TextView mLandscapePortraitBtn;
     private View backBtn;//返回键
     private boolean isClickBackBtn;
@@ -215,6 +216,7 @@ public class VodController extends BaseController {
         mSubtitleView = findViewById(R.id.subtitle_view);
         mZimuBtn = findViewById(R.id.zimu_select);
         mAudioTrackBtn = findViewById(R.id.audio_track_select);
+        mVideoTrackBtn = findViewById(R.id.video_track_select);
         mLandscapePortraitBtn = findViewById(R.id.landscape_portrait);
         backBtn = findViewById(R.id.tv_back);
         backBtn.setOnClickListener(new OnClickListener() {
@@ -652,6 +654,14 @@ public class VodController extends BaseController {
                 hideBottom();
             }
         });
+        mVideoTrackBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FastClickCheckUtil.check(view);
+                listener.selectVideoTrack();
+                hideBottom();
+            }
+        });
         mLandscapePortraitBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -775,6 +785,8 @@ public class VodController extends BaseController {
         void selectSubtitle();
 
         void selectAudioTrack();
+
+        void selectVideoTrack();
     }
 
     public void setListener(VodControlListener listener) {
