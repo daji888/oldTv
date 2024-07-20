@@ -18,6 +18,7 @@ import xyz.doikki.videoplayer.exo.ExoMediaPlayer;
 
 public class EXOmPlayer extends ExoMediaPlayer {
     private String audioId = "";
+    private String videoId = "";
     private String subtitleId = "";
 
     public EXOmPlayer(Context context) {
@@ -47,6 +48,16 @@ public class EXOmPlayer extends ExoMediaPlayer {
                             t.trackGroupId = groupIndex;
                             t.renderId = groupArrayIndex;
                             data.addAudio(t);
+                        } else if (MimeTypes.isVideo(format.sampleMimeType)) {
+                            String trackName = (data.getVideo().size() + 1) + " 、 " + trackNameProvider.getTrackName(format) + " 【 " + format.codecs + " 】";
+                            TrackInfoBean t = new TrackInfoBean();
+                            t.name = trackName;
+                            t.language = "";
+                            t.trackId = formatIndex;
+                            t.selected = !StringUtils.isEmpty(videoId) && videoId.equals(format.id);
+                            t.trackGroupId = groupIndex;
+                            t.renderId = groupArrayIndex;
+                            data.addVideo(t);
                         } else if (MimeTypes.isText(format.sampleMimeType)) {
                             String trackName = (data.getSubtitle().size() + 1) + " 、 " + trackNameProvider.getTrackName(format);
                             TrackInfoBean t = new TrackInfoBean();
@@ -68,6 +79,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
     @SuppressLint("UnsafeOptInUsageError")
     private void getExoSelectedTrack() {
         audioId = "";
+        videoId = "";
         subtitleId = "";        
         for (Tracks.Group group : mMediaPlayer.getCurrentTracks().getGroups()) {
             if (!group.isSelected()) continue;
@@ -76,6 +88,9 @@ public class EXOmPlayer extends ExoMediaPlayer {
                 Format format = group.getTrackFormat(trackIndex);
                 if (MimeTypes.isAudio(format.sampleMimeType)) {
                     audioId = format.id;
+                }
+                if (MimeTypes.isVideo(format.sampleMimeType)) {
+                    videoId = format.id;
                 }
                 if (MimeTypes.isText(format.sampleMimeType)) {
                     subtitleId = format.id;
