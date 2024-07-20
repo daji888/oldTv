@@ -299,6 +299,11 @@ public class PlayFragment extends BaseLazyFragment {
             }
 
             @Override
+            public void selectVideoTrack() {
+                selectMyVideoTrack();
+            }
+
+            @Override
             public void prepared() {
                 initSubtitleView();
             }
@@ -458,6 +463,73 @@ public class PlayFragment extends BaseLazyFragment {
                 return oldItem.trackId == newItem.trackId;
             }
         }, bean, trackInfo.getAudioSelected(false));
+        dialog.show();
+    }
+
+    void selectMyVideoTrack() {
+        AbstractPlayer mediaPlayer = mVideoView.getMediaPlayer();
+        TrackInfo trackInfo = null;
+        if (mediaPlayer instanceof IjkmPlayer) {
+            trackInfo = ((IjkmPlayer)mediaPlayer).getTrackInfo();
+        }
+        if (mediaPlayer instanceof EXOmPlayer) {
+            trackInfo = ((EXOmPlayer) mediaPlayer).getTrackInfo();
+        }    
+        if (trackInfo == null) {
+            Toast.makeText(mContext, "没有视轨", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        List<TrackInfoBean> bean = trackInfo.getVideo();
+        if (bean.size() < 1) return;
+        SelectDialog<TrackInfoBean> dialog = new SelectDialog<>(getActivity());
+        dialog.setTip("切换视轨");
+        dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<TrackInfoBean>() {
+            @Override
+            public void click(TrackInfoBean value, int pos) {
+                try {
+                    for (TrackInfoBean video : bean) {
+                        video.selected = video.trackId == value.trackId;
+                    }
+                    mediaPlayer.pause();
+                    long progress = mediaPlayer.getCurrentPosition();//保存当前进度，ijk 切换轨道 会有快进几秒
+                    if (mediaPlayer instanceof IjkmPlayer) {
+                        ((IjkmPlayer)mediaPlayer).setTrack(value.trackId);
+                     }   
+                    if (mediaPlayer instanceof EXOmPlayer) {
+                        ((EXOmPlayer) mediaPlayer).selectExoTrack(value);
+                    }    
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mediaPlayer.seekTo(progress);
+                            mediaPlayer.start();
+                            mController.startProgress();
+                        }
+                    }, 800);
+                    dialog.dismiss();
+                } catch (Exception e) {
+                    LOG.e("切换视轨出错");
+                }
+            }
+
+            @Override
+            public String getDisplay(TrackInfoBean val) {
+                String name = val.name.replace("VIDEO,", "");
+                name = name.replace("N/A,", "");
+                name = name.replace(" ", "");
+                return name + (StringUtils.isEmpty(val.language) ? "" : " " + val.language);
+            }
+        }, new DiffUtil.ItemCallback<TrackInfoBean>() {
+            @Override
+            public boolean areItemsTheSame(@NonNull @NotNull TrackInfoBean oldItem, @NonNull @NotNull TrackInfoBean newItem) {
+                return oldItem.trackId == newItem.trackId;
+            }
+
+            @Override
+            public boolean areContentsTheSame(@NonNull @NotNull TrackInfoBean oldItem, @NonNull @NotNull TrackInfoBean newItem) {
+                return oldItem.trackId == newItem.trackId;
+            }
+        }, bean, trackInfo.getVideoSelected(false));
         dialog.show();
     }
 
