@@ -502,6 +502,41 @@ public class DetailActivity extends BaseActivity {
                 v.animate().scaleX(1.1f).scaleY(1.1f).setDuration(300).setInterpolator(new BounceInterpolator()).start();
             else
                 v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(300).setInterpolator(new BounceInterpolator()).start();
+            if (tvPlay.hasFocus()) {
+                tvPlay.setTextColor(Color.GREEN);
+                tvPlay.getPaint().setFakeBoldText(true);
+            } else {
+                tvPlay.setTextColor(Color.YELLOW);
+                tvPlay.getPaint().setFakeBoldText(false);
+            }
+            if (tvQuickSearch.hasFocus()) {
+                tvQuickSearch.setTextColor(Color.GREEN);
+                tvQuickSearch.getPaint().setFakeBoldText(true);
+            } else {
+                tvQuickSearch.setTextColor(Color.YELLOW);
+                tvQuickSearch.getPaint().setFakeBoldText(false);
+            }
+            if (tvSort.hasFocus()) {
+                tvSort.setTextColor(Color.GREEN);
+                tvSort.getPaint().setFakeBoldText(true);
+            } else {
+                tvSort.setTextColor(Color.YELLOW); 
+                tvSort.getPaint().setFakeBoldText(false);
+            }
+            if (tvCollect.hasFocus()) {
+                tvCollect.setTextColor(Color.GREEN);
+                tvCollect.getPaint().setFakeBoldText(true);
+            } else {
+                tvCollect.setTextColor(Color.YELLOW);
+                tvCollect.getPaint().setFakeBoldText(false);
+            }
+            if (tvSynopsis.hasFocus()) {
+                tvSynopsis.setTextColor(Color.GREEN);
+                tvSynopsis.getPaint().setFakeBoldText(true);
+            } else {
+                tvSynopsis.setTextColor(Color.YELLOW); 
+                tvSynopsis.getPaint().setFakeBoldText(false);
+            }
         }
     };
 
