@@ -131,7 +131,7 @@ public class PlayerHelper {
         if (playersInfo.containsKey(playType)) {
             return playersInfo.get(playType);
         } else {
-            return "系统播放器";
+            return "系统";
         }
     }
 
@@ -139,14 +139,14 @@ public class PlayerHelper {
     public static HashMap<Integer, String> getPlayersInfo() {
         if (mPlayersInfo == null) {
             HashMap<Integer, String> playersInfo = new HashMap<>();
-            playersInfo.put(0, "系统播放器");
-            playersInfo.put(1, "IJK播放器");
-            playersInfo.put(2, "Exo播放器");
-            playersInfo.put(10, "MX播放器");
-            playersInfo.put(11, "Reex播放器");
-            playersInfo.put(12, "Kodi播放器");
-            playersInfo.put(13, "附近TVBox");
-            playersInfo.put(14, "VLC播放器");
+            playersInfo.put(0, "系统");
+            playersInfo.put(1, "IJK");
+            playersInfo.put(2, "Exo");
+            playersInfo.put(10, "MX");
+            playersInfo.put(11, "Reex");
+            playersInfo.put(12, "Kodi");
+            playersInfo.put(13, "附近");
+            playersInfo.put(14, "VLC");
             mPlayersInfo = playersInfo;
         }
         return mPlayersInfo;
@@ -229,10 +229,10 @@ public class PlayerHelper {
     }
 
     public static String getScaleName(int screenScaleType) {
-        String scaleText = "默认缩放";
+        String scaleText = "等比";
         switch (screenScaleType) {
             case VideoView.SCREEN_SCALE_DEFAULT:
-                scaleText = "默认缩放";
+                scaleText = "等比";
                 break;
             case VideoView.SCREEN_SCALE_16_9:
                 scaleText = "16:9";
