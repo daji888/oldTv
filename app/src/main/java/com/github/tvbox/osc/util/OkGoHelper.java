@@ -122,7 +122,7 @@ public class OkGoHelper {
     }
 
     static void initDnsOverHttps() {
-        dnsHttpsList.add("已关闭");
+        dnsHttpsList.add("运营商");
         dnsHttpsList.add("腾讯");
         dnsHttpsList.add("阿里");
         dnsHttpsList.add("360");
