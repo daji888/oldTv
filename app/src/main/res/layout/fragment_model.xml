@@ -56,7 +56,7 @@
                         android:id="@+id/tvDebugOpen"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="关"
+                        android:text="已关闭"
                         android:shadowColor="@color/color_000000_80"
                         android:shadowDx="5"
                         android:shadowDy="5"
@@ -807,7 +807,7 @@
                     <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="安全DNS"
+                            android:text="DNS"
                             android:shadowColor="@color/color_000000_80"
                             android:shadowDx="5"
                             android:shadowDy="5"

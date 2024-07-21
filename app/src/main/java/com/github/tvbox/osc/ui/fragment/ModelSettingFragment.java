@@ -252,7 +252,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
                 int dohUrl = Hawk.get(HawkConfig.DOH_URL, 0);
 
                 SelectDialog<String> dialog = new SelectDialog<>(mActivity);
-                dialog.setTip("请选择安全DNS");
+                dialog.setTip("请选择DNS");
                 dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<String>() {
                     @Override
                     public void click(String value, int pos) {
