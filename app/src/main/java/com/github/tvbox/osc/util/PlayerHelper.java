@@ -40,7 +40,7 @@ public class PlayerHelper {
         int scale = Hawk.get(HawkConfig.PLAY_SCALE, 0);
         try {
             playerType = playerCfg.getInt("pl");
-            //就我遇到的问题是 Exo 在 TextureView 黑屏 调整设置中的渲染模式无法生效
+            //就我遇到的问题是 EXO 在 TextureView 黑屏 调整设置中的渲染模式无法生效
             //renderType = playerCfg.getInt("pr");//该值无法修改，一旦确认该值后续无法进行修改 就是在设置选的 类型无法应用
             ijkCode = playerCfg.getString("ijk");
             scale = playerCfg.getInt("sc");
@@ -141,7 +141,7 @@ public class PlayerHelper {
             HashMap<Integer, String> playersInfo = new HashMap<>();
             playersInfo.put(0, "系统");
             playersInfo.put(1, "IJK");
-            playersInfo.put(2, "Exo");
+            playersInfo.put(2, "EXO");
             playersInfo.put(10, "MX");
             playersInfo.put(11, "Reex");
             playersInfo.put(12, "Kodi");
