@@ -29,7 +29,7 @@ jobs:
           fi
       - name: Checkout Tag
         run: |
-          echo "tag=$(git log --date=format:'%Y%m%d-%H%M' --pretty=format:%cd ${{ env.commitS }} -1)" >> $GITHUB_ENV
+          echo "tag=$(git log --date=format:'%Y.%m%d.%H%M' --pretty=format:%cd ${{ env.commitS }} -1)" >> $GITHUB_ENV
       - name: Extra Modify
         run: |
           echo '修改VersionName'
