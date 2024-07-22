@@ -374,11 +374,55 @@ public class VodController extends BaseController {
         mPlayerScaleBtn.setOnLongClickListener(new OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                int checkOrientation = mActivity.getRequestedOrientation();
-                if (checkOrientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE || checkOrientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE || checkOrientation == ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE) {
-                    mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
-                } else if (checkOrientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT || checkOrientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT || checkOrientation == ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT) {
-                    mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+                myHandle.removeCallbacks(myRunnable);
+                myHandle.postDelayed(myRunnable, myHandleSeconds);
+                FastClickCheckUtil.check(view);
+                try {
+                    int defaultPos = mPlayerConfig.getInt("sc");
+                    ArrayList<Integer> players = new ArrayList<>();
+                    players.add(0);
+                    players.add(1);
+                    players.add(2);
+                    players.add(3);
+                    players.add(4);
+                    players.add(5);
+                    SelectDialog<Integer> dialog = new SelectDialog<>(mActivity);
+                    dialog.setTip("请选择画面缩放");
+                    dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<Integer>() {
+                        @Override
+                        public void click(Integer value, int pos) {
+                            try {
+                                dialog.cancel();
+                                mPlayerConfig.put("sc", value);
+                                updatePlayerCfgView();
+                                listener.updatePlayerCfg();
+                                mControlWrapper.setScreenScaleType(value);
+                                hideBottom();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            mPlayerScaleBtn.requestFocus();
+                            mPlayerScaleBtn.requestFocusFromTouch();
+                        }
+
+                        @Override
+                        public String getDisplay(Integer val) {
+                            return PlayerHelper.getScaleName(val);
+                        }
+                    }, new DiffUtil.ItemCallback<Integer>() {
+                        @Override
+                        public boolean areItemsTheSame(@NonNull @NotNull Integer oldItem, @NonNull @NotNull Integer newItem) {
+                            return oldItem.intValue() == newItem.intValue();
+                        }
+
+                        @Override
+                        public boolean areContentsTheSame(@NonNull @NotNull Integer oldItem, @NonNull @NotNull Integer newItem) {
+                            return oldItem.intValue() == newItem.intValue();
+                        }
+                    }, players, defaultPos);
+                    dialog.show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
                 return true;
             }
