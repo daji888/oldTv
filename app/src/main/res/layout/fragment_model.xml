@@ -228,7 +228,7 @@
             </LinearLayout>
 
              <LinearLayout
-                    android:id="@+id/llVideoPurify"
+                    android:id="@+id/llDns"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/vs_60"
                     android:layout_marginBottom="@dimen/vs_10"
@@ -242,7 +242,7 @@
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="广告过滤"
+                        android:text="DNS"
                         android:shadowColor="@color/color_000000_80"
                         android:shadowDx="5"
                         android:shadowDy="5"
@@ -256,7 +256,7 @@
                         android:layout_weight="1" />
 
                 <TextView
-                        android:id="@+id/tvVideoPurifyText"
+                        android:id="@+id/tvDns"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:ellipsize="middle"
@@ -802,7 +802,7 @@
                     </LinearLayout>
                         
                 <LinearLayout
-                        android:id="@+id/llDns"
+                        android:id="@+id/llVideoPurify"
                         android:layout_width="@dimen/vs_0"
                         android:layout_height="match_parent"
                         android:layout_marginStart="@dimen/vs_5"
@@ -818,7 +818,7 @@
                     <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="DNS"
+                            android:text="广告过滤"
                             android:shadowColor="@color/color_000000_80"
                             android:shadowDx="5"
                             android:shadowDy="5"
@@ -832,7 +832,7 @@
                             android:layout_weight="1" />
 
                     <TextView
-                            android:id="@+id/tvDns"
+                            android:id="@+id/tvVideoPurifyText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:shadowColor="@color/color_000000_80"
