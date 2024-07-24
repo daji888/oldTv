@@ -254,19 +254,19 @@ public class PlayerHelper {
     }
 
     public static String getSpeedName(float speed) {
-        String speedText = "x1.0";
+        String speedText = "1 倍速";
             if  (speed == 1f)
-                speedText = "x1.0";
+                speedText = "1 倍速";
             if  (speed == 1.5f)
-                speedText = "x1.5";
+                speedText = "1.5 倍速";
             if  (speed == 2f)
-                speedText = "x2.0";
+                speedText = "2 倍速";
             if  (speed == 2.5f)
-                speedText = "x2.5";
+                speedText = "2.5 倍速";
             if  (speed == 3f)
-                speedText = "x3.0";
+                speedText = "3 倍速";
             if  (speed == 0.5f)
-                speedText = "x0.5";
+                speedText = "0.5 倍速";
         return speedText;
     }
 
