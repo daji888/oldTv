@@ -379,13 +379,13 @@ public class VodController extends BaseController {
                 FastClickCheckUtil.check(view);
                 try {
                     int defaultPos = mPlayerConfig.getInt("sc");
-                    ArrayList<Integer> players = new ArrayList<>();
-                    players.add(0);
-                    players.add(1);
-                    players.add(2);
-                    players.add(3);
-                    players.add(4);
-                    players.add(5);
+                    ArrayList<Integer> ScreenScale = new ArrayList<>();
+                    ScreenScale.add(0);
+                    ScreenScale.add(1);
+                    ScreenScale.add(2);
+                    ScreenScale.add(3);
+                    ScreenScale.add(4);
+                    ScreenScale.add(5);
                     SelectDialog<Integer> dialog = new SelectDialog<>(mActivity);
                     dialog.setTip("请选择画面缩放");
                     dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<Integer>() {
@@ -419,7 +419,7 @@ public class VodController extends BaseController {
                         public boolean areContentsTheSame(@NonNull @NotNull Integer oldItem, @NonNull @NotNull Integer newItem) {
                             return oldItem.intValue() == newItem.intValue();
                         }
-                    }, players, defaultPos);
+                    }, ScreenScale, defaultPos);
                     dialog.show();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -469,13 +469,13 @@ public class VodController extends BaseController {
                         defaultPos = 4;
                     if (speed == 0.5)
                         defaultPos = 5;                   
-                    ArrayList<Float> players = new ArrayList<>();
-                    players.add(1f);
-                    players.add(1.5f);
-                    players.add(2f);
-                    players.add(2.5f);
-                    players.add(3f);
-                    players.add(0.5f);
+                    ArrayList<Float> DoubleSpeed = new ArrayList<>();
+                    DoubleSpeed.add(1f);
+                    DoubleSpeed.add(1.5f);
+                    DoubleSpeed.add(2f);
+                    DoubleSpeed.add(2.5f);
+                    DoubleSpeed.add(3f);
+                    DoubleSpeed.add(0.5f);
                     SelectDialog<Float> dialog = new SelectDialog<>(mActivity);
                     dialog.setTip("请选择播放速度");
                     dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<Float>() {
@@ -509,7 +509,7 @@ public class VodController extends BaseController {
                         public boolean areContentsTheSame(@NonNull @NotNull Float oldItem, @NonNull @NotNull Float newItem) {
                             return oldItem.intValue() == newItem.intValue();
                         }
-                    }, players, defaultPos);
+                    }, DoubleSpeed, defaultPos);
                     dialog.show();
                 } catch (JSONException e) {
                     e.printStackTrace();
