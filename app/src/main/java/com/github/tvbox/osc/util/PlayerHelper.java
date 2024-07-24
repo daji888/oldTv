@@ -145,7 +145,7 @@ public class PlayerHelper {
             playersInfo.put(10, "MX");
             playersInfo.put(11, "Reex");
             playersInfo.put(12, "Kodi");
-            playersInfo.put(13, "附近");
+            playersInfo.put(13, "TVBox");
             playersInfo.put(14, "VLC");
             mPlayersInfo = playersInfo;
         }
@@ -251,6 +251,23 @@ public class PlayerHelper {
                 break;
         }
         return scaleText;
+    }
+
+    public static String getSpeedName(float speed) {
+        String speedText = "x1.0";
+            if  (speed == 1f)
+                speedText = "x1.0";
+            if  (speed == 1.5f)
+                speedText = "x1.5";
+            if  (speed == 2f)
+                speedText = "x2.0";
+            if  (speed == 2.5f)
+                speedText = "x2.5";
+            if  (speed == 3f)
+                speedText = "x3.0";
+            if  (speed == 0.5f)
+                speedText = "x0.5";
+        return speedText;
     }
 
     public static String getRootCauseMessage(Throwable th) {
