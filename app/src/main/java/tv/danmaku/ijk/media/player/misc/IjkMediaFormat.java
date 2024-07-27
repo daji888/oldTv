@@ -223,7 +223,7 @@ public class IjkMediaFormat implements IMediaFormat {
                 if (fpsNum <= 0 || fpsDen <= 0) {
                     return null;
                 } else {
-                    return String.valueOf(((float) (fpsNum)) / fpsDen);
+                    return String.valueOf(((int) (fpsNum)) / fpsDen) + "fps";
                 }
             }
         });
@@ -233,8 +233,10 @@ public class IjkMediaFormat implements IMediaFormat {
                 int sampleRate = mediaFormat.getInteger(IjkMediaMeta.IJKM_KEY_SAMPLE_RATE);
                 if (sampleRate <= 0) {
                     return null;
-                } else {
+                } else if (sampleRate < 1000) {
                     return String.format(Locale.US, "%d Hz", sampleRate);
+                } else {
+                    return String.format(Locale.US, "%d kHz", sampleRate / 1000);
                 }
             }
         });
