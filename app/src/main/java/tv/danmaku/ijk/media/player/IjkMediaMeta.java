@@ -379,8 +379,10 @@ public class IjkMediaMeta {
         public String getSampleRateInline() {
             if (mSampleRate <= 0) {
                 return "N/A";
+            } else if (mSampleRate < 1000) {
+                return String.format(Locale.US, "%d Hz", mSampleRate);    
             } else {
-                return String.format(Locale.US, "%d Hz", mSampleRate);
+                return String.format(Locale.US, "%d kHz", mSampleRate / 1000);
             }
         }
 

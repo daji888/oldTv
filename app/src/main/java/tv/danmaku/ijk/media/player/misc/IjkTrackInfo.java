@@ -72,6 +72,8 @@ public class IjkTrackInfo implements ITrackInfo {
                 out.append(mStreamMeta.getBitrateInline());
                 out.append(", ");
                 out.append(mStreamMeta.getResolutionInline());
+                out.append(", ");
+                out.append(mStreamMeta.getFpsInline());
                 break;
             case MEDIA_TRACK_TYPE_AUDIO:
                 out.append("AUDIO");
