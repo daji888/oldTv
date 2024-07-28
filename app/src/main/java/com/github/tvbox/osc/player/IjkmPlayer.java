@@ -54,6 +54,12 @@ public class IjkmPlayer extends IjkPlayer {
                 }
             }
         }
+        // 在每个数据包之后启用 I/O 上下文的刷新
+        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "flush_packets", 1);
+        // 当 CPU 处理不过来的时候丢帧帧数，默认为 0，参数范围是 [-1, 120]
+        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 1);
+        // 设置视频流格式
+        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "overlay-format", IjkMediaPlayer.SDL_FCC_RV32);
         //开启内置字幕
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "subtitle", 1);
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "dns_cache_clear", 1);
@@ -65,13 +71,16 @@ public class IjkmPlayer extends IjkPlayer {
     @Override
     public void setDataSource(String path, Map<String, String> headers) {
         try {
-            if (path != null && !TextUtils.isEmpty(path)) {
-                if(path.startsWith("rtsp")){
-                    mMediaPlayer.setOption(1, "infbuf", 1);
-                    mMediaPlayer.setOption(1, "rtsp_transport", "tcp");
-                    mMediaPlayer.setOption(1, "rtsp_flags", "prefer_tcp");
-                } else if (!path.contains(".m3u8") && (path.contains(".mp4") || path.contains(".mkv") || path.contains(".avi"))) {
-                    if (Hawk.get(HawkConfig.IJK_CACHE_PLAY, false)) {
+            if (path.contains("rtsp") || path.contains("udp") || path.contains("rtp")) {
+                    mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "infbuf", 1);
+                    mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "rtsp_transport", "tcp");
+                    mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "rtsp_flags", "prefer_tcp");
+                    mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 512 * 1000);
+                    mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzeduration", 2 * 1000 * 1000);
+                } else if (!TextUtils.isEmpty(path)
+                    && !path.contains(".m3u8")
+                    && (path.contains(".mp4") || path.contains(".mkv") || path.contains(".avi"))) {
+                if (Hawk.get(HawkConfig.IJK_CACHE_PLAY, false)) {
                         String cachePath = FileUtils.getExternalCachePath() + "/ijkcaches/";
                         String cacheMapPath = cachePath;
                         File cacheFile = new File(cachePath);
@@ -86,13 +95,11 @@ public class IjkmPlayer extends IjkPlayer {
                         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "cache_max_capacity", 60 * 1024 * 1024);
                         path = "ijkio:cache:ffio:" + path;
                     }
-                }
             }
-            setDataSourceHeader(headers);
         } catch (Exception e) {
             mPlayerEventListener.onError(-1, PlayerHelper.getRootCauseMessage(e));
         }
-        //mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "protocol_whitelist", "ijkio,ffio,async,cache,crypto,file,http,https,ijkhttphook,ijkinject,ijklivehook,ijklongurl,ijksegment,ijktcphook,pipe,rtp,tcp,tls,udp,ijkurlhook,data");
+        setDataSourceHeader(headers);
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "protocol_whitelist", "ijkio,ffio,async,cache,crypto,file,http,https,ijkhttphook,ijkinject,ijklivehook,ijklongurl,ijksegment,ijktcphook,pipe,rtp,tcp,tls,udp,ijkurlhook,data,concat,subfile,ffconcat");
         //mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0L);
 //        try {
