@@ -71,8 +71,7 @@ public class IjkmPlayer extends IjkPlayer {
     @Override
     public void setDataSource(String path, Map<String, String> headers) {
         try {
-            if (path != null && !TextUtils.isEmpty(path)) {
-                if (path.contains("rtsp") || path.contains("udp") || path.contains("rtp")) {
+            if (path.contains("rtsp") || path.contains("udp") || path.contains("rtp")) {
                     mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "infbuf", 1);
                     mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "rtsp_transport", "tcp");
                     mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "rtsp_flags", "prefer_tcp");
