@@ -91,7 +91,7 @@
 				android:textColor="#fff" />
 			<SeekBar
 				android:id="@+id/pb_progressbar"
-				android:padding="6dp"
+				android:padding="@dimen/vs_6"
 				android:layout_width="@dimen/vs_0"
 				android:layout_height="@dimen/vs_30"
 				android:maxHeight="@dimen/vs_6"
@@ -100,7 +100,7 @@
 				android:progressDrawable="@drawable/seekbar_style"
 				android:minHeight="@dimen/vs_6"
 				android:thumb="@drawable/transparent"
-				android:thumbOffset="0dp"
+				android:thumbOffset="@dimen/vs_0"
 				android:layout_weight="1"
 				android:paddingStart="@dimen/vs_5"
 				android:paddingEnd="@dimen/vs_5"
