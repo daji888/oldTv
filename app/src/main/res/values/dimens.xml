@@ -8,8 +8,10 @@
     <dimen name="ts_28">28mm</dimen>
     <dimen name="ts_30">30mm</dimen>
     <dimen name="ts_34">34mm</dimen>
+    <dimen name="ts_36">36mm</dimen>
     <dimen name="ts_40">40mm</dimen>
     <dimen name="ts_50">50mm</dimen>
+    <dimen name="ts_96">96mm</dimen>
     <dimen name="ts_100">100mm</dimen>
 
     <dimen name="focus_border_1">1mm</dimen>
@@ -45,7 +47,6 @@
     <dimen name="vs_28">28mm</dimen>
     <dimen name="vs_30">30mm</dimen>
     <dimen name="vs_35">35mm</dimen>
-    <dimen name="vs_36">36mm</dimen>
     <dimen name="vs_40">40mm</dimen>
     <dimen name="vs_45">45mm</dimen>
     <dimen name="vs_48">48mm</dimen>
@@ -55,7 +56,6 @@
     <dimen name="vs_76">76mm</dimen>
     <dimen name="vs_80">80mm</dimen>
     <dimen name="vs_90">90mm</dimen>
-    <dimen name="vs_96">96mm</dimen>
     <dimen name="vs_100">100mm</dimen>
     <dimen name="vs_108">108mm</dimen>
     <dimen name="vs_120">120mm</dimen>
