@@ -88,6 +88,7 @@
                                 android:shadowDx="-5"
                                 android:shadowDy="5"
                                 android:shadowRadius="5"
+				android:textSize="@dimen/ts_20"
 				android:textColor="#fff" />
 			<SeekBar
 				android:id="@+id/pb_progressbar"
@@ -117,6 +118,7 @@
                                 android:shadowDx="5"
                                 android:shadowDy="5"
                                 android:shadowRadius="5"
+				android:textSize="@dimen/ts_20"
 				android:textColor="#fff" />
 		</LinearLayout>
 
@@ -335,6 +337,7 @@
                                         android:shadowDx="5"
                                         android:shadowDy="5"
                                         android:shadowRadius="5"
+					android:textSize="@dimen/ts_20"
 					android:textColor="@color/color_FF0057"
 					android:visibility="gone" />
 			</LinearLayout>
@@ -828,6 +831,8 @@
 		android:layout_height="wrap_content"
 		android:layout_gravity="end|top"
 		android:layout_margin="@dimen/vs_20"
+		android:textColor="@color/color_FFFFFF"
+		android:textSize="@dimen/ts_20"
 		android:paddingTop="@dimen/vs_8"/>
 	<!--时间显示-->
 
@@ -837,6 +842,8 @@
 		android:layout_height="wrap_content"
 		android:layout_gravity="end|top"
 		android:layout_margin="@dimen/vs_20"
+		android:textColor="@color/color_FFFFFF"
+		android:textSize="@dimen/ts_20"
 		android:paddingTop="@dimen/vs_8"/>
 	<!--右上角加载动画-->
 
