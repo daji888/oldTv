@@ -25,7 +25,7 @@
         android:shadowDy="5"
         android:shadowRadius="5"
         android:textColor="@android:color/white"
-        android:textSize="@dimen/vs_96"
+        android:textSize="@dimen/ts_96"
         android:textStyle="bold"
         android:visibility="invisible" />    
 	<LinearLayout
@@ -525,7 +525,7 @@
         android:shadowDy="5"
         android:shadowRadius="5"    
         android:textColor="@android:color/white"
-        android:textSize="@dimen/vs_36"
+        android:textSize="@dimen/ts_36"
         android:textStyle="bold"
         android:visibility="gone" />
 
@@ -544,7 +544,7 @@
         android:shadowDy="5"
         android:shadowRadius="5"
         android:textColor="@android:color/white"
-        android:textSize="@dimen/vs_22"
+        android:textSize="@dimen/ts_22"
         android:visibility="gone" />
     <TextView
         android:id="@+id/tvNetSpeed"
@@ -561,7 +561,7 @@
         android:shadowDy="5"
         android:shadowRadius="5"    
         android:textColor="@android:color/white"
-        android:textSize="@dimen/vs_22"
+        android:textSize="@dimen/ts_22"
         android:visibility="gone" />
 
 
@@ -644,7 +644,7 @@
                                         android:shadowDy="5"
                                         android:shadowRadius="5"
 					android:textColor="@android:color/white"
-					android:textSize="@dimen/vs_50"
+					android:textSize="@dimen/ts_50"
 					android:textStyle="bold"
 					tools:ignore="EllipsizeMaxLines" />
 				<ImageView
@@ -876,7 +876,7 @@
                         android:shadowDy="5"
                         android:shadowRadius="5"
 			android:textColor="#CCFFFFFF"
-			android:textSize="@dimen/vs_20" />
+			android:textSize="@dimen/ts_20" />
 
 		<TextView
 			android:id="@+id/tv_right_top_type"
@@ -895,7 +895,7 @@
                         android:shadowDy="5"
                         android:shadowRadius="5"
 			android:textColor="#CCFFFFFF"
-			android:textSize="@dimen/vs_20" />
+			android:textSize="@dimen/ts_20" />
 	</LinearLayout>
 
 
@@ -948,7 +948,7 @@
                         android:shadowDy="5"
                         android:shadowRadius="5"
 			android:textColor="#FFFCFFFF"
-			android:textSize="@dimen/vs_30" />
+			android:textSize="@dimen/ts_30" />
 
 		<TextView
 			android:id="@+id/tv_right_top_tipnetspeed"
@@ -969,7 +969,7 @@
                         android:shadowRadius="5"
 			tools:text="0Kb/s"
 			android:textColor="#FFFCFFFF"
-			android:textSize="@dimen/vs_20" />
+			android:textSize="@dimen/ts_20" />
 	</RelativeLayout>
 
 
