@@ -30,7 +30,7 @@
                 android:padding="@dimen/vs_10"
                 android:text="选择内置字幕"
                 android:shadowColor="@color/color_000000_80"
-                android:shadowDx="-5"
+                android:shadowDx="5"
                 android:shadowDy="5"
                 android:shadowRadius="5"
                 android:visibility="gone"
@@ -49,7 +49,7 @@
                 android:padding="@dimen/vs_10"
                 android:text="选择本地字幕"
                 android:shadowColor="@color/color_000000_80"
-                android:shadowDx="-5"
+                android:shadowDx="5"
                 android:shadowDy="5"
                 android:shadowRadius="5"
                 android:textColor="@color/color_FFFFFF"
@@ -67,7 +67,7 @@
                 android:padding="@dimen/vs_10"
                 android:text="在线搜索字幕"
                 android:shadowColor="@color/color_000000_80"
-                android:shadowDx="-5"
+                android:shadowDx="5"
                 android:shadowDy="5"
                 android:shadowRadius="5"
                 android:textColor="@color/color_FFFFFF"
@@ -91,7 +91,7 @@
                     android:padding="@dimen/vs_10"
                     android:text="字号减小"
                     android:shadowColor="@color/color_000000_80"
-                    android:shadowDx="-5"
+                    android:shadowDx="5"
                     android:shadowDy="5"
                     android:shadowRadius="5"
                     android:textColor="@color/color_FFFFFF"
@@ -107,12 +107,12 @@
                     android:layout_marginRight="@dimen/vs_40"
                     android:text="20"
                     android:shadowColor="@color/color_000000_80"
-                    android:shadowDx="-5"
+                    android:shadowDx="5"
                     android:shadowDy="5"
                     android:shadowRadius="5"
                     android:textStyle="bold"
                     android:textColor="@color/color_CC000000"
-                    android:textSize="@dimen/ts_40" />
+                    android:textSize="@dimen/ts_20" />
 
                 <TextView
                     android:id="@+id/subtitleSizePlus"
@@ -125,7 +125,7 @@
                     android:padding="@dimen/vs_10"
                     android:text="字号增大"
                     android:shadowColor="@color/color_000000_80"
-                    android:shadowDx="-5"
+                    android:shadowDx="5"
                     android:shadowDy="5"
                     android:shadowRadius="5"
                     android:textColor="@color/color_FFFFFF"
@@ -164,8 +164,8 @@
                     android:gravity="center"
                     android:layout_marginLeft="@dimen/vs_40"
                     android:layout_marginRight="@dimen/vs_40"
-                    android:text=""
-                    android:textSize="@dimen/ts_40" />
+                    android:text="字幕样式"
+                    android:textSize="@dimen/ts_20" />
 
                 <TextView
                     android:id="@+id/subtitleStyleTwo"
@@ -202,7 +202,7 @@
                     android:gravity="center"
                     android:text="字幕延时仅对外挂字幕有效"
                     android:shadowColor="@color/color_000000_80"
-                    android:shadowDx="-5"
+                    android:shadowDx="5"
                     android:shadowDy="5"
                     android:shadowRadius="5"
                     android:textColor="@color/color_CC000000"
@@ -228,7 +228,7 @@
                     android:padding="@dimen/vs_10"
                     android:text="字幕提前"
                     android:shadowColor="@color/color_000000_80"
-                    android:shadowDx="-5"
+                    android:shadowDx="5"
                     android:shadowDy="5"
                     android:shadowRadius="5"
                     android:textColor="@color/color_FFFFFF"
@@ -244,12 +244,12 @@
                     android:layout_marginRight="@dimen/vs_40"
                     android:text="0"
                     android:shadowColor="@color/color_000000_80"
-                    android:shadowDx="-5"
+                    android:shadowDx="5"
                     android:shadowDy="5"
                     android:shadowRadius="5"
                     android:textStyle="bold"
                     android:textColor="@color/color_CC000000"
-                    android:textSize="@dimen/ts_40" />
+                    android:textSize="@dimen/ts_20" />
 
                 <TextView
                     android:id="@+id/subtitleTimePlus"
@@ -262,7 +262,7 @@
                     android:padding="@dimen/vs_10"
                     android:text="字幕推迟"
                     android:shadowColor="@color/color_000000_80"
-                    android:shadowDx="-5"
+                    android:shadowDx="5"
                     android:shadowDy="5"
                     android:shadowRadius="5"
                     android:textColor="@color/color_FFFFFF"
