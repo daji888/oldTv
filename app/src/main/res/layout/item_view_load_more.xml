@@ -2,7 +2,7 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/dp_40"
+    android:layout_height="@dimen/vs_40"
     android:visibility="invisible">
 
     <LinearLayout
@@ -18,20 +18,20 @@
             android:layout_height="wrap_content"
             android:indeterminateTint="@android:color/white"
             style="?android:attr/progressBarStyleSmall"
-            android:layout_marginRight="@dimen/dp_4"/>
+            android:layout_marginRight="@dimen/vs_4"/>
 
         <TextView
             android:id="@+id/loading_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/dp_4"
+            android:layout_marginLeft="@dimen/vs_4"
             android:text="@string/brvah_loading"
             android:shadowColor="@color/color_000000_80"
-            android:shadowDx="-5"
+            android:shadowDx="5"
             android:shadowDy="5"
             android:shadowRadius="5"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/sp_14"/>
+            android:textSize="@dimen/ts_14"/>
     </LinearLayout>
 
     <FrameLayout
@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:shadowColor="@color/color_000000_80"
-            android:shadowDx="-5"
+            android:shadowDx="5"
             android:shadowDy="5"
             android:shadowRadius="5"
             android:text="@string/brvah_load_failed"/>
@@ -66,7 +66,7 @@
             android:layout_gravity="center"
             android:text="@string/brvah_load_end"
             android:shadowColor="@color/color_000000_80"
-            android:shadowDx="-5"
+            android:shadowDx="5"
             android:shadowDy="5"
             android:shadowRadius="5"
             android:textColor="@android:color/darker_gray"/>
