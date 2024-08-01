@@ -31,7 +31,7 @@
                 android:paddingRight="@dimen/vs_2"
                 android:paddingBottom="@dimen/vs_10"
                 android:shadowColor="@color/color_000000_80"
-                android:shadowDx="-5"
+                android:shadowDx="5"
                 android:shadowDy="5"
                 android:shadowRadius="5"
                 android:textColor="@color/color_FFFFFF"
