@@ -15,7 +15,7 @@
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:lineSpacingExtra="@dimen/ts_40"
+            android:lineSpacingExtra="@dimen/vs_40"
             android:lineSpacingMultiplier="0"
             android:padding="@dimen/vs_20"
             android:singleLine="true"
