@@ -11,7 +11,7 @@
         android:layout_height="@dimen/vs_50"
         android:layout_marginTop="@dimen/vs_10"
         android:layout_marginBottom="@dimen/vs_10"
-        android:paddingLeft="20mm"
+        android:paddingLeft="@dimen/vs_20"
        >
 
         <TextView
@@ -20,7 +20,7 @@
             android:layout_height="match_parent"
             android:text="搜索(0/0)"
             android:shadowColor="@color/color_000000_80"
-            android:shadowDx="-5"
+            android:shadowDx="5"
             android:shadowDy="5"
             android:shadowRadius="5"
             android:layout_gravity="center_horizontal"
@@ -51,7 +51,7 @@
             android:layout_width="@dimen/vs_200"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:paddingLeft="20mm"
+            android:paddingLeft="@dimen/vs_20"
             android:paddingBottom="@dimen/vs_20">
 
             <com.owen.tvrecyclerview.widget.TvRecyclerView
