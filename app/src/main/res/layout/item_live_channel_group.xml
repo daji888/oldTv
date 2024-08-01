@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="10mm"
-    android:layout_marginBottom="10mm"
+    android:layout_marginTop="@dimen/vs_10"
+    android:layout_marginBottom="@dimen/vs_10"
     android:background="@drawable/shape_live_focus"
     android:focusable="true"
     android:focusableInTouchMode="false"
@@ -12,8 +12,8 @@
 
     <TextView
         android:id="@+id/tvChannelGroupName"
-        android:layout_width="0mm"
-        android:layout_height="60mm"
+        android:layout_width="@dimen/vs_0"
+        android:layout_height="@dimen/vs_60"
         android:layout_weight="1"
         android:duplicateParentState="true"
         android:ellipsize="marquee"
@@ -21,10 +21,10 @@
         android:marqueeRepeatLimit="marquee_forever"
         android:singleLine="true"
         android:shadowColor="@color/color_000000_80"
-        android:shadowDx="-5"
+        android:shadowDx="5"
         android:shadowDy="5"
         android:shadowRadius="5"
         android:textColor="@android:color/white"
-        android:textSize="22mm"
+        android:textSize="@dimen/ts_22"
         tools:text="收藏" />
 </LinearLayout>
