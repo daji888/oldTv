@@ -112,7 +112,7 @@
                     android:shadowRadius="5"
                     android:textStyle="bold"
                     android:textColor="@color/color_CC000000"
-                    android:textSize="@dimen/ts_20" />
+                    android:textSize="@dimen/ts_30" />
 
                 <TextView
                     android:id="@+id/subtitleSizePlus"
@@ -165,6 +165,8 @@
                     android:layout_marginLeft="@dimen/vs_40"
                     android:layout_marginRight="@dimen/vs_40"
                     android:text="字幕样式"
+                    android:textStyle="bold"
+                    android:textColor="@color/color_CC000000"
                     android:textSize="@dimen/ts_20" />
 
                 <TextView
@@ -205,6 +207,7 @@
                     android:shadowDx="5"
                     android:shadowDy="5"
                     android:shadowRadius="5"
+                    android:textStyle="bold"
                     android:textColor="@color/color_CC000000"
                     android:textSize="@dimen/ts_20" />
 
@@ -249,7 +252,7 @@
                     android:shadowRadius="5"
                     android:textStyle="bold"
                     android:textColor="@color/color_CC000000"
-                    android:textSize="@dimen/ts_20" />
+                    android:textSize="@dimen/ts_30" />
 
                 <TextView
                     android:id="@+id/subtitleTimePlus"
