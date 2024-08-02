@@ -165,6 +165,10 @@
                     android:layout_marginLeft="@dimen/vs_40"
                     android:layout_marginRight="@dimen/vs_40"
                     android:text="字幕样式"
+                    android:shadowColor="@color/color_000000_80"
+                    android:shadowDx="5"
+                    android:shadowDy="5"
+                    android:shadowRadius="5"
                     android:textStyle="bold"
                     android:textColor="@color/color_CC000000"
                     android:textSize="@dimen/ts_20" />
