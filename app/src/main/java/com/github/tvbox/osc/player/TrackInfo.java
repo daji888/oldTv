@@ -48,6 +48,10 @@ public class TrackInfo {
             if (video.selected) return track ? video.trackId : i;
             i++;
         }
+        for (TrackInfoBean subtitle : list) {
+            if (subtitle.selected) return track ? subtitle.trackId : i;
+            i++;
+        }
         return 99999;
     }
 
