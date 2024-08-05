@@ -180,8 +180,8 @@
 -keep class android.support.**{*;}
 
 # dkplayer
--keep class com.dueeeke.videoplayer.** { *; }
--dontwarn com.dueeeke.videoplayer.**
+-keep class xyz.doikki.videoplayer.** { *; }
+-dontwarn xyz.doikki.videoplayer.**
 
 # IjkPlayer
 -keep class tv.danmaku.ijk.** { *; }
