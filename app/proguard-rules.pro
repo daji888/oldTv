@@ -212,6 +212,7 @@
 
 # 实体类
 #-keep class com.github.tvbox.osc.bean.** { *; }
+-keep class com.github.tvbox.osc.cache.** { *; }
 -keep class com.github.tvbox.osc.viewmodel.** { *; }
 -keep class com.github.tvbox.osc.ui.fragment.homes.**{*;}
 #CardView
