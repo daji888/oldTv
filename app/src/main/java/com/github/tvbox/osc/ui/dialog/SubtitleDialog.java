@@ -54,6 +54,15 @@ public class SubtitleDialog extends BaseDialog {
         subtitleStyleOne = findViewById(R.id.subtitleStyleOne);
         subtitleStyleTwo = findViewById(R.id.subtitleStyleTwo);
 
+        selectInternal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FastClickCheckUtil.check(view);
+                dismiss();
+                mSubtitleViewListener.selectInternalSubtitle();
+            }
+        });
+
         selectLocal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -150,14 +159,6 @@ public class SubtitleDialog extends BaseDialog {
                 mSubtitleViewListener.setSubtitleDelay(mseconds);
             }
         });
-        selectInternal.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FastClickCheckUtil.check(view);
-                dismiss();
-                mSubtitleViewListener.selectInternalSubtitle();
-            }
-        });
 
         subtitleStyleOne.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -180,6 +181,17 @@ public class SubtitleDialog extends BaseDialog {
         });
     }
 
+    public void setSubtitleViewListener(SubtitleViewListener subtitleViewListener) {
+        mSubtitleViewListener = subtitleViewListener;
+    }
+
+    public interface SubtitleViewListener {
+        void setTextSize(int size);
+        void setSubtitleDelay(int milliseconds);
+        void selectInternalSubtitle();
+        void setTextStyle(int style);
+    }
+
     public void setLocalFileChooserListener(LocalFileChooserListener localFileChooserListener) {
         mLocalFileChooserListener = localFileChooserListener;
     }
@@ -194,16 +206,5 @@ public class SubtitleDialog extends BaseDialog {
 
     public interface SearchSubtitleListener {
         void openSearchSubtitleDialog();
-    }
-
-    public void setSubtitleViewListener(SubtitleViewListener subtitleViewListener) {
-        mSubtitleViewListener = subtitleViewListener;
-    }
-
-    public interface SubtitleViewListener {
-        void setTextSize(int size);
-        void setSubtitleDelay(int milliseconds);
-        void selectInternalSubtitle();
-        void setTextStyle(int style);
     }
 }
