@@ -527,7 +527,7 @@ public class PlayActivity extends BaseActivity {
             return;
         }
         List<TrackInfoBean> bean = trackInfo.getSubtitle();
-        if (bean.size() < 1) return;
+   //     if (bean.size() < 1) return;
         SelectDialog<TrackInfoBean> dialog = new SelectDialog<>(PlayActivity.this);
         dialog.setTip("切换内置字幕");
         dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<TrackInfoBean>() {
