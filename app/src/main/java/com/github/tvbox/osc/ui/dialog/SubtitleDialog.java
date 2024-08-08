@@ -165,7 +165,7 @@ public class SubtitleDialog extends BaseDialog {
                 int style = 0;
                 dismiss();
                 mSubtitleViewListener.setTextStyle(style);
-                Toast.makeText(getContext(), "设置样式成功", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "设置字幕样式 1 成功", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -175,7 +175,7 @@ public class SubtitleDialog extends BaseDialog {
                 int style = 1;
                 dismiss();
                 mSubtitleViewListener.setTextStyle(style);
-                Toast.makeText(getContext(), "设置样式成功", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "设置字幕样式 2 成功", Toast.LENGTH_SHORT).show();
             }
         });
     }
