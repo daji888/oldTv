@@ -205,6 +205,15 @@ public class IjkmPlayer extends IjkPlayer {
                 t.selected = index == subtitleSelected;
                 data.addSubtitle(t);
             }
+            if (info.getTrackType() == ITrackInfo.MEDIA_TRACK_TYPE_SUBTITLE) {//内置字幕
+                String trackName = (data.getSubtitle().size() + 1) + " 、 " + info.getInfoInline();
+                TrackInfoBean t = new TrackInfoBean();
+                t.name = trackName;
+                t.language = info.getLanguage();
+                t.trackId = index;
+                t.selected = index == subtitleSelected;
+                data.addSubtitle(t);
+            }
             index++;
         }
         return data;

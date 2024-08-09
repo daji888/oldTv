@@ -16,12 +16,14 @@ public class IjkMediaMeta {
     public static final String IJKM_KEY_VIDEO_STREAM = "video";
     public static final String IJKM_KEY_AUDIO_STREAM = "audio";
     public static final String IJKM_KEY_TIMEDTEXT_STREAM = "timedtext";
+    public static final String IJKM_KEY_SUBTITLE_STREAM = "timedtext";
 
     // stream meta
     public static final String IJKM_KEY_TYPE = "type";
     public static final String IJKM_VAL_TYPE__VIDEO = "video";
     public static final String IJKM_VAL_TYPE__AUDIO = "audio";
     public static final String IJKM_VAL_TYPE__TIMEDTEXT = "timedtext";
+    public static final String IJKM_VAL_TYPE__SUBTITLE = "timedtext";
     public static final String IJKM_VAL_TYPE__UNKNOWN = "unknown";
     public static final String IJKM_KEY_LANGUAGE = "language";
 
