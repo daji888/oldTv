@@ -17,6 +17,7 @@ public class IjkMediaMeta {
     public static final String IJKM_KEY_AUDIO_STREAM = "audio";
     public static final String IJKM_KEY_TIMEDTEXT_STREAM = "timedtext";
     public static final String IJKM_KEY_SUBTITLE_STREAM = "timedtext";
+    public static final String IJKM_KEY_UNKNOWN_STREAM = "unknown";
 
     // stream meta
     public static final String IJKM_KEY_TYPE = "type";
