@@ -41,7 +41,7 @@ public class IjkTrackInfo implements ITrackInfo {
     @Override
     public String getLanguage() {
         if (mStreamMeta == null || TextUtils.isEmpty(mStreamMeta.mLanguage))
-            return "und";
+            return "Language_unknown";
 
         return mStreamMeta.mLanguage;
     }
