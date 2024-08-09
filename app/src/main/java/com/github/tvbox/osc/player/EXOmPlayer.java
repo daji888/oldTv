@@ -52,7 +52,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
                             String trackName = (data.getVideo().size() + 1) + " 、 " + trackNameProvider.getTrackName(format) + " 【 " + format.codecs + " 】";
                             TrackInfoBean t = new TrackInfoBean();
                             t.name = trackName;
-                            t.language = "";
+                        //    t.language = "";
                             t.trackId = formatIndex;
                             t.selected = !StringUtils.isEmpty(videoId) && videoId.equals(format.id);
                             t.trackGroupId = groupIndex;
