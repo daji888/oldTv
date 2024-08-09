@@ -94,6 +94,11 @@ public class IjkTrackInfo implements ITrackInfo {
                 out.append(", ");
                 out.append(mStreamMeta.mLanguage);
                 break;
+            case MEDIA_TRACK_TYPE_UNKNOWN:
+                out.append("UNKNOWN");
+                out.append(", ");
+                out.append(mStreamMeta.mLanguage);
+                break;
             default:
                 out.append("UNKNOWN");
                 break;
