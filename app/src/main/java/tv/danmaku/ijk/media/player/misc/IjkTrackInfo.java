@@ -74,6 +74,8 @@ public class IjkTrackInfo implements ITrackInfo {
                 out.append(mStreamMeta.getResolutionInline());
                 out.append(", ");
                 out.append(mStreamMeta.getFpsInline());
+                out.append(", ");
+                out.append(getLanguage());
                 break;
             case MEDIA_TRACK_TYPE_AUDIO:
                 out.append("AUDIO");
@@ -83,6 +85,8 @@ public class IjkTrackInfo implements ITrackInfo {
                 out.append(mStreamMeta.getBitrateInline());
                 out.append(", ");
                 out.append(mStreamMeta.getSampleRateInline());
+                out.append(", ");
+                out.append(getLanguage());
                 break;
             case MEDIA_TRACK_TYPE_TIMEDTEXT:
                 out.append("TIMEDTEXT");
