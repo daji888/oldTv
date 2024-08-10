@@ -492,7 +492,8 @@ public class PlayActivity extends BaseActivity {
                 String name = val.name.replace("VIDEO,", "");
                 name = name.replace("N/A,", "");
        //         name = name.replace(" ", "");
-                return name + (StringUtils.isEmpty(val.language) ? "" : " " + val.language);
+       //         return name + (StringUtils.isEmpty(val.language) ? "" : " " + val.language);
+                return name;
             }
         }, new DiffUtil.ItemCallback<TrackInfoBean>() {
             @Override
