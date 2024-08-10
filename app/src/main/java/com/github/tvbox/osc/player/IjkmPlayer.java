@@ -182,7 +182,7 @@ public class IjkmPlayer extends IjkPlayer {
                 String trackName = (data.getAudio().size() + 1) + "、" + info.getInfoInline();
                 TrackInfoBean t = new TrackInfoBean();
                 t.name = trackName;
-           //     t.language = info.getLanguage();
+                t.language = info.getLanguage();
                 t.trackId = index;
                 t.selected = index == audioSelected;
                 data.addAudio(t);
@@ -200,7 +200,7 @@ public class IjkmPlayer extends IjkPlayer {
                 String trackName = (data.getSubtitle().size() + 1) + "、" + info.getInfoInline();
                 TrackInfoBean t = new TrackInfoBean();
                 t.name = trackName;
-            //    t.language = info.getLanguage();
+                t.language = info.getLanguage();
                 t.trackId = index;
                 t.selected = index == subtitleSelected;
                 data.addSubtitle(t);
