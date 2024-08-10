@@ -449,7 +449,7 @@ public class PlayFragment extends BaseLazyFragment {
             public String getDisplay(TrackInfoBean val) {
                 String name = val.name.replace("AUDIO,", "");
                 name = name.replace("N/A,", "");
-                name = name.replace(" ", "");
+        //        name = name.replace(" ", "");
                 return name + (StringUtils.isEmpty(val.language) ? "" : " " + val.language);
             }
         }, new DiffUtil.ItemCallback<TrackInfoBean>() {
@@ -516,7 +516,7 @@ public class PlayFragment extends BaseLazyFragment {
             public String getDisplay(TrackInfoBean val) {
                 String name = val.name.replace("VIDEO,", "");
                 name = name.replace("N/A,", "");
-                name = name.replace(" ", "");
+       //         name = name.replace(" ", "");
                 return name + (StringUtils.isEmpty(val.language) ? "" : " " + val.language);
             }
         }, new DiffUtil.ItemCallback<TrackInfoBean>() {
