@@ -55,7 +55,7 @@ public class ExoTrackNameProvider {
         if (trackType == C.TRACK_TYPE_VIDEO) {
             trackName =
                     joinWithSeparator(
-                            buildRoleString(format), buildResolutionString(format), buildBitrateString(format));
+                            buildRoleString(format), buildResolutionString(format), buildBitrateString(format), buildFrameRateString(format));
         } else if (trackType == C.TRACK_TYPE_AUDIO) {
             trackName =
                     joinWithSeparator(
@@ -81,6 +81,11 @@ public class ExoTrackNameProvider {
         return bitrate == Format.NO_VALUE
                 ? ""
                 : resources.getString(R.string.exo_track_bitrate, bitrate / 1000000f);
+    }
+
+    private String buildFrameRateString(Format format) {
+        float fameRate = format.frameRate;
+        return fameRate <= 0 ? "" : (int) Math.floor(fameRate) + "fps";
     }
 
     private String buildAudioChannelString(Format format) {
