@@ -199,7 +199,7 @@ public class ExoTrackNameProvider {
             case MimeTypes.AUDIO_DTS_HD:
                 return "DTS-HD";
             case MimeTypes.AUDIO_DTS_EXPRESS:
-                return "DTS-Express";
+                return "DTS Express";
             case MimeTypes.AUDIO_TRUEHD:
                 return "TrueHD";
             case MimeTypes.AUDIO_AC3:
@@ -273,9 +273,9 @@ public class ExoTrackNameProvider {
             case MimeTypes.APPLICATION_MEDIA3_CUES:
                 return "CUES";
             case MimeTypes.APPLICATION_CEA608:
-                return "CEA608";
+                return "CEA-608";
             case MimeTypes.APPLICATION_CEA708:
-                return "CEA708";    
+                return "CEA-708";    
             default:
                 return mimeType;
         }
