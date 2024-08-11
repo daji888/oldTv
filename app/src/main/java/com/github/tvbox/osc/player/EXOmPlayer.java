@@ -39,7 +39,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
                     for (int formatIndex = 0; formatIndex < group.length; formatIndex++) {
                         Format format = group.getFormat(formatIndex);
                         if (MimeTypes.isAudio(format.sampleMimeType)) {
-                            String trackName = (data.getAudio().size() + 1) + "、" + trackNameProvider.getTrackName(format) + "【" + format.codecs + "】";
+                            String trackName = (data.getAudio().size() + 1) + "、" + trackNameProvider.getTrackName(format) + ", "  + "【" + format.codecs + "】";
                             TrackInfoBean t = new TrackInfoBean();
                             t.name = trackName;
                             t.language = "";
@@ -49,7 +49,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
                             t.renderId = groupArrayIndex;
                             data.addAudio(t);
                         } else if (MimeTypes.isVideo(format.sampleMimeType)) {
-                            String trackName = (data.getVideo().size() + 1) + "、" + trackNameProvider.getTrackName(format) + "【" + format.codecs + "】";
+                            String trackName = (data.getVideo().size() + 1) + "、" + trackNameProvider.getTrackName(format) + ", "  + "【" + format.codecs + "】";
                             TrackInfoBean t = new TrackInfoBean();
                             t.name = trackName;
                         //    t.language = "";
