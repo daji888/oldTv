@@ -68,11 +68,12 @@ public class ExoTrackNameProvider {
                     joinWithSeparator(
                             buildLanguageOrLabelString(format),
                             buildAudioChannelString(format),
-                     //       buildMimeString(format), 
+                            buildMimeString(format), 
                             buildBitrateString(format));
         } else if (trackType == C.TRACK_TYPE_TEXT) {
             trackName =
                     joinWithSeparator(
+                            buildLanguageOrLabelString(format),
                             buildMimeString(format));     
         } else {
             trackName = buildLanguageOrLabelString(format);
