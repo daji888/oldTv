@@ -28,7 +28,6 @@ public class ExoTrackNameProvider {
         this.resources = Assertions.checkNotNull(resources);
     }
     
-    @Override
     public String getTrackName(Format format) {
         String trackName;
         int trackType = inferPrimaryTrackType(format);
@@ -170,7 +169,7 @@ public class ExoTrackNameProvider {
     }
 
     private static int inferPrimaryTrackType(Format format) {
-        @SuppressLint("UnsafeOptInUsageError") int trackType = MimeTypes.getTrackType(format.sampleMimeType);
+        int trackType = MimeTypes.getTrackType(format.sampleMimeType);
         if (trackType != C.TRACK_TYPE_UNKNOWN) {
             return trackType;
         }
