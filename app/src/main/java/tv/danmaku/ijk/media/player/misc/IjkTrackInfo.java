@@ -95,10 +95,15 @@ public class IjkTrackInfo implements ITrackInfo {
             //    out.append(", ");
             //    out.append(getLanguage());
                 break;
+            case MEDIA_TRACK_TYPE_METADATA:
+                out.append("METADATA");
+                out.append(", ");
+                out.append(getLanguage());
+                break;      
             case MEDIA_TRACK_TYPE_UNKNOWN:
                 out.append("UNKNOWN");
-            //    out.append(", ");
-            //    out.append(getLanguage());
+                out.append(", ");
+                out.append(getLanguage());
                 break;
             default:
                 out.append("UNKNOWN");
