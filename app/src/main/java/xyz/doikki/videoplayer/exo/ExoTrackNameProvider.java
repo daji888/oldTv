@@ -79,8 +79,8 @@ public class ExoTrackNameProvider {
     }
 
     private String buildFrameRateString(Format format) {
-        float fameRate = format.frameRate;
-        return fameRate <= 0 ? "" : (int) Math.floor(fameRate) + "fps";
+        float frameRate = format.frameRate;
+        return frameRate <= 0 ? "" : (int) Math.floor(frameRate) + "fps";
     }
 
     private String buildAudioChannelString(Format format) {
