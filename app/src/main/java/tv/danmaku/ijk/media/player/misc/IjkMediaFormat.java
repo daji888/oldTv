@@ -243,7 +243,7 @@ public class IjkMediaFormat implements IMediaFormat {
         sFormatterMap.put(KEY_IJK_CHANNEL_UI, new Formatter() {
             @Override
             protected String doFormat(IjkMediaFormat mediaFormat) {
-                int channelLayout = mediaFormat.getInteger(IjkMediaMeta.IJKM_KEY_CHANNEL_LAYOUT);
+                int mChannelLayout = mediaFormat.getInteger(IjkMediaMeta.IJKM_KEY_CHANNEL_LAYOUT);
                 if (mChannelLayout <= 0) {
                     return "无声道";
                 } else if (mChannelLayout == AV_CH_LAYOUT_MONO) {
