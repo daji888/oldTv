@@ -68,11 +68,11 @@ public class IjkTrackInfo implements ITrackInfo {
                 out.append(", ");
                 out.append(mStreamMeta.getCodecShortNameInline());
                 out.append(", ");
-                out.append(mStreamMeta.getBitrateInline());
-                out.append(", ");
                 out.append(mStreamMeta.getResolutionInline());
                 out.append(", ");
                 out.append(mStreamMeta.getFpsInline());
+                out.append(", ");
+                out.append(mStreamMeta.getBitrateInline());
                 break;
             case MEDIA_TRACK_TYPE_AUDIO:
                 out.append("AUDIO");
@@ -81,9 +81,9 @@ public class IjkTrackInfo implements ITrackInfo {
                 out.append(", ");
                 out.append(mStreamMeta.getCodecShortNameInline());
                 out.append(", ");
-                out.append(mStreamMeta.getBitrateInline());
-                out.append(", ");
                 out.append(mStreamMeta.getSampleRateInline());
+                out.append(", ");
+                out.append(mStreamMeta.getBitrateInline());
             //    out.append(", ");
             //    out.append(getLanguage());
                 break;
