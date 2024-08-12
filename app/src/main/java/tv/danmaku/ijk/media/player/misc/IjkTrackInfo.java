@@ -41,7 +41,7 @@ public class IjkTrackInfo implements ITrackInfo {
     @Override
     public String getLanguage() {
         if (mStreamMeta == null || TextUtils.isEmpty(mStreamMeta.mLanguage))
-            return "lang_UNK";
+            return "语言未知";
         return mStreamMeta.mLanguage;
     }
 
@@ -103,12 +103,12 @@ public class IjkTrackInfo implements ITrackInfo {
                 out.append(getLanguage());
                 break;    
             case MEDIA_TRACK_TYPE_UNKNOWN:
-                out.append("UNKNOWN");
+                out.append("未知");
                 out.append(", ");
                 out.append(getLanguage());
                 break;
             default:
-                out.append("UNKNOWN");
+                out.append("未知");
                 break;
         }
         return out.toString();
