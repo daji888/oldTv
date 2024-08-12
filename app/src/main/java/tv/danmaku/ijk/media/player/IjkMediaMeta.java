@@ -193,6 +193,18 @@ public class IjkMediaMeta {
         return String.format(Locale.US, "%02d:%02d:%02d", hours, mins, secs);
     }
 
+    private static String convertLang(String text) {
+        if ("chi".equals(text)) return "zh";
+        if ("cze".equals(text)) return "cs";
+        if ("dut".equals(text)) return "nl";
+        if ("fre".equals(text)) return "fr";
+        if ("ger".equals(text)) return "de";
+        if ("gre".equals(text)) return "el";
+        if ("ice".equals(text)) return "is";
+        if ("rum".equals(text)) return "ro";
+        return text;
+    }
+
     public static IjkMediaMeta parse(Bundle mediaMeta) {
         if (mediaMeta == null)
             return null;
@@ -225,7 +237,7 @@ public class IjkMediaMeta {
             IjkStreamMeta streamMeta = new IjkStreamMeta(index);
             streamMeta.mMeta = streamBundle;
             streamMeta.mType = streamMeta.getString(IJKM_KEY_TYPE);
-            streamMeta.mLanguage = streamMeta.getString(IJKM_KEY_LANGUAGE);
+            streamMeta.mLanguage = convertLang(streamMeta.getString(IJKM_KEY_LANGUAGE));
             if (TextUtils.isEmpty(streamMeta.mType))
                 continue;
 
