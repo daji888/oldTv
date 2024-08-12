@@ -126,7 +126,6 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
     public static final int FFP_PROP_INT64_SELECTED_AUDIO_STREAM = 20002;
     public static final int FFP_PROP_INT64_SELECTED_TIMEDTEXT_STREAM = 20011;
     public static final int FFP_PROP_INT64_SELECTED_SUBTITLE_STREAM = 20012;
-    public static final int FFP_PROP_INT64_SELECTED_UNKNOWN_STREAM = 20013;
 
     public static final int FFP_PROP_INT64_VIDEO_DECODER = 20003;
     public static final int FFP_PROP_INT64_AUDIO_DECODER = 20004;
@@ -694,9 +693,7 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
             } else if (streamMeta.mType.equalsIgnoreCase(IjkMediaMeta.IJKM_VAL_TYPE__TIMEDTEXT)) {
                 trackInfo.setTrackType(ITrackInfo.MEDIA_TRACK_TYPE_TIMEDTEXT);
             } else if (streamMeta.mType.equalsIgnoreCase(IjkMediaMeta.IJKM_VAL_TYPE__SUBTITLE)) {
-                trackInfo.setTrackType(ITrackInfo.MEDIA_TRACK_TYPE_SUBTITLE);
-            } else if (streamMeta.mType.equalsIgnoreCase(IjkMediaMeta.IJKM_VAL_TYPE__UNKNOWN)) {
-                trackInfo.setTrackType(ITrackInfo.MEDIA_TRACK_TYPE_UNKNOWN);    
+                trackInfo.setTrackType(ITrackInfo.MEDIA_TRACK_TYPE_SUBTITLE);  
             }
             trackInfos.add(trackInfo);
         }
@@ -714,9 +711,7 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
             case ITrackInfo.MEDIA_TRACK_TYPE_TIMEDTEXT:
                 return (int) _getPropertyLong(FFP_PROP_INT64_SELECTED_TIMEDTEXT_STREAM, -1);
             case ITrackInfo.MEDIA_TRACK_TYPE_SUBTITLE:
-                return (int) _getPropertyLong(FFP_PROP_INT64_SELECTED_SUBTITLE_STREAM, -1);
-            case ITrackInfo.MEDIA_TRACK_TYPE_UNKNOWN:
-                return (int) _getPropertyLong(FFP_PROP_INT64_SELECTED_UNKNOWN_STREAM, -1);    
+                return (int) _getPropertyLong(FFP_PROP_INT64_SELECTED_SUBTITLE_STREAM, -1);   
             default:
                 return -1;
         }
