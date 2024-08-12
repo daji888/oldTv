@@ -4,7 +4,6 @@ import android.content.res.Resources;
 import android.text.TextUtils;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.OptIn;
 import androidx.media3.common.C;
 import androidx.media3.common.Format;
 import androidx.media3.common.MimeTypes;
@@ -79,8 +78,8 @@ public class ExoTrackNameProvider {
     }
 
     private String buildFrameRateString(Format format) {
-        float fameRate = format.frameRate;
-        return fameRate <= 0 ? "" : (int) Math.floor(fameRate) + "fps";
+        float frameRate = format.frameRate;
+        return frameRate <= 0 ? "" : (int) Math.floor(frameRate) + "fps";
     }
 
     private String buildAudioChannelString(Format format) {
