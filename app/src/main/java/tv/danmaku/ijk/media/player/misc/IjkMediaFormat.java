@@ -243,17 +243,21 @@ public class IjkMediaFormat implements IMediaFormat {
         sFormatterMap.put(KEY_IJK_CHANNEL_UI, new Formatter() {
             @Override
             protected String doFormat(IjkMediaFormat mediaFormat) {
-                int channelLayout = mediaFormat.getInteger(IjkMediaMeta.IJKM_KEY_CHANNEL_LAYOUT);
-                if (channelLayout <= 0) {
-                    return null;
+                int mChannelLayout = mediaFormat.getInteger(IjkMediaMeta.IJKM_KEY_CHANNEL_LAYOUT);
+                if (mChannelLayout <= 0) {
+                    return "无声道";
+                } else if (mChannelLayout == IjkMediaMeta.AV_CH_LAYOUT_MONO) {
+                    return "单声道";
+                } else if (mChannelLayout == IjkMediaMeta.AV_CH_LAYOUT_STEREO || mChannelLayout == IjkMediaMeta.AV_CH_LAYOUT_STEREO_DOWNMIX) {
+                    return "立体声";
+                } else if (mChannelLayout == IjkMediaMeta.AV_CH_LAYOUT_5POINT1 || mChannelLayout == IjkMediaMeta.AV_CH_LAYOUT_5POINT1_BACK || mChannelLayout == IjkMediaMeta.AV_CH_LAYOUT_6POINT0 || mChannelLayout == IjkMediaMeta.AV_CH_LAYOUT_6POINT0_FRONT || mChannelLayout == IjkMediaMeta.AV_CH_LAYOUT_HEXAGONAL) {
+                    return "环绕声";
+                } else if (mChannelLayout == IjkMediaMeta.AV_CH_LAYOUT_6POINT1 || mChannelLayout == IjkMediaMeta.AV_CH_LAYOUT_6POINT1_BACK || mChannelLayout == IjkMediaMeta.AV_CH_LAYOUT_7POINT0 || mChannelLayout == IjkMediaMeta.AV_CH_LAYOUT_6POINT1_FRONT || mChannelLayout == IjkMediaMeta.AV_CH_LAYOUT_7POINT0_FRONT) {
+                    return "5.1 环绕声";
+                } else if (mChannelLayout == IjkMediaMeta.AV_CH_LAYOUT_7POINT1 || mChannelLayout == IjkMediaMeta.AV_CH_LAYOUT_7POINT1_WIDE_BACK || mChannelLayout == IjkMediaMeta.AV_CH_LAYOUT_7POINT1_WIDE || mChannelLayout == IjkMediaMeta.AV_CH_LAYOUT_OCTAGONAL) {
+                    return "7.1 环绕声";
                 } else {
-                    if (channelLayout == IjkMediaMeta.AV_CH_LAYOUT_MONO) {
-                        return "mono";
-                    } else if (channelLayout == IjkMediaMeta.AV_CH_LAYOUT_STEREO) {
-                        return "stereo";
-                    } else {
-                        return String.format(Locale.US, "%x", channelLayout);
-                    }
+                    return String.format(Locale.US, "%x", mChannelLayout);
                 }
             }
         });
