@@ -77,6 +77,8 @@ public class IjkTrackInfo implements ITrackInfo {
             case MEDIA_TRACK_TYPE_AUDIO:
                 out.append("AUDIO");
                 out.append(", ");
+                out.append(mStreamMeta.getChannelLayoutInline());
+                out.append(", ");
                 out.append(mStreamMeta.getCodecShortNameInline());
                 out.append(", ");
                 out.append(mStreamMeta.getBitrateInline());
