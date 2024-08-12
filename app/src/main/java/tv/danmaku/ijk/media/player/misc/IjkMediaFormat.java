@@ -246,15 +246,15 @@ public class IjkMediaFormat implements IMediaFormat {
                 int mChannelLayout = mediaFormat.getInteger(IjkMediaMeta.IJKM_KEY_CHANNEL_LAYOUT);
                 if (mChannelLayout <= 0) {
                     return "无声道";
-                } else if (mChannelLayout == AV_CH_LAYOUT_MONO) {
+                } else if (mChannelLayout == IjkMediaMeta.AV_CH_LAYOUT_MONO) {
                     return "单声道";
-                } else if (mChannelLayout == AV_CH_LAYOUT_STEREO || mChannelLayout == AV_CH_LAYOUT_STEREO_DOWNMIX) {
+                } else if (mChannelLayout == IjkMediaMeta.AV_CH_LAYOUT_STEREO || mChannelLayout == IjkMediaMeta.AV_CH_LAYOUT_STEREO_DOWNMIX) {
                     return "立体声";
-                } else if (mChannelLayout == AV_CH_LAYOUT_5POINT1 || mChannelLayout == AV_CH_LAYOUT_5POINT1_BACK || mChannelLayout == AV_CH_LAYOUT_6POINT0 || mChannelLayout == AV_CH_LAYOUT_6POINT0_FRONT || mChannelLayout == AV_CH_LAYOUT_HEXAGONAL) {
+                } else if (mChannelLayout == IjkMediaMeta.AV_CH_LAYOUT_5POINT1 || mChannelLayout == IjkMediaMeta.AV_CH_LAYOUT_5POINT1_BACK || mChannelLayout == IjkMediaMeta.AV_CH_LAYOUT_6POINT0 || mChannelLayout == IjkMediaMeta.AV_CH_LAYOUT_6POINT0_FRONT || mChannelLayout == IjkMediaMeta.AV_CH_LAYOUT_HEXAGONAL) {
                     return "环绕声";
-                } else if (mChannelLayout == AV_CH_LAYOUT_6POINT1 || mChannelLayout == AV_CH_LAYOUT_6POINT1_BACK || mChannelLayout == AV_CH_LAYOUT_7POINT0 || mChannelLayout == AV_CH_LAYOUT_6POINT1_FRONT || mChannelLayout == AV_CH_LAYOUT_7POINT0_FRONT) {
+                } else if (mChannelLayout == IjkMediaMeta.AV_CH_LAYOUT_6POINT1 || mChannelLayout == IjkMediaMeta.AV_CH_LAYOUT_6POINT1_BACK || mChannelLayout == IjkMediaMeta.AV_CH_LAYOUT_7POINT0 || mChannelLayout == IjkMediaMeta.AV_CH_LAYOUT_6POINT1_FRONT || mChannelLayout == IjkMediaMeta.AV_CH_LAYOUT_7POINT0_FRONT) {
                     return "5.1 环绕声";
-                } else if (mChannelLayout == AV_CH_LAYOUT_7POINT1 || mChannelLayout == AV_CH_LAYOUT_7POINT1_WIDE_BACK || mChannelLayout == AV_CH_LAYOUT_7POINT1_WIDE || mChannelLayout == AV_CH_LAYOUT_OCTAGONAL) {
+                } else if (mChannelLayout == IjkMediaMeta.AV_CH_LAYOUT_7POINT1 || mChannelLayout == IjkMediaMeta.AV_CH_LAYOUT_7POINT1_WIDE_BACK || mChannelLayout == IjkMediaMeta.AV_CH_LAYOUT_7POINT1_WIDE || mChannelLayout == IjkMediaMeta.AV_CH_LAYOUT_OCTAGONAL) {
                     return "7.1 环绕声";
                 } else {
                     return String.format(Locale.US, "%x", mChannelLayout);
