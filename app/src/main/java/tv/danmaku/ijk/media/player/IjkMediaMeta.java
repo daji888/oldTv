@@ -402,15 +402,19 @@ public class IjkMediaMeta {
 
         public String getChannelLayoutInline() {
             if (mChannelLayout <= 0) {
-                return "N/A";
+                return 0;
+            } else if (mChannelLayout == AV_CH_LAYOUT_MONO) {
+                return 1;
+            } else if (mChannelLayout == AV_CH_LAYOUT_STEREO || mChannelLayout == AV_CH_LAYOUT_STEREO_DOWNMIX) {
+                return 2;
+            } else if (mChannelLayout == AV_CH_LAYOUT_5POINT1 || mChannelLayout == AV_CH_LAYOUT_5POINT1_BACK || mChannelLayout == AV_CH_LAYOUT_6POINT0 || mChannelLayout == AV_CH_LAYOUT_6POINT0_FRONT || mChannelLayout == AV_CH_LAYOUT_HEXAGONAL) {
+                return 6;
+            } else if (mChannelLayout == AV_CH_LAYOUT_6POINT1 || mChannelLayout == AV_CH_LAYOUT_6POINT1_BACK || mChannelLayout == AV_CH_LAYOUT_7POINT0 || mChannelLayout == AV_CH_LAYOUT_6POINT1_FRONT || mChannelLayout == AV_CH_LAYOUT_7POINT0_FRONT) {
+                return 7;
+            } else if (mChannelLayout == AV_CH_LAYOUT_7POINT1 || mChannelLayout == AV_CH_LAYOUT_7POINT1_WIDE_BACK || mChannelLayout == AV_CH_LAYOUT_7POINT1_WIDE || mChannelLayout == AV_CH_LAYOUT_OCTAGONAL) {
+                return 8;
             } else {
-                if (mChannelLayout == AV_CH_LAYOUT_MONO) {
-                    return "mono";
-                } else if (mChannelLayout == AV_CH_LAYOUT_STEREO) {
-                    return "stereo";
-                } else {
-                    return String.format(Locale.US, "%x", mChannelLayout);
-                }
+                return String.format(Locale.US, "%x", mChannelLayout);
             }
         }
     }
