@@ -44,7 +44,7 @@ public class IjkMediaFormat implements IMediaFormat {
     public static final String KEY_IJK_CHANNEL_UI = "ijk-channel-ui";
 
     // Codec
-    public static final String CODEC_NAME_H264 = "h264";
+    public static final String CODEC_NAME_H264 = "H264";
 
     public final IjkMediaMeta.IjkStreamMeta mMediaFormat;
 
@@ -223,7 +223,7 @@ public class IjkMediaFormat implements IMediaFormat {
                 if (fpsNum <= 0 || fpsDen <= 0) {
                     return null;
                 } else {
-                    return String.valueOf(((int) (fpsNum)) / fpsDen) + "fps";
+                    return String.valueOf(((int) (fpsNum)) / fpsDen) + "FPS";
                 }
             }
         });
