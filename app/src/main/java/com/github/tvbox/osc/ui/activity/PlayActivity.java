@@ -426,10 +426,11 @@ public class PlayActivity extends BaseActivity {
 
             @Override
             public String getDisplay(TrackInfoBean val) {
-                String name = val.name.replace("AUDIO,", "");
-                name = name.replace("N/A,", "");
+                String name = val.name.replace("AUDIO，", "");
+                name = name.replace("N/A，", "");
+                name = name.replace("，N/A", "");
         //        name = name.replace(" ", "");
-                return name + (StringUtils.isEmpty(val.language) ? "" : ", " + val.language);
+                return name + (StringUtils.isEmpty(val.language) ? "，语言未知" : "，" + val.language);
             }
         }, new DiffUtil.ItemCallback<TrackInfoBean>() {
             @Override
@@ -492,10 +493,11 @@ public class PlayActivity extends BaseActivity {
 
             @Override
             public String getDisplay(TrackInfoBean val) {
-                String name = val.name.replace("VIDEO,", "");
-                name = name.replace("N/A,", "");
+                String name = val.name.replace("VIDEO，", "");
+                name = name.replace("N/A，", "");
+                name = name.replace("，N/A", "");
        //         name = name.replace(" ", "");
-       //         return name + (StringUtils.isEmpty(val.language) ? "" : ", " + val.language);
+       //         return name + (StringUtils.isEmpty(val.language) ? "，语言未知" : "，" + val.language);
                 return name;
             }
         }, new DiffUtil.ItemCallback<TrackInfoBean>() {
@@ -576,7 +578,7 @@ public class PlayActivity extends BaseActivity {
 
             @Override
             public String getDisplay(TrackInfoBean val) {
-                return val.name + (StringUtils.isEmpty(val.language) ? "" : ", " + val.language);
+                return val.name + (StringUtils.isEmpty(val.language) ? "，语言未知" : "，" + val.language);
             }
         }, new DiffUtil.ItemCallback<TrackInfoBean>() {
             @Override
