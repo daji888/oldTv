@@ -65,46 +65,46 @@ public class IjkTrackInfo implements ITrackInfo {
         switch (mTrackType) {
             case MEDIA_TRACK_TYPE_VIDEO:
                 out.append("VIDEO");
-                out.append(", ");
+                out.append("，");
                 out.append(mStreamMeta.getCodecShortNameInline());
-                out.append(", ");
+                out.append("，");
                 out.append(mStreamMeta.getResolutionInline());
-                out.append(", ");
+                out.append("，");
                 out.append(mStreamMeta.getFpsInline());
-                out.append(", ");
+                out.append("，");
                 out.append(mStreamMeta.getBitrateInline());
                 break;
             case MEDIA_TRACK_TYPE_AUDIO:
                 out.append("AUDIO");
-                out.append(", ");
+                out.append("，");
                 out.append(mStreamMeta.getChannelLayoutInline());
-                out.append(", ");
+                out.append("，");
                 out.append(mStreamMeta.getCodecShortNameInline());
-                out.append(", ");
+                out.append("，");
                 out.append(mStreamMeta.getSampleRateInline());
-                out.append(", ");
+                out.append("，");
                 out.append(mStreamMeta.getBitrateInline());
-            //    out.append(", ");
+            //    out.append("，");
             //    out.append(getLanguage());
                 break;
             case MEDIA_TRACK_TYPE_TIMEDTEXT:
                 out.append("TIMEDTEXT");
-            //    out.append(", ");
+            //    out.append("，");
             //    out.append(getLanguage());
                 break;
             case MEDIA_TRACK_TYPE_SUBTITLE:
                 out.append("SUBTITLE");
-            //    out.append(", ");
+            //    out.append("，");
             //    out.append(getLanguage());
                 break;
             case MEDIA_TRACK_TYPE_METADATA:
                 out.append("METADATA");
-                out.append(", ");
+                out.append("，");
                 out.append(getLanguage());
                 break;    
             case MEDIA_TRACK_TYPE_UNKNOWN:
                 out.append("未知");
-                out.append(", ");
+                out.append("，");
                 out.append(getLanguage());
                 break;
             default:
