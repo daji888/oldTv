@@ -68,7 +68,7 @@ public class AndroidTrackInfo implements ITrackInfo {
     @Override
     public String getLanguage() {
         if (mTrackInfo == null)
-            return "und";
+            return "语言未知";
 
         return mTrackInfo.getLanguage();
     }

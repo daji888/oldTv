@@ -376,7 +376,7 @@ public class IjkMediaMeta {
             if (mFpsNum <= 0 || mFpsDen <= 0) {
                 return "N/A";
             } else {
-                return String.valueOf(((int) (mFpsNum)) / mFpsDen) + "fps";
+                return String.valueOf(((int) (mFpsNum)) / mFpsDen) + "FPS";
             }
         }
 

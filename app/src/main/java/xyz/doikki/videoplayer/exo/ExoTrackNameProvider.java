@@ -79,7 +79,7 @@ public class ExoTrackNameProvider {
 
     private String buildFrameRateString(Format format) {
         float frameRate = format.frameRate;
-        return frameRate <= 0 ? "" : (int) Math.floor(frameRate) + "fps";
+        return frameRate <= 0 ? "" : (int) Math.floor(frameRate) + "FPS";
     }
 
     private String buildAudioChannelString(Format format) {
