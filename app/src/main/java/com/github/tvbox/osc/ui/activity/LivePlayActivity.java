@@ -162,7 +162,7 @@ public class LivePlayActivity extends BaseActivity {
     private TextView txtNoEpg ;
 
     private ObjectAnimator objectAnimator;
-    public String epgStringAddress ="";
+    public String epgStringAddress = "";
 
     private TvRecyclerView mEpgDateGridView;
     private TvRecyclerView mRightEpgList;
@@ -211,7 +211,8 @@ public class LivePlayActivity extends BaseActivity {
         context = this;
         epgStringAddress = Hawk.get(HawkConfig.EPG_URL,"");
         if(epgStringAddress == null || epgStringAddress.length()<5)
-            epgStringAddress = "http://epg.51zmt.top:8000/api/diyp/";
+        //    epgStringAddress = "http://epg.51zmt.top:8000/api/diyp/";
+           epgStringAddress = "http://epg.mxdyeah.top/api/diyp/?ch={name}&date={date}";  
 
         setLoadSir(findViewById(R.id.live_root));
         mVideoView = findViewById(R.id.mVideoView);
