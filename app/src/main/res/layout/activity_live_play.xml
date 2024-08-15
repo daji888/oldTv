@@ -354,9 +354,9 @@
             android:tag="tv_top_container"
 	    android:visibility="gone"
             tools:visibility="visible"
-	    android:background="@drawable/shape_user_focus"
+	    android:background="@drawable/bg_channel_list"
             android:layout_marginLeft="@dimen/vs_20"
-            android:layout_marginTop="@dimen/vs_0"
+            android:layout_marginTop="@dimen/vs_20"
             android:orientation="vertical">
 
         <LinearLayout
@@ -372,7 +372,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
-                android:paddingTop="@dimen/vs_0"
+                android:paddingTop="@dimen/vs_10"
                 android:paddingLeft="@dimen/vs_20"
 		android:paddingRight="@dimen/vs_10"
                 android:text="CCTV"
@@ -388,7 +388,7 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_gravity="left"
-                android:paddingTop="@dimen/vs_0"
+                android:paddingTop="@dimen/vs_10"
                 android:paddingLeft="@dimen/vs_10"
 		android:paddingRight="@dimen/vs_20"
 		android:text="线路 1/1"
@@ -409,8 +409,9 @@
                 android:maxLines="1"
                 android:paddingLeft="@dimen/vs_20"
 		android:paddingRight="@dimen/vs_20"
+		android:paddingBottom="@dimen/vs_10"    
                 android:tag="vod_video_size"
-                android:text="[ 1280 x 720 ]"
+                android:text="1280 x 720"
 		android:shadowColor="@color/color_000000_80"
                 android:shadowDx="5"
                 android:shadowDy="5"
@@ -914,10 +915,9 @@
 		android:background="@drawable/shape_user_search"
 		android:layout_width="@dimen/vs_240"
 		android:layout_height="@dimen/vs_70"
-		android:layout_marginTop="@dimen/vs_25"
-		android:layout_marginRight="@dimen/vs_25"
-
-		android:minWidth="270px">
+		android:layout_marginTop="@dimen/vs_20"
+		android:layout_marginRight="@dimen/vs_20"
+		android:minWidth="@dimen/vs_270">
 		<ImageView
 			android:id="@+id/iv_circle_bg"
 			android:layout_width="@dimen/vs_40"
