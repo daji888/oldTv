@@ -912,12 +912,12 @@
 		android:layout_gravity="center|right|top"
 		android:orientation="vertical"
 		android:id="@+id/ll_right_top_loading"
-		android:background="@drawable/shape_user_search"
-		android:layout_width="@dimen/vs_240"
+	        android:background="@drawable/bg_channel_list"
+		android:layout_width="@dimen/vs_190"
 		android:layout_height="@dimen/vs_70"
 		android:layout_marginTop="@dimen/vs_20"
 		android:layout_marginRight="@dimen/vs_20"
-		android:minWidth="@dimen/vs_270">
+		android:minWidth="@dimen/vs_220">
 		<ImageView
 			android:id="@+id/iv_circle_bg"
 			android:layout_width="@dimen/vs_40"
