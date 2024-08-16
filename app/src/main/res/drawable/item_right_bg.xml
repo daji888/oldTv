@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="@color/title_fouse_n"/>
-    <corners android:radius="@dimen/vs_10"/>
-    <stroke android:width="@dimen/vs_0"
-        android:color="@color/title_fouse_n"/>
-</shape>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_focused="true">
+        <shape>
+            <corners android:radius="@dimen/vs_20" />
+            <solid android:color="@color/color_1890FF" />
+            <stroke android:width="@dimen/vs_2" android:color="@color/color_FF5F00" />
+        </shape>
+    </item>
+    <item android:state_focused="false">
+        <shape>
+            <corners android:radius="@dimen/vs_10" />
+            <solid android:color="@color/color_1890FF" />
+        </shape>
+    </item>
+</selector>
