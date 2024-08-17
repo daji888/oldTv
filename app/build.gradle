@@ -112,9 +112,9 @@ dependencies {
     implementation "androidx.media3:media3-ui:1.2.1"
     implementation "androidx.media3:media3-common:1.2.1"
         
-    implementation('org.xwalk:xwalk_shared_library:23.53.589.4') {
-        exclude group: 'com.android.support'
-    }
+    // implementation('org.xwalk:xwalk_shared_library:23.53.589.4') {
+    //     exclude group: 'com.android.support'
+    // }
     implementation 'com.lzy.net:okgo:3.0.4'
     // implementation 'com.tencent.bugly:crashreport_upgrade:latest.release'
     implementation 'com.owen:tv-recyclerview:3.0.0'
