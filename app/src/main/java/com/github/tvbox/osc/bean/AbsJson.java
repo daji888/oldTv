@@ -1,5 +1,7 @@
 package com.github.tvbox.osc.bean;
 
+import android.text.TextUtils;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
