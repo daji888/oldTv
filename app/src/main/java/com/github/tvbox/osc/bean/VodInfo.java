@@ -89,7 +89,7 @@ public class VodInfo implements Serializable {
                 }
             }
             SourceBean sb = ApiConfig.get().getSource(video.sourceKey);
-            if (sb != null) { // ssp 不排序
+     /*       if (sb != null) { // ssp 不排序
                 // 优先展示m3u8
                 Collections.sort(seriesFlags, new Comparator<VodSeriesFlag>() {
                     final String PREFIX = "m3u8";
@@ -103,7 +103,7 @@ public class VodInfo implements Serializable {
                         return 0;
                     }
                 });
-            }
+            }           */
             seriesMap = new LinkedHashMap<>();
             for (VodSeriesFlag flag : seriesFlags) {
                 seriesMap.put(flag.name, tempSeriesMap.get(flag.name));
