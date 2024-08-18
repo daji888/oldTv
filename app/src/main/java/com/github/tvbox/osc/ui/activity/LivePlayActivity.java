@@ -351,13 +351,13 @@ public class LivePlayActivity extends BaseActivity {
         epgListAdapter.CanBack(currentLiveChannelItem.getinclude_back());
         //epgListAdapter.updateData(date, new ArrayList<>());
 
-        String url;
+        String epg;
         if(epgStringAddress.contains("{name}") && epgStringAddress.contains("{date}")){
-            url= epgStringAddress.replace("{name}",URLEncoder.encode(epgTagName)).replace("{date}",timeFormat.format(date));
+            epg = epgStringAddress.replace("{name}", URLEncoder.encode(epgTagName)).replace("{date}", timeFormat.format(date));
         }else {
-            url= epgStringAddress + "?ch="+ URLEncoder.encode(epgTagName) + "&date=" + timeFormat.format(date);
+            epg = epgStringAddress + "?ch="+ URLEncoder.encode(epgTagName) + "&date=" + timeFormat.format(date);
         }
-        UrlHttpUtil.get(url, new CallBackUtil.CallBackString() {
+        UrlHttpUtil.get(epg, new CallBackUtil.CallBackString() {
             public void onFailure(int i, String str) {
                 showEpg(date, new ArrayList());
            //     showBottomEpg();
