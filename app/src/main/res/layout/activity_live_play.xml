@@ -31,7 +31,7 @@
 	<LinearLayout
 
 		android:layout_gravity="bottom|center"
-		android:layout_width="fill_parent"
+		android:layout_width="match_parent"
 		android:layout_height="@dimen/vs_200"
 		android:gravity="bottom|center_vertical"
 		android:orientation="vertical"
@@ -41,8 +41,8 @@
 		android:visibility="invisible"
 		android:layout_marginBottom="@dimen/vs_0">
 		<LinearLayout
-			android:layout_width="fill_parent"
-			android:layout_height="@dimen/vs_0"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
 			android:layout_weight="1"
 			android:id="@+id/ll_play"
 			android:gravity="center"
@@ -59,7 +59,7 @@
 
 
 		<LinearLayout
-			android:layout_width="fill_parent"
+			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginLeft="@dimen/vs_70"
 			android:layout_marginRight="@dimen/vs_70"
@@ -93,7 +93,7 @@
 			<SeekBar
 				android:id="@+id/pb_progressbar"
 				android:padding="@dimen/vs_6"
-				android:layout_width="@dimen/vs_0"
+				android:layout_width="match_parent"
 				android:layout_height="@dimen/vs_30"
 				android:maxHeight="@dimen/vs_6"
 				android:max="100"
