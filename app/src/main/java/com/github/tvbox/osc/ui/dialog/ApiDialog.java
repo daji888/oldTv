@@ -81,8 +81,8 @@ public class ApiDialog extends BaseDialog {
                     history.add("http://www.饭太硬.com/tv/");
                 if (!history.contains("http://tv.nxog.top/m/"))
                     history.add("http://tv.nxog.top/m/");
-                if (!history.contains("http://tvbox.xn--4kq62z5rby2qupq9ub.xyz/"))
-                    history.add("http://tvbox.xn--4kq62z5rby2qupq9ub.xyz/");
+                if (!history.contains("http://tvbox.xn--4kq62z5rby2qupq9ub.top/"))
+                    history.add("http://tvbox.xn--4kq62z5rby2qupq9ub.top/");
                 if (!history.contains("http://cdn.qiaoji8.com/tvbox.json"))
                     history.add("http://cdn.qiaoji8.com/tvbox.json");
                 if (!history.contains("https://ghproxy.net/raw.githubusercontent.com/daji888/ys/master/ys99.txt"))
