@@ -44,6 +44,7 @@ public class SettingActivity extends BaseActivity {
     private Handler mHandler = new Handler();
     private String homeSourceKey;
     private String currentApi;
+    private String currentLive;
     private int homeRec;
     private int dnsOpt;
 
