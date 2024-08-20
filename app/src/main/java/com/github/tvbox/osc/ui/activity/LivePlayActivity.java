@@ -358,7 +358,7 @@ public class LivePlayActivity extends BaseActivity {
         UrlHttpUtil.get(epg, new CallBackUtil.CallBackString() {
             public void onFailure(int i, String str) {
                 showEpg(date, new ArrayList());
-                showBottomEpg();
+            //    showBottomEpg();
             }
 
             public void onResponse(String paramString) {
