@@ -45,7 +45,7 @@
                 android:shadowRadius="5"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/ts_30"
-                tools:text="100" />
+                android:text="00:00:00" />
         </LinearLayout>
 
     </FrameLayout>
