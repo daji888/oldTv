@@ -136,6 +136,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
         tvVideoPurifyText = findViewById(R.id.tvVideoPurifyText);
         tvVideoPurifyText.setText(Hawk.get(HawkConfig.VIDEO_PURIFY, true) ? "已开启" : "已关闭");
         tvIjkCachePlay.setText(Hawk.get(HawkConfig.IJK_CACHE_PLAY, false) ? "已开启" : "已关闭");
+        
         findViewById(R.id.llDebug).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -258,7 +259,6 @@ public class ModelSettingFragment extends BaseLazyFragment {
             public void onClick(View v) {
                 FastClickCheckUtil.check(v);
                 int dohUrl = Hawk.get(HawkConfig.DOH_URL, 0);
-
                 SelectDialog<String> dialog = new SelectDialog<>(mActivity);
                 dialog.setTip("请选择DNS");
                 dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<String>() {
@@ -269,6 +269,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
                         String url = OkGoHelper.getDohUrl(pos);
                         OkGoHelper.dnsOverHttps.setUrl(url.isEmpty() ? null : HttpUrl.get(url));
                         IjkMediaPlayer.toggleDotPort(pos > 0);
+                        dialog.dismiss();
                     }
 
                     @Override
@@ -385,6 +386,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
                     public void click(IJKCode value, int pos) {
                         value.selected(true);
                         tvMediaCodec.setText(value.getName());
+                        dialog.dismiss();
                     }
 
                     @Override
@@ -424,6 +426,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
                     public void click(Integer value, int pos) {
                         Hawk.put(HawkConfig.PLAY_SCALE, value);
                         tvScale.setText(PlayerHelper.getScaleName(value));
+                        dialog.dismiss();
                     }
 
                     @Override
@@ -467,6 +470,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
                         Hawk.put(HawkConfig.PLAY_TYPE, thisPlayerType);
                         tvPlay.setText(PlayerHelper.getPlayerName(thisPlayerType));
                         PlayerHelper.init();
+                        dialog.dismiss();
                     }
 
                     @Override
@@ -504,6 +508,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
                         Hawk.put(HawkConfig.PLAY_RENDER, value);
                         tvRender.setText(PlayerHelper.getRenderName(value));
                         PlayerHelper.init();
+                        dialog.dismiss();
                     }
 
                     @Override
@@ -540,6 +545,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
                     public void click(Integer value, int pos) {
                         Hawk.put(HawkConfig.HOME_REC, value);
                         tvHomeRec.setText(getHomeRecName(value));
+                        dialog.dismiss();
                     }
 
                     @Override
@@ -575,6 +581,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
                     public void click(Integer value, int pos) {
                         Hawk.put(HawkConfig.SEARCH_VIEW, value);
                         tvSearchView.setText(getSearchView(value));
+                        dialog.dismiss();
                     }
 
                     @Override
@@ -626,6 +633,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
                     public void click(Integer value, int pos) {
                         Hawk.put(HawkConfig.HISTORY_NUM, value);
                         tvHistoryNum.setText(HistoryHelper.getHistoryNumName(value));
+                        dialog.dismiss();
                     }
 
                     @Override
