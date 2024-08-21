@@ -22,7 +22,9 @@ import java.util.List;
 
 public class SelectDialogAdapter<T> extends ListAdapter<T, SelectDialogAdapter.SelectViewHolder> {
 
-    class SelectViewHolder extends RecyclerView.ViewHolder {
+    private boolean muteCheck = false;
+
+    static class SelectViewHolder extends RecyclerView.ViewHolder {
 
         public SelectViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
@@ -54,11 +56,16 @@ public class SelectDialogAdapter<T> extends ListAdapter<T, SelectDialogAdapter.S
 
     private int select = 0;
 
-    private SelectDialogInterface dialogInterface;
+    private SelectDialogInterface dialogInterface = null;
 
     public SelectDialogAdapter(SelectDialogInterface dialogInterface, DiffUtil.ItemCallback diffCallback) {
+        this(dialogInterface, diffCallback, false);
+    }
+
+    public SelectDialogAdapter(SelectDialogInterface dialogInterface, DiffUtil.ItemCallback diffCallback, boolean muteCheck) {
         super(diffCallback);
         this.dialogInterface = dialogInterface;
+        this.muteCheck = muteCheck;
     }
 
     public void setData(List<T> newData, int defaultSelect) {
@@ -76,15 +83,15 @@ public class SelectDialogAdapter<T> extends ListAdapter<T, SelectDialogAdapter.S
 
     @Override
     public SelectDialogAdapter.SelectViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
-        return new SelectDialogAdapter.SelectViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_dialog_select, parent, false));
+        return new SelectViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_dialog_select, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull @NotNull SelectDialogAdapter.SelectViewHolder holder, @SuppressLint("RecyclerView") int position) {
+    public void onBindViewHolder(@NonNull @NotNull SelectDialogAdapter.SelectViewHolder holder, @SuppressLint("RecyclerView") int position) {    
         T value = data.get(position);
         String name = dialogInterface.getDisplay(value);
         TextView view = holder.itemView.findViewById(R.id.tvName);
-        if (position == select) {
+        if (!muteCheck && position == select) {
             view.setTextColor(0xffE6C200);
             view .setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
         }else {
@@ -95,7 +102,7 @@ public class SelectDialogAdapter<T> extends ListAdapter<T, SelectDialogAdapter.S
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (position == select)
+                if (!muteCheck && position == select)
                     return;
                 notifyItemChanged(select);
                 select = position;
