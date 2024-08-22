@@ -1374,7 +1374,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="重置壁纸"
+                            android:text="默认壁纸"
                             android:shadowColor="@color/color_000000_80"
                             android:shadowDx="5"
                             android:shadowDy="5"
