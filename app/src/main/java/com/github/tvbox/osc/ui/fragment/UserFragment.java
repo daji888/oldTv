@@ -61,12 +61,14 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
     private LinearLayout tvHistory;
     private LinearLayout tvCollect;
     private LinearLayout tvPush;
+    private LinearLayout tvExit;
     private TextView tvLive1;
     private TextView tvSearch1;
     private TextView tvSetting1;
     private TextView tvHistory1;
     private TextView tvCollect1;
     private TextView tvPush1;
+    private TextView tvExit1;
     public static HomeHotVodAdapter homeHotVodAdapter;
     private List<Movie.Video> homeSourceRec;
     public static TvRecyclerView tvHotList1;
@@ -128,30 +130,35 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
         tvCollect = findViewById(R.id.tvFavorite);
         tvHistory = findViewById(R.id.tvHistory);
         tvPush = findViewById(R.id.tvPush);
+        tvExit = findViewById(R.id.tvExit);
         tvLive1 = (TextView) findViewById(R.id.tvLive1);
         tvSearch1 = (TextView) findViewById(R.id.tvSearch1);
         tvSetting1 = (TextView) findViewById(R.id.tvSetting1);
         tvCollect1 = (TextView) findViewById(R.id.tvFavorite1);
         tvHistory1 = (TextView) findViewById(R.id.tvHistory1);
         tvPush1 = (TextView) findViewById(R.id.tvPush1);
+        tvExit1 = findViewById(R.id.tvExit1);
         tvLive.setOnClickListener(this);
         tvSearch.setOnClickListener(this);
         tvSetting.setOnClickListener(this);
         tvHistory.setOnClickListener(this);
         tvPush.setOnClickListener(this);
         tvCollect.setOnClickListener(this);
+        tvExit.setOnClickListener(this);
         tvLive.setOnFocusChangeListener(focusChangeListener);
         tvSearch.setOnFocusChangeListener(focusChangeListener);
         tvSetting.setOnFocusChangeListener(focusChangeListener);
         tvHistory.setOnFocusChangeListener(focusChangeListener);
         tvPush.setOnFocusChangeListener(focusChangeListener);
         tvCollect.setOnFocusChangeListener(focusChangeListener);
+        tvExit.setOnFocusChangeListener(focusChangeListener);
         tvLive1.setOnFocusChangeListener(focusChangeListener);
         tvSearch1.setOnFocusChangeListener(focusChangeListener);
         tvSetting1.setOnFocusChangeListener(focusChangeListener);
         tvHistory1.setOnFocusChangeListener(focusChangeListener);
         tvPush1.setOnFocusChangeListener(focusChangeListener);
         tvCollect1.setOnFocusChangeListener(focusChangeListener);
+        tvExit1.setOnFocusChangeListener(focusChangeListener);
         tvHotList1 = findViewById(R.id.tvHotList1);
         tvHotList2 = findViewById(R.id.tvHotList2);
         homeHotVodAdapter = new HomeHotVodAdapter();
@@ -371,6 +378,13 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
                 tvPush1.setTextColor(Color.GREEN);
                 tvPush1.getPaint().setFakeBoldText(false);
             }
+            if (tvExit.hasFocus()) {
+                tvExit1.setTextColor(Color.RED);
+                tvExit1.getPaint().setFakeBoldText(true);
+            } else {
+                tvExit1.setTextColor(Color.GREEN); 
+                tvExit1.getPaint().setFakeBoldText(false);
+            }
         }
     };
 
@@ -393,6 +407,8 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
             jumpActivity(PushActivity.class);
         } else if (v.getId() == R.id.tvFavorite) {
             jumpActivity(CollectActivity.class);
+        } else if (v.getId() == R.id.tvExit) {
+            System.exit(0);
         }
     }
 
