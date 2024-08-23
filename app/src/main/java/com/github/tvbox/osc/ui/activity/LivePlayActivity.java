@@ -1696,7 +1696,7 @@ public class LivePlayActivity extends BaseActivity {
                         if (liveHistory.contains(current))
                             idx = liveHistory.indexOf(current);
                         ApiHistoryDialog dialog = new ApiHistoryDialog(LivePlayActivity.this);
-                        dialog.setTip("直播历史列表");
+                        dialog.setTip("切换直播");
                         dialog.setAdapter(new ApiHistoryDialogAdapter.SelectDialogInterface() {
                             @Override
                             public void click(String liveURL) {
