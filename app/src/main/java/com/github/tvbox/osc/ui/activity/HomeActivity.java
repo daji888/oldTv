@@ -499,7 +499,8 @@ public class HomeActivity extends BaseActivity {
             EventBus.getDefault().unregister(this);
             AppManager.getInstance().appExit(0);
             ControlManager.get().stopServer();
-            finish();
+        //    finish();
+            System.exit(0);
             super.onBackPressed();
         } else {
             if(dataInitOk && jarInitOk){
