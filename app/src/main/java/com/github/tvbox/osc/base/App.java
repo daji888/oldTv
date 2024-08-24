@@ -74,18 +74,18 @@ public class App extends MultiDexApplication {
         putDefault(HawkConfig.HOME_REC_STYLE, true);         //首页多行: true=是, false=否
         putDefault(HawkConfig.HISTORY_NUM, 2);               //历史条数: 0=50条, 1=100条, 2=200条
         // 播放器选项
-        putDefault(HawkConfig.SHOW_PREVIEW, false);          //小屏预览: true=开启, false=关闭
+        putDefault(HawkConfig.SHOW_PREVIEW, true);           //窗口预览: true=开启, false=关闭
         putDefault(HawkConfig.PLAY_RENDER, 0);               //渲染方式: 0=Textureview, 1=Surfaceview
         putDefault(HawkConfig.PLAY_SCALE, 0);                //画面缩放: 0=等比, 1=16:9, 2=4:3, 3=填充, 4=原始, 5=裁剪
         putDefault(HawkConfig.PLAY_TYPE, 1);                 //播放器: 0=系统, 1=IJK, 2=EXO, 3=MX, 4=Reex, 5=Kodi
         putDefault(HawkConfig.IJK_CODEC, "硬解");            //IJK解码: 软解, 硬解
         // 系统选项
-        putDefault(HawkConfig.SEARCH_VIEW, 0);               //搜索展示: 0=文字列表, 1=缩略图
+        putDefault(HawkConfig.SEARCH_VIEW, 1);               //搜索展示: 0=文字列表, 1=缩略图
         putDefault(HawkConfig.PARSE_WEBVIEW, true);          //嗅探Webview: true=系统自带, false=XWalkView
         putDefault(HawkConfig.DOH_URL, 0);                   //安全DNS: 0=运营商, 1=腾讯, 2=阿里, 3=360, 4=Google, 5=AdGuard, 6=Quad9
-        putDefault(HawkConfig.API_URL, "http://www.饭太硬.com/tv/");
-        putDefault(HawkConfig.LIVE_URL, "https://gh-proxy.com/raw.githubusercontent.com/daji888/ys/master/tv.txt");
-        putDefault(HawkConfig.EPG_URL, "http://epg.mxdyeah.top/api/diyp/?ch={name}&date={date}");
+        putDefault(HawkConfig.API_URL, "http://139.224.73.238:16555/balabala");
+        putDefault(HawkConfig.LIVE_URL, "http://139.224.73.238:16555/lib/live.txt");
+        putDefault(HawkConfig.EPG_URL, "http://139.224.73.238:16555/lib/epg.php?ch={name}&date={date}");
     }
 
     public static App getInstance() {
