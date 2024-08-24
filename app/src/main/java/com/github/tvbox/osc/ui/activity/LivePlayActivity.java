@@ -103,7 +103,6 @@ import com.github.tvbox.osc.ui.adapter.SelectDialogAdapter;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.annotation.NonNull;
 import org.jetbrains.annotations.NotNull;
-import com.github.tvbox.osc.util.StringUtils;
 
 /**
  * @author pj567
@@ -1558,7 +1557,7 @@ public class LivePlayActivity extends BaseActivity {
                                 name = name.replace("N/A，", "");
                                 name = name.replace("，N/A", "");
                         //        name = name.replace(" ", "");
-                                return name + (StringUtils.isEmpty(val.language) ? "" : "，" + val.language);
+                                return name + (com.github.tvbox.osc.util.StringUtils.isEmpty(val.language) ? "" : "，" + val.language);
                             }
                         }, new DiffUtil.ItemCallback<TrackInfoBean>() {
                             @Override
