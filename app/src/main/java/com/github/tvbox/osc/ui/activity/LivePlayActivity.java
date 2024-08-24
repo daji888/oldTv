@@ -1557,7 +1557,7 @@ public class LivePlayActivity extends BaseActivity {
                                 name = name.replace("N/A，", "");
                                 name = name.replace("，N/A", "");
                         //        name = name.replace(" ", "");
-                                return name + (StringUtils.isEmpty(val.language) ? "" : "，" + val.language);
+                                return name + (com.github.tvbox.osc.util.StringUtils.isEmpty(val.language) ? "" : "，" + val.language);
                             }
                         }, new DiffUtil.ItemCallback<TrackInfoBean>() {
                             @Override
