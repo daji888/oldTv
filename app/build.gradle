@@ -82,7 +82,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.recyclerview:recyclerview:1.3.2'
     implementation files('libs/thunder.jar')
-    implementation files('libs/commons-lang3-3.14.0.jar')
+    implementation files('libs/commons-lang3-3.16.0.jar')
     implementation project(":quickjs")
     
     annotationProcessor 'androidx.room:room-compiler:2.6.1'
