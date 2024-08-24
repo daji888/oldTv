@@ -204,8 +204,8 @@ public class LivePlayActivity extends BaseActivity {
     SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd");
     private View backcontroller;
     private CountDownTimer countDownTimer3;
-    private int videoWidth = 1280;
-    private int videoHeight = 720;
+    private int videoWidth = 1920;
+    private int videoHeight = 1080;
     private TextView tv_currentpos;
     private TextView tv_duration;
     private SeekBar sBar;
@@ -1222,9 +1222,9 @@ public class LivePlayActivity extends BaseActivity {
             @Override
             public void changeSource(int direction) {
                 if (direction > 0)
-                    if(isBack){  //手机换源和显示时移控制栏
+                    if (isBack) {  //手机换源和显示时移控制栏
                         showProgressBars(true);
-                    }else{
+                    } else {
                         playNextSource();
                     }
                 else
