@@ -131,7 +131,7 @@ dependencies {
     implementation 'commons-io:commons-io:2.11.0'
     implementation 'com.googlecode.juniversalchardet:juniversalchardet:1.0.3'
     configurations {
-        all {
+        configureEach {
             exclude group: 'xpp3', module: 'xpp3'
         }
     }
