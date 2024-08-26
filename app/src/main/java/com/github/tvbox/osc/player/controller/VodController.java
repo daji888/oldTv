@@ -106,6 +106,7 @@ public class VodController extends BaseController {
 
     SeekBar mSeekBar;
     TextView mCurrentTime;
+    TextView mCurrentTime1;
     TextView mTotalTime;
     boolean mIsDragging;
     public FrameLayout mProgressTop;
@@ -181,6 +182,7 @@ public class VodController extends BaseController {
     protected void initView() {
         super.initView();
         mCurrentTime = findViewById(R.id.curr_time);
+        mCurrentTime1 = findViewById(R.id.curr_time);
         mTotalTime = findViewById(R.id.total_time);
         mPlayTitle = findViewById(R.id.tv_info_name);
         mPlayTitle1 = findViewById(R.id.tv_info_name1);
@@ -914,7 +916,7 @@ public class VodController extends BaseController {
                 listener.playNext(true);
             }
         }
-        mCurrentTime.setText(PlayerUtils.stringForTime(position));
+        mCurrentTime1.setText(PlayerUtils.stringForTime(position));
         mTotalTime.setText(PlayerUtils.stringForTime(duration));
         if (duration > 0) {
             mSeekBar.setEnabled(true);
