@@ -183,9 +183,10 @@ public class DefaultConfig {
     }
 
     private static final Pattern snifferMatch = Pattern.compile(
-            "http((?!http).){20,}?\\.(m3u8|mp4|flv|avi|mkv|rm|wmv|mpg|m4a)\\?.*|" +
-                    "http((?!http).){20,}\\.(m3u8|mp4|flv|avi|mkv|rm|wmv|mpg|m4a)|" +
+            "http((?!http).){12,}?\\.(m3u8|mp4|flv|avi|mkv|mp3|rm|wmv|mpg|m4a|aac|mpd)\\?.*|" +
+                    "http((?!http).){12,}\\.(m3u8|mp4|flv|avi|mkv|mp3|rm|wmv|mpg|m4a|aac|mpd)|" +
                     "http((?!http).)*?video/tos*|" +
+                    "http((?!http).)*?obj/tos*|" +
                     "http((?!http).){20,}?/m3u8\\?pt=m3u8.*|" +
                     "http((?!http).)*?default\\.ixigua\\.com/.*|" +
                     "http((?!http).)*?dycdn-tos\\.pstatp[^\\?]*|" +
