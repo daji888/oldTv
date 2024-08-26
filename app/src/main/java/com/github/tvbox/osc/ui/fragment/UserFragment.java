@@ -109,7 +109,7 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
                 vod.name = vodInfo.name;
                 vod.pic = vodInfo.pic;
                 if (vodInfo.playNote != null && !vodInfo.playNote.isEmpty())
-                    vod.note = "上次看到" + vodInfo.playNote;
+                    vod.note = "上次看到：" + vodInfo.playNote;
                 vodList.add(vod);
             }
             homeHotVodAdapter.setNewData(vodList);
