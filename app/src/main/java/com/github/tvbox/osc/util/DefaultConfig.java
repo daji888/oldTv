@@ -200,12 +200,12 @@ public class DefaultConfig {
                     "http((?!http).)*?netease\\.com/file/.*"
     );
     public static boolean isVideoFormat(String url) {
-        if (url.contains("=http")) {
+        Uri uri = Uri.parse(url);
+        String path = uri.getPath();
+        if (TextUtils.isEmpty(path)) {
             return false;
         }
-        if (snifferMatch.matcher(url).find()) {
-            return !url.contains(".js") && !url.contains(".css") && !url.contains(".jpg") && !url.contains(".png") && !url.contains(".gif") && !url.contains(".ico") && !url.contains("rl=") && !url.contains(".html");
-        }
+        if (snifferMatch.matcher(url).find()) return true;
         return false;
     }
 
