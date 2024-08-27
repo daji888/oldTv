@@ -87,7 +87,7 @@ public class LiveEpgAdapter extends BaseQuickAdapter<Epginfo, BaseViewHolder> {
                 timeview.setFreezesText(true);
                 shiyi.setText("回看中");
                 shiyi.setTextColor(Color.RED);
-                shiyi.setBackgroundColor(R.color.color_0CFF00);
+                shiyi.setBackgroundColor(0xff0CFF00);
                 if (new Date().compareTo(value.startdateTime) >= 0 && new Date().compareTo(value.enddateTime) <= 0) {
                     shiyi.setVisibility(View.VISIBLE);
                     shiyi.setBackgroundColor(Color.YELLOW);
