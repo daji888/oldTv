@@ -17,6 +17,7 @@
             <shape>
 <!--                进度条颜色-->
                 <solid android:color="@color/color_CC0000" />
+                <corners android:radius="@dimen/vs_10" />
             </shape>
         </clip>
     </item>
