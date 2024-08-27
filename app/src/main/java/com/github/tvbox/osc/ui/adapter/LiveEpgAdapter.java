@@ -44,8 +44,8 @@ public class LiveEpgAdapter extends BaseQuickAdapter<Epginfo, BaseViewHolder> {
         AudioWaveView wqddg_AudioWaveView = holder.getView(R.id.wqddg_AudioWaveView);
         wqddg_AudioWaveView.setVisibility(View.GONE);
         if (value.index == selectedEpgIndex && value.index != focusedEpgIndex && (value.currentEpgDate.equals(shiyiDate) || value.currentEpgDate.equals(timeFormat.format(new Date())))) {
-            textview.setTextColor(mContext.getResources().getColor(R.color.color_1890FF));
-            timeview.setTextColor(mContext.getResources().getColor(R.color.color_1890FF));
+            textview.setTextColor(mContext.getResources().getColor(R.color.color_FF5F00));
+            timeview.setTextColor(mContext.getResources().getColor(R.color.color_FF5F00));
         }else {
             textview.setTextColor(Color.WHITE);
             timeview.setTextColor(Color.WHITE);
@@ -87,7 +87,7 @@ public class LiveEpgAdapter extends BaseQuickAdapter<Epginfo, BaseViewHolder> {
                 timeview.setFreezesText(true);
                 shiyi.setText("回看中");
                 shiyi.setTextColor(Color.RED);
-                shiyi.setBackgroundColor(Color.rgb(12, 255, 0));
+                shiyi.setBackgroundColor(0xff0CFF00);
                 if (new Date().compareTo(value.startdateTime) >= 0 && new Date().compareTo(value.enddateTime) <= 0) {
                     shiyi.setVisibility(View.VISIBLE);
                     shiyi.setBackgroundColor(Color.YELLOW);
