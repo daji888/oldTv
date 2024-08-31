@@ -535,12 +535,13 @@ public class LivePlayActivity extends BaseActivity {
         } else if (tvRightSettingLayout.getVisibility() == View.VISIBLE) {
             mHandler.removeCallbacks(mHideSettingLayoutRun);
             mHandler.post(mHideSettingLayoutRun);
-        } else if( backcontroller.getVisibility() == View.VISIBLE){ //
+        } else if ( backcontroller.getVisibility() == View.VISIBLE) {
             backcontroller.setVisibility(View.GONE);
-        }else if(isBack){
-            isBack= false;
-            playPreSource();
-        }else {
+        } else if (isBack) {
+            isBack = false;
+        //    playPreSource();
+            playChannel(currentChannelGroupIndex, currentLiveChannelIndex, true);
+        } else {
             mHandler.removeCallbacks(mConnectTimeoutChangeSourceRun);
             mHandler.removeCallbacks(mUpdateNetSpeedRun);
             super.onBackPressed();
