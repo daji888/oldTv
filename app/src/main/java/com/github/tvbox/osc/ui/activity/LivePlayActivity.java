@@ -106,6 +106,8 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.annotation.NonNull;
 import org.jetbrains.annotations.NotNull;
 
+import static xyz.doikki.videoplayer.util.PlayerUtils.stringForTime;
+
 /**
  * @author pj567
  * @date :2021/1/12
@@ -212,6 +214,7 @@ public class LivePlayActivity extends BaseActivity {
     private View iv_playpause;
     private View iv_play;
     private  boolean show = false;
+    boolean mIsDragging;
 
     TextView tv_pause_progress_text;
 
@@ -988,16 +991,18 @@ public class LivePlayActivity extends BaseActivity {
                             mRightEpgList.smoothScrollToPosition(position);
                         }
                     });
-                    shiyi_time_c = (int)getTime(formatDate.format(nowday) +" " + selectedData.start + ":" +"30", formatDate.format(nowday) +" " + selectedData.end + ":" +"30");
+                    shiyi_time_c = (int)getTime(formatDate.format(nowday) + " " + selectedData.start + ":" + "30", formatDate.format(nowday) + " " + selectedData.end + ":" + "30");
                     ViewGroup.LayoutParams lp =  iv_play.getLayoutParams();
                     lp.width=videoHeight/7;
                     lp.height=videoHeight/7;
                     sBar = (SeekBar) findViewById(R.id.pb_progressbar);
+              //      sBar.setMin(0);
                     sBar.setMax(shiyi_time_c*1000);
-                    sBar.setProgress((int)  mVideoView.getCurrentPosition());
-                    tv_currentpos.setText(durationToString((int)mVideoView.getCurrentPosition()));
-                    tv_duration.setText(durationToString(shiyi_time_c*1000));
-                    ((TextView) findViewById(R.id.tv_pause_progress_text)).setText((durationToString((int)mVideoView.getCurrentPosition())) + " / " + (durationToString(shiyi_time_c*1000)));
+                    sBar.setKeyProgressIncrement(shiyi_time_c*10);
+              //      sBar.setProgress((int)  mVideoView.getCurrentPosition());
+              //      tv_currentpos.setText(durationToString((int) mVideoView.getCurrentPosition()));
+              //      tv_duration.setText(durationToString(shiyi_time_c*1000));
+              //      ((TextView) findViewById(R.id.tv_pause_progress_text)).setText((durationToString((int) mVideoView.getCurrentPosition())) + " / " + (durationToString(shiyi_time_c*1000)));
                     showProgressBars(true);
                     ll_right_top_huikan.setVisibility(View.VISIBLE);
                     isBack = true;
@@ -1071,12 +1076,14 @@ public class LivePlayActivity extends BaseActivity {
                     lp.width=videoHeight/7;
                     lp.height=videoHeight/7;
                     sBar = (SeekBar) findViewById(R.id.pb_progressbar);
+              //      sBar.setMin(0);
                     sBar.setMax(shiyi_time_c*1000);
-                    sBar.setProgress((int)  mVideoView.getCurrentPosition());
+                    sBar.setKeyProgressIncrement(shiyi_time_c*10);
+              //      sBar.setProgress((int)  mVideoView.getCurrentPosition());
                    // long dd = mVideoView.getDuration();
-                    tv_currentpos.setText(durationToString((int)mVideoView.getCurrentPosition()));
-                    tv_duration.setText(durationToString(shiyi_time_c*1000));
-                    ((TextView) findViewById(R.id.tv_pause_progress_text)).setText((durationToString((int)mVideoView.getCurrentPosition())) + " / " + (durationToString(shiyi_time_c*1000)));
+              //      tv_currentpos.setText(durationToString((int) mVideoView.getCurrentPosition()));
+              //      tv_duration.setText(durationToString(shiyi_time_c*1000));
+              //      ((TextView) findViewById(R.id.tv_pause_progress_text)).setText((durationToString((int) mVideoView.getCurrentPosition())) + " / " + (durationToString(shiyi_time_c*1000)));
                     showProgressBars(true);
                     ll_right_top_huikan.setVisibility(View.VISIBLE);
                     isBack = true;
