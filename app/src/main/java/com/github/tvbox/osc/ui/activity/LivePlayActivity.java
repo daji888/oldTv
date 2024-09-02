@@ -2172,20 +2172,18 @@ public class LivePlayActivity extends BaseActivity {
         }
         return result;
     }
-    public void showProgressBars( boolean show){
-
+    
+    public void showProgressBars( boolean show) {
         sBar.requestFocus();
-        if(show){
+        if (show) {
             backcontroller.setVisibility(View.VISIBLE);
             ll_epg.setVisibility(View.GONE);
-        }else{
+        } else {
             backcontroller.setVisibility(View.GONE);
-            if(!tip_epg1.getText().equals("暂无节目信息")){
+            if (!tip_epg1.getText().equals("暂无节目信息")) {
                 ll_epg.setVisibility(View.VISIBLE);
             }
         }
-
-
 
         iv_play.setOnClickListener(new View.OnClickListener() {
 
@@ -2201,12 +2199,12 @@ public class LivePlayActivity extends BaseActivity {
         iv_playpause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                if(mVideoView.isPlaying()){
+                if (mVideoView.isPlaying()) {
                     mVideoView.pause();
                     countDownTimer.cancel();
                     iv_play.setVisibility(View.VISIBLE);
                     iv_playpause.setBackground(ContextCompat.getDrawable(LivePlayActivity.context, R.drawable.icon_play));
-                }else{
+                } else {
                     mVideoView.start();
                     iv_play.setVisibility(View.INVISIBLE);
                     countDownTimer.start();
@@ -2216,43 +2214,49 @@ public class LivePlayActivity extends BaseActivity {
         });
         sBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
-
-            @Override
-            public void onStopTrackingTouch(SeekBar arg0) {
-
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar arg0) {
-
-            }
-
            @Override
             public void onProgressChanged(SeekBar sb, int progress, boolean fromuser) {
                 if (!fromuser) {
                     return;
                 }
-                if(fromuser){
-                    if(countDownTimer!=null){
-                        mVideoView.seekTo(progress);
+                if (fromuser) {
+                    long duration = mVideoView.getDuration();
+                    long newPosition = (duration * progress) / sBar.getMax();
+                    mVideoView.seekTo((int) newPosition);
+                    if (tv_currentpos != null)
+                        tv_currentpos.setText(stringForTime((int) newPosition));
+                    if (countDownTimer != null) {
                         countDownTimer.cancel();
                         countDownTimer.start();
                     }
                 }
             }
+            
+            @Override
+            public void onStartTrackingTouch(SeekBar arg0) {
+                mIsDragging = true;
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar arg0) {
+                long duration = mVideoView.getDuration();
+                long newPosition = (duration * sBar.getProgress()) / sBar.getMax();
+                mVideoView.seekTo((int) newPosition);
+                mIsDragging = false;
+            }
         });
         sBar.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View arg0, int keycode, KeyEvent event) {
-                if(event.getAction()==KeyEvent.ACTION_DOWN){
-                    if(keycode==KeyEvent.KEYCODE_DPAD_CENTER||keycode==KeyEvent.KEYCODE_ENTER){
-                        if(mVideoView.isPlaying()){
+                if (event.getAction()==KeyEvent.ACTION_DOWN) {
+                    if (keycode==KeyEvent.KEYCODE_DPAD_CENTER||keycode==KeyEvent.KEYCODE_ENTER) {
+                        if (mVideoView.isPlaying()) {
                             mVideoView.pause();
                             countDownTimer.cancel();
                             tv_top_l_container.setVisibility(View.VISIBLE);
                             iv_play.setVisibility(View.VISIBLE);
                             iv_playpause.setBackground(ContextCompat.getDrawable(LivePlayActivity.context, R.drawable.icon_play));
-                        }else{
+                        } else {
                             mVideoView.start();
                             tv_top_l_container.setVisibility(View.INVISIBLE);
                             iv_play.setVisibility(View.INVISIBLE);
@@ -2264,39 +2268,35 @@ public class LivePlayActivity extends BaseActivity {
                 return false;
             }
         });
-        if(mVideoView.isPlaying()){
+        if (mVideoView.isPlaying()) {
             iv_play.setVisibility(View.INVISIBLE);
             iv_playpause.setBackground(ContextCompat.getDrawable(LivePlayActivity.context, R.drawable.vod_pause));
-        }else{
+        } else {
             iv_play.setVisibility(View.VISIBLE);
             iv_playpause.setBackground(ContextCompat.getDrawable(LivePlayActivity.context, R.drawable.icon_play));
         }
-        if(countDownTimer3==null){
+        if (countDownTimer3 == null) {
             countDownTimer3 = new CountDownTimer(6000, 1000) {
 
                 @Override
                 public void onTick(long arg0) {
-
-                    if(mVideoView != null){
+                    if (mVideoView != null) {
                         sBar.setProgress((int) mVideoView.getCurrentPosition());
-                        tv_currentpos.setText(durationToString((int) mVideoView.getCurrentPosition()));
-                        ((TextView) findViewById(R.id.tv_pause_progress_text)).setText((durationToString((int)mVideoView.getCurrentPosition())) + " / " + (durationToString(shiyi_time_c*1000)));
-
+                        tv_duration.setText(durationToString(shiyi_time_c*1000));
+                        ((TextView) findViewById(R.id.tv_pause_progress_text)).setText((durationToString((int) mVideoView.getCurrentPosition())) + " / " + (durationToString(shiyi_time_c*1000)));
                     }
-
                 }
 
                 @Override
                 public void onFinish() {
-                    if(backcontroller.getVisibility() == View.VISIBLE){
+                    if (backcontroller.getVisibility() == View.VISIBLE) {
                         backcontroller.setVisibility(View.GONE);
                     }
                 }
             };
-        }else{
+        } else {
             countDownTimer3.cancel();
         }
         countDownTimer3.start();
     }
-
 }
