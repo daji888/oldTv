@@ -2282,6 +2282,7 @@ public class LivePlayActivity extends BaseActivity {
                 public void onTick(long arg0) {
                     if (mVideoView != null) {
                         sBar.setProgress((int) mVideoView.getCurrentPosition());
+                        tv_currentpos.setText(durationToString((int) mVideoView.getCurrentPosition()));
                         tv_duration.setText(durationToString(shiyi_time_c*1000));
                         ((TextView) findViewById(R.id.tv_pause_progress_text)).setText((durationToString((int) mVideoView.getCurrentPosition())) + " / " + (durationToString(shiyi_time_c*1000)));
                     }
