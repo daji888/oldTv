@@ -30,6 +30,7 @@ import android.util.DisplayMetrics;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.core.content.ContextCompat;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -97,6 +98,7 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 
 public class DetailActivity extends BaseActivity {
+    public static Context context;
     private LinearLayout llLayout;
     private FragmentContainerView llPlayerFragmentContainer;
     private View llPlayerFragmentContainerBlock;
@@ -149,6 +151,7 @@ public class DetailActivity extends BaseActivity {
 
     @Override
     protected void init() {
+        context = this;
         EventBus.getDefault().register(this);
         initView();
         initViewModel();
@@ -810,7 +813,8 @@ public class DetailActivity extends BaseActivity {
         scrollView.addView(messageText);
         LinearLayout layout = new LinearLayout(DetailActivity.this);
         layout.setOrientation(LinearLayout.VERTICAL);
-        layout.setBackgroundColor(0xff6CEE6C);
+        layout.setBackground(ContextCompat.getDrawable(DetailActivity.context, R.drawable.shape_dialog_bg_main));
+   //     layout.setBackgroundColor(0xff6CEE6C);
         layout.setPadding(20, 20, 20, 20);
         layout.addView(titleText);
         layout.addView(scrollView);
