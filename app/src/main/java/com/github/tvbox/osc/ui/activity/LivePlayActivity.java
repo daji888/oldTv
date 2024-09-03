@@ -361,7 +361,7 @@ public class LivePlayActivity extends BaseActivity {
         }
         String finalChannelName = channelName;
         epgListAdapter.CanBack(currentLiveChannelItem.getinclude_back());
-        //epgListAdapter.updateData(date, new ArrayList<>());
+    //    epgListAdapter.updateData(date, new ArrayList<>());
         String epg;
         if (epgStringAddress.contains("{name}") && epgStringAddress.contains("{date}")) {
             epg = epgStringAddress.replace("{name}", URLEncoder.encode(epgTagName)).replace("{date}", timeFormat.format(date));
@@ -2170,7 +2170,6 @@ public class LivePlayActivity extends BaseActivity {
         }
 
         iv_play.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View arg0) {
                 mVideoView.start();
@@ -2196,8 +2195,8 @@ public class LivePlayActivity extends BaseActivity {
                 }
             }
         });
+        
         sBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-
             @Override
             public void onProgressChanged(SeekBar sb, int progress, boolean fromuser) {
                 if (!fromuser) {
@@ -2229,11 +2228,12 @@ public class LivePlayActivity extends BaseActivity {
                 mIsDragging = false;
             }
         });
+        
         sBar.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View arg0, int keycode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_DOWN) {
-                    if (keycode == KeyEvent.KEYCODE_DPAD_CENTER || keycode==KeyEvent.KEYCODE_ENTER) {
+                    if (keycode == KeyEvent.KEYCODE_DPAD_CENTER || keycode == KeyEvent.KEYCODE_ENTER) {
                         if (mVideoView.isPlaying()) {
                             mVideoView.pause();
                             countDownTimer.cancel();
