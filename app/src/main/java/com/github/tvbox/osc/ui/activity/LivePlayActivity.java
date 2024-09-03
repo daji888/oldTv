@@ -185,7 +185,6 @@ public class LivePlayActivity extends BaseActivity {
 
     private List<LiveDayListGroup> liveDayList = new ArrayList<>();
 
-
     //laodao 7day replay
     public static SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
     public static SimpleDateFormat formatDate1 = new SimpleDateFormat("MM-dd");
@@ -341,7 +340,6 @@ public class LivePlayActivity extends BaseActivity {
                 });
             }
         } else {
-
             Epginfo epgbcinfo = new Epginfo(date, "暂无节目信息", date, "00:00", "23:59", 0);
             arrayList.add(epgbcinfo);
             epgdata = arrayList;
@@ -364,7 +362,6 @@ public class LivePlayActivity extends BaseActivity {
         String finalChannelName = channelName;
         epgListAdapter.CanBack(currentLiveChannelItem.getinclude_back());
         //epgListAdapter.updateData(date, new ArrayList<>());
-
         String epg;
         if (epgStringAddress.contains("{name}") && epgStringAddress.contains("{date}")) {
             epg = epgStringAddress.replace("{name}", URLEncoder.encode(epgTagName)).replace("{date}", timeFormat.format(date));
@@ -378,9 +375,7 @@ public class LivePlayActivity extends BaseActivity {
             }
 
             public void onResponse(String paramString) {
-
                 ArrayList arrayList = new ArrayList();
-
                 Log.d("返回的EPG信息", paramString);
                 try {
                     if (paramString.contains("epg_data")) {
@@ -390,7 +385,7 @@ public class LivePlayActivity extends BaseActivity {
                                 JSONObject jSONObject = jSONArray.getJSONObject(b);
                                 Epginfo epgbcinfo = new Epginfo(date,jSONObject.optString("title"), date, jSONObject.optString("start"), jSONObject.optString("end"),b);
                                 arrayList.add(epgbcinfo);
-                                Log.d("EPG信息:", day +"  "+ jSONObject.optString("start") +" - "+jSONObject.optString("end") + "  " +jSONObject.optString("title"));
+                                Log.d("EPG信息:", day + "  " + jSONObject.optString("start") + " - " + jSONObject.optString("end") + "  " + jSONObject.optString("title"));
                             }
                     }
 
@@ -984,18 +979,18 @@ public class LivePlayActivity extends BaseActivity {
                             mRightEpgList.smoothScrollToPosition(position);
                         }
                     });
-                    shiyi_time_c = (int)getTime(formatDate.format(nowday) +" " + selectedData.start + ":" +"30", formatDate.format(nowday) +" " + selectedData.end + ":" +"30");
-                    ViewGroup.LayoutParams lp =  iv_play.getLayoutParams();
-                    lp.width=videoHeight/7;
-                    lp.height=videoHeight/7;
-                    sBar = (SeekBar) findViewById(R.id.pb_progressbar);
+                    shiyi_time_c = (int) getTime(formatDate.format(nowday) + " " + selectedData.start + ":" + "30", formatDate.format(nowday) + " " + selectedData.end + ":" + "30");
+                    ViewGroup.LayoutParams lp = iv_play.getLayoutParams();
+                    lp.width=videoHeight / 7;
+                    lp.height=videoHeight / 7;
+              //      sBar = (SeekBar) findViewById(R.id.pb_progressbar);
               //      sBar.setMin(0);
-                    sBar.setMax(shiyi_time_c*1000);
-                    sBar.setKeyProgressIncrement(shiyi_time_c*10);
+              //      sBar.setMax(shiyi_time_c * 1000);
+              //      sBar.setKeyProgressIncrement(shiyi_time_c * 10);
               //      sBar.setProgress((int)  mVideoView.getCurrentPosition());
               //      tv_currentpos.setText(durationToString((int) mVideoView.getCurrentPosition()));
-              //      tv_duration.setText(durationToString(shiyi_time_c*1000));
-              //      ((TextView) findViewById(R.id.tv_pause_progress_text)).setText((durationToString((int) mVideoView.getCurrentPosition())) + " / " + (durationToString(shiyi_time_c*1000)));
+              //      tv_duration.setText(durationToString(shiyi_time_c * 1000));
+              //      ((TextView) findViewById(R.id.tv_pause_progress_text)).setText((durationToString((int) mVideoView.getCurrentPosition())) + " / " + (durationToString(shiyi_time_c * 1000)));
                     showProgressBars(true);
                     ll_right_top_huikan.setVisibility(View.VISIBLE);
                     isBack = true;
@@ -1066,17 +1061,17 @@ public class LivePlayActivity extends BaseActivity {
                     });
                     shiyi_time_c = (int) getTime(formatDate.format(nowday) + " " + selectedData.start + ":" + "30", formatDate.format(nowday) + " " + selectedData.end + ":" + "30");
                     ViewGroup.LayoutParams lp = iv_play.getLayoutParams();
-                    lp.width=videoHeight/7;
-                    lp.height=videoHeight/7;
-                    sBar = (SeekBar) findViewById(R.id.pb_progressbar);
+                    lp.width=videoHeight / 7;
+                    lp.height=videoHeight / 7;
+              //      sBar = (SeekBar) findViewById(R.id.pb_progressbar);
               //      sBar.setMin(0);
-                    sBar.setMax(shiyi_time_c*1000);
-                    sBar.setKeyProgressIncrement(shiyi_time_c*10);
+              //      sBar.setMax(shiyi_time_c * 1000);
+              //      sBar.setKeyProgressIncrement(shiyi_time_c * 10);
               //      sBar.setProgress((int) mVideoView.getCurrentPosition());
                    // long dd = mVideoView.getDuration();
               //      tv_currentpos.setText(durationToString((int) mVideoView.getCurrentPosition()));
-              //      tv_duration.setText(durationToString(shiyi_time_c*1000));
-              //      ((TextView) findViewById(R.id.tv_pause_progress_text)).setText((durationToString((int) mVideoView.getCurrentPosition())) + " / " + (durationToString(shiyi_time_c*1000)));
+              //      tv_duration.setText(durationToString(shiyi_time_c * 1000));
+              //      ((TextView) findViewById(R.id.tv_pause_progress_text)).setText((durationToString((int) mVideoView.getCurrentPosition())) + " / " + (durationToString(shiyi_time_c * 1000)));
                     showProgressBars(true);
                     ll_right_top_huikan.setVisibility(View.VISIBLE);
                     isBack = true;
@@ -1793,7 +1788,6 @@ public class LivePlayActivity extends BaseActivity {
                     }
                 });
             }
-
             
             @Override
             public void onError(Response<String> response) {
@@ -1806,7 +1800,6 @@ public class LivePlayActivity extends BaseActivity {
 
     private void initLiveState() {
         String lastChannelName = Hawk.get(HawkConfig.LIVE_CHANNEL, "");
-
         int lastChannelGroupIndex = -1;
         int lastLiveChannelIndex = -1;
         for (LiveChannelGroup liveChannelGroup : liveChannelGroupList) {
@@ -2239,8 +2232,8 @@ public class LivePlayActivity extends BaseActivity {
         sBar.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View arg0, int keycode, KeyEvent event) {
-                if (event.getAction()==KeyEvent.ACTION_DOWN) {
-                    if (keycode==KeyEvent.KEYCODE_DPAD_CENTER||keycode==KeyEvent.KEYCODE_ENTER) {
+                if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                    if (keycode == KeyEvent.KEYCODE_DPAD_CENTER || keycode==KeyEvent.KEYCODE_ENTER) {
                         if (mVideoView.isPlaying()) {
                             mVideoView.pause();
                             countDownTimer.cancel();
@@ -2254,7 +2247,14 @@ public class LivePlayActivity extends BaseActivity {
                             countDownTimer.start();
                             iv_playpause.setBackground(ContextCompat.getDrawable(LivePlayActivity.context, R.drawable.vod_pause));
                         }
+                    } else if (keycode == KeyEvent.KEYCODE_DPAD_LEFT || keycode == KeyEvent.KEYCODE_DPAD_RIGHT) {
+                        mIsDragging = true;
                     }
+                } else if (event.getAction() == KeyEvent.ACTION_UP) {
+                    long duration = mVideoView.getDuration();
+                    long newPosition = (duration * sBar.getProgress()) / sBar.getMax();
+                    mVideoView.seekTo((int) newPosition);
+                    mIsDragging = false;
                 }
                 return false;
             }
@@ -2267,16 +2267,19 @@ public class LivePlayActivity extends BaseActivity {
             iv_playpause.setBackground(ContextCompat.getDrawable(LivePlayActivity.context, R.drawable.icon_play));
         }
         if (countDownTimer3 == null) {
-            countDownTimer3 = new CountDownTimer(6000, 1000) {
+            countDownTimer3 = new CountDownTimer(5000, 1000) {
 
                 @Override
                 public void onTick(long arg0) {
                     if (mVideoView != null) {
+                        sBar = (SeekBar) findViewById(R.id.pb_progressbar);
+                //      sBar.setMin(0);
+                        sBar.setMax(shiyi_time_c * 1000);
+                        sBar.setKeyProgressIncrement(shiyi_time_c * 10);
                         sBar.setProgress((int) mVideoView.getCurrentPosition());
                         tv_currentpos.setText(durationToString((int) mVideoView.getCurrentPosition()));
-                        tv_duration.setText(durationToString(shiyi_time_c*1000));
-                        ((TextView) findViewById(R.id.tv_pause_progress_text)).setText((durationToString((int) mVideoView.getCurrentPosition())) + " / " + (durationToString(shiyi_time_c*1000)));
-
+                        tv_duration.setText(durationToString(shiyi_time_c * 1000));
+                        ((TextView) findViewById(R.id.tv_pause_progress_text)).setText((durationToString((int) mVideoView.getCurrentPosition())) + " / " + (durationToString(shiyi_time_c * 1000)));
                     }
                 }
 
