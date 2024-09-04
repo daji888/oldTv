@@ -619,7 +619,7 @@ public class SourceViewModel extends ViewModel {
         }
     }
 
-    // searchContent
+    // QuicksearchContent
     public void getQuickSearch(String sourceKey, String wd) {
         SourceBean sourceBean = ApiConfig.get().getSource(sourceKey);
         int type = sourceBean.getType();
