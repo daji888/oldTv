@@ -100,7 +100,7 @@ dependencies {
     }
     implementation 'org.greenrobot:eventbus:3.3.1'
     implementation 'com.orhanobut:hawk:2.0.1'
-    implementation 'androidx.annotation:annotation:1.6.0'
+    implementation 'androidx.annotation:annotation:1.8.2'
     
     implementation "androidx.media3:media3-exoplayer:1.2.1"
     implementation "androidx.media3:media3-exoplayer-dash:1.2.1"
@@ -122,7 +122,7 @@ dependencies {
     implementation 'com.github.getActivity:XXPermissions:18.5'
     implementation 'org.jsoup:jsoup:1.16.1'
     implementation 'com.github.hedzr:android-file-chooser:v1.2.0-final'
-    implementation 'commons-io:commons-io:2.11.0'
+    implementation 'commons-io:commons-io:2.13.0'
     implementation 'com.googlecode.juniversalchardet:juniversalchardet:1.0.3'
     configurations {
         configureEach {
