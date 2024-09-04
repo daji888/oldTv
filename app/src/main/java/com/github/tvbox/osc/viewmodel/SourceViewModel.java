@@ -196,10 +196,10 @@ public class SourceViewModel extends ViewModel {
                             sortResult.postValue(null);
                         }
                     });
-        }else if (type == 4) {
+        } else if (type == 4) {
             String extend=sourceBean.getExt();
             extend=getFixUrl(extend);
-            if(URLEncoder.encode(extend).length()<1000){
+            if (URLEncoder.encode(extend).length() < 1000) {
                 OkGo.<String>get(sourceBean.getApi())
                         .tag(sourceBean.getKey() + "_sort")
                         .params("filter", "true")
@@ -335,7 +335,7 @@ public class SourceViewModel extends ViewModel {
                             listResult.postValue(null);
                         }
                     });
-        }else if (type == 4) {
+        } else if (type == 4) {
             String ext= "";
             if (sortData.filterSelect != null && sortData.filterSelect.size() > 0) {
                 try {
@@ -345,7 +345,7 @@ public class SourceViewModel extends ViewModel {
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
-            }else {
+            } else {
                 ext = Base64.encodeToString("{}".getBytes(), Base64.DEFAULT |  Base64.NO_WRAP);
             }
             OkGo.<String>get(homeSourceBean.getApi())
@@ -558,7 +558,7 @@ public class SourceViewModel extends ViewModel {
             try {
                 Spider sp = ApiConfig.get().getCSP(sourceBean);
                 String search = sp.searchContent(wd, false);
-                if(!TextUtils.isEmpty(search)){
+                if (!TextUtils.isEmpty(search)) {
                     json(searchResult, search, sourceBean.getKey());
                 } else {
                     json(searchResult, "", sourceBean.getKey());
@@ -600,7 +600,7 @@ public class SourceViewModel extends ViewModel {
                             EventBus.getDefault().post(new RefreshEvent(RefreshEvent.TYPE_SEARCH_RESULT, null));
                         }
                     });
-        }else if (type == 4) {
+        } else if (type == 4) {
             OkGo.<String>get(sourceBean.getApi())
                 .params("wd", wd)
                 .params("ac" ,"detail")
@@ -634,7 +634,7 @@ public class SourceViewModel extends ViewModel {
             searchResult.postValue(null);
         }
     }
-    // searchContent
+    // QuicksearchContent
     public void getQuickSearch(String sourceKey, String wd) {
         SourceBean sourceBean = ApiConfig.get().getSource(sourceKey);
         int type = sourceBean.getType();
