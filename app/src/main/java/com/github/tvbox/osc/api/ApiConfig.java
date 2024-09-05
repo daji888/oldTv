@@ -9,8 +9,8 @@ import com.github.catvod.crawler.JarLoader;
 import com.github.catvod.crawler.JsLoader;
 import com.github.catvod.crawler.Spider;
 import com.github.tvbox.osc.base.App;
-import com.github.tvbox.osc.bean.LiveChannelGroup;
 import com.github.tvbox.osc.bean.IJKCode;
+import com.github.tvbox.osc.bean.LiveChannelGroup;
 import com.github.tvbox.osc.bean.LiveChannelItem;
 import com.github.tvbox.osc.bean.ParseBean;
 import com.github.tvbox.osc.bean.SourceBean;
@@ -45,8 +45,11 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import okhttp3.OkHttpClient;
 
 /**
  * @author pj567
@@ -164,9 +167,14 @@ public class ApiConfig {
             configUrl = apiUrl;
         }
         String configKey = TempKey;
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        builder.readTimeout(10, TimeUnit.SECONDS); //设置当前请求的读取超时时间
+        builder.writeTimeout(10, TimeUnit.SECONDS); //设置当前请求的写入超时时间
+        builder.connectTimeout(5, TimeUnit.SECONDS); //设置当前请求的连接超时时间
         OkGo.<String>get(configUrl)
                 .headers("User-Agent", userAgent)
                 .headers("Accept", requestAccept)
+                .client(builder.build())
                 .execute(new AbsCallback<String>() {
                     @Override
                     public void onSuccess(Response<String> response) {
