@@ -8,6 +8,7 @@ import android.os.Build;
 import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.media3.common.PlaybackException;
@@ -132,10 +133,14 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
 
     @Override
     public void start() {
-        if (mMediaPlayer == null)
-            return;
-        System.gc();
-        mMediaPlayer.setPlayWhenReady(true);
+        try {
+            if (mMediaPlayer == null)
+                return;
+            System.gc();
+            mMediaPlayer.setPlayWhenReady(true);
+        } catch (Exception e) {
+            Toast.makeText(mAppContext, "播放失败:" + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -158,15 +163,19 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     @SuppressLint("UnsafeOptInUsageError")
     @Override
     public void prepareAsync() {
-        if (mMediaPlayer == null)
-            return;
-        if (mMediaSource == null) return;
-        if (mSpeedPlaybackParameters != null) {
-            mMediaPlayer.setPlaybackParameters(mSpeedPlaybackParameters);
+        try {
+            if (mMediaPlayer == null)
+                return;
+            if (mMediaSource == null) return;
+            if (mSpeedPlaybackParameters != null) {
+                mMediaPlayer.setPlaybackParameters(mSpeedPlaybackParameters);
+            }
+            mIsPreparing = true;
+            mMediaPlayer.setMediaSource(mMediaSource);
+            mMediaPlayer.prepare();
+        } catch (Exception e) {
+            Toast.makeText(mAppContext, "播放失败:" + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
-        mIsPreparing = true;
-        mMediaPlayer.setMediaSource(mMediaSource);
-        mMediaPlayer.prepare();
     }
 
     @Override
