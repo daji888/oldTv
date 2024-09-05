@@ -20,6 +20,8 @@ import androidx.media3.exoplayer.DefaultRenderersFactory;
 import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.exoplayer.LoadControl;
 import androidx.media3.exoplayer.source.MediaSource;
+import androidx.media3.exoplayer.trackselection.MappingTrackSelector;
+import androidx.media3.exoplayer.util.EventLogger;
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
 import androidx.media3.exoplayer.trackselection.TrackSelectionArray;
 import androidx.media3.ui.PlayerView;
@@ -34,22 +36,23 @@ import java.util.Locale;
 import java.util.Map;
 
 import xyz.doikki.videoplayer.player.AbstractPlayer;
+import xyz.doikki.videoplayer.player.VideoViewManager;
 import xyz.doikki.videoplayer.util.PlayerUtils;
 
 public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
 
-    protected Context mAppContext;
-    protected ExoPlayer mMediaPlayer;
-    protected MediaSource mMediaSource;
-    protected ExoMediaSourceHelper mMediaSourceHelper;
+    public static Context mAppContext;
+    protected static ExoPlayer mMediaPlayer;
+    protected static MediaSource mMediaSource;
+    protected static ExoMediaSourceHelper mMediaSourceHelper;
     protected ExoTrackNameProvider trackNameProvider;
     protected TrackSelectionArray mTrackSelections;
-    private PlaybackParameters mSpeedPlaybackParameters;
-    private boolean mIsPreparing;
+    private static PlaybackParameters mSpeedPlaybackParameters;
+    private static boolean mIsPreparing;
 
-    private LoadControl mLoadControl;
-    private DefaultRenderersFactory mRenderersFactory;
-    private DefaultTrackSelector mTrackSelector;
+    private static LoadControl mLoadControl;
+    private static DefaultRenderersFactory mRenderersFactory;
+    private static DefaultTrackSelector mTrackSelector;
 
     private int errorCode = -100;
     private String path;
@@ -90,14 +93,20 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
                 DefaultBandwidthMeter.getSingletonInstance(mAppContext),
                 new AnalyticsCollector(Clock.DEFAULT))
                 .build();*/
-        mMediaPlayer = new ExoPlayer.Builder(mAppContext)
+        if (mMediaPlayer == null) {
+            mMediaPlayer = new ExoPlayer.Builder(mAppContext)
                 .setLoadControl(mLoadControl)
                 .setRenderersFactory(mRenderersFactory)
-                .setTrackSelector(mTrackSelector).build();
-
+                .setTrackSelector(mTrackSelector)
+                .build();
+            //播放器日志
+            if (VideoViewManager.getConfig().mIsEnableLog && mTrackSelector instanceof MappingTrackSelector) {
+                mMediaPlayer.addAnalyticsListener(new EventLogger((MappingTrackSelector) mTrackSelector, "ExoPlayer"));
+            }
+            mMediaPlayer.addListener(this);
+        }    
         setOptions();
-
-        mMediaPlayer.addListener(this);
+        System.gc();
     }
 
     public DefaultTrackSelector getTrackSelector() {
@@ -106,10 +115,14 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
 
     @Override
     public void setDataSource(String path, Map<String, String> headers) {
+        if (mMediaPlayer != null) {
+            mMediaPlayer.clearMediaItems();
+        }
         this.path = path;
         this.headers = headers;
         mMediaSource = mMediaSourceHelper.getMediaSource(path, headers, false, errorCode);
         errorCode = -1;
+        System.gc();
     }
 
     @Override
@@ -121,6 +134,7 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     public void start() {
         if (mMediaPlayer == null)
             return;
+        System.gc();
         mMediaPlayer.setPlayWhenReady(true);
     }
 
@@ -129,6 +143,7 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
         if (mMediaPlayer == null)
             return;
         mMediaPlayer.setPlayWhenReady(false);
+        System.gc();
     }
 
     @Override
@@ -136,6 +151,8 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
         if (mMediaPlayer == null)
             return;
         mMediaPlayer.stop();
+        mMediaPlayer.clearMediaItems();
+        System.gc();
     }
 
     @SuppressLint("UnsafeOptInUsageError")
@@ -158,8 +175,10 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
             mMediaPlayer.stop();
             mMediaPlayer.clearMediaItems();
             mMediaPlayer.setVideoSurface(null);
+            mMediaPlayer.clearVideoSurface();
             mIsPreparing = false;
         }
+        System.gc();
     }
 
     @Override
@@ -196,6 +215,7 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
         lastTimeStamp = 0;
         mIsPreparing = false;
         mSpeedPlaybackParameters = null;
+        System.gc();
     }
 
     @Override
