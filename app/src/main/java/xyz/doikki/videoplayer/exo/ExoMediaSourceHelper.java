@@ -7,6 +7,7 @@ import android.text.TextUtils;
 
 import androidx.media3.common.C;
 import androidx.media3.common.MediaItem;
+import androidx.media3.common.util.Log;
 import androidx.media3.common.MimeTypes;
 import androidx.media3.common.PlaybackException;
 import androidx.media3.common.util.Util;
@@ -102,6 +103,7 @@ public final class ExoMediaSourceHelper {
 
     @SuppressLint("UnsafeOptInUsageError")
     public MediaSource getMediaSource(String uri, Map<String, String> headers, boolean isCache, int errorCode) {
+        Log.i("ExoGetMediaSource:", uri);
         Uri contentUri = Uri.parse(uri);
         if ("rtmp".equals(contentUri.getScheme())) {
             return new ProgressiveMediaSource.Factory(new RtmpDataSource.Factory())
