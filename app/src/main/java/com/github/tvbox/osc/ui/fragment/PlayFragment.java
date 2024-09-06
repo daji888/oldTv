@@ -84,6 +84,7 @@ import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.Response;
 import com.obsez.android.lib.filechooser.ChooserDialog;
 import com.orhanobut.hawk.Hawk;
+import com.p2p.P2PClass;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -827,10 +828,16 @@ public class PlayFragment extends BaseLazyFragment {
                         hideTip();
                         if (url.startsWith("data:application/dash+xml;base64,")) {
                             PlayerHelper.updateCfg(mVideoView, mVodPlayerCfg, 2);
-                            App.getInstance().setDashData(url.split("base64,")[1]);
+                            App.getInstance().setDashData("application/dash+xml", url.split("base64,")[1]);
                             url = ControlManager.get().getAddress(true) + "dash/proxy.mpd";
+                        } else if (url.startsWith("data:application/vnd.apple.mpegurl;base64,")) {
+                            PlayerHelper.updateCfg(mVideoView, mVodPlayerCfg, 2);
+                            App.getInstance().setDashData("application/vnd.apple.mpegurl", url.split("base64,")[1]);
+                            url = ControlManager.get().getAddress(true) + "dash/proxy.m3u8";    
                         } else if (url.contains(".mpd") || url.contains("type=mpd")) {
                             PlayerHelper.updateCfg(mVideoView, mVodPlayerCfg, 2);
+                        } else if (url.contains(String.valueOf(P2PClass.port))) {
+                            PlayerHelper.updateCfg(mVideoView, mVodPlayerCfg, 1);    
                         } else {
                             PlayerHelper.updateCfg(mVideoView, mVodPlayerCfg);
                         }
@@ -1131,7 +1138,7 @@ public class PlayFragment extends BaseLazyFragment {
         stopParse();
         Thunder.stop(true);//停止磁力下载
         Jianpian.finish();//停止p2p下载
-        App.getInstance().setDashData(null);
+        App.getInstance().setDashData(null, null);
     }
 
     private VodInfo mVodInfo;

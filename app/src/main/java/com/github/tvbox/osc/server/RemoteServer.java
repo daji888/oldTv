@@ -187,7 +187,7 @@ public class RemoteServer extends NanoHTTPD {
                         String data = new String(Base64.decode(dashData, Base64.DEFAULT | Base64.NO_WRAP), "UTF-8");
                         return NanoHTTPD.newFixedLengthResponse(
                                 Response.Status.OK,
-                                "application/dash+xml",
+                                App.getInstance().getDashDataType(),
                                 data
                         );
                     } catch (Throwable th) {
