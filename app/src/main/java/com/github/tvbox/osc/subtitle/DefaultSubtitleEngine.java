@@ -26,11 +26,12 @@
 package com.github.tvbox.osc.subtitle;
 
 import android.os.Handler;
-import android.os.HandlerThread;
+import android.os.Looper;
 import android.os.Message;
-import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
+
+import androidx.annotation.Nullable;
 
 import com.github.tvbox.osc.base.App;
 import com.github.tvbox.osc.cache.CacheManager;
@@ -58,8 +59,6 @@ public class DefaultSubtitleEngine implements SubtitleEngine {
     private static final int MSG_REFRESH = 0x888;
     private static final int REFRESH_INTERVAL = 100;
 
-    @Nullable
-    private HandlerThread mHandlerThread;
     @Nullable
     private Handler mWorkHandler;
     @Nullable
@@ -221,9 +220,7 @@ public class DefaultSubtitleEngine implements SubtitleEngine {
 
     private void initWorkThread() {
         stopWorkThread();
-        mHandlerThread = new HandlerThread("SubtitleFindThread");
-        mHandlerThread.start();
-        mWorkHandler = new Handler(mHandlerThread.getLooper(), new Handler.Callback() {
+        mWorkHandler = new Handler(Looper.getMainLooper(), new Handler.Callback() {
             @Override
             public boolean handleMessage(final Message msg) {
                 try {
@@ -260,7 +257,7 @@ public class DefaultSubtitleEngine implements SubtitleEngine {
                         mWorkHandler.sendEmptyMessageDelayed(MSG_REFRESH, delay);
                     }
                 } catch (Exception e) {
-                    // ignored
+                    e.printStackTrace();
                 }
                 return true;
             }
@@ -268,10 +265,6 @@ public class DefaultSubtitleEngine implements SubtitleEngine {
     }
 
     private void stopWorkThread() {
-        if (mHandlerThread != null) {
-            mHandlerThread.quit();
-            mHandlerThread = null;
-        }
         if (mWorkHandler != null) {
             mWorkHandler.removeCallbacksAndMessages(null);
             mWorkHandler = null;
