@@ -114,6 +114,8 @@ dependencies {
     implementation "androidx.media3:media3-datasource-okhttp:1.4.1"
     implementation "androidx.media3:media3-ui:1.4.1"
     implementation "androidx.media3:media3-common:1.4.1"
+
+    implementation 'xyz.doikki.android.dkplayer:dkplayer-ui:3.3.7'
     
     // compileOnly 'com.google.errorprone:error_prone_annotations:2.11.0'
     // compileOnly 'org.checkerframework:checker-qual:3.20.0'
