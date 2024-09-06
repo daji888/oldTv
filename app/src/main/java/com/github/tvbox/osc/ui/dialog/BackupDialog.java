@@ -94,6 +94,9 @@ public class BackupDialog extends BaseDialog {
             String root = Environment.getExternalStorageDirectory().getAbsolutePath();
             File file = new File(root + "/tvbox_backup/");
             File[] list = file.listFiles();
+            if (list == null || list.length == 0) {
+                return result;
+            }
             Arrays.sort(list, new Comparator<File>() {
                 @Override
                 public int compare(File o1, File o2) {
