@@ -618,6 +618,8 @@ public class VodController extends BaseController {
                 myHandle.removeCallbacks(myRunnable);
                 myHandle.postDelayed(myRunnable, myHandleSeconds);
                 try {
+                  int playerType = mPlayerConfig.getInt("pl");  
+                  if (playerType == 1) {  
                     String ijk = mPlayerConfig.getString("ijk");
                     List<IJKCode> codecs = ApiConfig.get().getIjkCodes();
                     for (int i = 0; i < codecs.size(); i++) {
@@ -631,6 +633,21 @@ public class VodController extends BaseController {
                         }
                     }
                     mPlayerConfig.put("ijk", ijk);
+                  } else if (playerType == 2) {
+                    String exo = mPlayerConfig.getString("exo");
+                    List<EXOCode> codecs = ApiConfig.get().getExoCodes();
+                    for (int i = 0; i < codecs.size(); i++) {
+                        if (exo.equals(codecs.get(i).getName())) {
+                            if (i >= codecs.size() - 1)
+                                ijk = codecs.get(0).getName();
+                            else {
+                                ijk = codecs.get(i + 1).getName();
+                            }
+                            break;
+                        }
+                    }
+                    mPlayerConfig.put("exo", exo);
+                  }    
                     updatePlayerCfgView();
                     listener.updatePlayerCfg();
                     listener.replay(false);
@@ -838,9 +855,13 @@ public class VodController extends BaseController {
             int playerType = mPlayerConfig.getInt("pl");
             mPlayerBtn.setText(PlayerHelper.getPlayerName(playerType));
             mPlayerScaleBtn.setText(PlayerHelper.getScaleName(mPlayerConfig.getInt("sc")));
-            mPlayerIJKBtn.setText(mPlayerConfig.getString("ijk"));
-       //     mPlayerIJKBtn.setVisibility(playerType == 1 ? VISIBLE : GONE);
-            mPlayerScaleBtn.setText(PlayerHelper.getScaleName(mPlayerConfig.getInt("sc")));
+            if (playerType == 1) {
+                mPlayerIJKBtn.setText(mPlayerConfig.getString("ijk"));
+                mPlayerIJKBtn.setVisibility(VISIBLE);
+            } else if (playerType == 2) {
+                mPlayerIJKBtn.setText(mPlayerConfig.getString("exo"));
+                mPlayerIJKBtn.setVisibility(VISIBLE);
+            }
             mPlayerSpeedBtn.setText("x" + mPlayerConfig.getDouble("sp"));
             mPlayerTimeStartBtn.setText(PlayerUtils.stringForTime(mPlayerConfig.getInt("st") * 1000));
             mPlayerTimeSkipBtn.setText(PlayerUtils.stringForTime(mPlayerConfig.getInt("et") * 1000));
