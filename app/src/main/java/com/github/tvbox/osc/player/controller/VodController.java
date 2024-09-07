@@ -639,9 +639,9 @@ public class VodController extends BaseController {
                     for (int i = 0; i < codecs.size(); i++) {
                         if (exo.equals(codecs.get(i).getName())) {
                             if (i >= codecs.size() - 1)
-                                ijk = codecs.get(0).getName();
+                                exo = codecs.get(0).getName();
                             else {
-                                ijk = codecs.get(i + 1).getName();
+                                exo = codecs.get(i + 1).getName();
                             }
                             break;
                         }
