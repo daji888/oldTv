@@ -26,6 +26,26 @@ public class EXOmPlayer extends ExoMediaPlayer {
         this.exocodec = exocodec;
     }
 
+    @Override
+    public void setOptions() {
+        EXOCode codecTmp = this.codec == null ? ApiConfig.get().getCurrentEXOCode() : this.codec;
+        LinkedHashMap<String, String> options = codecTmp.getOption();
+        if (options != null) {
+            for (String key : options.keySet()) {
+                String value = options.get(key);
+                String[] opt = key.split("\\|");
+                String name = opt[1].trim();
+                try {
+                    long valLong = Long.parseLong(value);
+                    mMediaPlayer.setOption(name, valLong);
+                } catch (Exception e) {
+                    mMediaPlayer.setOption(name, value);
+                }
+            }
+        }
+        super.setOptions();
+    }
+
     @SuppressLint("UnsafeOptInUsageError")
     public TrackInfo getTrackInfo() {
         TrackInfo data = new TrackInfo();
