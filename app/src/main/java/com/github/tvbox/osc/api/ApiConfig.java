@@ -563,7 +563,7 @@ public class ApiConfig {
         // 广告地址
         if(AdBlocker.isEmpty()){
             //默认广告拦截
-            for (JsonElement host : defaultJson.getAsJsonArray("ads") || JsonElement host : EXOdefaultJson.getAsJsonArray("ads")) {
+            for (JsonElement host : defaultJson.getAsJsonArray("ads") || EXOdefaultJson.getAsJsonArray("ads")) {
                 AdBlocker.addAdHost(host.getAsString());
             }
             //追加的广告拦截
@@ -576,7 +576,7 @@ public class ApiConfig {
             }
         }
         // IJK解码配置
-        if(ijkCodes == null){
+        if (ijkCodes == null) {
             ijkCodes = new ArrayList<>();
             boolean foundOldSelect = false;
             String ijkCodec = Hawk.get(HawkConfig.IJK_CODEC, "");
@@ -608,10 +608,8 @@ public class ApiConfig {
                 ijkCodes.get(0).selected(true);
             }
         }
-    }
-
-    // EXO解码配置
-        if(exoCodes == null){
+        // EXO解码配置
+        if (exoCodes == null) {
             exoCodes = new ArrayList<>();
             boolean foundOldSelect = false;
             String exoCodec = Hawk.get(HawkConfig.EXO_CODEC, "");
@@ -642,7 +640,7 @@ public class ApiConfig {
             if (!foundOldSelect && exoCodes.size() > 0) {
                 exoCodes.get(0).selected(true);
             }
-        }
+        }  
     }
 
     private void putLiveHistory(String url) {
