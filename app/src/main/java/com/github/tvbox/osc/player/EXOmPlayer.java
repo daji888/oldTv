@@ -21,10 +21,10 @@ public class EXOmPlayer extends ExoMediaPlayer {
     private String videoId = "";
     private String subtitleId = "";
 
-    public EXOmPlayer(Context context) {
+    public EXOmPlayer(Context context, EXOCode exocodec) {
         super(context);
+        this.exocodec = exocodec;
     }
-
 
     @SuppressLint("UnsafeOptInUsageError")
     public TrackInfo getTrackInfo() {
