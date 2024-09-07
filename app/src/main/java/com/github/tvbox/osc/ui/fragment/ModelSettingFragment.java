@@ -407,6 +407,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
                         return oldItem.getName().equals(newItem.getName());
                     }
                 }, ijkCodes, defaultPos);
+                dialog.show();  
                 } else if (playerType == 2) {
                   List<EXOCode> exoCodes = ApiConfig.get().getExoCodes();
                 if (exoCodes == null || exoCodes.size() == 0)
@@ -447,8 +448,8 @@ public class ModelSettingFragment extends BaseLazyFragment {
                         return oldItem.getName().equals(newItem.getName());
                     }
                 }, exoCodes, defaultPos);
+                dialog.show();  
                 }
-                dialog.show();
             }
         });
         findViewById(R.id.llScale).setOnClickListener(new View.OnClickListener() {
