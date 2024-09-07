@@ -43,9 +43,9 @@ public class EXOmPlayer extends ExoMediaPlayer {
                 String name = opt[1].trim();
                 try {
                     long valLong = Long.parseLong(value);
-                    mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.valLong);
+                    mRenderersFactory.setExtensionRendererMode("DefaultRenderersFactory." + valLong);
                 } catch (Exception e) {
-                    mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.value);
+                    mRenderersFactory.setExtensionRendererMode("DefaultRenderersFactory." + value);
                 }
             }
         }
