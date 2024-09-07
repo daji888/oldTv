@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.github.tvbox.osc.api.ApiConfig;
 import com.github.tvbox.osc.bean.IJKCode;
+import com.github.tvbox.osc.bean.EXOCode;
 import com.github.tvbox.osc.player.EXOmPlayer;
 import com.github.tvbox.osc.player.IjkmPlayer;
 import com.github.tvbox.osc.player.render.SurfaceRenderViewFactory;
@@ -37,18 +38,20 @@ public class PlayerHelper {
         int playerType = Hawk.get(HawkConfig.PLAY_TYPE, 0);
         int renderType = Hawk.get(HawkConfig.PLAY_RENDER, 0);
         String ijkCode = Hawk.get(HawkConfig.IJK_CODEC, "硬解");
+        String exoCode = Hawk.get(HawkConfig.EXO_CODEC, "硬解");
         int scale = Hawk.get(HawkConfig.PLAY_SCALE, 0);
         try {
             playerType = playerCfg.getInt("pl");
-            //就我遇到的问题是 EXO 在 TextureView 黑屏 调整设置中的渲染模式无法生效
-            //renderType = playerCfg.getInt("pr");//该值无法修改，一旦确认该值后续无法进行修改 就是在设置选的 类型无法应用
+            //renderType = playerCfg.getInt("pr");//该值无法修改，一旦确认该值后续无法进行修改 就是在设置选的 类型 无法应用
             ijkCode = playerCfg.getString("ijk");
+            exoCode = playerCfg.getString("exo");
             scale = playerCfg.getInt("sc");
         } catch (JSONException e) {
             e.printStackTrace();
         }
         if (forcePlayerType >= 0) playerType = forcePlayerType;
         IJKCode codec = ApiConfig.get().getIJKCodec(ijkCode);
+        EXOCode codec = ApiConfig.get().getEXOCodec(exoCode);
         PlayerFactory playerFactory;
         if (playerType == 1) {
             playerFactory = new PlayerFactory<IjkmPlayer>() {
@@ -61,14 +64,14 @@ public class PlayerHelper {
             playerFactory = new PlayerFactory<EXOmPlayer>() {
                 @Override
                 public EXOmPlayer createPlayer(Context context) {
-                    return new EXOmPlayer(context);
+                    return new EXOmPlayer(context, codec);
                 }
             };
         } else {
             playerFactory = AndroidMediaPlayerFactory.create();
         }
         RenderViewFactory renderViewFactory = null;
-        if (playerType==2){
+        if (playerType == 2){
             renderViewFactory = PlayerViewRenderViewFactory.create(renderType);
         }else{
             switch (renderType) {
@@ -100,7 +103,7 @@ public class PlayerHelper {
             playerFactory = new PlayerFactory<EXOmPlayer>() {
                 @Override
                 public EXOmPlayer createPlayer(Context context) {
-                    return new EXOmPlayer(context);
+                    return new EXOmPlayer(context, null);
                 }
             };
         } else {
