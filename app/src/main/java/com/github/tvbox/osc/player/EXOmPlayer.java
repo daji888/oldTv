@@ -38,11 +38,11 @@ public class EXOmPlayer extends ExoMediaPlayer {
         LinkedHashMap<String, String> options = codecTmp.getOption();
         if (options != null) {
             for (String key : options.keySet()) {
-                String value = options.get(key);
+                int value = options.get(key);
                 String[] opt = key.split("\\|");
                 String name = opt[1].trim();
                 try {
-                    long valLong = Long.parseLong(value);
+                    int valLong = Long.parseLong(value);
                     mRenderersFactory.setExtensionRendererMode(valLong);
                 } catch (Exception e) {
                     mRenderersFactory.setExtensionRendererMode(value);
