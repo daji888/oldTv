@@ -621,8 +621,8 @@ public class ApiConfig {
                 LinkedHashMap<String, String> baseOpt = new LinkedHashMap<>();
                 for (JsonElement cfg : obj.get("options").getAsJsonArray()) {
                     JsonObject cObj = (JsonObject) cfg;
-            //        String key = cObj.get("category").getAsString() + "|" + cObj.get("name").getAsString();
-            //        String val = cObj.get("value").getAsString();
+                    String key = cObj.get("name").getAsString();
+                    String val = cObj.get("value").getAsString();
                     baseOpt.put(key, val);
                 }
                 EXOCode codec = new EXOCode();
