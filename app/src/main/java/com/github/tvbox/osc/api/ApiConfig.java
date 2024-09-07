@@ -809,7 +809,7 @@ public class ApiConfig {
         return exoCodes;
     }
 
-    public EXOCode getCurrentIJKCode() {
+    public EXOCode getCurrentEXOCode() {
         String codeName = Hawk.get(HawkConfig.EXO_CODEC, "");
         return getEXOCodec(codeName);
     }
