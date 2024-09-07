@@ -42,7 +42,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
                 String[] opt = key.split("\\|");
                 String name = opt[1].trim();
                 try {
-                    int valLong = Long.parseLong(value);
+                    long valLong = Long.parseLong(value);
                     mRenderersFactory.setExtensionRendererMode(valLong);
                 } catch (Exception e) {
                     mRenderersFactory.setExtensionRendererMode(value);
