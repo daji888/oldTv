@@ -280,6 +280,18 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
             mMediaPlayer.setRepeatMode(isLooping ? Player.REPEAT_MODE_ALL : Player.REPEAT_MODE_OFF);
     }
 
+    public void setOption(String name, String value) {
+        _setOption(name, value);
+    }
+
+    public void setOption(String name, long value) {
+        _setOption(name, value);
+    }
+
+    private native void _setOption(String name, String value);
+
+    private native void _setOption(String name, long value);
+
     @Override
     public void setOptions() {
         //准备好就开始播放
