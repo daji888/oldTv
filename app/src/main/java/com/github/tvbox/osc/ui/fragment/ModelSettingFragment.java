@@ -366,7 +366,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
         findViewById(R.id.llMediaCodec).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-              int playerType = Hawk.get(HawkConfig.PLAY_TYPE, "");  
+              int playerType = Hawk.get(HawkConfig.PLAY_TYPE, 0);  
               if (playerType == 1) {
                 List<IJKCode> ijkCodes = ApiConfig.get().getIjkCodes();
                 if (ijkCodes == null || ijkCodes.size() == 0)
