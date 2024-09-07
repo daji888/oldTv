@@ -408,7 +408,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
                     }
                 }, ijkCodes, defaultPos);
                 } else if (playerType == 2) {
-                  List<List<EXOCode> exoCodes = ApiConfig.get().getExoCodes();
+                  List<EXOCode> exoCodes = ApiConfig.get().getExoCodes();
                 if (exoCodes == null || exoCodes.size() == 0)
                     return;
                 FastClickCheckUtil.check(v);
