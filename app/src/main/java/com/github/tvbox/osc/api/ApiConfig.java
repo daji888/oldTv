@@ -10,6 +10,7 @@ import com.github.catvod.crawler.JsLoader;
 import com.github.catvod.crawler.Spider;
 import com.github.tvbox.osc.base.App;
 import com.github.tvbox.osc.bean.IJKCode;
+import com.github.tvbox.osc.bean.EXOCode;
 import com.github.tvbox.osc.bean.LiveChannelGroup;
 import com.github.tvbox.osc.bean.LiveChannelItem;
 import com.github.tvbox.osc.bean.ParseBean;
@@ -65,6 +66,7 @@ public class ApiConfig {
     private List<ParseBean> parseBeanList;
     private List<String> vipParseFlags;
     private List<IJKCode> ijkCodes;
+    private List<EXOCode> exoCodes;
     private String spider = null;
     public String wallpaper = "";
 
@@ -803,6 +805,23 @@ public class ApiConfig {
                 return code;
         }
         return ijkCodes.get(0);
+    }
+
+    public List<EXOCode> getExoCodes() {
+        return exoCodes;
+    }
+
+    public EXOCode getCurrentIJKCode() {
+        String codeName = Hawk.get(HawkConfig.EXO_CODEC, "");
+        return getEXOCodec(codeName);
+    }
+
+    public EXOCode getEXOCodec(String name) {
+        for (EXOCode code : exoCodes) {
+            if (code.getName().equals(name))
+                return code;
+        }
+        return exoCodes.get(0);
     }
 
     String clanToAddress(String lanLink) {
