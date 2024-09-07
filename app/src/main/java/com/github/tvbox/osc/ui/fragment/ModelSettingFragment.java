@@ -15,6 +15,7 @@ import com.github.tvbox.osc.api.ApiConfig;
 import com.github.tvbox.osc.base.BaseActivity;
 import com.github.tvbox.osc.base.BaseLazyFragment;
 import com.github.tvbox.osc.bean.IJKCode;
+import com.github.tvbox.osc.bean.EXOCode;
 import com.github.tvbox.osc.bean.SourceBean;
 import com.github.tvbox.osc.event.RefreshEvent;
 import com.github.tvbox.osc.player.thirdparty.RemoteTVBox;
@@ -365,6 +366,8 @@ public class ModelSettingFragment extends BaseLazyFragment {
         findViewById(R.id.llMediaCodec).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+              int playerType = mPlayerConfig.getInt("pl");  
+              if (playerType == 1) {
                 List<IJKCode> ijkCodes = ApiConfig.get().getIjkCodes();
                 if (ijkCodes == null || ijkCodes.size() == 0)
                     return;
@@ -404,6 +407,47 @@ public class ModelSettingFragment extends BaseLazyFragment {
                         return oldItem.getName().equals(newItem.getName());
                     }
                 }, ijkCodes, defaultPos);
+                } else if (playerType == 2) {
+                  List<List<EXOCode> exoCodes = ApiConfig.get().getExoCodes();
+                if (exoCodes == null || exoCodes.size() == 0)
+                    return;
+                FastClickCheckUtil.check(v);
+
+                int defaultPos = 0;
+                String exoSel = Hawk.get(HawkConfig.EXO_CODEC, "");
+                for (int j = 0; j < exoCodes.size(); j++) {
+                    if (exoSel.equals(exoCodes.get(j).getName())) {
+                        defaultPos = j;
+                        break;
+                    }
+                }
+
+                SelectDialog<EXOCode> dialog = new SelectDialog<>(mActivity);
+                dialog.setTip("请选择EXO解码");
+                dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<EXOCode>() {
+                    @Override
+                    public void click(EXOCode value, int pos) {
+                        value.selected(true);
+                        tvMediaCodec.setText(value.getName());
+                        dialog.dismiss();
+                    }
+
+                    @Override
+                    public String getDisplay(EXOCode val) {
+                        return val.getName();
+                    }
+                }, new DiffUtil.ItemCallback<EXOCode>() {
+                    @Override
+                    public boolean areItemsTheSame(@NonNull @NotNull EXOCode oldItem, @NonNull @NotNull EXOCode newItem) {
+                        return oldItem == newItem;
+                    }
+
+                    @Override
+                    public boolean areContentsTheSame(@NonNull @NotNull EXOCode oldItem, @NonNull @NotNull EXOCode newItem) {
+                        return oldItem.getName().equals(newItem.getName());
+                    }
+                }, exoCodes, defaultPos);
+                }
                 dialog.show();
             }
         });
