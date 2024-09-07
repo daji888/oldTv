@@ -37,7 +37,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
         EXOCode codecTmp = this.exocodec == null ? ApiConfig.get().getCurrentEXOCode() : this.exocodec;
         LinkedHashMap<String, String> options = codecTmp.getOption();
         if (options != null) {
-            for (String key : options.keySet()) {
+            for (int key : options.keySet()) {
                 int value = options.get(key);
                 String[] opt = key.split("\\|");
                 String name = opt[1].trim();
