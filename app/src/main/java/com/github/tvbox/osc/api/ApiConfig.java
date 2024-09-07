@@ -67,6 +67,7 @@ public class ApiConfig {
     private List<String> vipParseFlags;
     private List<IJKCode> ijkCodes;
     private List<EXOCode> exoCodes;
+    private List<EXOCode> exoCodes;
     private String spider = null;
     public String wallpaper = "";
 
