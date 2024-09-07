@@ -862,6 +862,8 @@ public class VodController extends BaseController {
             } else if (playerType == 2) {
                 mPlayerIJKBtn.setText(mPlayerConfig.getString("exo"));
                 mPlayerIJKBtn.setVisibility(VISIBLE);
+            } else {
+                mPlayerIJKBtn.setVisibility(GONE);
             }
             mPlayerSpeedBtn.setText("x" + mPlayerConfig.getDouble("sp"));
             mPlayerTimeStartBtn.setText(PlayerUtils.stringForTime(mPlayerConfig.getInt("st") * 1000));
