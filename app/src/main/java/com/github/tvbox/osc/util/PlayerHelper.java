@@ -51,7 +51,7 @@ public class PlayerHelper {
         }
         if (forcePlayerType >= 0) playerType = forcePlayerType;
         IJKCode codec = ApiConfig.get().getIJKCodec(ijkCode);
-        EXOCode codec = ApiConfig.get().getEXOCodec(exoCode);
+        EXOCode exocodec = ApiConfig.get().getEXOCodec(exoCode);
         PlayerFactory playerFactory;
         if (playerType == 1) {
             playerFactory = new PlayerFactory<IjkmPlayer>() {
@@ -64,7 +64,7 @@ public class PlayerHelper {
             playerFactory = new PlayerFactory<EXOmPlayer>() {
                 @Override
                 public EXOmPlayer createPlayer(Context context) {
-                    return new EXOmPlayer(context, codec);
+                    return new EXOmPlayer(context, exocodec);
                 }
             };
         } else {
