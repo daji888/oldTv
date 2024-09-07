@@ -28,7 +28,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
 
     @Override
     public void setOptions() {
-        EXOCode codecTmp = this.codec == null ? ApiConfig.get().getCurrentEXOCode() : this.codec;
+        EXOCode codecTmp = this.exocodec == null ? ApiConfig.get().getCurrentEXOCode() : this.exocodec;
         LinkedHashMap<String, String> options = codecTmp.getOption();
         if (options != null) {
             for (String key : options.keySet()) {
