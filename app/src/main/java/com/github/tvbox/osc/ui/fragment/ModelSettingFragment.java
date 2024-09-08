@@ -106,6 +106,9 @@ public class ModelSettingFragment extends BaseLazyFragment {
         tvDebugOpen = findViewById(R.id.tvDebugOpen);
         tvParseWebView = findViewById(R.id.tvParseWebView);
         tvMediaCodec = findViewById(R.id.tvMediaCodec);
+        tvMediaCodec.setText(Hawk.get(HawkConfig.IJK_CODEC, ""));
+        tvMediaExoCodec = findViewById(R.id.tvMediaCodec);
+        tvMediaExoCodec.setText(Hawk.get(HawkConfig.EXO_CODEC, ""));
         tvPlay = findViewById(R.id.tvPlay);
         tvRender = findViewById(R.id.tvRenderType);
         tvScale = findViewById(R.id.tvScaleType);
@@ -118,7 +121,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
         tvHistoryNum = findViewById(R.id.tvHistoryNum);
         tvSearchView = findViewById(R.id.tvSearchView);
         tvIjkCachePlay = findViewById(R.id.tvIjkCachePlay);
-        tvMediaCodec.setText(Hawk.get(HawkConfig.IJK_CODEC, ""));
+        
         tvDebugOpen.setText(Hawk.get(HawkConfig.DEBUG_OPEN, false) ? "已开启" : "已关闭");
         tvParseWebView.setText(Hawk.get(HawkConfig.PARSE_WEBVIEW, true) ? "系统自带" : "XWalkView");
         tvApi.setText(Hawk.get(HawkConfig.API_URL, ""));
@@ -429,7 +432,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
                     @Override
                     public void click(EXOCode value, int pos) {
                         value.selected(true);
-                        tvMediaCodec.setText(value.getName());
+                        tvMediaExoCodec.setText(value.getName());
                         dialog.dismiss();
                     }
 
