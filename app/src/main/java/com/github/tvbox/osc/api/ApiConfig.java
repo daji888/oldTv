@@ -625,17 +625,17 @@ public class ApiConfig {
                     String val = cObj.get("value").getAsString();
                     baseOpt.put(key, val);
                 }
-                EXOCode codec = new EXOCode();
-                codec.setName(name);
-                codec.setOption(baseOpt);
+                EXOCode exocodec = new EXOCode();
+                exocodec.setName(name);
+                exocodec.setOption(baseOpt);
                 if (name.equals(exoCodec) || TextUtils.isEmpty(exoCodec)) {
-                    codec.selected(true);
+                    exocodec.selected(true);
                     exoCodec = name;
                     foundOldSelect = true;
                 } else {
-                    codec.selected(false);
+                    exocodec.selected(false);
                 }
-                exoCodes.add(codec);
+                exoCodes.add(exocodec);
             }
             if (!foundOldSelect && exoCodes.size() > 0) {
                 exoCodes.get(0).selected(true);
@@ -810,14 +810,14 @@ public class ApiConfig {
     }
 
     public EXOCode getCurrentEXOCode() {
-        String codeName = Hawk.get(HawkConfig.EXO_CODEC, "");
-        return getEXOCodec(codeName);
+        String exocodeName = Hawk.get(HawkConfig.EXO_CODEC, "");
+        return getEXOCodec(exocodeName);
     }
 
     public EXOCode getEXOCodec(String name) {
-        for (EXOCode code : exoCodes) {
-            if (code.getName().equals(name))
-                return code;
+        for (EXOCode exocode : exoCodes) {
+            if (exocode.getName().equals(name))
+                return exocode;
         }
         return exoCodes.get(0);
     }
