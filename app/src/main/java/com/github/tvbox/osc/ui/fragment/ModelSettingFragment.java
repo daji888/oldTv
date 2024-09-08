@@ -419,9 +419,9 @@ public class ModelSettingFragment extends BaseLazyFragment {
 
                 int exodefaultPos = 0;
                 String exoSel = Hawk.get(HawkConfig.EXO_CODEC, "");
-                for (int j = 0; j < exoCodes.size(); j++) {
-                    if (exoSel.equals(exoCodes.get(j).getName())) {
-                        exodefaultPos = j;
+                for (int a = 0; a < exoCodes.size(); a++) {
+                    if (exoSel.equals(exoCodes.get(a).getName())) {
+                        exodefaultPos = a;
                         break;
                     }
                 }
