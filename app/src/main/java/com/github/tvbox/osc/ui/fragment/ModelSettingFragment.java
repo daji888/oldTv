@@ -417,11 +417,11 @@ public class ModelSettingFragment extends BaseLazyFragment {
                     return;
                 FastClickCheckUtil.check(v);
 
-                int defaultPos = 0;
+                int exodefaultPos = 0;
                 String exoSel = Hawk.get(HawkConfig.EXO_CODEC, "");
                 for (int j = 0; j < exoCodes.size(); j++) {
                     if (exoSel.equals(exoCodes.get(j).getName())) {
-                        defaultPos = j;
+                        exodefaultPos = j;
                         break;
                     }
                 }
@@ -450,7 +450,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
                     public boolean areContentsTheSame(@NonNull @NotNull EXOCode oldItem, @NonNull @NotNull EXOCode newItem) {
                         return oldItem.getName().equals(newItem.getName());
                     }
-                }, exoCodes, defaultPos);
+                }, exoCodes, exodefaultPos);
                 dialog.show();  
                 }
             }
