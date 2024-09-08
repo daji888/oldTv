@@ -43,7 +43,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
                 int category = Integer.parseInt(opt[0].trim());
                 String name = opt[1].trim();
                 try {
-                    long valLong = Long.parseLong(category);
+                    long valLong = Long.parseLong(value);
                     mRenderersFactory.setExtensionRendererMode(valLong);
                 } catch (Exception e) {
                     mRenderersFactory.setExtensionRendererMode(category);
