@@ -63,6 +63,7 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 public class ModelSettingFragment extends BaseLazyFragment {
     private TextView tvDebugOpen;
     private TextView tvMediaCodec;
+    private TextView tvMediaExoCodec;
     private TextView tvParseWebView;
     private TextView tvPlay;
     private TextView tvRender;
