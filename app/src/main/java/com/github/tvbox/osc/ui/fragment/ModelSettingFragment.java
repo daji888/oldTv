@@ -455,7 +455,6 @@ public class ModelSettingFragment extends BaseLazyFragment {
                 }, exoCodes, exodefaultPos);
                 dialog.show();  
                 } else {
-                    String ijkSel = Hawk.get(HawkConfig.IJK_CODEC, "硬解");
                     tvMediaCodec.setText("硬解"); 
                 }  
             }
