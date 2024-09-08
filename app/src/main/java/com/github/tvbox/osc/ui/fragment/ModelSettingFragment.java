@@ -453,7 +453,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
                 }, exoCodes, exodefaultPos);
                 dialog.show();  
                 } else {
-                    String Sel = Hawk.get(HawkConfig.IJK_CODEC, "硬解");
+                    String ijkSel = Hawk.get(HawkConfig.IJK_CODEC, "硬解");
                 }  
             }
         });
