@@ -452,7 +452,9 @@ public class ModelSettingFragment extends BaseLazyFragment {
                     }
                 }, exoCodes, exodefaultPos);
                 dialog.show();  
-                }
+                } else {
+                    findViewById(R.id.llMediaCodec).setText("硬解");
+                }  
             }
         });
         findViewById(R.id.llScale).setOnClickListener(new View.OnClickListener() {
