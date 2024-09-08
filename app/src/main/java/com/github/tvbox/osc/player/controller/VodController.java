@@ -636,13 +636,13 @@ public class VodController extends BaseController {
                     mPlayerConfig.put("ijk", ijk);
                   } else if (playerType == 2) {
                     String exo = mPlayerConfig.getString("exo");
-                    List<EXOCode> codecs = ApiConfig.get().getExoCodes();
-                    for (int i = 0; i < codecs.size(); i++) {
-                        if (exo.equals(codecs.get(i).getName())) {
-                            if (i >= codecs.size() - 1)
-                                exo = codecs.get(0).getName();
+                    List<EXOCode> exocodecs = ApiConfig.get().getExoCodes();
+                    for (int i = 0; i < exocodecs.size(); i++) {
+                        if (exo.equals(exocodecs.get(i).getName())) {
+                            if (i >= exocodecs.size() - 1)
+                                exo = exocodecs.get(0).getName();
                             else {
-                                exo = codecs.get(i + 1).getName();
+                                exo = exocodecs.get(i + 1).getName();
                             }
                             break;
                         }
