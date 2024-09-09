@@ -38,7 +38,7 @@ public class PlayerHelper {
         int playerType = Hawk.get(HawkConfig.PLAY_TYPE, 0);
         int renderType = Hawk.get(HawkConfig.PLAY_RENDER, 0);
         String ijkCode = Hawk.get(HawkConfig.IJK_CODEC, "硬解");
-        String exoCode = Hawk.get(HawkConfig.EXO_CODEC, "硬解");
+        String exoCode = Hawk.get(HawkConfig.EXO_CODEC, "硬软");
         int scale = Hawk.get(HawkConfig.PLAY_SCALE, 0);
         try {
             playerType = playerCfg.getInt("pl");
@@ -73,7 +73,7 @@ public class PlayerHelper {
         RenderViewFactory renderViewFactory = null;
         if (playerType == 2){
             renderViewFactory = PlayerViewRenderViewFactory.create(renderType);
-        }else{
+        } else {
             switch (renderType) {
                 case 0:
                 default:
