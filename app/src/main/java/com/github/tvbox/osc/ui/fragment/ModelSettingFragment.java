@@ -112,7 +112,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
         tvMediaExoCodec = findViewById(R.id.tvMediaCodec);
         tvMediaExoCodec.setText(Hawk.get(HawkConfig.EXO_CODEC, ""));
         tvMediaQtCodec = findViewById(R.id.tvMediaQtCodec);
-        tvMediaQtCodec.setText("硬解"));    
+        tvMediaQtCodec.setText("硬解");    
         tvPlay = findViewById(R.id.tvPlay);
         tvRender = findViewById(R.id.tvRenderType);
         tvScale = findViewById(R.id.tvScaleType);
