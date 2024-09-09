@@ -394,18 +394,18 @@ public class ModelSettingFragment extends BaseLazyFragment {
                         PlayerHelper.init();
                         dialog.dismiss();
                         if (thisPlayerType == 1) {
-                tvMediaExoCodec.setVisibility(View.GONE);
-                tvMediaQtCodec.setVisibility(View.GONE);
-                tvMediaCodec.setVisibility(View.VISIBLE);
-            } else if (thisPlayerType == 2) {
-                  tvMediaCodec.setVisibility(View.GONE);
-                  tvMediaQtCodec.setVisibility(View.GONE);
-                  tvMediaExoCodec.setVisibility(View.VISIBLE);
-            } else {
-                    tvMediaCodec.setVisibility(View.GONE);
-                    tvMediaExoCodec.setVisibility(View.GONE);
-                    tvMediaQtCodec.setVisibility(View.VISIBLE);
-            }
+                            tvMediaExoCodec.setVisibility(View.GONE);
+                            tvMediaQtCodec.setVisibility(View.GONE);
+                            tvMediaCodec.setVisibility(View.VISIBLE);
+                       } else if (thisPlayerType == 2) {
+                            tvMediaCodec.setVisibility(View.GONE);
+                            tvMediaQtCodec.setVisibility(View.GONE);
+                            tvMediaExoCodec.setVisibility(View.VISIBLE);
+                       } else {
+                            tvMediaCodec.setVisibility(View.GONE);
+                            tvMediaExoCodec.setVisibility(View.GONE);
+                            tvMediaQtCodec.setVisibility(View.VISIBLE);
+                        }
                     }
 
                     @Override
