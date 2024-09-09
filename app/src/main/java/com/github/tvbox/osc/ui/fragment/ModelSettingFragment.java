@@ -391,6 +391,9 @@ public class ModelSettingFragment extends BaseLazyFragment {
                         PlayerHelper.init();
                         dialog.dismiss();
                         if (playerType == 1) {
+                            List<IJKCode> ijkCodes = ApiConfig.get().getIjkCodes();
+                            if (ijkCodes == null || ijkCodes.size() == 0)
+                                return;
                             int defaultPos = 0;
                             String ijkSel = Hawk.get(HawkConfig.IJK_CODEC, "");
                             for (int j = 0; j < ijkCodes.size(); j++) {
@@ -401,6 +404,9 @@ public class ModelSettingFragment extends BaseLazyFragment {
                                 }
                              }
                           } else if (playerType == 2) {
+                            List<EXOCode> exoCodes = ApiConfig.get().getExoCodes();
+                            if (exoCodes == null || exoCodes.size() == 0)
+                                return;
                             int exodefaultPos = 0;
                             String exoSel = Hawk.get(HawkConfig.EXO_CODEC, "");
                             for (int a = 0; a < exoCodes.size(); a++) {
@@ -483,9 +489,9 @@ public class ModelSettingFragment extends BaseLazyFragment {
                 dialog.show();  
                 } else if (playerType == 2) {
                   List<EXOCode> exoCodes = ApiConfig.get().getExoCodes();
-                if (exoCodes == null || exoCodes.size() == 0)
-                    return;
-                FastClickCheckUtil.check(v);
+                  if (exoCodes == null || exoCodes.size() == 0)
+                      return;
+                  FastClickCheckUtil.check(v);
 
                 int exodefaultPos = 0;
                 String exoSel = Hawk.get(HawkConfig.EXO_CODEC, "");
