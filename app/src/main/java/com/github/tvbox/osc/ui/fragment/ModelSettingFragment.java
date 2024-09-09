@@ -393,6 +393,20 @@ public class ModelSettingFragment extends BaseLazyFragment {
                         tvPlay.setText(PlayerHelper.getPlayerName(thisPlayerType));
                         PlayerHelper.init();
                         dialog.dismiss();
+                        if (playerType == 1) {
+                tvMediaExoCodec.setVisibility(View.GONE);
+                tvMediaQtCodec.setVisibility(View.GONE);
+                tvMediaCodec.setVisibility(View.VISIBLE);
+            } else if (playerType == 2) {
+                  tvMediaCodec.setVisibility(View.GONE);
+                  tvMediaQtCodec.setVisibility(View.GONE);
+                  tvMediaExoCodec.setVisibility(View.VISIBLE);
+            } else {
+                    tvMediaCodec.setVisibility(View.GONE);
+                    tvMediaExoCodec.setVisibility(View.GONE);
+                    tvMediaQtCodec.setVisibility(View.VISIBLE);
+                    tvMediaQtCodec.setText("硬解"); 
+            }
                     }
 
                     @Override
@@ -416,21 +430,6 @@ public class ModelSettingFragment extends BaseLazyFragment {
         });
 
         findViewById(R.id.llMediaCodec).setOnClickListener(new View.OnClickListener() {
-            int playerType = Hawk.get(HawkConfig.PLAY_TYPE, 0);  
-            if (playerType == 1) {
-                tvMediaExoCodec.setVisibility(View.GONE);
-                tvMediaQtCodec.setVisibility(View.GONE);
-                tvMediaCodec.setVisibility(View.VISIBLE);
-            } else if (playerType == 2) {
-                  tvMediaCodec.setVisibility(View.GONE);
-                  tvMediaQtCodec.setVisibility(View.GONE);
-                  tvMediaExoCodec.setVisibility(View.VISIBLE);
-            } else {
-                    tvMediaCodec.setVisibility(View.GONE);
-                    tvMediaExoCodec.setVisibility(View.GONE);
-                    tvMediaQtCodec.setVisibility(View.VISIBLE);
-                    tvMediaQtCodec.setText("硬解"); 
-            }
             @Override    
             public void onClick(View v) {
               int playerType = Hawk.get(HawkConfig.PLAY_TYPE, 0);  
