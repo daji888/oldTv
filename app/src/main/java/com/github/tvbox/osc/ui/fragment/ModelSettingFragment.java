@@ -416,7 +416,6 @@ public class ModelSettingFragment extends BaseLazyFragment {
         });
 
         findViewById(R.id.llMediaCodec).setOnClickListener(new View.OnClickListener() {
-            @Override
             int playerType = Hawk.get(HawkConfig.PLAY_TYPE, 0);  
             if (playerType == 1) {
                 tvMediaExoCodec.setVisibility(View.GONE);
@@ -431,7 +430,8 @@ public class ModelSettingFragment extends BaseLazyFragment {
                     tvMediaExoCodec.setVisibility(View.GONE);
                     tvMediaQtCodec.setVisibility(View.VISIBLE);
                     tvMediaQtCodec.setText("硬解"); 
-            }      
+            }
+            @Override    
             public void onClick(View v) {
               int playerType = Hawk.get(HawkConfig.PLAY_TYPE, 0);  
               if (playerType == 1) {
