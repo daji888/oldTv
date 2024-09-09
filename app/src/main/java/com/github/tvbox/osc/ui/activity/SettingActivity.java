@@ -123,11 +123,11 @@ public class SettingActivity extends BaseActivity {
         String ijkSel = Hawk.get(HawkConfig.IJK_CODEC, "");
         String exoSel = Hawk.get(HawkConfig.EXO_CODEC, "");
         int playerType = Hawk.get(HawkConfig.PLAY_TYPE, 0);
-        if (PlayerType == 1) {
+        if (playerType == 1) {
                             tvMediaExoCodec.setVisibility(View.GONE);
                             tvMediaQtCodec.setVisibility(View.GONE);
                             tvMediaCodec.setVisibility(View.VISIBLE);
-                       } else if (PlayerType == 2) {
+                       } else if (playerType == 2) {
                             tvMediaCodec.setVisibility(View.GONE);
                             tvMediaQtCodec.setVisibility(View.GONE);
                             tvMediaExoCodec.setVisibility(View.VISIBLE);
