@@ -65,6 +65,12 @@ public class SettingActivity extends BaseActivity {
     }
 
     private void initView() {
+        tvMediaCodec = findViewById(R.id.tvMediaCodec);
+        tvMediaCodec.setText(Hawk.get(HawkConfig.IJK_CODEC, ""));
+        tvMediaExoCodec = findViewById(R.id.tvMediaExoCodec);
+        tvMediaExoCodec.setText(Hawk.get(HawkConfig.EXO_CODEC, ""));
+        tvMediaQtCodec = findViewById(R.id.tvMediaQtCodec);
+        tvMediaQtCodec.setText("硬解");
         mGridView = findViewById(R.id.mGridView);
         mViewPager = findViewById(R.id.mViewPager);
         sortAdapter = new SettingMenuAdapter();
@@ -116,20 +122,6 @@ public class SettingActivity extends BaseActivity {
         currentLive = Hawk.get(HawkConfig.LIVE_URL, "");
         String ijkSel = Hawk.get(HawkConfig.IJK_CODEC, "");
         String exoSel = Hawk.get(HawkConfig.EXO_CODEC, "");
-        int playerType = Hawk.get(HawkConfig.PLAY_TYPE, 0);
-        if (playerType == 1) {
-                            tvMediaExoCodec.setVisibility(View.GONE);
-                            tvMediaQtCodec.setVisibility(View.GONE);
-                            tvMediaCodec.setVisibility(View.VISIBLE);
-                       } else if (playerType == 2) {
-                            tvMediaCodec.setVisibility(View.GONE);
-                            tvMediaQtCodec.setVisibility(View.GONE);
-                            tvMediaExoCodec.setVisibility(View.VISIBLE);
-                       } else {
-                            tvMediaCodec.setVisibility(View.GONE);
-                            tvMediaExoCodec.setVisibility(View.GONE);
-                            tvMediaQtCodec.setVisibility(View.VISIBLE);
-                        }
         homeSourceKey = ApiConfig.get().getHomeSourceBean().getKey();
         homeRec = Hawk.get(HawkConfig.HOME_REC, 0);
         dnsOpt = Hawk.get(HawkConfig.DOH_URL, 0);
