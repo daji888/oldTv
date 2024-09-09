@@ -374,6 +374,19 @@ public class ModelSettingFragment extends BaseLazyFragment {
             public void onClick(View v) {
                 FastClickCheckUtil.check(v);
                 int playerType = Hawk.get(HawkConfig.PLAY_TYPE, 0);
+                if (playerType == 1) {
+                            tvMediaExoCodec.setVisibility(View.GONE);
+                            tvMediaQtCodec.setVisibility(View.GONE);
+                            tvMediaCodec.setVisibility(View.VISIBLE);
+                       } else if (playerType == 2) {
+                            tvMediaCodec.setVisibility(View.GONE);
+                            tvMediaQtCodec.setVisibility(View.GONE);
+                            tvMediaExoCodec.setVisibility(View.VISIBLE);
+                       } else {
+                            tvMediaCodec.setVisibility(View.GONE);
+                            tvMediaExoCodec.setVisibility(View.GONE);
+                            tvMediaQtCodec.setVisibility(View.VISIBLE);
+                       }
                 int defaultPos = 0;
                 ArrayList<Integer> players = PlayerHelper.getExistPlayerTypes();
                 ArrayList<Integer> renders = new ArrayList<>();
@@ -393,7 +406,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
                         tvPlay.setText(PlayerHelper.getPlayerName(thisPlayerType));
                         PlayerHelper.init();
                         dialog.dismiss();
-                        if (thisPlayerType == 1) {
+             /*           if (thisPlayerType == 1) {
                             tvMediaExoCodec.setVisibility(View.GONE);
                             tvMediaQtCodec.setVisibility(View.GONE);
                             tvMediaCodec.setVisibility(View.VISIBLE);
@@ -405,7 +418,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
                             tvMediaCodec.setVisibility(View.GONE);
                             tvMediaExoCodec.setVisibility(View.GONE);
                             tvMediaQtCodec.setVisibility(View.VISIBLE);
-                        }
+                       }*/
                     }
 
                     @Override
