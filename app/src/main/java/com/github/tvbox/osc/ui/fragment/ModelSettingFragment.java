@@ -393,11 +393,11 @@ public class ModelSettingFragment extends BaseLazyFragment {
                         tvPlay.setText(PlayerHelper.getPlayerName(thisPlayerType));
                         PlayerHelper.init();
                         dialog.dismiss();
-                        if (playerType == 1) {
+                        if (thisPlayerType == 1) {
                 tvMediaExoCodec.setVisibility(View.GONE);
                 tvMediaQtCodec.setVisibility(View.GONE);
                 tvMediaCodec.setVisibility(View.VISIBLE);
-            } else if (playerType == 2) {
+            } else if (thisPlayerType == 2) {
                   tvMediaCodec.setVisibility(View.GONE);
                   tvMediaQtCodec.setVisibility(View.GONE);
                   tvMediaExoCodec.setVisibility(View.VISIBLE);
@@ -405,7 +405,6 @@ public class ModelSettingFragment extends BaseLazyFragment {
                     tvMediaCodec.setVisibility(View.GONE);
                     tvMediaExoCodec.setVisibility(View.GONE);
                     tvMediaQtCodec.setVisibility(View.VISIBLE);
-                    tvMediaQtCodec.setText("硬解"); 
             }
                     }
 
