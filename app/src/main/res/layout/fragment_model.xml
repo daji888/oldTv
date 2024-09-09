@@ -492,7 +492,9 @@
                             android:shadowColor="@color/color_000000_80"
                             android:shadowDx="5"
                             android:shadowDy="5"
-                            android:shadowRadius="5"    
+                            android:shadowRadius="5"
+                            android:visibility="gone"
+                            android:text="硬解"    
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
