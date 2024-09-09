@@ -420,6 +420,9 @@ public class ModelSettingFragment extends BaseLazyFragment {
             public void onClick(View v) {
               int playerType = Hawk.get(HawkConfig.PLAY_TYPE, 0);  
               if (playerType == 1) {
+                tvMediaExoCodec.setVisibility(View.GONE);
+                tvMediaQtCodec.setVisibility(View.GONE);
+                tvMediaCodec.setVisibility(View.VISIBLE);  
                 List<IJKCode> ijkCodes = ApiConfig.get().getIjkCodes();
                 if (ijkCodes == null || ijkCodes.size() == 0)
                     return;
@@ -430,9 +433,6 @@ public class ModelSettingFragment extends BaseLazyFragment {
                 for (int j = 0; j < ijkCodes.size(); j++) {
                     if (ijkSel.equals(ijkCodes.get(j).getName())) {
                         defaultPos = j;
-                        tvMediaExoCodec.setVisibility(View.GONE);
-                        tvMediaQtCodec.setVisibility(View.GONE);
-                        tvMediaCodec.setVisibility(View.VISIBLE);
                         tvMediaCodec.setText(ijkCodes.get(j).getName());
                         break;
                     }
@@ -465,6 +465,9 @@ public class ModelSettingFragment extends BaseLazyFragment {
                 }, ijkCodes, defaultPos);
                 dialog.show();  
                 } else if (playerType == 2) {
+                  tvMediaCodec.setVisibility(View.GONE);
+                  tvMediaQtCodec.setVisibility(View.GONE);
+                  tvMediaExoCodec.setVisibility(View.VISIBLE);
                   List<EXOCode> exoCodes = ApiConfig.get().getExoCodes();
                   if (exoCodes == null || exoCodes.size() == 0)
                       return;
@@ -475,9 +478,6 @@ public class ModelSettingFragment extends BaseLazyFragment {
                 for (int a = 0; a < exoCodes.size(); a++) {
                     if (exoSel.equals(exoCodes.get(a).getName())) {
                         exodefaultPos = a;
-                        tvMediaCodec.setVisibility(View.GONE);
-                        tvMediaQtCodec.setVisibility(View.GONE);
-                        tvMediaExoCodec.setVisibility(View.VISIBLE);
                         tvMediaExoCodec.setText(exoCodes.get(a).getName());
                         break;
                     }
