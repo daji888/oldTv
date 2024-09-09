@@ -417,12 +417,24 @@ public class ModelSettingFragment extends BaseLazyFragment {
 
         findViewById(R.id.llMediaCodec).setOnClickListener(new View.OnClickListener() {
             @Override
+            int playerType = Hawk.get(HawkConfig.PLAY_TYPE, 0);  
+            if (playerType == 1) {
+                tvMediaExoCodec.setVisibility(View.GONE);
+                tvMediaQtCodec.setVisibility(View.GONE);
+                tvMediaCodec.setVisibility(View.VISIBLE);
+            } else if (playerType == 2) {
+                  tvMediaCodec.setVisibility(View.GONE);
+                  tvMediaQtCodec.setVisibility(View.GONE);
+                  tvMediaExoCodec.setVisibility(View.VISIBLE);
+            } else {
+                    tvMediaCodec.setVisibility(View.GONE);
+                    tvMediaExoCodec.setVisibility(View.GONE);
+                    tvMediaQtCodec.setVisibility(View.VISIBLE);
+                    tvMediaQtCodec.setText("硬解"); 
+            }      
             public void onClick(View v) {
               int playerType = Hawk.get(HawkConfig.PLAY_TYPE, 0);  
               if (playerType == 1) {
-                tvMediaExoCodec.setVisibility(View.GONE);
-                tvMediaQtCodec.setVisibility(View.GONE);
-                tvMediaCodec.setVisibility(View.VISIBLE);  
                 List<IJKCode> ijkCodes = ApiConfig.get().getIjkCodes();
                 if (ijkCodes == null || ijkCodes.size() == 0)
                     return;
@@ -465,9 +477,6 @@ public class ModelSettingFragment extends BaseLazyFragment {
                 }, ijkCodes, defaultPos);
                 dialog.show();  
                 } else if (playerType == 2) {
-                  tvMediaCodec.setVisibility(View.GONE);
-                  tvMediaQtCodec.setVisibility(View.GONE);
-                  tvMediaExoCodec.setVisibility(View.VISIBLE);
                   List<EXOCode> exoCodes = ApiConfig.get().getExoCodes();
                   if (exoCodes == null || exoCodes.size() == 0)
                       return;
@@ -510,9 +519,6 @@ public class ModelSettingFragment extends BaseLazyFragment {
                 }, exoCodes, exodefaultPos);
                 dialog.show();  
                 } else {
-                    tvMediaCodec.setVisibility(View.GONE);
-                    tvMediaExoCodec.setVisibility(View.GONE);
-                    tvMediaQtCodec.setVisibility(View.VISIBLE);
                     tvMediaQtCodec.setText("硬解"); 
                 }  
             }
