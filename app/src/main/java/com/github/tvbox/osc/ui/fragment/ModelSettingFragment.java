@@ -374,13 +374,12 @@ public class ModelSettingFragment extends BaseLazyFragment {
                 int defaultPos = 0;
                 ArrayList<Integer> players = PlayerHelper.getExistPlayerTypes();
                 ArrayList<Integer> renders = new ArrayList<>();
-                for(int p = 0; p<players.size(); p++) {
+                for(int p = 0; p < players.size(); p++) {
                     renders.add(p);
                     if (players.get(p) == playerType) {
                         defaultPos = p;
                     }
                 }
-                String ijkSel = Hawk.get(HawkConfig.IJK_CODEC, "");
                 SelectDialog<Integer> dialog = new SelectDialog<>(mActivity);
                 dialog.setTip("请选择默认播放器");
                 dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<Integer>() {
@@ -391,6 +390,25 @@ public class ModelSettingFragment extends BaseLazyFragment {
                         tvPlay.setText(PlayerHelper.getPlayerName(thisPlayerType));
                         PlayerHelper.init();
                         dialog.dismiss();
+                        if (playerType == 1) {
+                            for (int j = 0; j < ijkCodes.size(); j++) {
+                                 if (ijkSel.equals(ijkCodes.get(j).getName())) {
+                                    defaultPos = j;
+                                    tvMediaCodec.setText(ijkCodes.get(j).getName());
+                                    break;
+                                }
+                             }
+                          } else if (playerType == 2) {
+                            for (int a = 0; a < exoCodes.size(); a++) {
+                                 if (exoSel.equals(exoCodes.get(a).getName())) {
+                                     exodefaultPos = a;
+                                     tvMediaExoCodec.setText(exoCodes.get(a).getName());
+                                     break;
+                                 }   
+                              }
+                          } else {
+                                  tvMediaCodec.setText("硬解"); 
+                          }  
                     }
 
                     @Override
@@ -434,7 +452,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
                 }
 
                 SelectDialog<IJKCode> dialog = new SelectDialog<>(mActivity);
-                dialog.setTip("请选择IJK解码");
+                dialog.setTip("请选择 IJK 默认解码");
                 dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<IJKCode>() {
                     @Override
                     public void click(IJKCode value, int pos) {
@@ -476,7 +494,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
                 }
 
                 SelectDialog<EXOCode> dialog = new SelectDialog<>(mActivity);
-                dialog.setTip("请选择EXO解码");
+                dialog.setTip("请选择 EXO 默认解码");
                 dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<EXOCode>() {
                     @Override
                     public void click(EXOCode value, int pos) {
