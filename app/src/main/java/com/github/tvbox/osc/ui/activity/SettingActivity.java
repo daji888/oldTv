@@ -47,6 +47,8 @@ public class SettingActivity extends BaseActivity {
     private String currentLive;
     private int homeRec;
     private int dnsOpt;
+    private String ijkSel;
+    private String exoSel;
 
     @Override
     protected int getLayoutResID() {
@@ -109,6 +111,8 @@ public class SettingActivity extends BaseActivity {
     private void initData() {
         currentApi = Hawk.get(HawkConfig.API_URL, "");
         currentLive = Hawk.get(HawkConfig.LIVE_URL, "");
+        String ijkSel = Hawk.get(HawkConfig.IJK_CODEC, "");
+        String exoSel = Hawk.get(HawkConfig.EXO_CODEC, "");
         homeSourceKey = ApiConfig.get().getHomeSourceBean().getKey();
         homeRec = Hawk.get(HawkConfig.HOME_REC, 0);
         dnsOpt = Hawk.get(HawkConfig.DOH_URL, 0);
