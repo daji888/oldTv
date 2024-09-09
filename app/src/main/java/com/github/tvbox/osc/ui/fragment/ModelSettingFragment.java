@@ -391,6 +391,8 @@ public class ModelSettingFragment extends BaseLazyFragment {
                         PlayerHelper.init();
                         dialog.dismiss();
                         if (playerType == 1) {
+                            int defaultPos = 0;
+                            String ijkSel = Hawk.get(HawkConfig.IJK_CODEC, "");
                             for (int j = 0; j < ijkCodes.size(); j++) {
                                  if (ijkSel.equals(ijkCodes.get(j).getName())) {
                                     defaultPos = j;
@@ -399,6 +401,8 @@ public class ModelSettingFragment extends BaseLazyFragment {
                                 }
                              }
                           } else if (playerType == 2) {
+                            int exodefaultPos = 0;
+                            String exoSel = Hawk.get(HawkConfig.EXO_CODEC, "");
                             for (int a = 0; a < exoCodes.size(); a++) {
                                  if (exoSel.equals(exoCodes.get(a).getName())) {
                                      exodefaultPos = a;
