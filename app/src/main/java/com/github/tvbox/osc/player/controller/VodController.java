@@ -863,6 +863,7 @@ public class VodController extends BaseController {
                 mPlayerIJKBtn.setText(mPlayerConfig.getString("exo"));
                 mPlayerIJKBtn.setVisibility(VISIBLE);
             } else {
+                mPlayerIJKBtn.setText("硬解");
                 mPlayerIJKBtn.setVisibility(VISIBLE);
             }
             mPlayerSpeedBtn.setText("x" + mPlayerConfig.getDouble("sp"));
