@@ -504,7 +504,6 @@
                             android:shadowDx="5"
                             android:shadowDy="5"
                             android:shadowRadius="5"
-                            android:visibility="gone"
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
@@ -516,7 +515,6 @@
                             android:shadowDx="5"
                             android:shadowDy="5"
                             android:shadowRadius="5"
-                            android:visibility="gone"
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />    
 
