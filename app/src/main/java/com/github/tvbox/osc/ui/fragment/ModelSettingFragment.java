@@ -64,6 +64,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
     private TextView tvDebugOpen;
     private TextView tvMediaCodec;
     private TextView tvMediaExoCodec;
+    private TextView tvMediaQtCodec;
     private TextView tvParseWebView;
     private TextView tvPlay;
     private TextView tvRender;
@@ -110,6 +111,8 @@ public class ModelSettingFragment extends BaseLazyFragment {
         tvMediaCodec.setText(Hawk.get(HawkConfig.IJK_CODEC, ""));
         tvMediaExoCodec = findViewById(R.id.tvMediaCodec);
         tvMediaExoCodec.setText(Hawk.get(HawkConfig.EXO_CODEC, ""));
+        tvMediaQtCodec = findViewById(R.id.tvMediaQtCodec);
+        tvMediaQtCodec.setText("硬解"));    
         tvPlay = findViewById(R.id.tvPlay);
         tvRender = findViewById(R.id.tvRenderType);
         tvScale = findViewById(R.id.tvScaleType);
@@ -427,6 +430,9 @@ public class ModelSettingFragment extends BaseLazyFragment {
                 for (int j = 0; j < ijkCodes.size(); j++) {
                     if (ijkSel.equals(ijkCodes.get(j).getName())) {
                         defaultPos = j;
+                        tvMediaExoCodec.setVisibility(View.GONE);
+                        tvMediaQtCodec.setVisibility(View.GONE);
+                        tvMediaCodec.setVisibility(View.VISIBLE);
                         tvMediaCodec.setText(ijkCodes.get(j).getName());
                         break;
                     }
@@ -469,6 +475,9 @@ public class ModelSettingFragment extends BaseLazyFragment {
                 for (int a = 0; a < exoCodes.size(); a++) {
                     if (exoSel.equals(exoCodes.get(a).getName())) {
                         exodefaultPos = a;
+                        tvMediaCodec.setVisibility(View.GONE);
+                        tvMediaQtCodec.setVisibility(View.GONE);
+                        tvMediaExoCodec.setVisibility(View.VISIBLE);
                         tvMediaExoCodec.setText(exoCodes.get(a).getName());
                         break;
                     }
@@ -501,7 +510,10 @@ public class ModelSettingFragment extends BaseLazyFragment {
                 }, exoCodes, exodefaultPos);
                 dialog.show();  
                 } else {
-                    tvMediaCodec.setText("硬解"); 
+                    tvMediaCodec.setVisibility(View.GONE);
+                    tvMediaExoCodec.setVisibility(View.GONE);
+                    tvMediaQtCodec.setVisibility(View.VISIBLE);
+                    tvMediaQtCodec.setText("硬解"); 
                 }  
             }
         });
