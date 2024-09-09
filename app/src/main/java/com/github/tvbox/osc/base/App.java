@@ -81,6 +81,7 @@ public class App extends MultiDexApplication {
         putDefault(HawkConfig.PLAY_SCALE, 0);                //画面缩放: 0=等比, 1=16:9, 2=4:3, 3=填充, 4=原始, 5=裁剪
         putDefault(HawkConfig.PLAY_TYPE, 1);                 //播放器: 0=系统, 1=IJK, 2=EXO, 3=MX, 4=Reex, 5=Kodi
         putDefault(HawkConfig.IJK_CODEC, "硬解");            //IJK解码: 软解, 硬解
+        putDefault(HawkConfig.EXO_CODEC, "硬软");            //EXO解码: 硬软, 软硬, 硬解
         // 系统选项
         putDefault(HawkConfig.SEARCH_VIEW, 0);               //搜索展示: 0=文字列表, 1=缩略图
         putDefault(HawkConfig.PARSE_WEBVIEW, true);          //嗅探Webview: true=系统自带, false=XWalkView
