@@ -499,6 +499,19 @@
                             android:textSize="@dimen/ts_24" />
 
                         <TextView
+                            android:id="@+id/tvMediaExoCodec"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:shadowColor="@color/color_000000_80"
+                            android:shadowDx="5"
+                            android:shadowDy="5"
+                            android:shadowRadius="5"
+                            android:visibility="gone"
+                            android:text="硬解"    
+                            android:textColor="@android:color/white"
+                            android:textSize="@dimen/ts_24" />    
+
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/vs_10"
