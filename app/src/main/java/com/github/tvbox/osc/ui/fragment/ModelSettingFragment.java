@@ -849,18 +849,18 @@ public class ModelSettingFragment extends BaseLazyFragment {
     private void initView() {
         int playerType = Hawk.get(HawkConfig.PLAY_TYPE, 0);
         if (playerType == 1) {
-                            tvMediaExoCodec.setVisibility(View.GONE);
-                            tvMediaQtCodec.setVisibility(View.GONE);
-                            tvMediaCodec.setVisibility(View.VISIBLE);
-                       } else if (playerType == 2) {
-                            tvMediaCodec.setVisibility(View.GONE);
-                            tvMediaQtCodec.setVisibility(View.GONE);
-                            tvMediaExoCodec.setVisibility(View.VISIBLE);
-                       } else {
-                            tvMediaCodec.setVisibility(View.GONE);
-                            tvMediaExoCodec.setVisibility(View.GONE);
-                            tvMediaQtCodec.setVisibility(View.VISIBLE);
-                       }
+            tvMediaExoCodec.setVisibility(View.GONE);
+            tvMediaQtCodec.setVisibility(View.GONE);
+            tvMediaCodec.setVisibility(View.VISIBLE);
+        } else if (playerType == 2) {
+            tvMediaCodec.setVisibility(View.GONE);
+            tvMediaQtCodec.setVisibility(View.GONE);
+            tvMediaExoCodec.setVisibility(View.VISIBLE);
+        } else {
+            tvMediaCodec.setVisibility(View.GONE);
+            tvMediaExoCodec.setVisibility(View.GONE);
+            tvMediaQtCodec.setVisibility(View.VISIBLE);
+        }
     }
 
     public static SearchRemoteTvDialog loadingSearchRemoteTvDialog;
