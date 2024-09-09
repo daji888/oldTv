@@ -821,6 +821,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
 
         findViewById(R.id.llIjkCachePlay).setOnClickListener((view -> onClickIjkCachePlay(view)));
         findViewById(R.id.llClearCache).setOnClickListener((view -> onClickClearCache(view)));
+        initView();
     }
 
     private void onClickIjkCachePlay(View v) {
@@ -845,6 +846,22 @@ public class ModelSettingFragment extends BaseLazyFragment {
         return;
     }
 
+    private void initView() {
+        int playerType = Hawk.get(HawkConfig.PLAY_TYPE, 0);
+        if (playerType == 1) {
+                            tvMediaExoCodec.setVisibility(View.GONE);
+                            tvMediaQtCodec.setVisibility(View.GONE);
+                            tvMediaCodec.setVisibility(View.VISIBLE);
+                       } else if (playerType == 2) {
+                            tvMediaCodec.setVisibility(View.GONE);
+                            tvMediaQtCodec.setVisibility(View.GONE);
+                            tvMediaExoCodec.setVisibility(View.VISIBLE);
+                       } else {
+                            tvMediaCodec.setVisibility(View.GONE);
+                            tvMediaExoCodec.setVisibility(View.GONE);
+                            tvMediaQtCodec.setVisibility(View.VISIBLE);
+                       }
+    }
 
     public static SearchRemoteTvDialog loadingSearchRemoteTvDialog;
     public static List<String> remoteTvHostList;
