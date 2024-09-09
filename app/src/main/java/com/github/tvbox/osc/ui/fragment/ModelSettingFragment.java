@@ -393,7 +393,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
                         tvPlay.setText(PlayerHelper.getPlayerName(thisPlayerType));
                         PlayerHelper.init();
                         dialog.dismiss();
-               /*         if (thisPlayerType == 1) {
+                        if (thisPlayerType == 1) {
                             tvMediaExoCodec.setVisibility(View.GONE);
                             tvMediaQtCodec.setVisibility(View.GONE);
                             tvMediaCodec.setVisibility(View.VISIBLE);
@@ -405,7 +405,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
                             tvMediaCodec.setVisibility(View.GONE);
                             tvMediaExoCodec.setVisibility(View.GONE);
                             tvMediaQtCodec.setVisibility(View.VISIBLE);
-                       }*/
+                       }
                     }
 
                     @Override
