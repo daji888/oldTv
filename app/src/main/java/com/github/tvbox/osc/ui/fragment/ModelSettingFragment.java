@@ -390,37 +390,6 @@ public class ModelSettingFragment extends BaseLazyFragment {
                         tvPlay.setText(PlayerHelper.getPlayerName(thisPlayerType));
                         PlayerHelper.init();
                         dialog.dismiss();
-                        if (playerType == 1) {
-                            List<IJKCode> ijkCodes = ApiConfig.get().getIjkCodes();
-                            if (ijkCodes == null || ijkCodes.size() == 0)
-                                return;
-                            int defaultPos = 0;
-                            String ijkSel = Hawk.get(HawkConfig.IJK_CODEC, "");
-                            for (int j = 0; j < ijkCodes.size(); j++) {
-                                 if (ijkSel.equals(ijkCodes.get(j).getName())) {
-                                    defaultPos = j;
-                                    ((TextView) findViewById(R.id.llMediaCodec)).setText(ijkCodes.get(j).getName()); 
-                                //    tvMediaCodec.setText(ijkCodes.get(j).getName());
-                                    break;
-                                }
-                             }
-                          } else if (playerType == 2) {
-                            List<EXOCode> exoCodes = ApiConfig.get().getExoCodes();
-                            if (exoCodes == null || exoCodes.size() == 0)
-                                return;
-                            int exodefaultPos = 0;
-                            String exoSel = Hawk.get(HawkConfig.EXO_CODEC, "");
-                            for (int a = 0; a < exoCodes.size(); a++) {
-                                 if (exoSel.equals(exoCodes.get(a).getName())) {
-                                     exodefaultPos = a;
-                                     ((TextView) findViewById(R.id.llMediaCodec)).setText(exoCodes.get(a).getName());
-                                 //    tvMediaExoCodec.setText(exoCodes.get(a).getName());
-                                     break;
-                                 }   
-                              }
-                          } else {
-                                  tvMediaCodec.setText("硬解"); 
-                          }  
                     }
 
                     @Override
