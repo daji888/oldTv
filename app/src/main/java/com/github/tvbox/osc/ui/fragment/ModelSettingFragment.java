@@ -399,7 +399,8 @@ public class ModelSettingFragment extends BaseLazyFragment {
                             for (int j = 0; j < ijkCodes.size(); j++) {
                                  if (ijkSel.equals(ijkCodes.get(j).getName())) {
                                     defaultPos = j;
-                                    tvMediaCodec.setText(ijkCodes.get(j).getName());
+                                    ((TextView) findViewById(R.id.llMediaCodec)).setText(ijkCodes.get(j).getName()); 
+                                //    tvMediaCodec.setText(ijkCodes.get(j).getName());
                                     break;
                                 }
                              }
@@ -412,7 +413,8 @@ public class ModelSettingFragment extends BaseLazyFragment {
                             for (int a = 0; a < exoCodes.size(); a++) {
                                  if (exoSel.equals(exoCodes.get(a).getName())) {
                                      exodefaultPos = a;
-                                     tvMediaExoCodec.setText(exoCodes.get(a).getName());
+                                     ((TextView) findViewById(R.id.llMediaCodec)).setText(exoCodes.get(a).getName());
+                                 //    tvMediaExoCodec.setText(exoCodes.get(a).getName());
                                      break;
                                  }   
                               }
