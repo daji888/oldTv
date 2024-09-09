@@ -47,11 +47,6 @@ public class SettingActivity extends BaseActivity {
     private String currentLive;
     private int homeRec;
     private int dnsOpt;
-    private String ijkSel;
-    private String exoSel;
-    private TextView tvMediaCodec;
-    private TextView tvMediaExoCodec;
-    private TextView tvMediaQtCodec;
 
     @Override
     protected int getLayoutResID() {
@@ -65,12 +60,6 @@ public class SettingActivity extends BaseActivity {
     }
 
     private void initView() {
-        tvMediaCodec = findViewById(R.id.tvMediaCodec);
-        tvMediaCodec.setText(Hawk.get(HawkConfig.IJK_CODEC, ""));
-        tvMediaExoCodec = findViewById(R.id.tvMediaExoCodec);
-        tvMediaExoCodec.setText(Hawk.get(HawkConfig.EXO_CODEC, ""));
-        tvMediaQtCodec = findViewById(R.id.tvMediaQtCodec);
-        tvMediaQtCodec.setText("硬解");
         mGridView = findViewById(R.id.mGridView);
         mViewPager = findViewById(R.id.mViewPager);
         sortAdapter = new SettingMenuAdapter();
@@ -120,8 +109,6 @@ public class SettingActivity extends BaseActivity {
     private void initData() {
         currentApi = Hawk.get(HawkConfig.API_URL, "");
         currentLive = Hawk.get(HawkConfig.LIVE_URL, "");
-        String ijkSel = Hawk.get(HawkConfig.IJK_CODEC, "");
-        String exoSel = Hawk.get(HawkConfig.EXO_CODEC, "");
         homeSourceKey = ApiConfig.get().getHomeSourceBean().getKey();
         homeRec = Hawk.get(HawkConfig.HOME_REC, 0);
         dnsOpt = Hawk.get(HawkConfig.DOH_URL, 0);
