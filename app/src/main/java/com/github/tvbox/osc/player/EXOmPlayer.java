@@ -32,7 +32,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
         this.exocodec = exocodec;
     }
 
- /*   @Override
+    @Override
     public void setOptions() {
         EXOCode exocodecTmp = this.exocodec == null ? ApiConfig.get().getCurrentEXOCode() : this.exocodec;
         LinkedHashMap<String, String> options = exocodecTmp.getOption();
@@ -44,14 +44,14 @@ public class EXOmPlayer extends ExoMediaPlayer {
                 String name = opt[1].trim();
                 try {
                     long valLong = Long.parseLong(value);
-                    mRenderersFactory.setExtensionRendererMode((int) valLong);
+                    mMediaPlayer.setOption(category, name, valLong);
                 } catch (Exception e) {
-                    mRenderersFactory.setExtensionRendererMode(category);
+                    mMediaPlayer.setOption(category, name, value);
                 }
             }
         }
         super.setOptions();
-    }  */
+    }
 
     @SuppressLint("UnsafeOptInUsageError")
     public TrackInfo getTrackInfo() {
