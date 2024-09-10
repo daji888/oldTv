@@ -58,7 +58,8 @@ public class EXOmPlayer extends ExoMediaPlayer {
                     mRenderersFactory.setExtensionRendererMode(extensionRendererMode); 
                 } catch (Exception e) {
              //       mRenderersFactory.setExtensionRendererMode(extensionRendererMode);
-                    e.printStackTrace();
+             //       e.printStackTrace();
+                    Toast.makeText(mAppContext, "播放失败:" + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         }
