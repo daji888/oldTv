@@ -53,10 +53,12 @@ public class EXOmPlayer extends ExoMediaPlayer {
                 int extensionRendererMode = Integer.parseInt(opt[0].trim());
                 String name = opt[1].trim();
                 try {
-                    long valLong = Long.parseLong(value);
-                    mRenderersFactory.setExtensionRendererMode((int) valLong);
+             //       long valLong = Long.parseLong(value);
+             //       mRenderersFactory.setExtensionRendererMode((int) valLong);
+                    mRenderersFactory.setExtensionRendererMode(extensionRendererMode); 
                 } catch (Exception e) {
-                    mRenderersFactory.setExtensionRendererMode(extensionRendererMode);
+             //       mRenderersFactory.setExtensionRendererMode(extensionRendererMode);
+                    e.printStackTrace();
                 }
             }
         }
