@@ -67,7 +67,7 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     private long lastTotalRxBytes = 0;
     private long lastTimeStamp = 0;
 
-    private EXOCode codec = null;
+    private EXOCode exocodec = null;
 
     public ExoMediaPlayer(Context context) {
         mAppContext = context.getApplicationContext();
