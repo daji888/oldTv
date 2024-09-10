@@ -32,7 +32,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
 
     public EXOmPlayer(Context context, EXOCode exocodec) {
         super(context, exocodec);
-        this.exocodec = exocodec;
+   //     this.exocodec = exocodec;
     }
 
  /*   @IntDef({EXTENSION_RENDERER_MODE_ON, EXTENSION_RENDERER_MODE_PREFER, EXTENSION_RENDERER_MODE_OFF})
