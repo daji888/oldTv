@@ -20,6 +20,8 @@ import com.github.tvbox.osc.bean.EXOCode;
 import xyz.doikki.videoplayer.exo.ExoMediaPlayer;
 import java.util.LinkedHashMap;
 
+import androidx.annotation.IntDef;
+
 public class EXOmPlayer extends ExoMediaPlayer {
     private String audioId = "";
     private String videoId = "";
@@ -31,6 +33,14 @@ public class EXOmPlayer extends ExoMediaPlayer {
         super(context);
         this.exocodec = exocodec;
     }
+
+    @IntDef({EXTENSION_RENDERER_MODE_ON, EXTENSION_RENDERER_MODE_PREFER, EXTENSION_RENDERER_MODE_OFF})
+    public @interface ExtensionRendererMode {}
+
+    public static final int EXTENSION_RENDERER_MODE_OFF = 0;
+    public static final int EXTENSION_RENDERER_MODE_ON = 1;
+    public static final int EXTENSION_RENDERER_MODE_PREFER = 2;
+    private @ExtensionRendererMode int extensionRendererMode;
 
     @Override
     public void setOptions() {
@@ -46,7 +56,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
                     long valLong = Long.parseLong(value);
                     mRenderersFactory.setExtensionRendererMode((int) valLong);
                 } catch (Exception e) {
-                    mRenderersFactory.setExtensionRendererMode(extensionRendererMode);
+                    mRenderersFactory.setExtensionRendererMode(@ExtensionRendererMode int extensionRendererMode);
                 }
             }
         }
