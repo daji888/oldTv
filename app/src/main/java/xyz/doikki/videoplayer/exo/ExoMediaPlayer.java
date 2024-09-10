@@ -69,9 +69,10 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
 
     private EXOCode exocodec = null;
 
-    public ExoMediaPlayer(Context context) {
+    public EXOmPlayer(Context context, EXOCode exocodec) {
         mAppContext = context.getApplicationContext();
         mMediaSourceHelper = ExoMediaSourceHelper.getInstance(context);
+        this.exocodec = exocodec;
     }
 
  /*    @IntDef({EXTENSION_RENDERER_MODE_ON, EXTENSION_RENDERER_MODE_PREFER, EXTENSION_RENDERER_MODE_OFF})
