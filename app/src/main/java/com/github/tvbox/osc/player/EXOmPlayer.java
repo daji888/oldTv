@@ -2,7 +2,6 @@ package com.github.tvbox.osc.player;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.Build;
 
 import androidx.annotation.Nullable;
 import androidx.media3.common.C;
@@ -45,9 +44,9 @@ public class EXOmPlayer extends ExoMediaPlayer {
                 String name = opt[1].trim();
                 try {
                     long valLong = Long.parseLong(value);
-                    mMediaPlayer.Builder(mAppContext).setRenderersFactory(mRenderersFactory);
+                    mMediaPlayer.Builder.setRenderersFactory(mRenderersFactory);
                 } catch (Exception e) {
-                    mMediaPlayer.Builder(mAppContext).setRenderersFactory(mRenderersFactory);
+                    mMediaPlayer.Builder.setRenderersFactory(mRenderersFactory);
                 }
             }
         }
