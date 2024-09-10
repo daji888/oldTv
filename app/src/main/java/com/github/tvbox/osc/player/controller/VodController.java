@@ -130,7 +130,7 @@ public class VodController extends BaseController {
     TextView mPlayerScaleBtn;
     public TextView mPlayerSpeedBtn;
     TextView mPlayerBtn;
-    TextView mPlayerIJKBtn;
+    TextView mPlayerDecodeBtn;
     TextView mPlayerRetry;
     TextView mPlayrefresh;
     public TextView mPlayerTimeStartEndText;
@@ -206,7 +206,7 @@ public class VodController extends BaseController {
         mPlayerScaleBtn = findViewById(R.id.play_scale);
         mPlayerSpeedBtn = findViewById(R.id.play_speed);
         mPlayerBtn = findViewById(R.id.play_player);
-        mPlayerIJKBtn = findViewById(R.id.play_ijk);
+        mPlayerDecodeBtn = findViewById(R.id.play_ijk);
         mPlayerTimeStartEndText = findViewById(R.id.play_time_start_end_text);
         mPlayerTimeStartBtn = findViewById(R.id.play_time_start);
         mPlayerTimeSkipBtn = findViewById(R.id.play_time_end);
@@ -613,7 +613,7 @@ public class VodController extends BaseController {
                 return true;
             }
         });
-        mPlayerIJKBtn.setOnClickListener(new OnClickListener() {
+        mPlayerDecodeBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 myHandle.removeCallbacks(myRunnable);
@@ -656,8 +656,8 @@ public class VodController extends BaseController {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                mPlayerIJKBtn.requestFocus();
-                mPlayerIJKBtn.requestFocusFromTouch();
+                mPlayerDecodeBtn.requestFocus();
+                mPlayerDecodeBtn.requestFocusFromTouch();
             }
         });
 //        增加播放页面片头片尾时间重置
@@ -857,14 +857,14 @@ public class VodController extends BaseController {
             mPlayerBtn.setText(PlayerHelper.getPlayerName(playerType));
             mPlayerScaleBtn.setText(PlayerHelper.getScaleName(mPlayerConfig.getInt("sc")));
             if (playerType == 1) {
-                mPlayerIJKBtn.setText(mPlayerConfig.getString("ijk"));
-                mPlayerIJKBtn.setVisibility(VISIBLE);
+                mPlayerDecodeBtn.setText(mPlayerConfig.getString("ijk"));
+                mPlayerDecodeBtn.setVisibility(VISIBLE);
             } else if (playerType == 2) {
-                mPlayerIJKBtn.setText(mPlayerConfig.getString("exo"));
-                mPlayerIJKBtn.setVisibility(VISIBLE);
+                mPlayerDecodeBtn.setText(mPlayerConfig.getString("exo"));
+                mPlayerDecodeBtn.setVisibility(VISIBLE);
             } else {
-                mPlayerIJKBtn.setText("硬解");
-                mPlayerIJKBtn.setVisibility(VISIBLE);
+                mPlayerDecodeBtn.setText("硬解");
+                mPlayerDecodeBtn.setVisibility(VISIBLE);
             }
             mPlayerSpeedBtn.setText("x" + mPlayerConfig.getDouble("sp"));
             mPlayerTimeStartBtn.setText(PlayerUtils.stringForTime(mPlayerConfig.getInt("st") * 1000));
