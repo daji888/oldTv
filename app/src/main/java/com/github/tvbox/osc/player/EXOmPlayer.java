@@ -30,8 +30,9 @@ public class EXOmPlayer extends ExoMediaPlayer {
     private EXOCode exocodec = null;
     private static DefaultRenderersFactory mRenderersFactory;
 
-    public EXOmPlayer(Context context) {
+    public EXOmPlayer(Context context, EXOCode exocodec) {
         super(context, null);
+        this.exocodec = exocodec;
     }
 
  /*   @IntDef({EXTENSION_RENDERER_MODE_ON, EXTENSION_RENDERER_MODE_PREFER, EXTENSION_RENDERER_MODE_OFF})
