@@ -13,7 +13,7 @@ import androidx.media3.common.Tracks;
 import androidx.media3.exoplayer.source.TrackGroupArray;
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
 import androidx.media3.exoplayer.trackselection.MappingTrackSelector;
-import androidx.media3.exoplayer.DefaultRenderersFactory;
+import androidx.media3.exoplayer.RenderersFactory;
 import com.github.tvbox.osc.util.StringUtils;
 import com.github.tvbox.osc.api.ApiConfig;
 import com.github.tvbox.osc.bean.EXOCode;
@@ -25,7 +25,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
     private String videoId = "";
     private String subtitleId = "";
     private EXOCode exocodec = null;
-    private static DefaultRenderersFactory mRenderersFactory;
+    private static RenderersFactory mRenderersFactory;
 
     public EXOmPlayer(Context context, EXOCode exocodec) {
         super(context);
