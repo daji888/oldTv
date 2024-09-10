@@ -85,29 +85,29 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     @SuppressLint("UnsafeOptInUsageError")
     @Override
     public void initPlayer() {
-        EXOCode exocodecTmp = ApiConfig.get().getCurrentEXOCode();
+    /*   EXOCode exocodecTmp = ApiConfig.get().getCurrentEXOCode();
         LinkedHashMap<String, String> options = exocodecTmp.getOption();
         if (options != null) {
             for (String key : options.keySet()) {
                 String value = options.get(key);
                 String[] opt = key.split("\\|");
                 int extensionRendererMode = Integer.parseInt(opt[0].trim());
-                String name = opt[1].trim();
+                String name = opt[1].trim();*/
                 try {
                     if (mRenderersFactory == null) {
                         mRenderersFactory = new DefaultRenderersFactory(mAppContext);
-                        if (extensionRendererMode == 0) {
+                     /*   if (extensionRendererMode == 0) {
                             mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF);
-                        } else if (extensionRendererMode == 1) {
+                        } else if (extensionRendererMode == 1) {*/
                             mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON);
-                        } else if (extensionRendererMode == 2) {
+                     /*   } else if (extensionRendererMode == 2) {
                             mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER);
-                      }   
+                      }*/   
                    }
                 } catch (Exception e) {
                    e.printStackTrace();
                 }
-             }
+         //    }
         }   
     /*    if (mRenderersFactory == null) {
             mRenderersFactory = new DefaultRenderersFactory(mAppContext);
