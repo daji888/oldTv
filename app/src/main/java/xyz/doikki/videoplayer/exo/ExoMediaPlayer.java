@@ -40,6 +40,8 @@ import xyz.doikki.videoplayer.player.AbstractPlayer;
 import xyz.doikki.videoplayer.player.VideoViewManager;
 import xyz.doikki.videoplayer.util.PlayerUtils;
 
+import androidx.annotation.IntDef;
+
 public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
 
     public static Context mAppContext;
