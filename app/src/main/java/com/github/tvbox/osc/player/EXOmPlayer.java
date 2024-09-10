@@ -56,11 +56,20 @@ public class EXOmPlayer extends ExoMediaPlayer {
                 try {
              //       long valLong = Long.parseLong(value);
              //       mRenderersFactory.setExtensionRendererMode((int) valLong);
-                    mRenderersFactory.setExtensionRendererMode(extensionRendererMode); 
+                    if (mRenderersFactory == null) {
+                        mRenderersFactory = new DefaultRenderersFactory(mAppContext);
+                        if (extensionRendererMode == 0) {
+                            mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF);
+                        } else if (extensionRendererMode == 1) {
+                            mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON);
+                        } else if (extensionRendererMode == 2) {
+                            mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER);
+                      }   
+                   } 
                 } catch (Exception e) {
              //       mRenderersFactory.setExtensionRendererMode(extensionRendererMode);
-             //       e.printStackTrace();
-                    Toast.makeText(mAppContext, "播放失败:" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+             //       Toast.makeText(mAppContext, "播放失败:" + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         }
