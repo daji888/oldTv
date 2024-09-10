@@ -67,7 +67,7 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     private long lastTotalRxBytes = 0;
     private long lastTimeStamp = 0;
 
-    private EXOCode exocodec = null;
+    private EXOCode codec = null;
 
     public ExoMediaPlayer(Context context) {
         mAppContext = context.getApplicationContext();
@@ -85,7 +85,7 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     @SuppressLint("UnsafeOptInUsageError")
     @Override
     public void initPlayer() {
-        EXOCode exocodecTmp = this.exocodec == null ? ApiConfig.get().getCurrentEXOCode() : this.exocodec;
+        EXOCode exocodecTmp == ApiConfig.get().getCurrentEXOCode();
         LinkedHashMap<String, String> options = exocodecTmp.getOption();
         if (options != null) {
             for (String key : options.keySet()) {
