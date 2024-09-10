@@ -206,7 +206,7 @@ public class VodController extends BaseController {
         mPlayerScaleBtn = findViewById(R.id.play_scale);
         mPlayerSpeedBtn = findViewById(R.id.play_speed);
         mPlayerBtn = findViewById(R.id.play_player);
-        mPlayerDecodeBtn = findViewById(R.id.play_ijk);
+        mPlayerDecodeBtn = findViewById(R.id.player_decode);
         mPlayerTimeStartEndText = findViewById(R.id.play_time_start_end_text);
         mPlayerTimeStartBtn = findViewById(R.id.play_time_start);
         mPlayerTimeSkipBtn = findViewById(R.id.play_time_end);
