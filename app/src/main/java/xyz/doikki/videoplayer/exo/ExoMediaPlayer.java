@@ -92,6 +92,7 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
                 String value = options.get(key);
                 String[] opt = key.split("\\|");
                 int extensionRendererMode = Integer.parseInt(opt[0].trim());
+                String name = opt[1].trim();
                 try {
                     if (mRenderersFactory == null) {
                         mRenderersFactory = new DefaultRenderersFactory(mAppContext);
