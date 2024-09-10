@@ -188,8 +188,8 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
             mMediaPlayer.clearVideoSurface();
             mIsPreparing = false;
         }
+    //    setOptions();
         System.gc();
-        setOptions();
     }
 
     @Override
