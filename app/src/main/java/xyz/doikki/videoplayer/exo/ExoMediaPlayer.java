@@ -80,7 +80,7 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
         if (mRenderersFactory == null) {
             mRenderersFactory = new DefaultRenderersFactory(mAppContext);
         //    mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON);
-            mRenderersFactory.setExtensionRendererMode(@ExtensionRendererMode int extensionRendererMode);
+            mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.extensionRendererMode);
         }
         //https://github.com/androidx/media/blob/release/libraries/decoder_ffmpeg/README.md
         if ("MiTV-MFTR0".equals(Build.MODEL)) {
