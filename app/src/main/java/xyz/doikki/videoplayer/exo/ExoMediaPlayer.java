@@ -92,9 +92,23 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
                 String value = options.get(key);
                 String[] opt = key.split("\\|");
                 int extensionRendererMode = Integer.parseInt(opt[0].trim());
+             try {
+                    if (mRenderersFactory == null) {
+                      mRenderersFactory = new DefaultRenderersFactory(mAppContext);
+                      if (extensionRendererMode == 0) {
+                         mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF);
+                      } else if (extensionRendererMode == 1) {
+                         mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON);
+                      } else if (extensionRendererMode == 1) {
+                         mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER);
+                      }   
+                   }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
              }
         }   
-        if (mRenderersFactory == null) {
+    /*    if (mRenderersFactory == null) {
             mRenderersFactory = new DefaultRenderersFactory(mAppContext);
             if (extensionRendererMode == 0) {
                 mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF);
@@ -103,7 +117,7 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
             } else if (extensionRendererMode == 1) {
                 mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER);
             }   
-        }
+        }*/
         //https://github.com/androidx/media/blob/release/libraries/decoder_ffmpeg/README.md
         if ("MiTV-MFTR0".equals(Build.MODEL)) {
             mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON);
