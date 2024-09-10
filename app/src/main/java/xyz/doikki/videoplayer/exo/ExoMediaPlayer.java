@@ -93,7 +93,7 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
                 String[] opt = key.split("\\|");
                 int extensionRendererMode = Integer.parseInt(opt[0].trim());
                 String name = opt[1].trim();
-        //        try {
+                try {
                     if (mRenderersFactory == null) {
                         mRenderersFactory = new DefaultRenderersFactory(mAppContext);
              /*           if (extensionRendererMode == 0) {
@@ -104,9 +104,9 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
                             mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER);
                       }*/   
                    }
-          //      } catch (Exception e) {
-          //         e.printStackTrace();
-          //     }
+                } catch (Exception e) {
+                   e.printStackTrace();
+                }
              }
         }   
     /*    if (mRenderersFactory == null) {
