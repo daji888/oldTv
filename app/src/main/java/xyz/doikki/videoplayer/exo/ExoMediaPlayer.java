@@ -85,7 +85,7 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     @SuppressLint("UnsafeOptInUsageError")
     @Override
     public void initPlayer() {
-        EXOCode exocodecTmp == ApiConfig.get().getCurrentEXOCode();
+        EXOCode exocodecTmp = ApiConfig.get().getCurrentEXOCode();
         LinkedHashMap<String, String> options = exocodecTmp.getOption();
         if (options != null) {
             for (String key : options.keySet()) {
