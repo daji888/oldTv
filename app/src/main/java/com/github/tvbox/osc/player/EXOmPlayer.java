@@ -40,13 +40,13 @@ public class EXOmPlayer extends ExoMediaPlayer {
             for (String key : options.keySet()) {
                 String value = options.get(key);
                 String[] opt = key.split("\\|");
-                int category = Integer.parseInt(opt[0].trim());
+                int extensionRendererMode = Integer.parseInt(opt[0].trim());
                 String name = opt[1].trim();
                 try {
                     long valLong = Long.parseLong(value);
                     mRenderersFactory.setExtensionRendererMode((int)valLong);
                 } catch (Exception e) {
-                    mRenderersFactory.setExtensionRendererMode(category);
+                    mRenderersFactory.setExtensionRendererMode(extensionRendererMode);
                 }
             }
         }
