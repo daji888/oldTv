@@ -85,14 +85,14 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     @SuppressLint("UnsafeOptInUsageError")
     @Override
     public void initPlayer() {
-    /*   EXOCode exocodecTmp = ApiConfig.get().getCurrentEXOCode();
+        EXOCode exocodecTmp = ApiConfig.get().getCurrentEXOCode();
         LinkedHashMap<String, String> options = exocodecTmp.getOption();
         if (options != null) {
             for (String key : options.keySet()) {
                 String value = options.get(key);
                 String[] opt = key.split("\\|");
                 int extensionRendererMode = Integer.parseInt(opt[0].trim());
-                String name = opt[1].trim();*/
+                String name = opt[1].trim();
                 try {
                     if (mRenderersFactory == null) {
                         mRenderersFactory = new DefaultRenderersFactory(mAppContext);
@@ -107,8 +107,8 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
                 } catch (Exception e) {
                    e.printStackTrace();
                 }
-         //    }
-    //    }   
+             }
+        }   
     /*    if (mRenderersFactory == null) {
             mRenderersFactory = new DefaultRenderersFactory(mAppContext);
             if (extensionRendererMode == 0) {
