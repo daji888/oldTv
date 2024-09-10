@@ -17,7 +17,7 @@ public class ExoMediaPlayerFactory extends PlayerFactory<ExoMediaPlayer> {
     @Override
     public ExoMediaPlayer createPlayer(Context context) {
         if (exoMediaPlayer == null) {
-            exoMediaPlayer = new ExoMediaPlayer(context);
+            exoMediaPlayer = new ExoMediaPlayer(context, null);
         }
         ExoMediaPlayer.mAppContext = context;
         return exoMediaPlayer;
