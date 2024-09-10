@@ -35,7 +35,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
         this.exocodec = exocodec;
     }
 
-    @IntDef({EXTENSION_RENDERER_MODE_ON, EXTENSION_RENDERER_MODE_PREFER, EXTENSION_RENDERER_MODE_OFF})
+/*    @IntDef({EXTENSION_RENDERER_MODE_ON, EXTENSION_RENDERER_MODE_PREFER, EXTENSION_RENDERER_MODE_OFF})
     public @interface ExtensionRendererMode {}
 
     public static final int EXTENSION_RENDERER_MODE_OFF = 0;
@@ -65,7 +65,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
             }
         }
         super.setOptions();
-    }
+    }*/
 
     @SuppressLint("UnsafeOptInUsageError")
     public TrackInfo getTrackInfo() {
