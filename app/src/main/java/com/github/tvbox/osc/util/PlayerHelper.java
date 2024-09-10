@@ -64,7 +64,7 @@ public class PlayerHelper {
             playerFactory = new PlayerFactory<EXOmPlayer>() {
                 @Override
                 public EXOmPlayer createPlayer(Context context) {
-                    return new EXOmPlayer(context);
+                    return new EXOmPlayer(context, codec);
                 }
             };
         } else {
@@ -103,7 +103,7 @@ public class PlayerHelper {
             playerFactory = new PlayerFactory<EXOmPlayer>() {
                 @Override
                 public EXOmPlayer createPlayer(Context context) {
-                    return new EXOmPlayer(context);
+                    return new EXOmPlayer(context, null);
                 }
             };
         } else {
