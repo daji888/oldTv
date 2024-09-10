@@ -94,13 +94,13 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
                 int extensionRendererMode = Integer.parseInt(opt[0].trim());
              try {
                     if (mRenderersFactory == null) {
-                      mRenderersFactory = new DefaultRenderersFactory(mAppContext);
-                      if (extensionRendererMode == 0) {
-                         mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF);
-                      } else if (extensionRendererMode == 1) {
-                         mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON);
-                      } else if (extensionRendererMode == 1) {
-                         mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER);
+                        mRenderersFactory = new DefaultRenderersFactory(mAppContext);
+                        if (extensionRendererMode == 0) {
+                            mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF);
+                        } else if (extensionRendererMode == 1) {
+                            mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON);
+                        } else if (extensionRendererMode == 2) {
+                            mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER);
                       }   
                    }
                 } catch (Exception e) {
