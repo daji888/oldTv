@@ -31,7 +31,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
     private static DefaultRenderersFactory mRenderersFactory;
 
     public EXOmPlayer(Context context) {
-        super(context);
+        super(context, null);
     }
 
  /*   @IntDef({EXTENSION_RENDERER_MODE_ON, EXTENSION_RENDERER_MODE_PREFER, EXTENSION_RENDERER_MODE_OFF})
