@@ -27,19 +27,19 @@ public class EXOmPlayer extends ExoMediaPlayer {
     private String audioId = "";
     private String videoId = "";
     private String subtitleId = "";
-//    private EXOCode exocodec = null;
-//    private static DefaultRenderersFactory mRenderersFactory;
+    private EXOCode exocodec = null;
+    private static DefaultRenderersFactory mRenderersFactory;
 
-    public EXOmPlayer(Context context) {
+/*    public EXOmPlayer(Context context) {
         super(context);
-    }
+    }*/
 
-/*    public EXOmPlayer(Context context, EXOCode exocodec) {
+    public EXOmPlayer(Context context, EXOCode exocodec) {
         super(context);
         this.exocodec = exocodec;
     }
 
-    @IntDef({EXTENSION_RENDERER_MODE_ON, EXTENSION_RENDERER_MODE_PREFER, EXTENSION_RENDERER_MODE_OFF})
+/*    @IntDef({EXTENSION_RENDERER_MODE_ON, EXTENSION_RENDERER_MODE_PREFER, EXTENSION_RENDERER_MODE_OFF})
     public @interface ExtensionRendererMode {}
 
     public static final int EXTENSION_RENDERER_MODE_OFF = 0;
