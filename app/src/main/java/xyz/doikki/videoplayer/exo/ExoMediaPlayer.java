@@ -40,7 +40,11 @@ import xyz.doikki.videoplayer.player.AbstractPlayer;
 import xyz.doikki.videoplayer.player.VideoViewManager;
 import xyz.doikki.videoplayer.util.PlayerUtils;
 
-import androidx.annotation.IntDef;
+import com.github.tvbox.osc.bean.EXOCode;
+import com.github.tvbox.osc.api.ApiConfig;
+import java.util.LinkedHashMap;
+
+//import androidx.annotation.IntDef;
 
 public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
 
@@ -62,6 +66,8 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     private Map<String, String> headers;
     private long lastTotalRxBytes = 0;
     private long lastTimeStamp = 0;
+
+    private EXOCode exocodec = null;
 
     public ExoMediaPlayer(Context context) {
         mAppContext = context.getApplicationContext();
