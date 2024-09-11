@@ -97,9 +97,11 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
             }
             if (extensionRendererMode == 0) {
                 mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF);
-            } else if (extensionRendererMode == 1) {
+            } 
+            if (extensionRendererMode == 1) {
                 mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON);
-            } else if (extensionRendererMode == 2) {
+            }
+            if (extensionRendererMode == 2) {
                 mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER);
             }
         }
