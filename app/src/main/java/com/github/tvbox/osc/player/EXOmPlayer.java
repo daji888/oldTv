@@ -54,9 +54,8 @@ public class EXOmPlayer extends ExoMediaPlayer {
                 int extensionRendererMode = Integer.parseInt(opt[0].trim());
            //     String name = opt[1].trim();
                 try {
-             //       long valLong = Long.parseLong(value);
-             //       mRenderersFactory.setExtensionRendererMode((int) valLong);
-                    if (mRenderersFactory == null) {
+                      mRenderersFactory.setExtensionRendererMode(extensionRendererMode);
+                 /*   if (mRenderersFactory == null) {
                         mRenderersFactory = new DefaultRenderersFactory(mAppContext);
                         if (extensionRendererMode == 0) {
                             mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF);
@@ -65,11 +64,9 @@ public class EXOmPlayer extends ExoMediaPlayer {
                         } else if (extensionRendererMode == 2) {
                             mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER);
                       }   
-                   } 
+                   }*/ 
                 } catch (Exception e) {
-             //       mRenderersFactory.setExtensionRendererMode(extensionRendererMode);
                     e.printStackTrace();
-             //       Toast.makeText(mAppContext, "播放失败:" + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         }
