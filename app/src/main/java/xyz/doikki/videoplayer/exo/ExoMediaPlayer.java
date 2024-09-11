@@ -44,7 +44,7 @@ import com.github.tvbox.osc.bean.EXOCode;
 import com.github.tvbox.osc.api.ApiConfig;
 import java.util.LinkedHashMap;
 
-//import androidx.annotation.IntDef;
+import androidx.annotation.IntDef;
 
 public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
 
@@ -120,10 +120,10 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
             } else if (extensionRendererMode == 2) {
                 mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER);
             }   
-        }*/
+        }
         if (mRenderersFactory == null) {
             mRenderersFactory = new DefaultRenderersFactory(mAppContext);
-        }    
+        }*/    
         //https://github.com/androidx/media/blob/release/libraries/decoder_ffmpeg/README.md
         if ("MiTV-MFTR0".equals(Build.MODEL)) {
             mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON);
