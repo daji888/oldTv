@@ -626,7 +626,7 @@ public class ApiConfig {
                 //    String val = cObj.get("value").getAsString();
                 //    baseOpt.put(key, val);
                     String key = cObj.get("extensionRendererMode").getAsString();
-                    baseOpt.put(key);
+                    baseOpt.put(key, null);
                 }
                 EXOCode exocodec = new EXOCode();
                 exocodec.setName(name);
