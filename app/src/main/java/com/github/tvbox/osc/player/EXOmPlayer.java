@@ -52,13 +52,13 @@ public class EXOmPlayer extends ExoMediaPlayer {
            //     String value = options.get(key);
                 String[] opt = key.split("\\|");
                 @ExtensionRendererMode int extensionRendererMode = Integer.parseInt(opt[0].trim());
-          /*      String name = opt[1].trim();
+          //      String name = opt[1].trim();
                 try {
-            //        if (mRenderersFactory == null) {
-            //            mRenderersFactory = new DefaultRenderersFactory(mAppContext);
-            //            mRenderersFactory.setExtensionRendererMode(extensionRendererMode);
-            //         }   
                     if (mRenderersFactory == null) {
+                        mRenderersFactory = new DefaultRenderersFactory(mAppContext);
+                        mRenderersFactory.setExtensionRendererMode(extensionRendererMode);
+                     }   
+            /*        if (mRenderersFactory == null) {
                         mRenderersFactory = new DefaultRenderersFactory(mAppContext);
                         if (extensionRendererMode == 0) {
                             mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF);
@@ -67,10 +67,10 @@ public class EXOmPlayer extends ExoMediaPlayer {
                         } else if (extensionRendererMode == 2) {
                             mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER);
                        }   
-                    }
+                    }*/
                 } catch (Exception e) {
                     e.printStackTrace();
-                }*/
+                }
             }
         }
         super.setOptions();
