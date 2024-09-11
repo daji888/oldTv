@@ -86,7 +86,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
                             mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER);
                       }   
                 //   } 
-        super.setOptions(extensionRendererMode);
+        super.setOptions();
     }
 
     @SuppressLint("UnsafeOptInUsageError")
