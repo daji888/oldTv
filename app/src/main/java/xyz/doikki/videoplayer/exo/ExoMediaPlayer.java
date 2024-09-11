@@ -44,8 +44,6 @@ import com.github.tvbox.osc.bean.EXOCode;
 import com.github.tvbox.osc.api.ApiConfig;
 import java.util.LinkedHashMap;
 
-import androidx.annotation.IntDef;
-
 public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
 
     public static Context mAppContext;
@@ -66,8 +64,6 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     private Map<String, String> headers;
     private long lastTotalRxBytes = 0;
     private long lastTimeStamp = 0;
-
-    private EXOCode exocodec = null;
 
     public ExoMediaPlayer(Context context) {
         mAppContext = context.getApplicationContext();
@@ -99,17 +95,8 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
                    }
                  }
             }
-      /*      if (extensionRendererMode == 0) {
-                mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF);
-            } 
-            if (extensionRendererMode == 1) {
-                mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON);
-            }
-            if (extensionRendererMode == 2) {
-                mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER);
-            }
         }
-        if (mRenderersFactory == null) {
+     /*   if (mRenderersFactory == null) {
             mRenderersFactory = new DefaultRenderersFactory(mAppContext);
             mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON);
         }*/   
