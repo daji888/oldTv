@@ -3,6 +3,7 @@ package com.github.tvbox.osc.player;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.widget.Toast;
+import android.os.Build;
 
 import androidx.annotation.Nullable;
 import androidx.media3.common.C;
@@ -35,13 +36,13 @@ public class EXOmPlayer extends ExoMediaPlayer {
         this.exocodec = exocodec;
     }
 
-    @IntDef({EXTENSION_RENDERER_MODE_ON, EXTENSION_RENDERER_MODE_PREFER, EXTENSION_RENDERER_MODE_OFF})
+ /*   @IntDef({EXTENSION_RENDERER_MODE_ON, EXTENSION_RENDERER_MODE_PREFER, EXTENSION_RENDERER_MODE_OFF})
     public @interface ExtensionRendererMode {}
 
     public static final int EXTENSION_RENDERER_MODE_OFF = 0;
     public static final int EXTENSION_RENDERER_MODE_ON = 1;
     public static final int EXTENSION_RENDERER_MODE_PREFER = 2;
-    private @ExtensionRendererMode int extensionRendererMode;
+    private @ExtensionRendererMode int extensionRendererMode;*/
 
     @Override
     public void setOptions() {
