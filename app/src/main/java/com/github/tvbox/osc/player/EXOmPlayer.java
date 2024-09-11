@@ -72,8 +72,8 @@ public class EXOmPlayer extends ExoMediaPlayer {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }*/
-        }
+            }
+        }*/
         super.setOptions();
     }
 
