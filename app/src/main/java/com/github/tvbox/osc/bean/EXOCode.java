@@ -12,7 +12,7 @@ import java.util.LinkedHashMap;
  */
 public class EXOCode {
     private String name;
-    private LinkedHashMap<String> option;
+    private LinkedHashMap<String, String> option;
     private boolean selected;
 
     public void selected(boolean selected) {
@@ -34,11 +34,11 @@ public class EXOCode {
         this.name = name;
     }
 
-    public LinkedHashMap<String> getOption() {
+    public LinkedHashMap<String, String> getOption() {
         return option;
     }
 
-    public void setOption(LinkedHashMap<String> option) {
+    public void setOption(LinkedHashMap<String, String> option) {
         this.option = option;
     }
 }
