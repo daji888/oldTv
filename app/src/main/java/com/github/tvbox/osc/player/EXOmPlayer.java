@@ -30,10 +30,6 @@ public class EXOmPlayer extends ExoMediaPlayer {
     private EXOCode exocodec = null;
     private static DefaultRenderersFactory mRenderersFactory;
 
-/*    public EXOmPlayer(Context context) {
-        super(context);
-    }*/
-
     public EXOmPlayer(Context context, EXOCode exocodec) {
         super(context);
         this.exocodec = exocodec;
@@ -45,7 +41,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
     public static final int EXTENSION_RENDERER_MODE_OFF = 0;
     public static final int EXTENSION_RENDERER_MODE_ON = 1;
     public static final int EXTENSION_RENDERER_MODE_PREFER = 2;
-    private @ExtensionRendererMode int extensionRendererMode;
+    private @ExtensionRendererMode int extensionRendererMode;*/
 
     @Override
     public void setOptions() {
@@ -53,10 +49,10 @@ public class EXOmPlayer extends ExoMediaPlayer {
         LinkedHashMap<String, String> options = exocodecTmp.getOption();
         if (options != null) {
             for (String key : options.keySet()) {
-                String value = options.get(key);
+           //     String value = options.get(key);
                 String[] opt = key.split("\\|");
                 int extensionRendererMode = Integer.parseInt(opt[0].trim());
-                String name = opt[1].trim();
+           //     String name = opt[1].trim();
                 try {
              //       long valLong = Long.parseLong(value);
              //       mRenderersFactory.setExtensionRendererMode((int) valLong);
@@ -78,7 +74,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
             }
         }
         super.setOptions();
-    }*/
+    }
 
     @SuppressLint("UnsafeOptInUsageError")
     public TrackInfo getTrackInfo() {
