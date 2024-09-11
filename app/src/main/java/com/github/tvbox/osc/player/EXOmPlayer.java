@@ -21,8 +21,6 @@ import com.github.tvbox.osc.bean.EXOCode;
 import xyz.doikki.videoplayer.exo.ExoMediaPlayer;
 import java.util.LinkedHashMap;
 
-import androidx.annotation.IntDef;
-
 public class EXOmPlayer extends ExoMediaPlayer {
     private String audioId = "";
     private String videoId = "";
@@ -35,29 +33,19 @@ public class EXOmPlayer extends ExoMediaPlayer {
         this.exocodec = exocodec;
     }
 
-/*    @IntDef({EXTENSION_RENDERER_MODE_ON, EXTENSION_RENDERER_MODE_PREFER, EXTENSION_RENDERER_MODE_OFF})
-    public @interface ExtensionRendererMode {}
-
-    public static final int EXTENSION_RENDERER_MODE_OFF = 0;
-    public static final int EXTENSION_RENDERER_MODE_ON = 1;
-    public static final int EXTENSION_RENDERER_MODE_PREFER = 2;
-    private @ExtensionRendererMode int extensionRendererMode;
-
     @Override
     public void setOptions() {
         EXOCode exocodecTmp = this.exocodec == null ? ApiConfig.get().getCurrentEXOCode() : this.exocodec;
         LinkedHashMap<String, String> options = exocodecTmp.getOption();
         if (options != null) {
             for (String key : options.keySet()) {
-           //     String value = options.get(key);
                 String[] opt = key.split("\\|");
-                @ExtensionRendererMode int extensionRendererMode = Integer.parseInt(opt[0].trim());
-          //      String name = opt[1].trim();
+                int extensionRendererMode = Integer.parseInt(opt[0].trim());
                 try {
-                    if (mRenderersFactory == null) {
+                 /*   if (mRenderersFactory == null) {
                         mRenderersFactory = new DefaultRenderersFactory(mAppContext);
                         mRenderersFactory.setExtensionRendererMode(extensionRendererMode);
-                     }   
+                     }*/   
                     if (mRenderersFactory == null) {
                         mRenderersFactory = new DefaultRenderersFactory(mAppContext);
                         if (extensionRendererMode == 0) {
@@ -74,7 +62,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
             }
         }
         super.setOptions();
-    }*/
+    }
 
     @SuppressLint("UnsafeOptInUsageError")
     public TrackInfo getTrackInfo() {
