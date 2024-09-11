@@ -40,10 +40,6 @@ import xyz.doikki.videoplayer.player.AbstractPlayer;
 import xyz.doikki.videoplayer.player.VideoViewManager;
 import xyz.doikki.videoplayer.util.PlayerUtils;
 
-import com.github.tvbox.osc.bean.EXOCode;
-import com.github.tvbox.osc.api.ApiConfig;
-import java.util.LinkedHashMap;
-
 public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
 
     public static Context mAppContext;
@@ -73,30 +69,9 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     @SuppressLint("UnsafeOptInUsageError")
     @Override
     public void initPlayer() {
-    /*    if (mRenderersFactory == null) {
-            mRenderersFactory = new DefaultRenderersFactory(mAppContext);
-            EXOCode exocodecTmp = ApiConfig.get().getCurrentEXOCode();
-            LinkedHashMap<String, String> options = exocodecTmp.getOption();
-            if (options != null) {
-                for (String key : options.keySet()) {
-                     String[] opt = key.split("\\|");
-                     int extensionRendererMode = Integer.parseInt(opt[0].trim());
-                     try {
-                        if (extensionRendererMode == 0) {
-                            mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF);
-                        } else if (extensionRendererMode == 1) {
-                            mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON);
-                        } else if (extensionRendererMode == 2) {
-                            mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER);
-                        }   
-                      } catch (Exception e) {
-                          e.printStackTrace();
-                      }
-                 }
-            }
-        }*/
         if (mRenderersFactory == null) {
             mRenderersFactory = new DefaultRenderersFactory(mAppContext);
+            mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON);
         }
         //https://github.com/androidx/media/blob/release/libraries/decoder_ffmpeg/README.md
         if ("MiTV-MFTR0".equals(Build.MODEL)) {
@@ -213,7 +188,7 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
             mMediaPlayer.clearVideoSurface();
             mIsPreparing = false;
         }
-    //    setOptions();
+        setOptions();
         System.gc();
     }
 
