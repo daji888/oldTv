@@ -85,7 +85,7 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     @SuppressLint("UnsafeOptInUsageError")
     @Override
     public void initPlayer() {
-        EXOCode exocodecTmp = ApiConfig.get().getCurrentEXOCode();
+/*        EXOCode exocodecTmp = ApiConfig.get().getCurrentEXOCode();
         LinkedHashMap<String, String> options = exocodecTmp.getOption();
         if (options != null) {
             for (String key : options.keySet()) {
@@ -119,6 +119,8 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
                 mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER);
             }   
         }*/
+        if (mRenderersFactory == null) {
+            mRenderersFactory = new DefaultRenderersFactory(mAppContext);
         //https://github.com/androidx/media/blob/release/libraries/decoder_ffmpeg/README.md
         if ("MiTV-MFTR0".equals(Build.MODEL)) {
             mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON);
