@@ -60,9 +60,8 @@ public class EXOmPlayer extends ExoMediaPlayer {
             //        if (mRenderersFactory == null) {
             //            mRenderersFactory = new DefaultRenderersFactory(mAppContext);
             //            mRenderersFactory.setExtensionRendererMode(extensionRendererMode);
-                    mMediaPlayer = new ExoPlayer.Builder(mAppContext).setRenderersFactory(mRenderersFactory).build();
             //         }   
-                 /*   if (mRenderersFactory == null) {
+                    if (mRenderersFactory == null) {
                         mRenderersFactory = new DefaultRenderersFactory(mAppContext);
                         if (extensionRendererMode == 0) {
                             mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF);
@@ -70,26 +69,20 @@ public class EXOmPlayer extends ExoMediaPlayer {
                             mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON);
                         } else if (extensionRendererMode == 2) {
                             mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER);
-                      }   
-                   }*/ 
+                       }   
+                    }
+                    if (mMediaPlayer == null) {
+                        mMediaPlayer = new ExoPlayer.Builder(mAppContext)
+                            .setLoadControl(mLoadControl)
+                            .setRenderersFactory(mRenderersFactory)
+                            .setTrackSelector(mTrackSelector)
+                            .build();
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }
-  //     if (mRenderersFactory == null) {
-  //                      mRenderersFactory = new DefaultRenderersFactory(mAppContext);
- //                       extensionRendererMode = EXTENSION_RENDERER_MODE_OFF;
-                        if (extensionRendererMode == 0) {
-                            mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF);
-                        } 
-                        if (extensionRendererMode == 1) {
-                            mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON);
-                        } 
-                        if (extensionRendererMode == 2) {
-                            mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER);
-                      }   
-                //   } 
         super.setOptions();
     }
 
