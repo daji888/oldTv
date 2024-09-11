@@ -73,9 +73,9 @@ public class EXOmPlayer extends ExoMediaPlayer {
                     }
                     if (mMediaPlayer == null) {
                         mMediaPlayer = new ExoPlayer.Builder(mAppContext)
-                            .setLoadControl(mLoadControl)
+                        //    .setLoadControl(mLoadControl)
                             .setRenderersFactory(mRenderersFactory)
-                            .setTrackSelector(mTrackSelector)
+                         //   .setTrackSelector(mTrackSelector)
                             .build();
                     }
                 } catch (Exception e) {
