@@ -44,7 +44,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
     private @ExtensionRendererMode int extensionRendererMode;*/
 
     @Override
-    public void setOptions() {
+    public void setExtensionRendererMode() {
         EXOCode exocodecTmp = this.exocodec == null ? ApiConfig.get().getCurrentEXOCode() : this.exocodec;
         LinkedHashMap<String, String> options = exocodecTmp.getOption();
         if (options != null) {
@@ -73,7 +73,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
                 }
             }
         }
-        super.setOptions();
+        super.setExtensionRendererMode();
     }
 
     @SuppressLint("UnsafeOptInUsageError")
