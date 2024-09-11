@@ -41,7 +41,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
     public static final int EXTENSION_RENDERER_MODE_OFF = 0;
     public static final int EXTENSION_RENDERER_MODE_ON = 1;
     public static final int EXTENSION_RENDERER_MODE_PREFER = 2;
-    private @ExtensionRendererMode int extensionRendererMode;
+    public @ExtensionRendererMode int extensionRendererMode;
 
     @Override
     public void setOptions() {
