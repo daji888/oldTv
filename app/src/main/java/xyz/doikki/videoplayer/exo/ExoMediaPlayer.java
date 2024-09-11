@@ -89,10 +89,10 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
         LinkedHashMap<String, String> options = exocodecTmp.getOption();
         if (options != null) {
             for (String key : options.keySet()) {
-                String value = options.get(key);
+          //      String value = options.get(key);
                 String[] opt = key.split("\\|");
                 int extensionRendererMode = Integer.parseInt(opt[0].trim());
-                String name = opt[1].trim();
+           //     String name = opt[1].trim();
                 try {
                     if (mRenderersFactory == null) {
                         mRenderersFactory = new DefaultRenderersFactory(mAppContext);
