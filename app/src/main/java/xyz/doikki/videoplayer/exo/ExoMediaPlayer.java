@@ -113,24 +113,22 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
         }*/   
         if (mRenderersFactory == null) {
             mRenderersFactory = new DefaultRenderersFactory(mAppContext);
-                EXOCode exocodecTmp = ApiConfig.get().getCurrentEXOCode();
-        LinkedHashMap<String, String> options = exocodecTmp.getOption();
-        if (options != null) {
-            for (String key : options.keySet()) {
-          //      String value = options.get(key);
-                String[] opt = key.split("\\|");
-                @ExtensionRendererMode int extensionRendererMode = Integer.parseInt(opt[0].trim());
+            EXOCode exocodecTmp = ApiConfig.get().getCurrentEXOCode();
+            LinkedHashMap<String, String> options = exocodecTmp.getOption();
+            if (options != null) {
+                for (String key : options.keySet()) {
+                     String[] opt = key.split("\\|");
+                     @ExtensionRendererMode int extensionRendererMode = Integer.parseInt(opt[0].trim());
+                 }
+            }    
             if (extensionRendererMode == 0) {
                 mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF);
             } else if (extensionRendererMode == 1) {
                 mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON);
             } else if (extensionRendererMode == 2) {
                 mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER);
-            }   
+            }
         }
-      /*  if (mRenderersFactory == null) {
-            mRenderersFactory = new DefaultRenderersFactory(mAppContext);
-        }*/    
         //https://github.com/androidx/media/blob/release/libraries/decoder_ffmpeg/README.md
         if ("MiTV-MFTR0".equals(Build.MODEL)) {
             mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON);
