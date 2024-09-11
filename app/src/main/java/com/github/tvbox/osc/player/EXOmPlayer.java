@@ -56,7 +56,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
                 try {
                     if (mRenderersFactory == null) {
                         mRenderersFactory = new DefaultRenderersFactory(mAppContext);
-                        mRenderersFactory.setExtensionRendererMode("DefaultRenderersFactory" + ".name");
+                        mRenderersFactory.setExtensionRendererMode(name);
                      }   
                  /*   if (mRenderersFactory == null) {
                         mRenderersFactory = new DefaultRenderersFactory(mAppContext);
