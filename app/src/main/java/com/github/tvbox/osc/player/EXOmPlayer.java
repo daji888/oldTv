@@ -3,7 +3,6 @@ package com.github.tvbox.osc.player;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.widget.Toast;
-import android.os.Build;
 
 import androidx.annotation.Nullable;
 import androidx.media3.common.C;
@@ -12,7 +11,6 @@ import androidx.media3.common.MimeTypes;
 import androidx.media3.common.Player;
 import androidx.media3.common.TrackGroup;
 import androidx.media3.common.Tracks;
-import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.exoplayer.source.TrackGroupArray;
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
 import androidx.media3.exoplayer.trackselection.MappingTrackSelector;
@@ -30,7 +28,6 @@ public class EXOmPlayer extends ExoMediaPlayer {
     private String videoId = "";
     private String subtitleId = "";
     private EXOCode exocodec = null;
-    protected static ExoPlayer mMediaPlayer;
     private static DefaultRenderersFactory mRenderersFactory;
 
     public EXOmPlayer(Context context, EXOCode exocodec) {
@@ -38,7 +35,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
         this.exocodec = exocodec;
     }
 
-    @IntDef({EXTENSION_RENDERER_MODE_ON, EXTENSION_RENDERER_MODE_PREFER, EXTENSION_RENDERER_MODE_OFF})
+/*    @IntDef({EXTENSION_RENDERER_MODE_ON, EXTENSION_RENDERER_MODE_PREFER, EXTENSION_RENDERER_MODE_OFF})
     public @interface ExtensionRendererMode {}
 
     public static final int EXTENSION_RENDERER_MODE_OFF = 0;
@@ -71,12 +68,6 @@ public class EXOmPlayer extends ExoMediaPlayer {
                             mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER);
                        }   
                     }
-                    if (mMediaPlayer == null) {
-                        mMediaPlayer = new ExoPlayer.Builder(mAppContext)
-                        //    .setLoadControl(mLoadControl)
-                            .setRenderersFactory(mRenderersFactory)
-                         //   .setTrackSelector(mTrackSelector)
-                            .build();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -84,7 +75,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
             }
         }
         super.setOptions();
-    }
+    }*/
 
     @SuppressLint("UnsafeOptInUsageError")
     public TrackInfo getTrackInfo() {
