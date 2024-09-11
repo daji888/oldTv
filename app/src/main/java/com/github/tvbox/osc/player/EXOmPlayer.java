@@ -44,7 +44,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
     private @ExtensionRendererMode int extensionRendererMode;*/
 
     @Override
-    public void setExtensionRendererMode() {
+    public void setOptions() {
         EXOCode exocodecTmp = this.exocodec == null ? ApiConfig.get().getCurrentEXOCode() : this.exocodec;
         LinkedHashMap<String, String> options = exocodecTmp.getOption();
         if (options != null) {
@@ -52,11 +52,11 @@ public class EXOmPlayer extends ExoMediaPlayer {
            //     String value = options.get(key);
                 String[] opt = key.split("\\|");
                 int extensionRendererMode = Integer.parseInt(opt[0].trim());
-           //     String name = opt[1].trim();
+                String name = opt[1].trim();
                 try {
                     if (mRenderersFactory == null) {
                         mRenderersFactory = new DefaultRenderersFactory(mAppContext);
-                        mRenderersFactory.setExtensionRendererMode(extensionRendererMode);
+                        mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.name);
                      }   
                  /*   if (mRenderersFactory == null) {
                         mRenderersFactory = new DefaultRenderersFactory(mAppContext);
@@ -73,7 +73,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
                 }
             }
         }
-        super.setExtensionRendererMode();
+        super.setOptions();
     }
 
     @SuppressLint("UnsafeOptInUsageError")
