@@ -47,12 +47,12 @@ public class EXOmPlayer extends ExoMediaPlayer {
     public void setOptions() {
         EXOCode exocodecTmp = this.exocodec == null ? ApiConfig.get().getCurrentEXOCode() : this.exocodec;
         LinkedHashMap<String, String> options = exocodecTmp.getOption();
-    /*    if (options != null) {
+        if (options != null) {
             for (String key : options.keySet()) {
            //     String value = options.get(key);
                 String[] opt = key.split("\\|");
                 @ExtensionRendererMode int extensionRendererMode = Integer.parseInt(opt[0].trim());
-                String name = opt[1].trim();
+           /*     String name = opt[1].trim();
                 try {
             //        if (mRenderersFactory == null) {
             //            mRenderersFactory = new DefaultRenderersFactory(mAppContext);
