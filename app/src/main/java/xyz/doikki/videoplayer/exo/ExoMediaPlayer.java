@@ -86,6 +86,7 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     @Override
     public void initPlayer() {
         if (mRenderersFactory == null) {
+            mRenderersFactory = new DefaultRenderersFactory(mAppContext);
             EXOCode exocodecTmp = ApiConfig.get().getCurrentEXOCode();
             LinkedHashMap<String, String> options = exocodecTmp.getOption();
             if (options != null) {
@@ -94,7 +95,6 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
                      int extensionRendererMode = Integer.parseInt(opt[0].trim());
                  }
             }
-            mRenderersFactory = new DefaultRenderersFactory(mAppContext);
             if (extensionRendererMode == 0) {
                 mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF);
             } else if (extensionRendererMode == 1) {
