@@ -27,15 +27,15 @@ public class EXOmPlayer extends ExoMediaPlayer {
     private String audioId = "";
     private String videoId = "";
     private String subtitleId = "";
-//    private EXOCode exocodec = null;
+    private EXOCode exocodec = null;
     private static DefaultRenderersFactory mRenderersFactory;
 
     public EXOmPlayer(Context context, EXOCode exocodec) {
         super(context);
-//        this.exocodec = exocodec;
+        this.exocodec = exocodec;
     }
 
-/*    @IntDef({EXTENSION_RENDERER_MODE_ON, EXTENSION_RENDERER_MODE_PREFER, EXTENSION_RENDERER_MODE_OFF})
+    @IntDef({EXTENSION_RENDERER_MODE_ON, EXTENSION_RENDERER_MODE_PREFER, EXTENSION_RENDERER_MODE_OFF})
     public @interface ExtensionRendererMode {}
 
     public static final int EXTENSION_RENDERER_MODE_OFF = 0;
@@ -47,7 +47,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
     public void setOptions() {
         EXOCode exocodecTmp = this.exocodec == null ? ApiConfig.get().getCurrentEXOCode() : this.exocodec;
         LinkedHashMap<String, String> options = exocodecTmp.getOption();
-        if (options != null) {
+    /*    if (options != null) {
             for (String key : options.keySet()) {
            //     String value = options.get(key);
                 String[] opt = key.split("\\|");
@@ -72,10 +72,10 @@ public class EXOmPlayer extends ExoMediaPlayer {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }
+            }*/
         }
         super.setOptions();
-    }*/
+    }
 
     @SuppressLint("UnsafeOptInUsageError")
     public TrackInfo getTrackInfo() {
