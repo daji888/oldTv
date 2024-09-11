@@ -41,7 +41,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
     public static final int EXTENSION_RENDERER_MODE_OFF = 0;
     public static final int EXTENSION_RENDERER_MODE_ON = 1;
     public static final int EXTENSION_RENDERER_MODE_PREFER = 2;
-    public @ExtensionRendererMode int extensionRendererMode;
+    private @ExtensionRendererMode int extensionRendererMode;
 
     @Override
     public void setOptions() {
@@ -56,7 +56,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
                 try {
                     if (mRenderersFactory == null) {
                         mRenderersFactory = new DefaultRenderersFactory(mAppContext);
-                        mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.extensionRendererMode);
+                        mRenderersFactory.setExtensionRendererMode(extensionRendererMode);
                      }   
                  /*   if (mRenderersFactory == null) {
                         mRenderersFactory = new DefaultRenderersFactory(mAppContext);
