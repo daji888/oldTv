@@ -27,7 +27,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
     private String audioId = "";
     private String videoId = "";
     private String subtitleId = "";
-    private EXOCode exocodec = null;
+//    private EXOCode exocodec = null;
     private static DefaultRenderersFactory mRenderersFactory;
 
     public EXOmPlayer(Context context, EXOCode exocodec) {
