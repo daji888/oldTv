@@ -52,7 +52,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
            //     String value = options.get(key);
                 String[] opt = key.split("\\|");
                 @ExtensionRendererMode int extensionRendererMode = Integer.parseInt(opt[0].trim());
-           /*     String name = opt[1].trim();
+          /*      String name = opt[1].trim();
                 try {
             //        if (mRenderersFactory == null) {
             //            mRenderersFactory = new DefaultRenderersFactory(mAppContext);
@@ -68,12 +68,11 @@ public class EXOmPlayer extends ExoMediaPlayer {
                             mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER);
                        }   
                     }
-                    }
                 } catch (Exception e) {
                     e.printStackTrace();
-                }
+                }*/
             }
-        }*/
+        }
         super.setOptions();
     }
 
