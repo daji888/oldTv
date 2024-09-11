@@ -44,7 +44,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
     private @ExtensionRendererMode int extensionRendererMode;
 
     @Override
-    public void setOptions(extensionRendererMode) {
+    public void setOptions() {
         EXOCode exocodecTmp = this.exocodec == null ? ApiConfig.get().getCurrentEXOCode() : this.exocodec;
         LinkedHashMap<String, String> options = exocodecTmp.getOption();
         if (options != null) {
