@@ -30,6 +30,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
     private String videoId = "";
     private String subtitleId = "";
     private EXOCode exocodec = null;
+    protected static ExoPlayer mMediaPlayer;
     private static DefaultRenderersFactory mRenderersFactory;
 
     public EXOmPlayer(Context context, EXOCode exocodec) {
