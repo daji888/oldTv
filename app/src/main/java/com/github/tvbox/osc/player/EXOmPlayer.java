@@ -75,7 +75,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
         }
        if (mRenderersFactory == null) {
                         mRenderersFactory = new DefaultRenderersFactory(mAppContext);
-                        int extensionRendererMode = EXTENSION_RENDERER_MODE_ON
+                        int extensionRendererMode = EXTENSION_RENDERER_MODE_ON;
                         if (extensionRendererMode == 0) {
                             mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF);
                         } else if (extensionRendererMode == 1) {
