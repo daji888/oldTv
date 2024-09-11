@@ -41,7 +41,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
             for (String key : options.keySet()) {
             //    String[] opt = key.split("\\|");
             //    int extensionRendererMode = Integer.parseInt(opt[0].trim());
-                String[] opt = key;
+                String opt = key;
                 int extensionRendererMode = Integer.parseInt(opt.trim());
                 try {
                     if (mRenderersFactory == null) {
