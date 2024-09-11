@@ -67,20 +67,12 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     private long lastTotalRxBytes = 0;
     private long lastTimeStamp = 0;
 
- //   private EXOCode exocodec = null;
+    private EXOCode exocodec = null;
 
     public ExoMediaPlayer(Context context) {
         mAppContext = context.getApplicationContext();
         mMediaSourceHelper = ExoMediaSourceHelper.getInstance(context);
     }
-
-/*    @IntDef({EXTENSION_RENDERER_MODE_ON, EXTENSION_RENDERER_MODE_PREFER, EXTENSION_RENDERER_MODE_OFF})
-    public @interface ExtensionRendererMode {}
-
-    public static final int EXTENSION_RENDERER_MODE_OFF = 0;
-    public static final int EXTENSION_RENDERER_MODE_ON = 1;
-    public static final int EXTENSION_RENDERER_MODE_PREFER = 2;
-    private @ExtensionRendererMode int extensionRendererMode;*/
 
     @SuppressLint("UnsafeOptInUsageError")
     @Override
