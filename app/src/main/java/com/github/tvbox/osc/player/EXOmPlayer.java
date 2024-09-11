@@ -73,9 +73,9 @@ public class EXOmPlayer extends ExoMediaPlayer {
                 }
             }
         }
-       if (mRenderersFactory == null) {
-                        mRenderersFactory = new DefaultRenderersFactory(mAppContext);
-                        extensionRendererMode = EXTENSION_RENDERER_MODE_OFF;
+  //     if (mRenderersFactory == null) {
+  //                      mRenderersFactory = new DefaultRenderersFactory(mAppContext);
+ //                       extensionRendererMode = EXTENSION_RENDERER_MODE_OFF;
                         if (extensionRendererMode == 0) {
                             mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF);
                         } else if (extensionRendererMode == 1) {
@@ -83,7 +83,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
                         } else if (extensionRendererMode == 2) {
                             mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER);
                       }   
-                   } 
+                //   } 
         super.setOptions();
     }
 
