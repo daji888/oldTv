@@ -112,7 +112,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
         tvMediaExoCodec = findViewById(R.id.tvMediaExoCodec);
         tvMediaExoCodec.setText(Hawk.get(HawkConfig.EXO_CODEC, ""));
         tvMediaQtCodec = findViewById(R.id.tvMediaQtCodec);
-        tvMediaQtCodec.setText("硬解");
+        tvMediaQtCodec.setText("硬解");    
         tvPlay = findViewById(R.id.tvPlay);
         tvRender = findViewById(R.id.tvRenderType);
         tvScale = findViewById(R.id.tvScaleType);
@@ -521,7 +521,6 @@ public class ModelSettingFragment extends BaseLazyFragment {
                 }  
             }
         });
-        
         findViewById(R.id.llScale).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -562,6 +561,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
                 dialog.show();
             }
         });
+        
         findViewById(R.id.llRender).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
