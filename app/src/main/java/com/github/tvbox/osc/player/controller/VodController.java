@@ -865,6 +865,7 @@ public class VodController extends BaseController {
             } else {
                 mPlayerDecodeBtn.setText("硬解");
                 mPlayerDecodeBtn.setVisibility(VISIBLE);
+                mPlayerDecodeBtn.setFocusable(false);
             }
             mPlayerSpeedBtn.setText("x" + mPlayerConfig.getDouble("sp"));
             mPlayerTimeStartBtn.setText(PlayerUtils.stringForTime(mPlayerConfig.getInt("st") * 1000));
