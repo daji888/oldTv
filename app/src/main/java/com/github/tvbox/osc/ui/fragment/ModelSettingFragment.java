@@ -15,6 +15,7 @@ import com.github.tvbox.osc.api.ApiConfig;
 import com.github.tvbox.osc.base.BaseActivity;
 import com.github.tvbox.osc.base.BaseLazyFragment;
 import com.github.tvbox.osc.bean.IJKCode;
+import com.github.tvbox.osc.bean.EXOCode;
 import com.github.tvbox.osc.bean.SourceBean;
 import com.github.tvbox.osc.event.RefreshEvent;
 import com.github.tvbox.osc.player.thirdparty.RemoteTVBox;
@@ -62,6 +63,8 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 public class ModelSettingFragment extends BaseLazyFragment {
     private TextView tvDebugOpen;
     private TextView tvMediaCodec;
+    private TextView tvMediaExoCodec;
+    private TextView tvMediaQtCodec;
     private TextView tvParseWebView;
     private TextView tvPlay;
     private TextView tvRender;
@@ -105,6 +108,11 @@ public class ModelSettingFragment extends BaseLazyFragment {
         tvDebugOpen = findViewById(R.id.tvDebugOpen);
         tvParseWebView = findViewById(R.id.tvParseWebView);
         tvMediaCodec = findViewById(R.id.tvMediaCodec);
+        tvMediaCodec.setText(Hawk.get(HawkConfig.IJK_CODEC, ""));
+        tvMediaExoCodec = findViewById(R.id.tvMediaExoCodec);
+        tvMediaExoCodec.setText(Hawk.get(HawkConfig.EXO_CODEC, ""));
+        tvMediaQtCodec = findViewById(R.id.tvMediaQtCodec);
+        tvMediaQtCodec.setText("硬解");
         tvPlay = findViewById(R.id.tvPlay);
         tvRender = findViewById(R.id.tvRenderType);
         tvScale = findViewById(R.id.tvScaleType);
@@ -117,7 +125,6 @@ public class ModelSettingFragment extends BaseLazyFragment {
         tvHistoryNum = findViewById(R.id.tvHistoryNum);
         tvSearchView = findViewById(R.id.tvSearchView);
         tvIjkCachePlay = findViewById(R.id.tvIjkCachePlay);
-        tvMediaCodec.setText(Hawk.get(HawkConfig.IJK_CODEC, ""));
         tvDebugOpen.setText(Hawk.get(HawkConfig.DEBUG_OPEN, false) ? "已开启" : "已关闭");
         tvParseWebView.setText(Hawk.get(HawkConfig.PARSE_WEBVIEW, true) ? "系统自带" : "XWalkView");
         tvApi.setText(Hawk.get(HawkConfig.API_URL, ""));
@@ -362,9 +369,70 @@ public class ModelSettingFragment extends BaseLazyFragment {
             }
         });
 
-        findViewById(R.id.llMediaCodec).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.llPlay).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                FastClickCheckUtil.check(v);
+                int playerType = Hawk.get(HawkConfig.PLAY_TYPE, 0);
+                int defaultPos = 0;
+                ArrayList<Integer> players = PlayerHelper.getExistPlayerTypes();
+                ArrayList<Integer> renders = new ArrayList<>();
+                for(int p = 0; p < players.size(); p++) {
+                    renders.add(p);
+                    if (players.get(p) == playerType) {
+                        defaultPos = p;
+                    }
+                }
+                SelectDialog<Integer> dialog = new SelectDialog<>(mActivity);
+                dialog.setTip("请选择默认播放器");
+                dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<Integer>() {
+                    @Override
+                    public void click(Integer value, int pos) {
+                        Integer thisPlayerType = players.get(pos);
+                        Hawk.put(HawkConfig.PLAY_TYPE, thisPlayerType);
+                        tvPlay.setText(PlayerHelper.getPlayerName(thisPlayerType));
+                        PlayerHelper.init();
+                        dialog.dismiss();
+                        if (thisPlayerType == 1) {
+                            tvMediaExoCodec.setVisibility(View.GONE);
+                            tvMediaQtCodec.setVisibility(View.GONE);
+                            tvMediaCodec.setVisibility(View.VISIBLE);
+                       } else if (thisPlayerType == 2) {
+                            tvMediaCodec.setVisibility(View.GONE);
+                            tvMediaQtCodec.setVisibility(View.GONE);
+                            tvMediaExoCodec.setVisibility(View.VISIBLE);
+                       } else {
+                            tvMediaCodec.setVisibility(View.GONE);
+                            tvMediaExoCodec.setVisibility(View.GONE);
+                            tvMediaQtCodec.setVisibility(View.VISIBLE);
+                       }
+                    }
+
+                    @Override
+                    public String getDisplay(Integer val) {
+                        Integer playerType = players.get(val);
+                        return PlayerHelper.getPlayerName(playerType);
+                    }
+                }, new DiffUtil.ItemCallback<Integer>() {
+                    @Override
+                    public boolean areItemsTheSame(@NonNull @NotNull Integer oldItem, @NonNull @NotNull Integer newItem) {
+                        return oldItem.intValue() == newItem.intValue();
+                    }
+
+                    @Override
+                    public boolean areContentsTheSame(@NonNull @NotNull Integer oldItem, @NonNull @NotNull Integer newItem) {
+                        return oldItem.intValue() == newItem.intValue();
+                    }
+                }, renders, defaultPos);
+                dialog.show();
+            }
+        });
+
+        findViewById(R.id.llMediaCodec).setOnClickListener(new View.OnClickListener() {
+            @Override    
+            public void onClick(View v) {
+              int playerType = Hawk.get(HawkConfig.PLAY_TYPE, 0);  
+              if (playerType == 1) {
                 List<IJKCode> ijkCodes = ApiConfig.get().getIjkCodes();
                 if (ijkCodes == null || ijkCodes.size() == 0)
                     return;
@@ -375,12 +443,13 @@ public class ModelSettingFragment extends BaseLazyFragment {
                 for (int j = 0; j < ijkCodes.size(); j++) {
                     if (ijkSel.equals(ijkCodes.get(j).getName())) {
                         defaultPos = j;
+                        tvMediaCodec.setText(ijkCodes.get(j).getName());
                         break;
                     }
                 }
 
                 SelectDialog<IJKCode> dialog = new SelectDialog<>(mActivity);
-                dialog.setTip("请选择IJK解码");
+                dialog.setTip("请选择 IJK 默认解码");
                 dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<IJKCode>() {
                     @Override
                     public void click(IJKCode value, int pos) {
@@ -404,9 +473,55 @@ public class ModelSettingFragment extends BaseLazyFragment {
                         return oldItem.getName().equals(newItem.getName());
                     }
                 }, ijkCodes, defaultPos);
-                dialog.show();
+                dialog.show();  
+                } else if (playerType == 2) {
+                  List<EXOCode> exoCodes = ApiConfig.get().getExoCodes();
+                  if (exoCodes == null || exoCodes.size() == 0)
+                      return;
+                  FastClickCheckUtil.check(v);
+
+                int exodefaultPos = 0;
+                String exoSel = Hawk.get(HawkConfig.EXO_CODEC, "");
+                for (int a = 0; a < exoCodes.size(); a++) {
+                    if (exoSel.equals(exoCodes.get(a).getName())) {
+                        exodefaultPos = a;
+                        tvMediaExoCodec.setText(exoCodes.get(a).getName());
+                        break;
+                    }
+                }
+
+                SelectDialog<EXOCode> dialog = new SelectDialog<>(mActivity);
+                dialog.setTip("请选择 EXO 默认解码");
+                dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<EXOCode>() {
+                    @Override
+                    public void click(EXOCode value, int pos) {
+                        value.selected(true);
+                        tvMediaExoCodec.setText(value.getName());
+                        dialog.dismiss();
+                    }
+
+                    @Override
+                    public String getDisplay(EXOCode val) {
+                        return val.getName();
+                    }
+                }, new DiffUtil.ItemCallback<EXOCode>() {
+                    @Override
+                    public boolean areItemsTheSame(@NonNull @NotNull EXOCode oldItem, @NonNull @NotNull EXOCode newItem) {
+                        return oldItem == newItem;
+                    }
+
+                    @Override
+                    public boolean areContentsTheSame(@NonNull @NotNull EXOCode oldItem, @NonNull @NotNull EXOCode newItem) {
+                        return oldItem.getName().equals(newItem.getName());
+                    }
+                }, exoCodes, exodefaultPos);
+                dialog.show();  
+                } else {
+                    tvMediaQtCodec.setText("硬解"); 
+                }  
             }
         });
+        
         findViewById(R.id.llScale).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -444,51 +559,6 @@ public class ModelSettingFragment extends BaseLazyFragment {
                         return oldItem.intValue() == newItem.intValue();
                     }
                 }, players, defaultPos);
-                dialog.show();
-            }
-        });
-        findViewById(R.id.llPlay).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FastClickCheckUtil.check(v);
-                int playerType = Hawk.get(HawkConfig.PLAY_TYPE, 0);
-                int defaultPos = 0;
-                ArrayList<Integer> players = PlayerHelper.getExistPlayerTypes();
-                ArrayList<Integer> renders = new ArrayList<>();
-                for(int p = 0; p<players.size(); p++) {
-                    renders.add(p);
-                    if (players.get(p) == playerType) {
-                        defaultPos = p;
-                    }
-                }
-                SelectDialog<Integer> dialog = new SelectDialog<>(mActivity);
-                dialog.setTip("请选择默认播放器");
-                dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<Integer>() {
-                    @Override
-                    public void click(Integer value, int pos) {
-                        Integer thisPlayerType = players.get(pos);
-                        Hawk.put(HawkConfig.PLAY_TYPE, thisPlayerType);
-                        tvPlay.setText(PlayerHelper.getPlayerName(thisPlayerType));
-                        PlayerHelper.init();
-                        dialog.dismiss();
-                    }
-
-                    @Override
-                    public String getDisplay(Integer val) {
-                        Integer playerType = players.get(val);
-                        return PlayerHelper.getPlayerName(playerType);
-                    }
-                }, new DiffUtil.ItemCallback<Integer>() {
-                    @Override
-                    public boolean areItemsTheSame(@NonNull @NotNull Integer oldItem, @NonNull @NotNull Integer newItem) {
-                        return oldItem.intValue() == newItem.intValue();
-                    }
-
-                    @Override
-                    public boolean areContentsTheSame(@NonNull @NotNull Integer oldItem, @NonNull @NotNull Integer newItem) {
-                        return oldItem.intValue() == newItem.intValue();
-                    }
-                }, renders, defaultPos);
                 dialog.show();
             }
         });
@@ -751,6 +821,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
 
         findViewById(R.id.llIjkCachePlay).setOnClickListener((view -> onClickIjkCachePlay(view)));
         findViewById(R.id.llClearCache).setOnClickListener((view -> onClickClearCache(view)));
+        initView();
     }
 
     private void onClickIjkCachePlay(View v) {
@@ -775,6 +846,22 @@ public class ModelSettingFragment extends BaseLazyFragment {
         return;
     }
 
+    private void initView() {
+        int playerType = Hawk.get(HawkConfig.PLAY_TYPE, 0);
+        if (playerType == 1) {
+            tvMediaExoCodec.setVisibility(View.GONE);
+            tvMediaQtCodec.setVisibility(View.GONE);
+            tvMediaCodec.setVisibility(View.VISIBLE);
+        } else if (playerType == 2) {
+            tvMediaCodec.setVisibility(View.GONE);
+            tvMediaQtCodec.setVisibility(View.GONE);
+            tvMediaExoCodec.setVisibility(View.VISIBLE);
+        } else {
+            tvMediaCodec.setVisibility(View.GONE);
+            tvMediaExoCodec.setVisibility(View.GONE);
+            tvMediaQtCodec.setVisibility(View.VISIBLE);
+        }
+    }
 
     public static SearchRemoteTvDialog loadingSearchRemoteTvDialog;
     public static List<String> remoteTvHostList;
