@@ -620,7 +620,7 @@ public class VodController extends BaseController {
                 myHandle.postDelayed(myRunnable, myHandleSeconds);
                 try {
                   int playerType = mPlayerConfig.getInt("pl");  
-                  if (playerType == 1) {
+                  if (playerType == 1) {  
                     String ijk = mPlayerConfig.getString("ijk");
                     List<IJKCode> codecs = ApiConfig.get().getIjkCodes();
                     for (int i = 0; i < codecs.size(); i++) {
@@ -648,7 +648,7 @@ public class VodController extends BaseController {
                         }
                     }
                     mPlayerConfig.put("exo", exo);
-                  }
+                  }    
                     updatePlayerCfgView();
                     listener.updatePlayerCfg();
                     listener.replay(false);
