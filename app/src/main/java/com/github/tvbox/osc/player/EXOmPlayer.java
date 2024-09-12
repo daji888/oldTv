@@ -13,18 +13,51 @@ import androidx.media3.common.Tracks;
 import androidx.media3.exoplayer.source.TrackGroupArray;
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
 import androidx.media3.exoplayer.trackselection.MappingTrackSelector;
+import androidx.media3.exoplayer.DefaultRenderersFactory;
 import com.github.tvbox.osc.util.StringUtils;
+import com.github.tvbox.osc.api.ApiConfig;
+import com.github.tvbox.osc.bean.EXOCode;
 import xyz.doikki.videoplayer.exo.ExoMediaPlayer;
+import java.util.LinkedHashMap;
 
 public class EXOmPlayer extends ExoMediaPlayer {
     private String audioId = "";
     private String videoId = "";
     private String subtitleId = "";
+    private EXOCode exocodec = null;
+    private static DefaultRenderersFactory mRenderersFactory;
 
-    public EXOmPlayer(Context context) {
+    public EXOmPlayer(Context context, EXOCode exocodec) {
         super(context);
+        this.exocodec = exocodec;
     }
 
+    @Override
+    public void setOptions() {
+        EXOCode exocodecTmp = this.exocodec == null ? ApiConfig.get().getCurrentEXOCode() : this.exocodec;
+        LinkedHashMap<String, String> options = exocodecTmp.getOption();
+        if (options != null) {
+            for (String key : options.keySet()) {
+                String opt = key;
+                int extensionRendererMode = Integer.parseInt(opt.trim());
+                try {
+                    if (mRenderersFactory == null) {
+                        mRenderersFactory = new DefaultRenderersFactory(mAppContext);
+                        if (extensionRendererMode == 0) {
+                            mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF);
+                        } else if (extensionRendererMode == 1) {
+                            mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON);
+                        } else if (extensionRendererMode == 2) {
+                            mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER);
+                       }   
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        super.setOptions();
+    }
 
     @SuppressLint("UnsafeOptInUsageError")
     public TrackInfo getTrackInfo() {
