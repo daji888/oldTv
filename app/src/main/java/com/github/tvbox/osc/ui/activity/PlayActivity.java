@@ -1014,6 +1014,9 @@ public class PlayActivity extends BaseActivity {
             if (!mVodPlayerCfg.has("ijk")) {
                 mVodPlayerCfg.put("ijk", Hawk.get(HawkConfig.IJK_CODEC, ""));
             }
+            if (!mVodPlayerCfg.has("exo")) {
+                mVodPlayerCfg.put("exo", Hawk.get(HawkConfig.EXO_CODEC, ""));
+            }
             if (!mVodPlayerCfg.has("sc")) {
                 mVodPlayerCfg.put("sc", Hawk.get(HawkConfig.PLAY_SCALE, 0));
             }
