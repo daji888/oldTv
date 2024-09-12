@@ -284,7 +284,7 @@
                 android:textSize="@dimen/ts_20" />
 
             <TextView
-                android:id="@+id/play_ijk"
+                android:id="@+id/player_decode"
                 android:singleLine="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
