@@ -2,7 +2,6 @@ package com.github.tvbox.osc.player;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.media3.common.C;
@@ -39,8 +38,6 @@ public class EXOmPlayer extends ExoMediaPlayer {
         LinkedHashMap<String, String> options = exocodecTmp.getOption();
         if (options != null) {
             for (String key : options.keySet()) {
-            //    String[] opt = key.split("\\|");
-            //    int extensionRendererMode = Integer.parseInt(opt[0].trim());
                 String opt = key;
                 int extensionRendererMode = Integer.parseInt(opt.trim());
                 try {
