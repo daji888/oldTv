@@ -26,6 +26,7 @@ public class LivePlayerManager {
             if (playerType == -1) playerType = Hawk.get(HawkConfig.PLAY_TYPE, 0);
             defaultPlayerConfig.put("pl", playerType);
             defaultPlayerConfig.put("ijk", Hawk.get(HawkConfig.IJK_CODEC, "硬解"));
+            defaultPlayerConfig.put("exo", Hawk.get(HawkConfig.EXO_CODEC, "硬软"));
             defaultPlayerConfig.put("pr", Hawk.get(HawkConfig.PLAY_RENDER, 0));
             defaultPlayerConfig.put("sc", Hawk.get(HawkConfig.PLAY_SCALE, 0));
         } catch (JSONException e) {
@@ -58,6 +59,10 @@ public class LivePlayerManager {
                     && playerConfig.getInt("pr") == currentPlayerConfig.getInt("pr")
                     && playerConfig.getString("ijk").equals(currentPlayerConfig.getString("ijk"))) {
                 videoView.setScreenScaleType(playerConfig.getInt("sc"));
+            } else if (playerConfig.getInt("pl") == currentPlayerConfig.getInt("pl")
+                    && playerConfig.getInt("pr") == currentPlayerConfig.getInt("pr")
+                    && playerConfig.getString("exo").equals(currentPlayerConfig.getString("exo"))) {
+                videoView.setScreenScaleType(playerConfig.getInt("sc"));
             } else {
                 PlayerHelper.updateCfg(videoView, playerConfig);
             }
@@ -73,10 +78,11 @@ public class LivePlayerManager {
         try {
             int playerType = currentPlayerConfig.getInt("pl");
             String ijkCodec = currentPlayerConfig.getString("ijk");
+            String exoCodec = currentPlayerConfig.getString("exo");
             switch (playerType) {
                 case 0:
                     playerTypeIndex = 0;
-                    break;
+                    break;       
                 case 1:
                     if (ijkCodec.equals("硬解"))
                         playerTypeIndex = 1;
@@ -84,7 +90,13 @@ public class LivePlayerManager {
                         playerTypeIndex = 2;
                     break;
                 case 2:
-                    playerTypeIndex = 3;
+                    if (exoCodec.equals("硬软")) {
+                        playerTypeIndex = 3;
+                    } else if (exoCodec.equals("软硬")) {
+                        playerTypeIndex = 4;
+                    } else if (exoCodec.equals("硬解")) {
+                        playerTypeIndex = 5;
+                    }    
                     break;
             }
         } catch (JSONException e) {
@@ -108,8 +120,8 @@ public class LivePlayerManager {
             switch (playerType) {
                 case 0:
                     playerConfig.put("pl", 0);
-                    playerConfig.put("ijk", "软解");
-                    break;
+                    playerConfig.put("系统", "");
+                    break;       
                 case 1:
                     playerConfig.put("pl", 1);
                     playerConfig.put("ijk", "硬解");
@@ -120,7 +132,15 @@ public class LivePlayerManager {
                     break;
                 case 3:
                     playerConfig.put("pl", 2);
-                    playerConfig.put("ijk", "软解");
+                    playerConfig.put("exo", "硬软");
+                    break;
+                case 4:
+                    playerConfig.put("pl", 2);
+                    playerConfig.put("exo", "软硬");
+                    break;
+                case 5:
+                    playerConfig.put("pl", 2);
+                    playerConfig.put("exo", "硬解");
                     break;
             }
         } catch (JSONException e) {
