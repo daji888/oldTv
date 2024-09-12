@@ -859,9 +859,15 @@ public class VodController extends BaseController {
             if (playerType == 1) {
                 mPlayerDecodeBtn.setText(mPlayerConfig.getString("ijk"));
                 mPlayerDecodeBtn.setVisibility(VISIBLE);
+                mPlayerDecodeBtn.setFocusable(true);
+                mPlayerDecodeBtn.setFocusableInTouchMode(true);
+                mPlayerDecodeBtn.setClickable(true);
             } else if (playerType == 2) {
                 mPlayerDecodeBtn.setText(mPlayerConfig.getString("exo"));
                 mPlayerDecodeBtn.setVisibility(VISIBLE);
+                mPlayerDecodeBtn.setFocusable(true);
+                mPlayerDecodeBtn.setFocusableInTouchMode(true);
+                mPlayerDecodeBtn.setClickable(true);
             } else {
                 mPlayerDecodeBtn.setText("硬解");
                 mPlayerDecodeBtn.setVisibility(VISIBLE);
