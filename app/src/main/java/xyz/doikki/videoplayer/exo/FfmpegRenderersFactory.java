@@ -32,7 +32,8 @@ class FfmpegRenderersFactory extends DefaultRenderersFactory {
         int extensionRendererMode, 
         MediaCodecSelector mediaCodecSelector, 
         boolean enableDecoderFallback, 
-        AudioSink audioSink, Handler eventHandler, 
+        AudioSink audioSink, 
+        Handler eventHandler, 
         AudioRendererEventListener eventListener, 
         ArrayList<Renderer> out) {
         out.add(new FfmpegAudioRenderer());
