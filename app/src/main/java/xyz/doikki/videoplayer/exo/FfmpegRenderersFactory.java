@@ -27,11 +27,24 @@ class FfmpegRenderersFactory extends DefaultRenderersFactory {
     }
 
     @Override
-    protected void buildAudioRenderers(Context context, int extensionRendererMode, MediaCodecSelector mediaCodecSelector, boolean enableDecoderFallback, AudioSink audioSink, Handler eventHandler, AudioRendererEventListener eventListener, ArrayList<Renderer> out) {
+    protected void buildAudioRenderers(
+        Context context, 
+        int extensionRendererMode, 
+        MediaCodecSelector mediaCodecSelector, 
+        boolean enableDecoderFallback, 
+        AudioSink audioSink, 
+        Handler eventHandler, 
+        AudioRendererEventListener eventListener, 
+        ArrayList<Renderer> out) {
         out.add(new FfmpegAudioRenderer());
-        super.buildAudioRenderers(context, extensionRendererMode, mediaCodecSelector, enableDecoderFallback, audioSink, eventHandler, eventListener, out);
+        super.buildAudioRenderers(context, 
+                                  extensionRendererMode, 
+                                  mediaCodecSelector, 
+                                  enableDecoderFallback, 
+                                  audioSink, 
+                                  eventHandler, 
+                                  eventListener, 
+                                  out);
 
     }
 }
-
-
