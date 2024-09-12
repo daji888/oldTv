@@ -867,6 +867,7 @@ public class VodController extends BaseController {
                 mPlayerDecodeBtn.setVisibility(VISIBLE);
                 mPlayerDecodeBtn.setFocusable(false);
                 mPlayerDecodeBtn.setFocusableInTouchMode(false);
+                mPlayerDecodeBtn.setClickable(false);
             }
             mPlayerSpeedBtn.setText("x" + mPlayerConfig.getDouble("sp"));
             mPlayerTimeStartBtn.setText(PlayerUtils.stringForTime(mPlayerConfig.getInt("st") * 1000));
