@@ -41,7 +41,8 @@ class FfmpegRenderersFactory extends DefaultRenderersFactory {
                                   extensionRendererMode, 
                                   mediaCodecSelector, 
                                   enableDecoderFallback, 
-                                  audioSink, eventHandler, 
+                                  audioSink, 
+                                  eventHandler, 
                                   eventListener, 
                                   out);
 
