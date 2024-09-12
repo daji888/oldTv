@@ -25,6 +25,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.api.ApiConfig;
 import com.github.tvbox.osc.bean.IJKCode;
+import com.github.tvbox.osc.bean.EXOCode;
 import com.github.tvbox.osc.bean.ParseBean;
 import com.github.tvbox.osc.subtitle.widget.SimpleSubtitleView;
 import com.github.tvbox.osc.ui.adapter.ParseAdapter;
@@ -129,7 +130,7 @@ public class VodController extends BaseController {
     TextView mPlayerScaleBtn;
     public TextView mPlayerSpeedBtn;
     TextView mPlayerBtn;
-    TextView mPlayerIJKBtn;
+    TextView mPlayerDecodeBtn;
     TextView mPlayerRetry;
     TextView mPlayrefresh;
     public TextView mPlayerTimeStartEndText;
@@ -205,7 +206,7 @@ public class VodController extends BaseController {
         mPlayerScaleBtn = findViewById(R.id.play_scale);
         mPlayerSpeedBtn = findViewById(R.id.play_speed);
         mPlayerBtn = findViewById(R.id.play_player);
-        mPlayerIJKBtn = findViewById(R.id.play_ijk);
+        mPlayerDecodeBtn = findViewById(R.id.player_decode);
         mPlayerTimeStartEndText = findViewById(R.id.play_time_start_end_text);
         mPlayerTimeStartBtn = findViewById(R.id.play_time_start);
         mPlayerTimeSkipBtn = findViewById(R.id.play_time_end);
@@ -612,12 +613,14 @@ public class VodController extends BaseController {
                 return true;
             }
         });
-        mPlayerIJKBtn.setOnClickListener(new OnClickListener() {
+        mPlayerDecodeBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 myHandle.removeCallbacks(myRunnable);
                 myHandle.postDelayed(myRunnable, myHandleSeconds);
                 try {
+                  int playerType = mPlayerConfig.getInt("pl");  
+                  if (playerType == 1) {
                     String ijk = mPlayerConfig.getString("ijk");
                     List<IJKCode> codecs = ApiConfig.get().getIjkCodes();
                     for (int i = 0; i < codecs.size(); i++) {
@@ -631,6 +634,21 @@ public class VodController extends BaseController {
                         }
                     }
                     mPlayerConfig.put("ijk", ijk);
+                  } else if (playerType == 2) {
+                    String exo = mPlayerConfig.getString("exo");
+                    List<EXOCode> exocodecs = ApiConfig.get().getExoCodes();
+                    for (int i = 0; i < exocodecs.size(); i++) {
+                        if (exo.equals(exocodecs.get(i).getName())) {
+                            if (i >= exocodecs.size() - 1)
+                                exo = exocodecs.get(0).getName();
+                            else {
+                                exo = exocodecs.get(i + 1).getName();
+                            }
+                            break;
+                        }
+                    }
+                    mPlayerConfig.put("exo", exo);
+                  }
                     updatePlayerCfgView();
                     listener.updatePlayerCfg();
                     listener.replay(false);
@@ -638,8 +656,8 @@ public class VodController extends BaseController {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                mPlayerIJKBtn.requestFocus();
-                mPlayerIJKBtn.requestFocusFromTouch();
+                mPlayerDecodeBtn.requestFocus();
+                mPlayerDecodeBtn.requestFocusFromTouch();
             }
         });
 //        增加播放页面片头片尾时间重置
@@ -838,8 +856,16 @@ public class VodController extends BaseController {
             int playerType = mPlayerConfig.getInt("pl");
             mPlayerBtn.setText(PlayerHelper.getPlayerName(playerType));
             mPlayerScaleBtn.setText(PlayerHelper.getScaleName(mPlayerConfig.getInt("sc")));
-            mPlayerIJKBtn.setText(mPlayerConfig.getString("ijk"));
-            mPlayerIJKBtn.setVisibility(playerType == 1 ? VISIBLE : GONE);
+            if (playerType == 1) {
+                mPlayerDecodeBtn.setText(mPlayerConfig.getString("ijk"));
+                mPlayerDecodeBtn.setVisibility(VISIBLE);
+            } else if (playerType == 2) {
+                mPlayerDecodeBtn.setText(mPlayerConfig.getString("exo"));
+                mPlayerDecodeBtn.setVisibility(VISIBLE);
+            } else {
+                mPlayerDecodeBtn.setText("硬解");
+                mPlayerDecodeBtn.setVisibility(VISIBLE);
+            }
             mPlayerSpeedBtn.setText("x" + mPlayerConfig.getDouble("sp"));
             mPlayerTimeStartBtn.setText(PlayerUtils.stringForTime(mPlayerConfig.getInt("st") * 1000));
             mPlayerTimeSkipBtn.setText(PlayerUtils.stringForTime(mPlayerConfig.getInt("et") * 1000));
