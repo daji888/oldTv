@@ -193,14 +193,16 @@ public class IjkMediaMeta {
     }
 
     private static String convertLang(String text) {
-        if ("chi".equals(text)) return "zh";
-        if ("cze".equals(text)) return "cs";
-        if ("dut".equals(text)) return "nl";
-        if ("fre".equals(text)) return "fr";
-        if ("ger".equals(text)) return "de";
-        if ("gre".equals(text)) return "el";
-        if ("ice".equals(text)) return "is";
-        if ("rum".equals(text)) return "ro";
+        if ("chi".equals(text)) return "中文";
+        if ("zho".equals(text)) return "中文";
+        if ("eng".equals(text)) return "英语";
+        if ("cze".equals(text)) return "捷克语";
+        if ("dut".equals(text)) return "荷兰语";
+        if ("fre".equals(text)) return "法语";
+        if ("ger".equals(text)) return "德语";
+        if ("gre".equals(text)) return "希腊语";
+        if ("ice".equals(text)) return "冰岛语";
+        if ("rum".equals(text)) return "罗马尼亚语";
         return text;
     }
 
