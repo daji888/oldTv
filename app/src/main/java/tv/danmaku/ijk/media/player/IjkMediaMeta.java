@@ -196,6 +196,8 @@ public class IjkMediaMeta {
         if ("chi".equals(text)) return "中文";
         if ("zho".equals(text)) return "中文";
         if ("eng".equals(text)) return "英语";
+        if ("jpn".equals(text)) return "日语";
+        if ("kor".equals(text)) return "韩语";
         if ("cze".equals(text)) return "捷克语";
         if ("dut".equals(text)) return "荷兰语";
         if ("fre".equals(text)) return "法语";
