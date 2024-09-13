@@ -619,9 +619,6 @@ public class ApiConfig {
                 LinkedHashMap<String, String> baseOpt = new LinkedHashMap<>();
                 for (JsonElement cfg : obj.get("options").getAsJsonArray()) {
                     JsonObject cObj = (JsonObject) cfg;
-                //    String key = cObj.get("extensionRendererMode").getAsString() + "|" + cObj.get("name").getAsString();
-                //    String val = cObj.get("value").getAsString();
-                //    baseOpt.put(key, val);
                     String key = cObj.get("extensionRendererMode").getAsString();
                     baseOpt.put(key, null);
                 }
