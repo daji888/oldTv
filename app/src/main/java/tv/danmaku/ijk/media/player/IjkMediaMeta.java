@@ -194,7 +194,8 @@ public class IjkMediaMeta {
 
     private static String convertLang(String text) {
         if ("chi".equals(text)) return "中文";
-        if ("en".equals(text)) return "英语";
+        if ("zho".equals(text)) return "中文";
+        if ("eng".equals(text)) return "英语";
         if ("cze".equals(text)) return "捷克语";
         if ("dut".equals(text)) return "荷兰语";
         if ("fre".equals(text)) return "法语";
