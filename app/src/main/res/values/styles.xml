@@ -51,3 +51,5 @@
         <item name="android:drawablePadding">@dimen/vs_10</item>
         <item name="android:radius">@dimen/vs_10</item>
     </style>
+</resources>
+    
