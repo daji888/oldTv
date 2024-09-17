@@ -51,11 +51,4 @@
         <item name="android:drawablePadding">@dimen/vs_10</item>
         <item name="android:radius">@dimen/vs_10</item>
     </style>
-
-    <style name="surfaceType_surface">
-        <item name="surface_type">surface_view</item>
-    </style>
-    <style name="surfaceType_texture">
-        <item name="surface_type">texture_view</item>
-    </style>
 </resources>
