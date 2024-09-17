@@ -28,7 +28,6 @@ import xyz.doikki.videoplayer.player.PlayerFactory;
 import xyz.doikki.videoplayer.player.VideoView;
 import xyz.doikki.videoplayer.render.RenderViewFactory;
 import xyz.doikki.videoplayer.render.TextureRenderViewFactory;
-import xyz.doikki.videoplayer.render.PlayerViewRenderViewFactory;
 
 public class PlayerHelper {
     public static void updateCfg(VideoView videoView, JSONObject playerCfg) {
@@ -42,7 +41,7 @@ public class PlayerHelper {
         int scale = Hawk.get(HawkConfig.PLAY_SCALE, 0);
         try {
             playerType = playerCfg.getInt("pl");
-            //renderType = playerCfg.getInt("pr");//该值无法修改，一旦确认该值后续无法进行修改 就是在设置选的 类型 无法应用
+            renderType = playerCfg.getInt("pr");
             ijkCode = playerCfg.getString("ijk");
             exoCode = playerCfg.getString("exo");
             scale = playerCfg.getInt("sc");
@@ -71,18 +70,14 @@ public class PlayerHelper {
             playerFactory = AndroidMediaPlayerFactory.create();
         }
         RenderViewFactory renderViewFactory = null;
-        if (playerType == 2){
-            renderViewFactory = PlayerViewRenderViewFactory.create(renderType);
-        } else {
-            switch (renderType) {
-                case 0:
-                default:
-                    renderViewFactory = TextureRenderViewFactory.create();
-                    break;
-                case 1:
-                    renderViewFactory = SurfaceRenderViewFactory.create();
-                    break;
-            }
+        switch (renderType) {
+            case 0:
+            default:
+                renderViewFactory = TextureRenderViewFactory.create();
+                break;
+            case 1:
+                renderViewFactory = SurfaceRenderViewFactory.create();
+                break;
         }
         videoView.setPlayerFactory(playerFactory);
         videoView.setRenderViewFactory(renderViewFactory);
