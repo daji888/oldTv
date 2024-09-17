@@ -73,12 +73,6 @@ public class PlayerViewRenderView extends PlayerView implements IRenderView {
                 default:
                     setResizeMode(RESIZE_MODE_FIT);
                     break;
-                case 3:
-                    setResizeMode(RESIZE_MODE_ZOOM);
-                    break;
-                case 4:
-                    setResizeMode(RESIZE_MODE_FILL);
-                    break;
                 case 1: {
                     View surfaceView = getVideoSurfaceView();
                     if (surfaceView != null) {
@@ -90,7 +84,6 @@ public class PlayerViewRenderView extends PlayerView implements IRenderView {
                     }
                     break;
                 }
-
                 case 2: {
                     View surfaceView = getVideoSurfaceView();
                     if (surfaceView != null) {
@@ -102,6 +95,12 @@ public class PlayerViewRenderView extends PlayerView implements IRenderView {
                     }
                     break;
                 }
+                case 3:
+                    setResizeMode(RESIZE_MODE_ZOOM);
+                    break;
+                case 4:
+                    setResizeMode(RESIZE_MODE_FILL);
+                    break;    
                 case 5:
                     View surfaceView = getVideoSurfaceView();
                     if (surfaceView != null) {
