@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.net.TrafficStats;
-import android.os.Build;
 import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -25,7 +24,6 @@ import androidx.media3.exoplayer.trackselection.MappingTrackSelector;
 import androidx.media3.exoplayer.util.EventLogger;
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
 import androidx.media3.exoplayer.trackselection.TrackSelectionArray;
-import androidx.media3.ui.PlayerView;
 
 import com.github.tvbox.osc.base.App;
 import com.github.tvbox.osc.util.HawkConfig;
@@ -246,12 +244,6 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     @Override
     public int getBufferedPercentage() {
         return mMediaPlayer == null ? 0 : mMediaPlayer.getBufferedPercentage();
-    }
-
-    public void setPlayerView(PlayerView view) {
-        if (mMediaPlayer != null) {
-            view.setPlayer(mMediaPlayer);
-        }
     }
 
     @Override
