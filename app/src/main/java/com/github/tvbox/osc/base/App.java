@@ -89,7 +89,7 @@ public class App extends MultiDexApplication {
         putDefault(HawkConfig.DOH_URL, 0);                   //安全DNS: 0=运营商, 1=腾讯, 2=阿里, 3=360, 4=Google, 5=AdGuard, 6=Quad9
         putDefault(HawkConfig.API_URL, "http://www.饭太硬.com/tv/");
         putDefault(HawkConfig.LIVE_URL, "https://gh-proxy.com/raw.githubusercontent.com/daji888/ys/master/tv.txt");
-        putDefault(HawkConfig.EPG_URL, "http://epg.mxdyeah.top/api/diyp/?ch={name}&date={date}");
+        putDefault(HawkConfig.EPG_URL, "http://epg.crestekk.cn/api/diyp/?ch={name}&date={date}");
     }
 
     public static App getInstance() {
