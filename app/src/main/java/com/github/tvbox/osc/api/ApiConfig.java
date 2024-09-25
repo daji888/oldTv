@@ -153,15 +153,15 @@ public class ApiConfig {
             TempKey = a[1];
             if (apiUrl.startsWith("clan")){
                 configUrl = clanToAddress(a[0]);
-            }else if (apiUrl.startsWith("http")){
+            } else if (apiUrl.startsWith("http")){
                 configUrl = a[0];
-            }else {
+            } else {
                 configUrl = "http://" + a[0];
             }
         } else if (apiUrl.startsWith("clan")) {
             configUrl = clanToAddress(apiUrl);
         } else if (!apiUrl.startsWith("http")) {
-            configUrl = "http://" + configUrl;
+            configUrl = "http://" + apiUrl;
         } else {
             configUrl = apiUrl;
         }
