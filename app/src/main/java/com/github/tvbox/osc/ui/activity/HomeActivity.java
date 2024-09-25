@@ -493,10 +493,10 @@ public class HomeActivity extends BaseActivity {
             System.exit(0);
             super.onBackPressed();
         } else {
-            if(dataInitOk && jarInitOk){
+            if (dataInitOk && jarInitOk) {
                 mExitTime = System.currentTimeMillis();
                 Toast.makeText(mContext, "再按一次返回键退出应用", Toast.LENGTH_SHORT).show();
-            }else {
+            } else {
                 jumpActivity(SettingActivity.class);
             }
         }
