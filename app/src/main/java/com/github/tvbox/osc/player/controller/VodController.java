@@ -1066,6 +1066,8 @@ public class VodController extends BaseController {
     }
 
     private boolean isPaused = false;
+    private boolean fromLongPress;
+    private float speed_old = 1.0f;
 
     @Override
     public boolean onKeyEvent(KeyEvent event) {
@@ -1093,31 +1095,62 @@ public class VodController extends BaseController {
                     togglePlay();
                     return true;
                 }
-//            } else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {  return true;// 闲置开启计时关闭透明底栏
-            } else if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN || keyCode == KeyEvent.KEYCODE_DPAD_UP || keyCode== KeyEvent.KEYCODE_MENU) {
+            } else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
+                if (videoPlayState != VideoView.STATE_PAUSED) {
+                    fromLongPress = true;
+                    try {
+                        speed_old = (float) mPlayerConfig.getDouble("sp");
+                        mProgressTop.setVisibility(VISIBLE);
+                        float speed = 3.0f;
+                        mPlayerConfig.put("sp", speed);
+                        updatePlayerCfgView();
+                        listener.updatePlayerCfg();
+                        mControlWrapper.setSpeed(speed);
+                    } catch (JSONException f) {
+                        f.printStackTrace();
+                    }
+                }
+                return true;
+                }
+            } else if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN || keyCode== KeyEvent.KEYCODE_MENU) {
                 if (!isBottomVisible()) {
                     showBottom();
                     myHandle.postDelayed(myRunnable, myHandleSeconds);
                     return true;
                 }
-            }
         } else if (action == KeyEvent.ACTION_UP) {
             if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT || keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
                 if (isInPlayback) {
                     tvSlideStop();
                     return true;
                 }
+             } else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
+                if (fromLongPress) {
+                    if (videoPlayState != VideoView.STATE_PAUSED) {
+                        mProgressTop.setVisibility(GONE);
+                    }    
+                fromLongPress = false;
+                try {
+                    float speed = 1.0f;
+                    mPlayerConfig.put("sp", speed);
+                    updatePlayerCfgView();
+                    listener.updatePlayerCfg();
+                    mControlWrapper.setSpeed(speed);
+                } catch (JSONException f) {
+                    f.printStackTrace();
+                }
             }
+            return true;
+            } 
         }
         return super.dispatchKeyEvent(event);
     }
 
-
-    private boolean fromLongPress;
-    private float speed_old = 1.0f;
+//    private boolean fromLongPress;
+//    private float speed_old = 1.0f;
     @Override
     public void onLongPress(MotionEvent e) {
-        if (videoPlayState!=VideoView.STATE_PAUSED) {
+        if (videoPlayState != VideoView.STATE_PAUSED) {
             fromLongPress = true;
             try {
                 speed_old = (float) mPlayerConfig.getDouble("sp");
@@ -1139,7 +1172,7 @@ public class VodController extends BaseController {
         if (e.getAction() == MotionEvent.ACTION_UP) {
             if (fromLongPress) {
                 mProgressTop.setVisibility(GONE);
-                fromLongPress =false;
+                fromLongPress = false;
                 try {
                     float speed = speed_old;
                     mPlayerConfig.put("sp", speed);
