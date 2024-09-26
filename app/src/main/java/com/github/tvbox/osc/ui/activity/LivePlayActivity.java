@@ -1109,12 +1109,21 @@ public class LivePlayActivity extends BaseActivity {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
         SimpleDateFormat datePresentFormat = new SimpleDateFormat("M-d EE");
+        SimpleDateFormat datePresentFormat1 = new SimpleDateFormat("M-d");
         calendar.add(Calendar.DAY_OF_MONTH, 1);
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 9; i++) {
             Date dateIns = calendar.getTime();
             LiveEpgDate epgDate = new LiveEpgDate();
             epgDate.setIndex(i);
-            epgDate.setDatePresented(datePresentFormat.format(dateIns));
+            if (i == 0) {
+                epgDate.setDatePresented(datePresentFormat1.format(dateIns) + " 明天");
+            } else if (i == 1) {
+                epgDate.setDatePresented(datePresentFormat1.format(dateIns) + " 今天");
+            } else if (i == 2) {
+                epgDate.setDatePresented(datePresentFormat1.format(dateIns) + " 昨天");
+            } else {
+                epgDate.setDatePresented(datePresentFormat.format(dateIns));
+            }
             epgDate.setDateParamVal(dateIns);
             liveEpgDateAdapter.addData(epgDate);
             calendar.add(Calendar.DAY_OF_MONTH, -1);
