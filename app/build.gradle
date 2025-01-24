@@ -84,7 +84,7 @@ dependencies {
     implementation files('libs/thunder.jar')
     implementation files('libs/dec-0.1.2.jar')
     implementation files('libs/commons-lang3-3.17.0.jar')
-    implementation files('libs/xwalk_shared_library-23.53.589.4.aar')
+//    implementation files('libs/xwalk_shared_library-23.53.589.4.aar')
     implementation files('libs/lib-decoder-ffmpeg-release.aar')
     implementation project(":quickjs")
     
