@@ -1,6 +1,9 @@
 package com.github.tvbox.osc.ui.adapter;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -55,9 +58,26 @@ public class HomeHotVodAdapter extends BaseQuickAdapter<Movie.Video, BaseViewHol
         ImageView ivThumb = helper.getView(R.id.ivThumb);
         //由于部分电视机使用glide报错
         if (!TextUtils.isEmpty(item.pic)) {
-            ImgUtil.load(item.pic, ivThumb, 10);
+            item.pic = item.pic.trim();
+            if (isBase64Image(item.pic)) {
+                // 如果是 Base64 图片，解码并设置
+                ivThumb.setImageBitmap(decodeBase64ToBitmap(item.pic));
+            } else {
+                ImgUtil.load(item.pic, ivThumb, 10);
+            }
         } else {
             ivThumb.setImageResource(R.drawable.img_loading_placeholder);
         }
+    }
+
+    private boolean isBase64Image(String picUrl) {
+        return picUrl.startsWith("data:image");
+    }
+
+    private Bitmap decodeBase64ToBitmap(String base64Str) {
+        // 去掉 Base64 数据的头部前缀，例如 "data:image/png;base64,"
+        String base64Data = base64Str.substring(base64Str.indexOf(",") + 1);
+        byte[] decodedBytes = Base64.decode(base64Data, Base64.DEFAULT);
+        return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
     }
 }
