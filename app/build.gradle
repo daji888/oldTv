@@ -134,6 +134,10 @@ dependencies {
     implementation 'com.github.hedzr:android-file-chooser:v1.2.0-final'
     implementation 'commons-io:commons-io:2.13.0'
     implementation 'com.googlecode.juniversalchardet:juniversalchardet:1.0.3'
+    //支持http3
+    implementation ('com.google.net.cronet:cronet-okhttp:0.1.0')
+//    implementation 'com.google.android.gms:play-services-cronet:18.0.1'
+    implementation ('org.chromium.net:cronet-embedded:101.4951.41')
     configurations {
         configureEach {
             exclude group: 'xpp3', module: 'xpp3'
