@@ -127,6 +127,7 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.16.1'
     implementation 'com.github.hedzr:android-file-chooser:v1.2.0-final'
     implementation 'commons-io:commons-io:2.13.0'
+    implementation(name:'xwalk_shared_library-23.53.589.4',ext:'aar')
     //支持http3
     implementation ('com.google.net.cronet:cronet-okhttp:0.1.0')
 //    implementation 'com.google.android.gms:play-services-cronet:18.0.1'
