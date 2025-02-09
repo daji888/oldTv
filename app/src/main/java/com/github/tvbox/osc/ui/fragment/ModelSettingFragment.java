@@ -139,7 +139,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
         tvHomeApi.setText(ApiConfig.get().getHomeSourceBean().getName());
         tvScale.setText(PlayerHelper.getScaleName(Hawk.get(HawkConfig.PLAY_SCALE, 0)));
         tvPlay.setText(PlayerHelper.getPlayerName(Hawk.get(HawkConfig.PLAY_TYPE, 0)));
-        tvRender.setText(PlayerHelper.getRenderName(Hawk.get(HawkConfig.PLAY_RENDER, 0)));
+        tvRender.setText(PlayerHelper.getRenderName(Hawk.get(HawkConfig.PLAY_RENDER, 1)));
         tvVideoPurifyText = findViewById(R.id.tvVideoPurifyText);
         tvVideoPurifyText.setText(Hawk.get(HawkConfig.VIDEO_PURIFY, true) ? "已开启" : "已关闭");
         tvIjkCachePlay.setText(Hawk.get(HawkConfig.IJK_CACHE_PLAY, false) ? "已开启" : "已关闭");
@@ -566,7 +566,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
             @Override
             public void onClick(View v) {
                 FastClickCheckUtil.check(v);
-                int defaultPos = Hawk.get(HawkConfig.PLAY_RENDER, 0);
+                int defaultPos = Hawk.get(HawkConfig.PLAY_RENDER, 1);
                 ArrayList<Integer> renders = new ArrayList<>();
                 renders.add(0);
                 renders.add(1);
