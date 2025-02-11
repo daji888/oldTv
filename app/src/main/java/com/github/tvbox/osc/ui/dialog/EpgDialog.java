@@ -77,8 +77,8 @@ public class EpgDialog extends BaseDialog {
             @Override
             public void onClick(View v) {
                 ArrayList<String> history = Hawk.get(HawkConfig.EPG_HISTORY, new ArrayList<String>());
-                if (!history.contains("http://epg.crestekk.cn/api/diyp/?ch={name}&date={date}"))
-                    history.add("http://epg.crestekk.cn/api/diyp/?ch={name}&date={date}");
+                if (!history.contains("https://epg.crestekk.cn/api/diyp/?ch={name}&date={date}"))
+                    history.add("https://epg.crestekk.cn/api/diyp/?ch={name}&date={date}");
                 String current = Hawk.get(HawkConfig.EPG_URL, "");
                 int idx = 0;
                 if (history.contains(current))
