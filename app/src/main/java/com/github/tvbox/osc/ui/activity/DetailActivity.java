@@ -231,22 +231,6 @@ public class DetailActivity extends BaseActivity {
 
         llPlayerFragmentContainerBlock.setOnClickListener((view -> toggleFullPreview()));
 
-        tvSort.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("NotifyDataSetChanged")
-            @Override
-            public void onClick(View v) {
-                if (vodInfo != null && vodInfo.seriesMap.size() > 0) {
-                    vodInfo.reverseSort = !vodInfo.reverseSort;
-                    isReverse = !isReverse;
-                    vodInfo.reverse();
-                    vodInfo.playIndex=(vodInfo.seriesMap.get(vodInfo.playFlag).size()-1)-vodInfo.playIndex;
-//                    insertVod(sourceKey, vodInfo);
-                    firstReverse = true;
-                    setSeriesGroupOptions();
-                    seriesAdapter.notifyDataSetChanged();
-                }
-            }
-        });
         tvPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -294,6 +278,7 @@ public class DetailActivity extends BaseActivity {
                 });
             }
         });
+        
         tvCollect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -309,6 +294,7 @@ public class DetailActivity extends BaseActivity {
                 }
             }
         });
+        
         tvSynopsis.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -320,6 +306,24 @@ public class DetailActivity extends BaseActivity {
                 }
             }
         });
+
+        tvSort.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onClick(View v) {
+                if (vodInfo != null && vodInfo.seriesMap.size() > 0) {
+                    vodInfo.reverseSort = !vodInfo.reverseSort;
+                    isReverse = !isReverse;
+                    vodInfo.reverse();
+                    vodInfo.playIndex=(vodInfo.seriesMap.get(vodInfo.playFlag).size()-1)-vodInfo.playIndex;
+//                    insertVod(sourceKey, vodInfo);
+                    firstReverse = true;
+                    setSeriesGroupOptions();
+                    seriesAdapter.notifyDataSetChanged();
+                }
+            }
+        });
+        
         tvPlayUrl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -330,6 +334,7 @@ public class DetailActivity extends BaseActivity {
                 Toast.makeText(DetailActivity.this, "已复制", Toast.LENGTH_SHORT).show();
             }
         });
+        
         tvDes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
