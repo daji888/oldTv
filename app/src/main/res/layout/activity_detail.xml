@@ -191,6 +191,7 @@
                     android:ellipsize="end"
                     android:lineSpacingMultiplier="1.2"
                     android:maxLines="3"
+                    android:focusable="false"
                     android:shadowColor="@color/color_000000_80"
                     android:shadowDx="5"
                     android:shadowDy="5"
