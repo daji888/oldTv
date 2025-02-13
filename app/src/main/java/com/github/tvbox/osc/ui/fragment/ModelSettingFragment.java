@@ -847,6 +847,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
     }
 
     private void initView() {
+        findViewById(R.id.llApi).requestFocus();
         int playerType = Hawk.get(HawkConfig.PLAY_TYPE, 0);
         if (playerType == 1) {
             tvMediaExoCodec.setVisibility(View.GONE);
