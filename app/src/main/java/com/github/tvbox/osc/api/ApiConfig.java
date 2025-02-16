@@ -102,7 +102,7 @@ public class ApiConfig {
             if (AES.isJson(content)) return content;
             Pattern pattern = Pattern.compile("[A-Za-z0]{8}\\*\\*");
             Matcher matcher = pattern.matcher(content);
-            if(matcher.find()){
+            if (matcher.find()) {
                 content=content.substring(content.indexOf(matcher.group()) + 10);
                 content = new String(Base64.decode(content, Base64.DEFAULT));
             }
@@ -112,10 +112,10 @@ public class ApiConfig {
                 String key = AES.rightPadding(content.substring(content.indexOf("$#") + 2, content.indexOf("#$")), "0", 16);
                 String iv = AES.rightPadding(content.substring(content.length() - 13), "0", 16);
                 json = AES.CBC(data, key, iv);
-            }else if (configKey !=null && !AES.isJson(content)) {
+            } else if (configKey !=null && !AES.isJson(content)) {
                 json = AES.ECB(content, configKey);
             }
-            else{
+            else {
                 json = content;
             }
         } catch (Exception e) {
@@ -127,7 +127,7 @@ public class ApiConfig {
     private static byte[] getImgJar(String body){
         Pattern pattern = Pattern.compile("[A-Za-z0]{8}\\*\\*");
         Matcher matcher = pattern.matcher(body);
-        if(matcher.find()){
+        if (matcher.find()) {
             body = body.substring(body.indexOf(matcher.group()) + 10);
             return Base64.decode(body, Base64.DEFAULT);
         }
@@ -154,9 +154,9 @@ public class ApiConfig {
         if (apiUrl.contains(pk)) {
             String[] a = apiUrl.split(pk);
             TempKey = a[1];
-            if (apiUrl.startsWith("clan")){
+            if (apiUrl.startsWith("clan")) {
                 configUrl = clanToAddress(a[0]);
-            } else if (apiUrl.startsWith("http")){
+            } else if (apiUrl.startsWith("http")) {
                 configUrl = a[0];
             } else {
                 configUrl = "http://" + a[0];
@@ -269,7 +269,7 @@ public class ApiConfig {
                 if (cache.exists())
                     cache.delete();
                 FileOutputStream fos = new FileOutputStream(cache);
-                if(isJarInImg) {
+                if (isJarInImg) {
                     String respData = response.body().string();
                     byte[] imgJar = getImgJar(respData);
                     fos.write(imgJar);
@@ -335,9 +335,9 @@ public class ApiConfig {
             sb.setQuickSearch(DefaultConfig.safeJsonInt(obj, "quickSearch", 1));
             sb.setFilterable(DefaultConfig.safeJsonInt(obj, "filterable", 1));
             sb.setPlayerUrl(DefaultConfig.safeJsonString(obj, "playUrl", ""));
-            if(obj.has("ext") && (obj.get("ext").isJsonObject() || obj.get("ext").isJsonArray())){
+            if (obj.has("ext") && (obj.get("ext").isJsonObject() || obj.get("ext").isJsonArray())) {
                 sb.setExt(obj.get("ext").toString());
-            }else {
+            } else {
                 sb.setExt(DefaultConfig.safeJsonString(obj, "ext", ""));
             }
             sb.setJar(DefaultConfig.safeJsonString(obj, "jar", ""));
@@ -360,7 +360,7 @@ public class ApiConfig {
         vipParseFlags = DefaultConfig.safeJsonStringList(infoJson, "flags");
         // 解析地址
         parseBeanList.clear();
-        if(infoJson.has("parses")){
+        if (infoJson.has("parses")) {
             JsonArray parses = infoJson.get("parses").getAsJsonArray();
             for (JsonElement opt : parses) {
                 JsonObject obj = (JsonObject) opt;
@@ -403,9 +403,9 @@ public class ApiConfig {
                 String extUrl = Uri.parse(url).getQueryParameter("ext");
                 if (extUrl != null && !extUrl.isEmpty()) {
                     String extUrlFix;
-                    if(extUrl.startsWith("http") || extUrl.startsWith("clan://")){
+                    if (extUrl.startsWith("http") || extUrl.startsWith("clan://")) {
                         extUrlFix = extUrl;
-                    }else {
+                    } else {
                         extUrlFix = new String(Base64.decode(extUrl, Base64.DEFAULT | Base64.URL_SAFE | Base64.NO_WRAP), "UTF-8");
                     }
 //                    System.out.println("extUrlFix :"+extUrlFix);
@@ -444,18 +444,24 @@ public class ApiConfig {
                             Hawk.put(HawkConfig.EPG_URL, epgURL);
                         }
                     }
+                
+                    //直播播放器类型
+                    if (livesOBJ.has("playerType")) {
+                        String livePlayType =livesOBJ.get("playerType").getAsString();
+                        Hawk.put(HawkConfig.LIVE_PLAY_TYPE,livePlayType);
+                    }
 
  //               LiveChannelGroup liveChannelGroup = new LiveChannelGroup();
  //               liveChannelGroup.setGroupName(url);
  //               liveChannelGroupList.add(liveChannelGroup);
             } else {
-                if(!lives.contains("type")){
+                if (!lives.contains("type")) {
                     loadLives(infoJson.get("lives").getAsJsonArray());
-                }else {
+                } else {
                     JsonObject fengMiLives = infoJson.get("lives").getAsJsonArray().get(0).getAsJsonObject();
                     Hawk.put(HawkConfig.LIVE_PLAYER_TYPE, DefaultConfig.safeJsonInt(fengMiLives, "playerType", -1));
                     String type = fengMiLives.get("type").getAsString();
-                    if(type.equals("0")){
+                    if (type.equals("0")) {
                         String url = fengMiLives.get("url").getAsString();
    //                     Hawk.put(HawkConfig.LIVE_URL,url);
                         //设置epg
@@ -471,8 +477,14 @@ public class ApiConfig {
                                     Hawk.put(HawkConfig.EPG_URL, epgURL);
                                 }
                             }
+                        
+                            //直播播放器类型
+                            if (livesOBJ.has("playerType")) {
+                                String livePlayType =livesOBJ.get("playerType").getAsString();
+                                Hawk.put(HawkConfig.LIVE_PLAY_TYPE,livePlayType);
+                            }
 
-                        if(url.startsWith("http")){
+                        if (url.startsWith("http")) {
                             // takagen99: Capture Live URL into Settings
                                 System.out.println("Live URL :" + url);
                                 putLiveHistory(url);
@@ -507,7 +519,7 @@ public class ApiConfig {
         //video parse rule for host
         if (infoJson.has("rules")) {
             VideoParseRuler.clearRule();
-            for(JsonElement oneHostRule : infoJson.getAsJsonArray("rules")) {
+            for (JsonElement oneHostRule : infoJson.getAsJsonArray("rules")) {
                 JsonObject obj = (JsonObject) oneHostRule;
                 if (obj.has("host")) {
                     String host = obj.get("host").getAsString();
@@ -559,15 +571,15 @@ public class ApiConfig {
         JsonObject defaultJson = new Gson().fromJson(defaultIJKADS, JsonObject.class);
         JsonObject EXOdefaultJson = new Gson().fromJson(defaultEXO, JsonObject.class);
         // 广告地址
-        if(AdBlocker.isEmpty()){
+        if (AdBlocker.isEmpty()) {
             //默认广告拦截
             for (JsonElement host : defaultJson.getAsJsonArray("ads")) {
                 AdBlocker.addAdHost(host.getAsString());
             }
             //追加的广告拦截
-            if(infoJson.has("ads")){
+            if (infoJson.has("ads")) {
                 for (JsonElement host : infoJson.getAsJsonArray("ads")) {
-                    if(!AdBlocker.hasHost(host.getAsString())){
+                    if (!AdBlocker.hasHost(host.getAsString())) {
                         AdBlocker.addAdHost(host.getAsString());
                     }
                 }
@@ -839,10 +851,10 @@ public class ApiConfig {
 
     String fixContentPath(String url, String content) {
         if (content.contains("\"./")) {
-            if(!url.startsWith("http") && !url.startsWith("clan://")){
+            if (!url.startsWith("http") && !url.startsWith("clan://")) {
                 url = "http://" + url;
             }
-            if(url.startsWith("clan://"))url=clanToAddress(url);
+            if (url.startsWith("clan://")) url = clanToAddress(url);
             content = content.replace("./", url.substring(0,url.lastIndexOf("/") + 1));
         }
         return content;

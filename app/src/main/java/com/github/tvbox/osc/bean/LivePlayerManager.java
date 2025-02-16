@@ -25,6 +25,7 @@ public class LivePlayerManager {
             int playerType = Hawk.get(HawkConfig.LIVE_PLAYER_TYPE, -1);
             if (playerType == -1) playerType = Hawk.get(HawkConfig.PLAY_TYPE, 0);
             defaultPlayerConfig.put("pl", playerType);
+            defaultPlayerConfig.put("pl", Hawk.get(HawkConfig.LIVE_PLAY_TYPE, 1));
             defaultPlayerConfig.put("ijk", Hawk.get(HawkConfig.IJK_CODEC, "硬解"));
             defaultPlayerConfig.put("exo", Hawk.get(HawkConfig.EXO_CODEC, "硬软"));
             defaultPlayerConfig.put("pr", Hawk.get(HawkConfig.PLAY_RENDER, 0));
