@@ -39,6 +39,7 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.util.Map;
 
+import okhttp3.Call;
 import okhttp3.OkHttpClient;
 
 public final class ExoMediaSourceHelper {
@@ -193,7 +194,7 @@ public final class ExoMediaSourceHelper {
     @SuppressLint("UnsafeOptInUsageError")
     private DataSource.Factory getHttpDataSourceFactory() {
         if (mHttpDataSourceFactory == null) {
-            mHttpDataSourceFactory = new OkHttpDataSource.Factory(mOkClient)
+            mHttpDataSourceFactory = new OkHttpDataSource.Factory((Call.Factory) mOkClient)
                     .setUserAgent(mUserAgent)/*
                     .setAllowCrossProtocolRedirects(true)*/;
         }
