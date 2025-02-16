@@ -32,8 +32,14 @@ import com.github.tvbox.osc.util.LOG;
 import com.github.tvbox.osc.util.PlayerHelper;
 import com.orhanobut.hawk.Hawk;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+
+import okhttp3.Dns;
+import okhttp3.OkHttpClient;
 
 import xyz.doikki.videoplayer.player.AbstractPlayer;
 import xyz.doikki.videoplayer.player.VideoViewManager;
@@ -62,14 +68,31 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
 
     public ExoMediaPlayer(Context context) {
         mAppContext = context.getApplicationContext();
+        // 初始化 ExoMediaSourceHelper 实例
         mMediaSourceHelper = ExoMediaSourceHelper.getInstance(context);
+        // 构造自定义的 OkHttpClient，加入自定义 DNS 逻辑：
+        // 当请求的域名以 "cache.ott" 开头时，使用 "base-v4-free-mghy.e.cdn.chinamobile.com" 解析
+        OkHttpClient customOkHttpClient = new OkHttpClient.Builder()
+                .dns(new Dns() {
+                    @Override
+                    public List<InetAddress> lookup(@NonNull String hostname) throws UnknownHostException {
+                        if (hostname.matches("^cache\\.ott\\..*\\.cmvideo\\.cn$")) {
+                            // 这里将 hostname 强制解析为目标域名
+                            return Dns.SYSTEM.lookup("base-v4-free-mghy.e.cdn.chinamobile.com");
+                        }
+                        return Dns.SYSTEM.lookup(hostname);
+                    }
+                })
+                .build();
+        // 注入自定义 OkHttpClient 到 ExoMediaSourceHelper 中
+        mMediaSourceHelper.setOkClient(customOkHttpClient);
     }
 
     @SuppressLint("UnsafeOptInUsageError")
     @Override
     public void initPlayer() {
         if (mRenderersFactory == null) {
-            mRenderersFactory = new DefaultRenderersFactory(mAppContext);
+            mRenderersFactory = new DefaultRenderersFactory(mAppContext).setEnableDecoderFallback(true); // 启用解码器回退，避免硬件加速问题。
             mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON);
         }
         //https://github.com/androidx/media/blob/release/libraries/decoder_ffmpeg/README.md
