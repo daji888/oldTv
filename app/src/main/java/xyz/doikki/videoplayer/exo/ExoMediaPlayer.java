@@ -92,7 +92,7 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     @Override
     public void initPlayer() {
         if (mRenderersFactory == null) {
-            mRenderersFactory = new DefaultRenderersFactory(mAppContext);
+            mRenderersFactory = new DefaultRenderersFactory(mAppContext).setEnableDecoderFallback(true); // 启用解码器回退，避免硬件加速问题。
             mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON);
         }
         //https://github.com/androidx/media/blob/release/libraries/decoder_ffmpeg/README.md
