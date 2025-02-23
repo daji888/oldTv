@@ -309,7 +309,6 @@ public class LivePlayActivity extends BaseActivity {
         initSettingItemView();
         initLiveChannelList();
         initLiveSettingGroupList();
-        Hawk.put(HawkConfig.PLAYER_IS_LIVE,true);
     }
     //获取EPG并存储 // 百川epg  DIYP epg   51zmt epg ------- 自建EPG格式输出格式请参考 51zmt
     private List<Epginfo> epgdata = new ArrayList<>();
@@ -365,9 +364,9 @@ public class LivePlayActivity extends BaseActivity {
         epgListAdapter.CanBack(currentLiveChannelItem.getinclude_back());
     //    epgListAdapter.updateData(date, new ArrayList<>());
         String epg;
-        if (epgStringAddress.contains("{name}") && epgStringAddress.contains("{date}")) {
+        if(epgStringAddress.contains("{name}") && epgStringAddress.contains("{date}")){
             epg = epgStringAddress.replace("{name}", URLEncoder.encode(epgTagName)).replace("{date}", timeFormat.format(date));
-        } else {
+        }else {
             epg = epgStringAddress + "?ch="+ URLEncoder.encode(epgTagName) + "&date=" + timeFormat.format(date);
         }
         UrlHttpUtil.get(epg, new CallBackUtil.CallBackString() {
@@ -378,7 +377,7 @@ public class LivePlayActivity extends BaseActivity {
 
             public void onResponse(String paramString) {
                 ArrayList arrayList = new ArrayList();
-       //         Log.d("返回的EPG信息", paramString);
+                Log.d("返回的EPG信息", paramString);
                 try {
                     if (paramString.contains("epg_data")) {
                         final JSONArray jSONArray = new JSONObject(paramString).optJSONArray("epg_data");
@@ -387,7 +386,7 @@ public class LivePlayActivity extends BaseActivity {
                                 JSONObject jSONObject = jSONArray.getJSONObject(b);
                                 Epginfo epgbcinfo = new Epginfo(date,jSONObject.optString("title"), date, jSONObject.optString("start"), jSONObject.optString("end"),b);
                                 arrayList.add(epgbcinfo);
-       //                         Log.d("EPG信息:", day + "  " + jSONObject.optString("start") + " - " + jSONObject.optString("end") + "  " + jSONObject.optString("title"));
+                                Log.d("EPG信息:", day + "  " + jSONObject.optString("start") + " - " + jSONObject.optString("end") + "  " + jSONObject.optString("title"));
                             }
                     }
 
@@ -1779,7 +1778,6 @@ public class LivePlayActivity extends BaseActivity {
 
             @Override
             public String convertResponse(okhttp3.Response response) throws Throwable {
-                assert response.body() != null;
                 return response.body().string();
             }
 
