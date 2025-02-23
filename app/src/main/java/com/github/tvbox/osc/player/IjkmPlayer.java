@@ -6,17 +6,14 @@ import android.text.TextUtils;
 
 import com.github.tvbox.osc.api.ApiConfig;
 import com.github.tvbox.osc.bean.IJKCode;
-import com.github.tvbox.osc.server.ControlManager;
 import com.github.tvbox.osc.util.FileUtils;
 import com.github.tvbox.osc.util.HawkConfig;
-import com.github.tvbox.osc.util.LOG;
 import com.github.tvbox.osc.util.MD5;
 import com.github.tvbox.osc.util.PlayerHelper;
 import com.orhanobut.hawk.Hawk;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
 import java.net.URLEncoder;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -78,25 +75,13 @@ public class IjkmPlayer extends IjkPlayer {
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "skip_loop_filter", 0);
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "reconnect", 1);
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 0);
-
-        if (Hawk.get(HawkConfig.PLAYER_IS_LIVE)) {
-            LOG.i("type-直播");
-            mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0);
-//            mMediaPlayer.setOption(tv.IjkMediaPlayer.OPT_CATEGORY_FORMAT, "fflags", "nobuffer"); // 减少协议层缓冲
-        } else {
-            LOG.i("type-点播");
-            mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 1);
-        }
         super.setOptions();
     }
-
-    private static final String ITV_TARGET_DOMAIN = "gslbserv.itv.cmvideo.cn";
 
     @Override
     public void setDataSource(String path, Map<String, String> headers) {
         try {
-            switch (getStreamType(path)) {
-                case RTSP_UDP_RTP:
+            if (path.contains("rtsp") || path.contains("udp") || path.contains("rtp")) {
                     mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "infbuf", 1);
                     mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "rtsp_transport", "tcp");
                     mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "rtsp_flags", "prefer_tcp");
@@ -108,37 +93,24 @@ public class IjkmPlayer extends IjkPlayer {
                     mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzeduration", 1 * 1000 * 1000);
                     mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 1);
                     mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "min-frames", 3);
-                    break;
-                    
-                case CACHE_VIDEO:
-                    if (Hawk.get(HawkConfig.IJK_CACHE_PLAY, false)) {
-                        String cachePath = FileUtils.getCachePath() + "/ijkcaches/";
+                } else if (!TextUtils.isEmpty(path)
+                    && !path.contains(".m3u8")
+                    && (path.contains(".mp4") || path.contains(".mkv") || path.contains(".avi"))) {
+                if (Hawk.get(HawkConfig.IJK_CACHE_PLAY, false)) {
+                        String cachePath = FileUtils.getExternalCachePath() + "/ijkcaches/";
+                        String cacheMapPath = cachePath;
                         File cacheFile = new File(cachePath);
                         if (!cacheFile.exists()) cacheFile.mkdirs();
                         String tmpMd5 = MD5.string2MD5(path);
-                        String cacheFilePath = cachePath + tmpMd5 + ".file";
-                        String cacheMapPath = cachePath + tmpMd5 + ".map";
-
-                        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "cache_file_path", cacheFilePath);
+                        cachePath += tmpMd5 + ".file";
+                        cacheMapPath += tmpMd5 + ".map";
+                        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "cache_file_path", cachePath);
                         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "cache_map_path", cacheMapPath);
                         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "parse_cache_map", 1);
                         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "auto_save_map", 1);
                         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "cache_max_capacity", 60 * 1024 * 1024);
                         path = "ijkio:cache:ffio:" + path;
                     }
-                    break;
-
-                case M3U8:
-                    // 直播且是ijk的时候自动自动走代理解决DNS
-                    if (Hawk.get(HawkConfig.PLAYER_IS_LIVE, false) ) {
-                        URI uri = new URI(path);
-                        String host = uri.getHost();
-                        if(ITV_TARGET_DOMAIN.equalsIgnoreCase(host))path = ControlManager.get().getAddress(true) + "proxy?go=live&type=m3u8&url="+ URLEncoder.encode(path,"UTF-8");
-                    }
-                    break;
-
-                default:
-                    break;
             }
         } catch (Exception e) {
             mPlayerEventListener.onError(-1, PlayerHelper.getRootCauseMessage(e));
@@ -152,33 +124,6 @@ public class IjkmPlayer extends IjkPlayer {
 //
 //        }
         super.setDataSource(path, headers);
-    }
-
-    /**
-     * 解析 URL
-     */
-    private static final int RTSP_UDP_RTP = 1;
-    private static final int CACHE_VIDEO = 2;
-    private static final int M3U8 = 3;
-    private static final int OTHER = 0;
-
-    private int getStreamType(String path) {
-        if (TextUtils.isEmpty(path)) {
-            return OTHER;
-        }
-        // 低成本检查 RTSP/UDP/RTP 类型
-        String lowerPath = path.toLowerCase();
-        if (lowerPath.startsWith("rtsp://") || lowerPath.startsWith("udp://") || lowerPath.startsWith("rtp://")) {
-            return RTSP_UDP_RTP;
-        }
-        String cleanUrl = path.split("\\?")[0];
-        if (cleanUrl.endsWith(".m3u8")) {
-            return M3U8;
-        }
-        if (cleanUrl.endsWith(".mp4") || cleanUrl.endsWith(".mkv") || cleanUrl.endsWith(".avi")) {
-            return CACHE_VIDEO;
-        }
-        return OTHER;
     }
 
     private String encodeSpaceChinese(String str) throws UnsupportedEncodingException {

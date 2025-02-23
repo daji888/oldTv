@@ -48,7 +48,6 @@ public class HawkConfig {
     public static final String VIDEO_PURIFY = "video_purify";  //去除部分广告
     public static final String LIVE_PLAYER_TYPE = "live_player_type"; // 0 系统 1 ijk 2 exo
     public static final String LIVE_PLAY_TYPE = "live_play_type";//0 系统 1 ijk 2 exo 10 MXPlayer
-    public static final String PLAYER_IS_LIVE = "player_is_live";
     
      public static boolean isDebug() {
         return Hawk.get(DEBUG_OPEN, false);
