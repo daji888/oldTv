@@ -283,7 +283,11 @@ public class PlayFragment extends BaseLazyFragment {
                 if (replay) {
                     play(true);
                 } else {
-                    playUrl(webPlayUrl,webHeaderMap);
+                    if (webPlayUrl != null && !webPlayUrl.isEmpty()) {
+                        playUrl(webPlayUrl,webHeaderMap);
+                    } else {
+                        play(false);
+                    }
                 }
             }
 
