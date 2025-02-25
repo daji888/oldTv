@@ -9,6 +9,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.bean.Movie;
+import com.github.tvbox.osc.util.Base64Img;
 import com.github.tvbox.osc.util.DefaultConfig;
 import com.github.tvbox.osc.util.ImgUtil;
 
@@ -36,7 +37,12 @@ public class GridAdapter extends BaseQuickAdapter<Movie.Video, BaseViewHolder> {
             //由于部分电视机使用glide报错
             if (!TextUtils.isEmpty(item.pic)) {
             	item.pic = item.pic.trim();
-                ImgUtil.load(item.pic, ivThumb, 10);
+                if (Base64Img.isBase64Image(item.pic)) {
+                    // 如果是 Base64 图片，解码并设置
+                    ivThumb.setImageBitmap(Base64Img.decodeBase64ToBitmap(item.pic));
+                } else {
+                    ImgUtil.load(item.pic, ivThumb, 10);
+                }
             } else {
                 ivThumb.setImageResource(R.drawable.img_loading_placeholder);
             }
@@ -78,7 +84,12 @@ public class GridAdapter extends BaseQuickAdapter<Movie.Video, BaseViewHolder> {
         //由于部分电视机使用glide报错
         if (!TextUtils.isEmpty(item.pic)) {
             item.pic = item.pic.trim();
-            ImgUtil.load(item.pic, ivThumb, 10);
+            if (Base64Img.isBase64Image(item.pic)) {
+                // 如果是 Base64 图片，解码并设置
+                ivThumb.setImageBitmap(Base64Img.decodeBase64ToBitmap(item.pic));
+            } else {
+                 ImgUtil.load(item.pic, ivThumb, 10);
+            }
         } else {
             ivThumb.setImageResource(R.drawable.img_loading_placeholder);
         }
