@@ -27,11 +27,13 @@ import com.github.tvbox.osc.api.ApiConfig;
 import com.github.tvbox.osc.bean.IJKCode;
 import com.github.tvbox.osc.bean.EXOCode;
 import com.github.tvbox.osc.bean.ParseBean;
+import com.github.tvbox.osc.server.ControlManager;
 import com.github.tvbox.osc.subtitle.widget.SimpleSubtitleView;
 import com.github.tvbox.osc.ui.adapter.ParseAdapter;
 import com.github.tvbox.osc.ui.adapter.SelectDialogAdapter;
 import com.github.tvbox.osc.ui.dialog.SelectDialog;
 import com.github.tvbox.osc.util.FastClickCheckUtil;
+import com.github.tvbox.osc.util.LOG;
 import com.github.tvbox.osc.util.PlayerHelper;
 import com.github.tvbox.osc.util.ScreenUtils;
 import com.github.tvbox.osc.util.SubtitleHelper;
@@ -42,6 +44,8 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -1230,5 +1234,52 @@ public class VodController extends BaseController {
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         mHandler.removeCallbacks(myRunnable2);
+    }
+
+    //尝试去bom
+    public String getWebPlayUrlIfNeeded(String webPlayUrl) {
+        if (webPlayUrl != null && webPlayUrl.contains(".m3u8")) {
+            try {
+                String urlEncode = URLEncoder.encode(webPlayUrl, "UTF-8");
+                LOG.i("echo-BOM-------");
+                return ControlManager.get().getAddress(true) + "proxy?go=bom&url=" + urlEncode;
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
+        return webPlayUrl;
+    }
+
+    public String encodeUrl(String url) {
+        try {
+            return URLEncoder.encode(url, "UTF-8");
+        } catch (Exception e) {
+            return url;
+        }
+    }
+
+    private static int switchPlayerCount = 0;
+    public boolean switchPlayer() {
+        try {
+            int playerType = mPlayerConfig.getInt("pl");
+            int p_type = (playerType == 1) ? playerType + 1 : (playerType == 2) ? playerType - 1 : playerType;
+            if (p_type != playerType) {
+                LOG.i("echo-切换播放器");
+                mPlayerConfig.put("pl", p_type);
+                updatePlayerCfgView();
+                listener.updatePlayerCfg();
+                listener.replay(false);
+            } else {
+                return true;
+            }
+        } catch (Exception e) {
+            return true;
+        }
+        if (switchPlayerCount == 1) {
+            switchPlayerCount = 0;
+            return true;
+        }
+        switchPlayerCount++;
+        return false;
     }
 }
