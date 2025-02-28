@@ -63,7 +63,7 @@ public class PushActivity extends BaseActivity {
     private void refreshQRCode() {
         String address = ControlManager.get().getAddress(false);
         tvAddress.setText(String.format("手机、电脑扫描二维码或者浏览器直接访问以下网址：\n%s", address));
-        ivQRCode.setImageBitmap(QRCodeGen.generateBitmap(address, AutoSizeUtils.mm2px(this, 300), AutoSizeUtils.mm2px(this, 300), 4));
+        ivQRCode.setImageBitmap(QRCodeGen.generateBitmap(address+"push.html", AutoSizeUtils.mm2px(this, 300), AutoSizeUtils.mm2px(this, 300), 4));
     }
 
     private void initData() {
