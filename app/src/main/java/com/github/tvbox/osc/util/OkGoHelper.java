@@ -154,8 +154,8 @@ public class OkGoHelper {
 
     public static void setDnsList() {
         dnsHttpsList.clear();
-        String json=Hawk.get(HawkConfig.DOH_JSON,"");
-        if(json.isEmpty())json=dnsConfigJson;
+        String json = Hawk.get(HawkConfig.DOH_JSON,"");
+        if (json.isEmpty()) json = dnsConfigJson;
         JsonArray jsonArray = JsonParser.parseString(json).getAsJsonArray();
         dnsHttpsList.add("运营商");
         for (int i = 0; i < jsonArray.size(); i++) {
@@ -163,7 +163,7 @@ public class OkGoHelper {
             String name = dnsConfig.has("name") ? dnsConfig.get("name").getAsString() : "Unknown Name";
             dnsHttpsList.add(name);
         }
-        if(Hawk.get(HawkConfig.DOH_URL, 0)+1>dnsHttpsList.size())Hawk.put(HawkConfig.DOH_URL, 0);
+        if (Hawk.get(HawkConfig.DOH_URL, 0) + 1 > dnsHttpsList.size()) Hawk.put(HawkConfig.DOH_URL, 0);
 
     }
 
@@ -183,19 +183,19 @@ public class OkGoHelper {
     }
 
     static void initDnsOverHttps() {
-        Integer dohSelector=Hawk.get(HawkConfig.DOH_URL, 0);
-        JsonArray ips=null;
+        Integer dohSelector = Hawk.get(HawkConfig.DOH_URL, 0);
+        JsonArray ips = null;
         try {
             dnsHttpsList.add("运营商");
-            String json=Hawk.get(HawkConfig.DOH_JSON,"");
-            if(json.isEmpty())json=dnsConfigJson;
+            String json = Hawk.get(HawkConfig.DOH_JSON,"");
+            if (json.isEmpty()) json = dnsConfigJson;
             JsonArray jsonArray = JsonParser.parseString(json).getAsJsonArray();
-            if(dohSelector+1>jsonArray.size())Hawk.put(HawkConfig.DOH_URL, 0);
+            if (dohSelector + 1 > jsonArray.size()) Hawk.put(HawkConfig.DOH_URL, 0);
             for (int i = 0; i < jsonArray.size(); i++) {
                 JsonObject dnsConfig = jsonArray.get(i).getAsJsonObject();
                 String name = dnsConfig.has("name") ? dnsConfig.get("name").getAsString() : "Unknown Name";
                 dnsHttpsList.add(name);
-                if(dohSelector==i)ips = dnsConfig.has("ips") ? dnsConfig.getAsJsonArray("ips") : null;
+                if (dohSelector == i) ips = dnsConfig.has("ips") ? dnsConfig.getAsJsonArray("ips") : null;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -241,25 +241,29 @@ public class OkGoHelper {
         public List<InetAddress> lookup(@NonNull String hostname) throws UnknownHostException {
             if (myHosts == null) {
                 myHosts = ApiConfig.get().getMyHost(); //确保只获取一次减少消耗
-                if(!myHosts.isEmpty())mapHosts(myHosts);
             }
+            if (!myHosts.isEmpty() && myHosts.containsKey(hostname)) {
+                hostname = myHosts.get(hostname);
+            }
+            assert hostname != null;
             if (isValidIpAddress(hostname)) {
                 return Collections.singletonList(InetAddress.getByName(hostname));
-            }
-            else if (map != null && map.containsKey(hostname)) {
-                return Objects.requireNonNull(map.get(hostname));    
             }
             else {
                 return  dnsOverHttps.lookup(hostname);
             }
         }
 
-        public synchronized void mapHosts(Map<String,String> hosts) {
-            map=new ConcurrentHashMap<>();
+        public synchronized void mapHosts(Map<String,String> hosts) throws UnknownHostException {
+            map = new ConcurrentHashMap<>();
             for (Map.Entry<String, String> entry : hosts.entrySet()) {
                 String key = entry.getKey();
                 String value = entry.getValue();
-                map.put(key,getAllByName(value));
+                if (isValidIpAddress(value)) {
+                    map.put(key,Collections.singletonList(InetAddress.getByName(value)));
+                } else {
+                    map.put(key,getAllByName(value));
+                }
             }
         }
 
