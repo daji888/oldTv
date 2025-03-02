@@ -205,8 +205,8 @@ public class LivePlayActivity extends BaseActivity {
     SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd");
     private View backcontroller;
     private CountDownTimer countDownTimer3;
-    private int videoWidth = 1920;
-    private int videoHeight = 1080;
+    private final int videoWidth = 1920;
+    private final int videoHeight = 1080;
     private TextView tv_currentpos;
     private TextView tv_duration;
     private SeekBar sBar;
@@ -775,7 +775,7 @@ public class LivePlayActivity extends BaseActivity {
          //   showChannelInfo();
             return true;
         }
-        mVideoView.release();
+        if (mVideoView != null) mVideoView.release();
         if (!changeSource) {
             currentChannelGroupIndex = channelGroupIndex;
             currentLiveChannelIndex = liveChannelIndex;
@@ -796,9 +796,11 @@ public class LivePlayActivity extends BaseActivity {
         getEpg(new Date());
         backcontroller.setVisibility(View.GONE);
         ll_right_top_huikan.setVisibility(View.GONE);
-        mVideoView.setUrl(currentLiveChannelItem.getUrl());
-        //showChannelInfo();
-        mVideoView.start();
+        if (mVideoView != null) {
+            mVideoView.setUrl(currentLiveChannelItem.getUrl());
+            mVideoView.start();
+        }
+        // showChannelInfo();
         return true;
     }
 

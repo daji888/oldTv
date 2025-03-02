@@ -154,6 +154,7 @@ public class ApiConfig {
             }
         }
         String TempKey = null, configUrl = "", pk = ";pk;";
+        apiUrl = apiUrl.replace("file://", "clan://localhost/");
         if (apiUrl.contains(pk)) {
             String[] a = apiUrl.split(pk);
             TempKey = a[1];
@@ -172,6 +173,7 @@ public class ApiConfig {
             configUrl = apiUrl;
         }
         String configKey = TempKey;
+        String finalApiUrl = apiUrl;
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.readTimeout(10, TimeUnit.SECONDS); //设置当前请求的读取超时时间
         builder.writeTimeout(10, TimeUnit.SECONDS); //设置当前请求的写入超时时间
@@ -185,7 +187,7 @@ public class ApiConfig {
                     public void onSuccess(Response<String> response) {
                         try {
                             String json = response.body();
-                            parseJson(apiUrl, json);
+                            parseJson(finalApiUrl, json);
                             try {
                                 File cacheDir = cache.getParentFile();
                                 if (!cacheDir.exists())
@@ -211,7 +213,7 @@ public class ApiConfig {
                         super.onError(response);
                         if (cache.exists()) {
                             try {
-                                parseJson(apiUrl, cache);
+                                parseJson(finalApiUrl, cache);
                                 callback.success();
                                 return;
                             } catch (Throwable th) {
@@ -229,11 +231,11 @@ public class ApiConfig {
                             result = FindResult(response.body().string(), configKey);
                         }
 
-                        if (apiUrl.startsWith("clan")) {
-                            result = clanContentFix(clanToAddress(apiUrl), result);
+                        if (finalApiUrl.startsWith("clan")) {
+                            result = clanContentFix(clanToAddress(finalApiUrl), result);
                         }
                         //假相對路徑
-                        result = fixContentPath(apiUrl,result);
+                        result = fixContentPath(finalApiUrl,result);
                         return result;
                     }
                 });
@@ -870,7 +872,7 @@ public class ApiConfig {
 
     String clanContentFix(String lanLink, String content) {
         String fix = lanLink.substring(0, lanLink.indexOf("/file/") + 6);
-        return content.replace("clan://", fix);
+        return content.replace("clan://localhost/", fix).replace("file://", fix);
     }
 
     String fixContentPath(String url, String content) {
