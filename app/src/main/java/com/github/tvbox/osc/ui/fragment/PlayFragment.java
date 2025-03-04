@@ -653,6 +653,7 @@ public class PlayFragment extends BaseLazyFragment {
                 @Override
                 public void run() {
                     if (finish) {
+                        setTip(err, false, true);
                         Toast.makeText(mContext, err, Toast.LENGTH_SHORT).show();
                     } else {
                         setTip(err, false, true);
@@ -1021,12 +1022,9 @@ public class PlayFragment extends BaseLazyFragment {
                             playUrl(playUrl + url, headers);
                         }
                     } catch (Throwable th) {
-//                        errorWithRetry("获取播放信息错误", true);
-//                        Toast.makeText(mContext, "获取播放信息错误1", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    //获取播放信息错误后只需再重试一次
-                    setTip("获取播放信息错误", false, true);
+                    errorWithRetry("获取播放信息错误", true);
                 }
             }
         });
@@ -1168,7 +1166,7 @@ public class PlayFragment extends BaseLazyFragment {
         if (!hasNext) {
             Toast.makeText(requireContext(), "已经是最后一集了!", Toast.LENGTH_SHORT).show();
             return;
-        }else {
+        } else {
             mVodInfo.playIndex++;
         }
         play(false);
@@ -1196,7 +1194,7 @@ public class PlayFragment extends BaseLazyFragment {
     boolean autoRetry() {
         long currentTime = System.currentTimeMillis();
         // 如果距离上次重试超过 10 秒（10000 毫秒），重置重试次数
-        if (autoRetryCount < 2 && currentTime - lastRetryTime > 10_000) {
+        if (currentTime - lastRetryTime > 60_000) {
             LOG.i("echo-reset-autoRetryCount");
             autoRetryCount = 0;
         }
@@ -1214,7 +1212,7 @@ public class PlayFragment extends BaseLazyFragment {
                 //切换播放器不占用重试次数
                 if (mController.switchPlayer()) {
                     autoRetryCount++;
-                    webPlayUrl=mController.getWebPlayUrlIfNeeded(webPlayUrl);
+ //                   webPlayUrl = mController.getWebPlayUrlIfNeeded(webPlayUrl);
                 } else {
 //                    Toast.makeText(mContext, "自动切换播放器重试", Toast.LENGTH_SHORT).show();
                 }
