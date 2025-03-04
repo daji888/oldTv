@@ -60,9 +60,9 @@ public class IjkmPlayer extends IjkPlayer {
         // 在每个数据包之后启用 I/O 上下文的刷新
   //      mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "flush_packets", 1);
         // 当 CPU 处理不过来的时候丢帧帧数，默认为 0，参数范围是 [-1, 120]
-        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 1);
+  //      mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 1);
         // 设置视频流格式
-        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "overlay-format", IjkMediaPlayer.SDL_FCC_RV32);
+  //      mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "overlay-format", IjkMediaPlayer.SDL_FCC_RV32);
         //开启内置字幕
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "subtitle", 1);
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "dns_cache_clear", 1);
@@ -80,12 +80,12 @@ public class IjkmPlayer extends IjkPlayer {
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 0);
 
         if (Hawk.get(HawkConfig.PLAYER_IS_LIVE)) {
-            LOG.i("type-直播");
-            mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0);
+            LOG.i("echo-type-直播");
+//           mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0);
 //            mMediaPlayer.setOption(tv.IjkMediaPlayer.OPT_CATEGORY_FORMAT, "fflags", "nobuffer"); // 减少协议层缓冲
         } else {
-            LOG.i("type-点播");
-            mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 1);
+            LOG.i("echo-type-点播");
+//            mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 1);
         }
         super.setOptions();
     }
@@ -129,7 +129,7 @@ public class IjkmPlayer extends IjkPlayer {
                     break;
 
                 case M3U8:
-                    // 直播且是ijk的时候自动自动走代理解决DNS
+                    // 直播且是ijk的时候自动走代理解决DNS
                     if (Hawk.get(HawkConfig.PLAYER_IS_LIVE, false) ) {
                         URI uri = new URI(path);
                         String host = uri.getHost();
