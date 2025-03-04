@@ -628,6 +628,7 @@ public class PlayActivity extends BaseActivity {
                 @Override
                 public void run() {
                     if (finish) {
+                        setTip(err, false, true);
                         Toast.makeText(mContext, err, Toast.LENGTH_SHORT).show();
                         finish();
                     } else {
@@ -989,8 +990,7 @@ public class PlayActivity extends BaseActivity {
                     } catch (Throwable th) {
                     }
                 } else {
-                    //获取播放信息错误后只需再重试一次
-                    setTip("获取播放信息错误", false, true);
+                    errorWithRetry("获取播放信息错误", true);
                 }
             }
         });
@@ -1175,7 +1175,8 @@ public class PlayActivity extends BaseActivity {
     boolean autoRetry() {
         long currentTime = System.currentTimeMillis();
         // 如果距离上次重试超过 10 秒（10000 毫秒），重置重试次数
-        if (autoRetryCount < 2 && currentTime - lastRetryTime > 10_000) {
+        if (currentTime - lastRetryTime > 60_000) {
+            LOG.i("echo-reset-autoRetryCount");
             autoRetryCount = 0;
         }
         lastRetryTime = currentTime;  // 更新上次调用时间
@@ -1191,7 +1192,7 @@ public class PlayActivity extends BaseActivity {
             } else {
                 if (mController.switchPlayer()) {
                     autoRetryCount++;
-                    webPlayUrl=mController.getWebPlayUrlIfNeeded(webPlayUrl);
+ //                   webPlayUrl = mController.getWebPlayUrlIfNeeded(webPlayUrl);
                 } else {
 //                    Toast.makeText(mContext, "自动切换播放器重试", Toast.LENGTH_SHORT).show();
                 }
