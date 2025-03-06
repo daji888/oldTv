@@ -262,6 +262,9 @@ public class PlayActivity extends BaseActivity {
                     play(true);
                 } else {
                     if (webPlayUrl != null && !webPlayUrl.isEmpty()) {
+                        stopParse();
+                        initParseLoadFound();
+                        if (mVideoView != null) mVideoView.release();
                         playUrl(webPlayUrl,webHeaderMap);
                     } else {
                         play(false);
@@ -1198,6 +1201,9 @@ public class PlayActivity extends BaseActivity {
                 }
                 //第一次重试直接带着原地址继续播放
                 if (webPlayUrl != null) {
+                    stopParse();
+                    initParseLoadFound();
+                    if (mVideoView != null) mVideoView.release();
                     playUrl(webPlayUrl, webHeaderMap);
                 } else {
                     play(false);
