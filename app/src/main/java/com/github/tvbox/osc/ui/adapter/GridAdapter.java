@@ -34,7 +34,7 @@ public class GridAdapter extends BaseQuickAdapter<Movie.Video, BaseViewHolder> {
 
     @Override
     protected void convert(BaseViewHolder helper, Movie.Video item) {
-        if(this.mShowList) {
+        if (this.mShowList) {
             helper.setText(R.id.tvNote, item.note);
             helper.setText(R.id.tvName, item.name);
             ImageView ivThumb = helper.getView(R.id.ivThumb);
