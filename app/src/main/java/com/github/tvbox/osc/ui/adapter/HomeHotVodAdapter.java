@@ -58,7 +58,7 @@ public class HomeHotVodAdapter extends BaseQuickAdapter<Movie.Video, BaseViewHol
         ImageView ivThumb = helper.getView(R.id.ivThumb);
         //由于部分电视机使用glide报错
         if (!TextUtils.isEmpty(item.pic)) {
-            item.pic=item.pic.trim();
+            item.pic = item.pic.trim();
             Picasso.get()
                     .load(DefaultConfig.checkReplaceProxy(item.pic))
                     .transform(new RoundTransformation(MD5.string2MD5(item.pic))
