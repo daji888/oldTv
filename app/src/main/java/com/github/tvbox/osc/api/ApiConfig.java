@@ -437,11 +437,11 @@ public class ApiConfig {
                         }
                     }
 
-                    //直播播放器类型
+          /*          //直播播放器类型
                     if (livesOBJ.has("playerType")) {
-                        String livePlayType =livesOBJ.get("playerType").getAsString();
+                        String livePlayType = livesOBJ.get("playerType").getAsString();
                         Hawk.put(HawkConfig.LIVE_PLAY_TYPE,livePlayType);
-                    }
+                    }  */
 
  //               LiveChannelGroup liveChannelGroup = new LiveChannelGroup();
  //               liveChannelGroup.setGroupName(url);
@@ -470,11 +470,11 @@ public class ApiConfig {
                                 }
                             }
 
-                            //直播播放器类型
+               /*             //直播播放器类型
                             if (livesOBJ.has("playerType")) {
-                                String livePlayType =livesOBJ.get("playerType").getAsString();
+                                String livePlayType = livesOBJ.get("playerType").getAsString();
                                 Hawk.put(HawkConfig.LIVE_PLAY_TYPE,livePlayType);
-                            }
+                            }  */
 
                         if (url.startsWith("http")) {
                             // takagen99: Capture Live URL into Settings
