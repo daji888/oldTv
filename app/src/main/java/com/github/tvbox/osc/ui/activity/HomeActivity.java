@@ -23,6 +23,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
 import com.github.tvbox.osc.R;
@@ -66,6 +67,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import me.jessyan.autosize.utils.AutoSizeUtils;
 
@@ -133,6 +135,18 @@ public class HomeActivity extends BaseActivity {
         this.mGridView.setLayoutManager(new V7LinearLayoutManager(this.mContext, 0, false));
         this.mGridView.setSpacingWithMargins(0, AutoSizeUtils.dp2px(this.mContext, 10.0f));
         this.mGridView.setAdapter(this.sortAdapter);
+        sortAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+              @Override
+              public void onChanged() {
+                  mGridView.post(() -> {
+                      View firstChild = Objects.requireNonNull(mGridView.getLayoutManager()).findViewByPosition(0);
+                      if (firstChild != null) {
+                          mGridView.setSelectedPosition(0);
+                          firstChild.requestFocus();
+                      }
+                  });
+              }
+          });
         this.mGridView.setOnItemListener(new TvRecyclerView.OnItemListener() {
             public void onItemPreSelected(TvRecyclerView tvRecyclerView, View view, int position) {
                 if (view != null && !HomeActivity.this.isDownOrUp) {
