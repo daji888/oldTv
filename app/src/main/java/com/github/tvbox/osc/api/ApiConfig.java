@@ -154,7 +154,6 @@ public class ApiConfig {
             }
         }
         String TempKey = null, configUrl = "", pk = ";pk;";
-        apiUrl = apiUrl.replace("file://", "clan://localhost/");
         if (apiUrl.contains(pk)) {
             String[] a = apiUrl.split(pk);
             TempKey = a[1];
@@ -871,7 +870,7 @@ public class ApiConfig {
 
     String clanContentFix(String lanLink, String content) {
         String fix = lanLink.substring(0, lanLink.indexOf("/file/") + 6);
-        return content.replace("clan://localhost/", fix).replace("file://", fix);
+        return content.replace("clan://", fix);
     }
 
     String fixContentPath(String url, String content) {
