@@ -173,7 +173,6 @@ public class ApiConfig {
             configUrl = apiUrl;
         }
         String configKey = TempKey;
-        String finalApiUrl = apiUrl;
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.readTimeout(10, TimeUnit.SECONDS); //设置当前请求的读取超时时间
         builder.writeTimeout(10, TimeUnit.SECONDS); //设置当前请求的写入超时时间
@@ -187,7 +186,7 @@ public class ApiConfig {
                     public void onSuccess(Response<String> response) {
                         try {
                             String json = response.body();
-                            parseJson(finalApiUrl, json);
+                            parseJson(apiUrl, json);
                             try {
                                 File cacheDir = cache.getParentFile();
                                 if (!cacheDir.exists())
@@ -213,7 +212,7 @@ public class ApiConfig {
                         super.onError(response);
                         if (cache.exists()) {
                             try {
-                                parseJson(finalApiUrl, cache);
+                                parseJson(apiUrl, cache);
                                 callback.success();
                                 return;
                             } catch (Throwable th) {
@@ -231,11 +230,11 @@ public class ApiConfig {
                             result = FindResult(response.body().string(), configKey);
                         }
 
-                        if (finalApiUrl.startsWith("clan")) {
-                            result = clanContentFix(clanToAddress(finalApiUrl), result);
+                        if (apiUrl.startsWith("clan")) {
+                            result = clanContentFix(clanToAddress(apiUrl), result);
                         }
                         //假相對路徑
-                        result = fixContentPath(finalApiUrl,result);
+                        result = fixContentPath(apiUrl,result);
                         return result;
                     }
                 });
