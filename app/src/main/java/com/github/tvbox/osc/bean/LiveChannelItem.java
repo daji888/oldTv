@@ -1,6 +1,7 @@
 package com.github.tvbox.osc.bean;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * @author pj567
@@ -101,4 +102,18 @@ public class LiveChannelItem {
     public String getSourceName() {
         return channelSourceNames.get(sourceIndex);
     }
+
+    @Override
+     public boolean equals(Object o) {
+         if (this == o) return true;
+         if (o == null || getClass() != o.getClass()) return false;
+         LiveChannelItem that = (LiveChannelItem) o;
+         return Objects.equals(channelName, that.channelName)
+                 && Objects.equals(channelUrls.get(sourceIndex), that.getUrl());
+     }
+ 
+     @Override
+     public int hashCode() {
+         return Objects.hash(channelName, channelUrls.get(sourceIndex));
+     }
 }
