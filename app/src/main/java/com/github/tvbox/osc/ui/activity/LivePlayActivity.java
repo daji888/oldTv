@@ -678,19 +678,48 @@ public class LivePlayActivity extends BaseActivity {
             return;
         }
         if (tvLeftChannelListLayout.getVisibility() == View.INVISIBLE) {
-            //重新载入上一次状态
-            liveChannelItemAdapter.setNewData(getLiveChannels(currentChannelGroupIndex));
-            if (currentLiveChannelIndex > -1)
+            refreshChannelList(currentChannelGroupIndex);
+            if (currentLiveChannelIndex > -1) {
                 mLiveChannelView.scrollToPosition(currentLiveChannelIndex);
-            mLiveChannelView.setSelection(currentLiveChannelIndex);
-            mChannelGroupView.scrollToPosition(currentChannelGroupIndex);
-            mChannelGroupView.setSelection(currentChannelGroupIndex);
-            mHandler.postDelayed(mFocusCurrentChannelAndShowChannelList, 200);
+                mLiveChannelView.setSelection(currentLiveChannelIndex);
+             }
+ //            mChannelGroupView.scrollToPosition(currentChannelGroupIndex);
+ //            mChannelGroupView.setSelection(currentChannelGroupIndex);
+             mHandler.postDelayed(mFocusCurrentChannelAndShowChannelList, 50);
         } else {
             mHandler.removeCallbacks(mHideChannelListRun);
             mHandler.post(mHideChannelListRun);
         }
     }
+
+     private int mLastChannelGroupIndex = -1;
+     private List<LiveChannelItem> mLastChannelList = new ArrayList<>();
+ 
+     private void refreshChannelList(int currentChannelGroupIndex) {
+         // 1. 获取新数据
+         List<LiveChannelItem> newChannels = getLiveChannels(currentChannelGroupIndex);
+         // 2. 判断数据是否变化（相同组索引且数据内容未变）
+         if (currentChannelGroupIndex == mLastChannelGroupIndex
+                 && isSameData(newChannels, mLastChannelList)) {
+             return; // 数据未变化，跳过刷新 解决部分直播频道过多时卡顿
+         }
+         mLastChannelGroupIndex = currentChannelGroupIndex;
+         mLastChannelList = new ArrayList<>(newChannels);
+         liveChannelItemAdapter.setNewData(newChannels);
+     }
+ 
+     // 对比两个列表内容是否相同
+     private boolean isSameData(List<LiveChannelItem> list1, List<LiveChannelItem> list2) {
+ //        return list1.size() == list2.size();
+         if (list1 == list2) return true;
+         if (list1 == null || list2 == null || list1.size() != list2.size()) return false;
+         for (int i = 0; i < list1.size(); i++) {
+             if (!list1.get(i).equals(list2.get(i))) {
+                 return false;
+             }
+         }
+         return true;
+     }
 
     private Runnable mFocusCurrentChannelAndShowChannelList = new Runnable() {
         @Override
@@ -842,7 +871,7 @@ public class LivePlayActivity extends BaseActivity {
             selectSettingGroup(0, false);
             mSettingGroupView.scrollToPosition(0);
             mSettingItemView.scrollToPosition(currentLiveChannelItem.getSourceIndex());
-            mHandler.postDelayed(mFocusAndShowSettingGroup, 200);
+            mHandler.postDelayed(mFocusAndShowSettingGroup, 50);
         } else {
             mHandler.removeCallbacks(mHideSettingLayoutRun);
             mHandler.post(mHideSettingLayoutRun);
