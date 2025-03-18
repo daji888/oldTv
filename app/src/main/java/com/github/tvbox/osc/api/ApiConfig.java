@@ -304,7 +304,6 @@ public class ApiConfig {
                      public void onSuccess(Response<File> response) {
                          File file = response.body();
                          if (file != null && file.exists()) {
-                             LOG.i("echo---jar Trying to load: " + file.getAbsolutePath());
                              try {
                                  if (jarLoader.load(file.getAbsolutePath())) {
                                      callback.success();
@@ -511,7 +510,7 @@ public class ApiConfig {
                         
                             //直播播放器类型
                             if (livesOBJ.has("playerType")) {
-                                String livePlayType =livesOBJ.get("playerType").getAsString();
+                                String livePlayType = livesOBJ.get("playerType").getAsString();
                                 Hawk.put(HawkConfig.LIVE_PLAY_TYPE,livePlayType);
                             }
 
