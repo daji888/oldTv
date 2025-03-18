@@ -1264,7 +1264,7 @@ public class VodController extends BaseController {
             int playerType = mPlayerConfig.getInt("pl");
             int p_type = (playerType == 1) ? playerType + 1 : (playerType == 2) ? playerType - 1 : playerType;
             if (p_type != playerType) {
-                LOG.i("echo-切换播放器");
+                LOG.i("echo-切换播放器" + (p_type == 1?"IJK":"exo"));
                 mPlayerConfig.put("pl", p_type);
                 updatePlayerCfgView();
                 listener.updatePlayerCfg();
