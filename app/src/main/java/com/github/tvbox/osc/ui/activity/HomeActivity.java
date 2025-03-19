@@ -656,12 +656,12 @@ public class HomeActivity extends BaseActivity {
     }
 
     void showSiteSwitch() {
-        List<SourceBean> sites = ApiConfig.get().getSourceBeanList();
+        List<SourceBean> sites = ApiConfig.get().getSwitchSourceBeanList();
         if (sites.size() > 0) {
             SelectDialog<SourceBean> dialog = new SelectDialog<>(HomeActivity.this);
             TvRecyclerView tvRecyclerView = dialog.findViewById(R.id.list);
             int spanCount;
-            spanCount = (int)Math.floor(sites.size()/60);
+            spanCount = (int)Math.floor(sites.size() / 30);
             spanCount = Math.min(spanCount, 2);
             tvRecyclerView.setLayoutManager(new V7GridLayoutManager(dialog.getContext(), spanCount+1));
             ConstraintLayout cl_root = dialog.findViewById(R.id.cl_root);
