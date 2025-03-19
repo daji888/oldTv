@@ -8,9 +8,9 @@ import com.orhanobut.hawk.Hawk;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
- import java.util.Map;
- import java.util.List;
- import java.util.Iterator;
+import java.util.Map;
+import java.util.List;
+import java.util.Iterator;
 
 public class SearchHelper {
 
