@@ -991,6 +991,9 @@ public class PlayFragment extends BaseLazyFragment {
                         }
                         String flag = info.optString("flag");
                         String url = info.getString("url");
+                        if (url.startsWith("[")) {
+                             url = mController.firstUrlByArray(url);
+                         }
                         HashMap<String, String> headers = null;
                         webUserAgent = null;
                         webHeaderMap = null;
