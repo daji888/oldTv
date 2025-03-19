@@ -208,7 +208,11 @@ public class GridFragment extends BaseLazyFragment {
                     bundle.putString("title", video.name);
                     if (video.tag != null && (video.tag.equals("folder") || video.tag.equals("cover"))) {
                         focusedView = view;
-                        changeView(video.id,video.tag.equals("cover"));
+                        if (("12".indexOf(getUITag()) != -1)) {
+                             changeView(video.id,video.tag.equals("folder"));
+                         } else {
+                             changeView(video.id,false);
+                         }
                     }
                     else {
                         if (video.id == null || video.id.isEmpty() || video.id.startsWith("msearch:")) {
@@ -260,11 +264,10 @@ public class GridFragment extends BaseLazyFragment {
                     }
                     page++;
                     maxPage = absXml.movie.pagecount;
-
-                    if (maxPage>0 && page > maxPage) {
+                    if (maxPage > 0 && page > maxPage) {
                         gridAdapter.loadMoreEnd();
                         gridAdapter.setEnableLoadMore(false);
-                        if(page>2)Toast.makeText(getContext(), "最后一页啦", Toast.LENGTH_SHORT).show();
+                        if (page > 2)Toast.makeText(getContext(), "最后一页啦", Toast.LENGTH_SHORT).show();
                     } else {
                         gridAdapter.loadMoreComplete();
                         gridAdapter.setEnableLoadMore(true);
