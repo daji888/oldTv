@@ -272,7 +272,7 @@ public class GridFragment extends BaseLazyFragment {
                 } else {
                     if (page == 1) {
                         showEmpty();
-                     }else {
+                    } else {
                         Toast.makeText(getContext(), "最后一页啦", Toast.LENGTH_SHORT).show();
                         gridAdapter.loadMoreEnd();
                     }
