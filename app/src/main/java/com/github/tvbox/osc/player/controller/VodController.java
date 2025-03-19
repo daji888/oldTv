@@ -41,6 +41,7 @@ import com.owen.tvrecyclerview.widget.TvRecyclerView;
 import com.owen.tvrecyclerview.widget.V7LinearLayoutManager;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -1282,4 +1283,19 @@ public class VodController extends BaseController {
         switchPlayerCount++;
         return false;
     }
+
+    public String firstUrlByArray(String url) {
+         try {
+             JSONArray urlArray = new JSONArray(url);
+             for (int i = 0; i < urlArray.length(); i++) {
+                 String item = urlArray.getString(i);
+                 if (item.contains("http")) {
+                     url = item;
+                     break; // 找到第一个立即终止循环
+                 }
+             }
+         } catch (JSONException e) {
+         }
+         return url;
+     }
 }
