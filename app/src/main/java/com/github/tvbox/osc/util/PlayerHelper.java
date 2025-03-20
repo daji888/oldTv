@@ -278,12 +278,12 @@ public class PlayerHelper {
         return th.getLocalizedMessage();
     }
 
-    public static String getDisplaySpeed(long speed) {
+    public static String getDisplaySpeed(long speed,boolean show) {
         if(speed > 1048576)
             return new DecimalFormat("#.00").format(speed / 1048576d) + "Mb/s";
         else if(speed > 1024)
             return (speed / 1024) + "Kb/s";
         else
-            return speed > 0?speed + "B/s":"";
+            return speed > 0?speed + "B/s":(show?"0B/s":"");
     }
 }

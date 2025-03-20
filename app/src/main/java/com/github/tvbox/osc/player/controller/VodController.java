@@ -41,6 +41,7 @@ import com.owen.tvrecyclerview.widget.TvRecyclerView;
 import com.owen.tvrecyclerview.widget.V7LinearLayoutManager;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -166,7 +167,7 @@ public class VodController extends BaseController {
             Date date = new Date();
             SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
             mPlayPauseTime.setText(timeFormat.format(date));
-            String speed = PlayerHelper.getDisplaySpeed(mControlWrapper.getTcpSpeed());
+            String speed = PlayerHelper.getDisplaySpeed(mControlWrapper.getTcpSpeed(), true);
             mPlayLoadNetSpeedRightTop.setText(speed);
             mPlayLoadNetSpeed.setText(speed);
             String width = Integer.toString(mControlWrapper.getVideoSize()[0]);
@@ -1264,11 +1265,10 @@ public class VodController extends BaseController {
             int playerType = mPlayerConfig.getInt("pl");
             int p_type = (playerType == 1) ? playerType + 1 : (playerType == 2) ? playerType - 1 : playerType;
             if (p_type != playerType) {
-                LOG.i("echo-切换播放器" + (p_type == 1?"IJK":"exo"));
+                Toast.makeText(getContext(), "切换到" + (p_type == 1?"IJK":"EXO") + "播放器重试", Toast.LENGTH_SHORT).show();
                 mPlayerConfig.put("pl", p_type);
                 updatePlayerCfgView();
                 listener.updatePlayerCfg();
-                listener.replay(false);
             } else {
                 return true;
             }
@@ -1282,4 +1282,19 @@ public class VodController extends BaseController {
         switchPlayerCount++;
         return false;
     }
+
+    public String firstUrlByArray(String url) {
+         try {
+             JSONArray urlArray = new JSONArray(url);
+             for (int i = 0; i < urlArray.length(); i++) {
+                 String item = urlArray.getString(i);
+                 if (item.contains("http")) {
+                     url = item;
+                     break; // 找到第一个立即终止循环
+                 }
+             }
+         } catch (JSONException e) {
+         }
+         return url;
+     }
 }

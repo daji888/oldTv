@@ -260,7 +260,6 @@ public class ApiConfig {
         }
 
         boolean isJarInImg = jarUrl.startsWith("img+");
-        LOG.i("echo---jar_start");
         jarUrl = jarUrl.replace("img+", "");
         OkGo.<File>get(jarUrl)
                 .headers("User-Agent", userAgent)
@@ -306,6 +305,7 @@ public class ApiConfig {
                          if (file != null && file.exists()) {
                              try {
                                  if (jarLoader.load(file.getAbsolutePath())) {
+                                     LOG.i("echo---load-jar-success");
                                      callback.success();
                                  } else {
                                      LOG.e("echo---jar Loader returned false");
@@ -333,7 +333,6 @@ public class ApiConfig {
      }
 
     private void parseJson(String apiUrl, File f) throws Throwable {
-        System.out.println("从本地缓存加载" + f.getAbsolutePath());
         BufferedReader bReader = new BufferedReader(new InputStreamReader(new FileInputStream(f), "UTF-8"));
         StringBuilder sb = new StringBuilder();
         String s = "";
@@ -345,6 +344,7 @@ public class ApiConfig {
     }
 
     private void parseJson(String apiUrl, String jsonStr) {
+        LOG.i("echo-parseJson"+jsonStr);
         JsonObject infoJson = new Gson().fromJson(jsonStr, JsonObject.class);
         // spider
         spider = DefaultConfig.safeJsonString(infoJson, "spider", "");
@@ -374,15 +374,17 @@ public class ApiConfig {
             sb.setPlayerType(DefaultConfig.safeJsonInt(obj, "playerType", -1));
             sb.setCategories(DefaultConfig.safeJsonStringList(obj, "categories"));
             sb.setClickSelector(DefaultConfig.safeJsonString(obj, "click", ""));
-            if (firstSite == null)
+            if (firstSite == null && sb.getFilterable() == 1)
                 firstSite = sb;
             sourceBeanList.put(siteKey, sb);
         }
         if (sourceBeanList != null && sourceBeanList.size() > 0) {
             String home = Hawk.get(HawkConfig.HOME_API, "");
             SourceBean sh = getSource(home);
-            if (sh == null)
-                setSourceBean(firstSite);
+            if (sh == null) {
+                 assert firstSite != null;
+                 setSourceBean(firstSite);
+             }
             else
                 setSourceBean(sh);
         }
@@ -834,6 +836,16 @@ public class ApiConfig {
     public List<SourceBean> getSourceBeanList() {
         return new ArrayList<>(sourceBeanList.values());
     }
+
+    public List<SourceBean> getSwitchSourceBeanList() {
+         List<SourceBean> filteredList = new ArrayList<>();
+         for (SourceBean bean : sourceBeanList.values()) {
+             if (bean.getFilterable() == 1) {
+                 filteredList.add(bean);
+             }
+         }
+         return filteredList;
+     }
 
     public List<ParseBean> getParseBeanList() {
         return parseBeanList;

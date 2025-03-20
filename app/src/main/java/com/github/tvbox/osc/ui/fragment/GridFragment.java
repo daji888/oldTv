@@ -83,14 +83,14 @@ public class GridFragment extends BaseLazyFragment {
         initData();
     }
 
-    private void changeView(String id,Boolean isFolder){
-        if(isFolder){
+    private void changeView(String id,Boolean isFolder) {
+        if (isFolder) {
             this.sortData.flag ="1"; // 修改sortData.flag
-        }else {
+        } else {
             this.sortData.flag ="2"; // 修改sortData.flag
         }
         initView();
-        this.sortData.id =id; // 修改sortData.id为新的ID
+        this.sortData.id = id; // 修改sortData.id为新的ID
         initViewModel();
         initData();
     }
@@ -103,8 +103,8 @@ public class GridFragment extends BaseLazyFragment {
     // 是否允许聚合搜索 sortData.flag的第二个字符为‘1’时允许聚搜
     public boolean enableFastSearch(){  return sortData.flag == null || sortData.flag.length() < 2 || (sortData.flag.charAt(1) == '1'); }
     // 保存当前页面
-    private void saveCurrentView(){
-        if(this.mGridView == null) return;
+    private void saveCurrentView() {
+        if (this.mGridView == null) return;
         GridInfo info = new GridInfo();
         info.sortID = this.sortData.id;
         info.mGridView = this.mGridView;
@@ -116,8 +116,8 @@ public class GridFragment extends BaseLazyFragment {
         this.mGrids.push(info);
     }
     // 丢弃当前页面，将页面还原成上一个保存的页面
-    public boolean restoreView(){
-        if(mGrids.empty()) return false;
+    public boolean restoreView() {
+        if (mGrids.empty()) return false;
         this.showSuccess();
         ((ViewGroup) mGridView.getParent()).removeView(this.mGridView); // 重父窗口移除当前控件
         GridInfo info = mGrids.pop();// 还原上次保存的控件
@@ -130,15 +130,15 @@ public class GridFragment extends BaseLazyFragment {
         this.focusedView = info.focusedView;
         this.mGridView.setVisibility(View.VISIBLE);
 //        if(this.focusedView != null){ this.focusedView.requestFocus(); }
-        if(mGridView != null) mGridView.requestFocus();
+        if (mGridView != null) mGridView.requestFocus();
         return true;
     }
     // 更改当前页面
-    private void createView(){
+    private void createView() {
         this.saveCurrentView(); // 保存当前页面
-        if(mGridView == null){ // 从layout中拿view
+        if (mGridView == null) { // 从layout中拿view
             mGridView = findViewById(R.id.mGridView);
-        }else{ // 复制当前view
+        } else { // 复制当前view
             TvRecyclerView v3 = new TvRecyclerView(this.mContext);
             v3.setSpacingWithMargins(10,10);
             v3.setLayoutParams(mGridView.getLayoutParams());
@@ -159,9 +159,9 @@ public class GridFragment extends BaseLazyFragment {
     private void initView() {
         this.createView();
         mGridView.setAdapter(gridAdapter);
-        if(isFolederMode()){
+        if (isFolederMode()) {
             mGridView.setLayoutManager(new V7LinearLayoutManager(this.mContext, 1, false));
-        }else{
+        } else {
             mGridView.setLayoutManager(new V7GridLayoutManager(this.mContext, isBaseOnWidth() ? 5 : 6));
         }
 
@@ -206,22 +206,25 @@ public class GridFragment extends BaseLazyFragment {
                     bundle.putString("id", video.id);
                     bundle.putString("sourceKey", video.sourceKey);
                     bundle.putString("title", video.name);
-                    if(("12".indexOf(getUITag()) != -1) && (video.tag.equals("folder") || video.tag.equals("cover"))){
+                    if (video.tag != null && (video.tag.equals("folder") || video.tag.equals("cover"))) {
                         focusedView = view;
-                        changeView(video.id,video.tag.equals("folder"));
+                        if (("12".indexOf(getUITag()) != -1)) {
+                             changeView(video.id,video.tag.equals("folder"));
+                         } else {
+                             changeView(video.id,false);
+                         }
                     }
-                    else{
-                        if(video.id == null || video.id.isEmpty() || video.id.startsWith("msearch:")){
-                            if(Hawk.get(HawkConfig.FAST_SEARCH_MODE, false) && enableFastSearch()){
+                    else {
+                        if (video.id == null || video.id.isEmpty() || video.id.startsWith("msearch:")) {
+                            if (Hawk.get(HawkConfig.FAST_SEARCH_MODE, false) && enableFastSearch()) {
                                 jumpActivity(FastSearchActivity.class, bundle);
-                            }else {
+                            } else {
                                 jumpActivity(SearchActivity.class, bundle);
                             }
-                        }else {
+                        } else {
                             jumpActivity(DetailActivity.class, bundle);
                         }
                     }
-
                 }
             }
         });
@@ -261,19 +264,18 @@ public class GridFragment extends BaseLazyFragment {
                     }
                     page++;
                     maxPage = absXml.movie.pagecount;
-
-                    if (maxPage>0 && page > maxPage) {
+                    if (maxPage > 0 && page > maxPage) {
                         gridAdapter.loadMoreEnd();
                         gridAdapter.setEnableLoadMore(false);
-                        if(page>2)Toast.makeText(getContext(), "最后一页啦", Toast.LENGTH_SHORT).show();
+                        if (page > 2)Toast.makeText(getContext(), "最后一页啦", Toast.LENGTH_SHORT).show();
                     } else {
                         gridAdapter.loadMoreComplete();
                         gridAdapter.setEnableLoadMore(true);
                     }
                 } else {
-                    if(page == 1){
+                    if (page == 1) {
                         showEmpty();
-                    }else{
+                    } else {
                         Toast.makeText(getContext(), "最后一页啦", Toast.LENGTH_SHORT).show();
                         gridAdapter.loadMoreEnd();
                     }
@@ -296,7 +298,7 @@ public class GridFragment extends BaseLazyFragment {
     }
 
     private void toggleFilterColor() {
-        if (sortData.filters != null && !sortData.filters.isEmpty()) {
+        if (sortData != null && sortData.filters != null && !sortData.filters.isEmpty()) {
             int count = sortData.filterSelectCount();
             EventBus.getDefault().post(new RefreshEvent(RefreshEvent.TYPE_FILTER_CHANGE, count));
         }

@@ -54,7 +54,8 @@ public class JarLoader {
     }
 
     private boolean loadClassLoader(String jar, String key) {
-        final String TAG = "JarLoader";
+         if (classLoaders.contains(key)) return true;
+         final String TAG = "JarLoader";
          final File jarFile = new File(jar);
          final AtomicBoolean success = new AtomicBoolean(false);
          DexClassLoader classLoader = null;

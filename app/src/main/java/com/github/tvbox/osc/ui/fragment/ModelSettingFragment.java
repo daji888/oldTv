@@ -224,10 +224,12 @@ public class ModelSettingFragment extends BaseLazyFragment {
             @Override
             public void onClick(View v) {
                 FastClickCheckUtil.check(v);
-                List<SourceBean> sites = ApiConfig.get().getSourceBeanList();
+                List<SourceBean> sites = ApiConfig.get().getSwitchSourceBeanList();
                 if (sites.size() > 0) {
                     SelectDialog<SourceBean> dialog = new SelectDialog<>(mActivity);
                     dialog.setTip("请选择首页数据源");
+                    int select = sites.indexOf(ApiConfig.get().getHomeSourceBean());
+                    if (select < 0) select = 0;
                     dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<SourceBean>() {
                         @Override
                         public void click(SourceBean value, int pos) {
@@ -256,7 +258,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
                         public boolean areContentsTheSame(@NonNull @NotNull SourceBean oldItem, @NonNull @NotNull SourceBean newItem) {
                             return oldItem.getKey().equals(newItem.getKey());
                         }
-                    }, sites, sites.indexOf(ApiConfig.get().getHomeSourceBean()));
+                    }, sites, select);
                     dialog.show();
                 }
             }

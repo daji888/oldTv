@@ -656,18 +656,20 @@ public class HomeActivity extends BaseActivity {
     }
 
     void showSiteSwitch() {
-        List<SourceBean> sites = ApiConfig.get().getSourceBeanList();
+        List<SourceBean> sites = ApiConfig.get().getSwitchSourceBeanList();
         if (sites.size() > 0) {
             SelectDialog<SourceBean> dialog = new SelectDialog<>(HomeActivity.this);
             TvRecyclerView tvRecyclerView = dialog.findViewById(R.id.list);
             int spanCount;
-            spanCount = (int)Math.floor(sites.size()/60);
+            spanCount = (int)Math.floor(sites.size() / 30);
             spanCount = Math.min(spanCount, 2);
             tvRecyclerView.setLayoutManager(new V7GridLayoutManager(dialog.getContext(), spanCount+1));
             ConstraintLayout cl_root = dialog.findViewById(R.id.cl_root);
             ViewGroup.LayoutParams clp = cl_root.getLayoutParams();
             clp.width = AutoSizeUtils.mm2px(dialog.getContext(), 380+200*spanCount);
             dialog.setTip("请选择首页数据源");
+            int select = sites.indexOf(ApiConfig.get().getHomeSourceBean());
+            if (select < 0) select = 0;
             dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<SourceBean>() {
                 @Override
                 public void click(SourceBean value, int pos) {
@@ -694,7 +696,7 @@ public class HomeActivity extends BaseActivity {
                 public boolean areContentsTheSame(@NonNull @NotNull SourceBean oldItem, @NonNull @NotNull SourceBean newItem) {
                     return oldItem.getKey().equals(newItem.getKey());
                 }
-            }, sites, sites.indexOf(ApiConfig.get().getHomeSourceBean()));
+            }, sites, select);
             dialog.show();
         }
     }
