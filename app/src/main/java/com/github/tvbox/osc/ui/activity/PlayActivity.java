@@ -257,7 +257,6 @@ public class PlayActivity extends BaseActivity {
             @Override
             public void replay(boolean replay) {
                 autoRetryCount = 0;
-                LOG.i("echo-replay");
                 if (replay) {
                     play(true);
                 } else {
