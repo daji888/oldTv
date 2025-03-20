@@ -260,7 +260,6 @@ public class ApiConfig {
         }
 
         boolean isJarInImg = jarUrl.startsWith("img+");
-        LOG.i("echo---jar_start");
         jarUrl = jarUrl.replace("img+", "");
         OkGo.<File>get(jarUrl)
                 .headers("User-Agent", userAgent)
@@ -306,6 +305,7 @@ public class ApiConfig {
                          if (file != null && file.exists()) {
                              try {
                                  if (jarLoader.load(file.getAbsolutePath())) {
+                                     LOG.i("echo---load-jar-success");
                                      callback.success();
                                  } else {
                                      LOG.e("echo---jar Loader returned false");
@@ -333,7 +333,6 @@ public class ApiConfig {
      }
 
     private void parseJson(String apiUrl, File f) throws Throwable {
-        System.out.println("从本地缓存加载" + f.getAbsolutePath());
         BufferedReader bReader = new BufferedReader(new InputStreamReader(new FileInputStream(f), "UTF-8"));
         StringBuilder sb = new StringBuilder();
         String s = "";
