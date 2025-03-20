@@ -47,16 +47,22 @@ public class JarLoader {
      * @param cache
      */
     public boolean load(String cache) {
-        spiders.clear();
         recentJarKey = "main";
+        return loadClassLoader(cache, recentJarKey);
+    }
+ 
+    public void clear() {
+        spiders.clear();
         proxyMethods.clear();
         classLoaders.clear();
-        return loadClassLoader(cache, "main");
     }
 
     private boolean loadClassLoader(String jar, String key) {
-         if (classLoaders.containsKey(key)) return true;
          final String TAG = "JarLoader";
+         if (classLoaders.containsKey(key)) {
+             Log.i(TAG, "loadClassLoader jar缓存: " + key);
+             return true;
+         }
          final File jarFile = new File(jar);
          final AtomicBoolean success = new AtomicBoolean(false);
          DexClassLoader classLoader;
@@ -222,6 +228,7 @@ public class JarLoader {
 
     private DexClassLoader loadJarInternal(String jar, String md5, String key) {
         if (classLoaders.containsKey(key)) {
+             Log.i("JarLoader", "loadJarInternal jar缓存: " + key);
              return classLoaders.get(key);
          }
         File cache = new File(App.getInstance().getFilesDir().getAbsolutePath() + "/" + key + ".jar");
@@ -259,10 +266,14 @@ public class JarLoader {
     }
 
     public Spider getSpider(String key, String cls, String ext, String jar) {
+        if (spiders.containsKey(key)) {
+             Log.i("JarLoader", "getSpider spider缓存: " + key);
+             return spiders.get(key);
+         }
         String clsKey = cls.replace("csp_", "");
         String jarUrl = "";
         String jarMd5 = "";
-        String jarKey = "";
+        String jarKey;
         if (jar.isEmpty()) {
             jarKey = "main";
         } else {
@@ -272,17 +283,9 @@ public class JarLoader {
             jarMd5 = urls.length > 1 ? urls[1].trim() : "";
         }
         recentJarKey = jarKey;
-        if (spiders.containsKey(key))
-            return spiders.get(key);
-        DexClassLoader classLoader = null;
         assert jarKey != null;
-        if (jarKey.equals("main"))
-            classLoader = classLoaders.get("main");
-        else {
-            classLoader = loadJarInternal(jarUrl, jarMd5, jarKey);
-        }
-        if (classLoader == null)
-            return new SpiderNull();
+        DexClassLoader classLoader = jarKey.equals("main")? classLoaders.get("main"):loadJarInternal(jarUrl, jarMd5, jarKey);
+        if (classLoader == null) return new SpiderNull();
         try {
             Spider sp = (Spider) classLoader.loadClass("com.github.catvod.spider." + clsKey).newInstance();
             sp.init(App.getInstance(), ext);
