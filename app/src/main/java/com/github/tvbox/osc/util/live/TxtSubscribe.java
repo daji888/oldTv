@@ -87,10 +87,9 @@ public class TxtSubscribe {
             LinkedHashMap<String, ArrayList<String>> linkedHashMap2 = new LinkedHashMap<>();
             LinkedHashMap<String, ArrayList<String>> linkedHashMap3 = linkedHashMap2;
             while (readLine != null) {
-                if (readLine.trim().isEmpty()) {
+                if (readLine.trim().isEmpty() || readLine.startsWith("#")) {
                     readLine = bufferedReader.readLine();
                 } else {
-                    if (readLine.startsWith("#")) continue;
                     String[] split = readLine.split(",", 2);
                     if (split.length < 2) {
                         readLine = bufferedReader.readLine();
