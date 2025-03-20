@@ -33,7 +33,6 @@ public class TxtSubscribe {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 if (line.equals("")) continue;
-                if (line.startsWith("#")) continue;
                 if (line.startsWith("#EXTM3U")) continue;
                 if (isSetting(line)) continue;
                 if (line.startsWith("#EXTINF") || line.contains("#EXTINF")) {
