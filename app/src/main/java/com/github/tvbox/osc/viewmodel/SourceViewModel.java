@@ -105,11 +105,11 @@ public class SourceViewModel extends ViewModel {
 
     public static final ExecutorService spThreadPool = Executors.newSingleThreadExecutor();
 
-    //homeContent缓存，最多存储5个sourceKey的AbsSortXml对象
-     private static final Map<String, AbsSortXml> sortCache = new LinkedHashMap<String, AbsSortXml>(5, 0.75f, true) {
+    //homeContent缓存，最多存储10个sourceKey的AbsSortXml对象
+     private static final Map<String, AbsSortXml> sortCache = new LinkedHashMap<String, AbsSortXml>(10, 0.75f, true) {
          @Override
          protected boolean removeEldestEntry(Map.Entry<String, AbsSortXml> eldest) {
-             return size() > 5;
+             return size() > 10;
          }
      };
 
