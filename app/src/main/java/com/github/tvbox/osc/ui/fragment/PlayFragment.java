@@ -1215,21 +1215,17 @@ public class PlayFragment extends BaseLazyFragment {
                 play(false);
                 autoRetryCount++;
             } else {
-                //切换播放器不占用重试次数
-                if (mController.switchPlayer()) {
-                    autoRetryCount++;
- //                   webPlayUrl = mController.getWebPlayUrlIfNeeded(webPlayUrl);
-                } else {
-//                    Toast.makeText(mContext, "自动切换播放器重试", Toast.LENGTH_SHORT).show();
-                }
                 //第一次重试直接带着原地址继续播放
                 if (webPlayUrl != null) {
+                    //切换播放器不占用重试次数
+                    if (mController.switchPlayer()) autoRetryCount++;
                     stopParse();
                     initParseLoadFound();
                     if (mVideoView != null) mVideoView.release();
                     playUrl(webPlayUrl, webHeaderMap);
                 } else {
                     play(false);
+                    autoRetryCount++;
                 }
             }
             return true;
