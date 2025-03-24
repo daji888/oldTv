@@ -106,13 +106,18 @@ public class JarLoader {
              Log.i("JarLoader", "echo-loadJarInternal jar缓存: " + key);
              return classLoaders.get(key);
          }
-        File cache = new File(App.getInstance().getFilesDir().getAbsolutePath() + "/" + key + ".jar");
+        File cache = new File(App.getInstance().getFilesDir().getAbsolutePath() + "/csp/" + key + ".jar");
         if (!md5.isEmpty()) {
             if (cache.exists() && MD5.getFileMd5(cache).equalsIgnoreCase(md5)) {
                 loadClassLoader(cache.getAbsolutePath(), key);
                 return classLoaders.get(key);
             }
-        }
+        } else {
+             if (cache.exists()) {
+                 loadClassLoader(cache.getAbsolutePath(), key);
+                 return classLoaders.get(key);
+             }
+         }
         try {
             Response response = OkGo.<File>get(jar).execute();
             assert response.body() != null;
