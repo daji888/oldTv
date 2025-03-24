@@ -260,7 +260,7 @@ public class ApiConfig {
                 return;
             }
           } else {
-             if (cache.exists() && !FileUtils.isWeekAgo(cache)) {
+             if (Boolean.parseBoolean(jarCache) && cache.exists() && !FileUtils.isWeekAgo(cache)) {
                  if (jarLoader.load(cache.getAbsolutePath())) {
                      callback.success();
                  } else {
@@ -354,10 +354,12 @@ public class ApiConfig {
         parseJson(apiUrl, sb.toString());
     }
 
+    private static  String jarCache ="true";
     private void parseJson(String apiUrl, String jsonStr) {
         JsonObject infoJson = new Gson().fromJson(jsonStr, JsonObject.class);
         // spider
         spider = DefaultConfig.safeJsonString(infoJson, "spider", "");
+        jarCache = DefaultConfig.safeJsonString(infoJson, "jarCache", "true");
         // wallpaper
         wallpaper = DefaultConfig.safeJsonString(infoJson, "wallpaper", "");
         // 远端站点源
