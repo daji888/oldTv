@@ -520,4 +520,20 @@ public class FileUtils {
         }
         return;
     }
+
+    public static void saveCache(File cache,String json) {
+         try {
+             File cacheDir = cache.getParentFile();
+             if (!cacheDir.exists())
+                 cacheDir.mkdirs();
+             if (cache.exists())
+                 cache.delete();
+             FileOutputStream fos = new FileOutputStream(cache);
+             fos.write(json.getBytes("UTF-8"));
+             fos.flush();
+             fos.close();
+         } catch (Throwable th) {
+             th.printStackTrace();
+         }
+     }
 }
