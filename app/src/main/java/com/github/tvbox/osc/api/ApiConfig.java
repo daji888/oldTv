@@ -188,6 +188,7 @@ public class ApiConfig {
                     public void onSuccess(Response<String> response) {
                         try {
                             String json = response.body();
+                            LOG.i("echo-ConfigJson"+json);
                             parseJson(apiUrl, json);
                             try {
                                 File cacheDir = cache.getParentFile();
@@ -345,7 +346,6 @@ public class ApiConfig {
     }
 
     private void parseJson(String apiUrl, String jsonStr) {
-        LOG.i("echo-parseJson"+jsonStr);
         JsonObject infoJson = new Gson().fromJson(jsonStr, JsonObject.class);
         // spider
         spider = DefaultConfig.safeJsonString(infoJson, "spider", "");
