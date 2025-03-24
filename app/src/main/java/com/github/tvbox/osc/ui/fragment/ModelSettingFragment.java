@@ -843,7 +843,6 @@ public class ModelSettingFragment extends BaseLazyFragment {
             try {
                 if (cacheDir.exists()) FileUtils.cleanDirectory(cacheDir);
                 if (cspCacheDir.exists()) {
-                     ApiConfig.get().clearJarLoader();
                      FileUtils.cleanDirectory(cspCacheDir);
                  }
             } catch (Exception e) {
@@ -851,7 +850,6 @@ public class ModelSettingFragment extends BaseLazyFragment {
             }
         }).start();
         Toast.makeText(getContext(), "播放&JAR缓存已清空", Toast.LENGTH_LONG).show();
-        return;
     }
 
     private void initView() {
