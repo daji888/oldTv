@@ -257,18 +257,20 @@ public class HomeActivity extends BaseActivity {
                      String jarUrl=!jar.isEmpty()?jar:ApiConfig.get().getSpider();
                      File cspCacheDir = new File(cspCachePath + MD5.string2MD5(jarUrl)+".jar");
                      Toast.makeText(mContext, "jar缓存已清除", Toast.LENGTH_LONG).show();
-                 if (!cspCacheDir.exists()) {
-                     return;
-                }
-                new Thread(() -> {
-                     try {
-                         FileUtils.deleteFile(cspCacheDir);
-                         ApiConfig.get().clearJarLoader();
-                             refreshHome();
-                     } catch (Exception e) {
-                         e.printStackTrace();
+                     if (!cspCacheDir.exists()){
+                         Toast.makeText(mContext, "jar缓存已清除", Toast.LENGTH_LONG).show();
+                         return;
                      }
-                 }).start();
+                     new Thread(() -> {
+                         try {
+                             FileUtils.deleteFile(cspCacheDir);
+                         } catch (Exception e) {
+                             e.printStackTrace();
+                         }
+                     }).start();
+               } else {
+                     jumpActivity(SettingActivity.class);
+                 }     
             }
         });
         tvName.setOnLongClickListener(new View.OnLongClickListener() {
