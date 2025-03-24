@@ -48,8 +48,11 @@ import com.github.tvbox.osc.ui.tv.widget.NoScrollViewPager;
 import com.github.tvbox.osc.ui.tv.widget.ViewObj;
 import com.github.tvbox.osc.util.AppManager;
 import com.github.tvbox.osc.util.DefaultConfig;
+import com.github.tvbox.osc.util.FastClickCheckUtil;
+import com.github.tvbox.osc.util.FileUtils;
 import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.LOG;
+import com.github.tvbox.osc.util.MD5;
 import com.github.tvbox.osc.viewmodel.SourceViewModel;
 import com.orhanobut.hawk.Hawk;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
@@ -62,6 +65,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -218,14 +222,9 @@ public class HomeActivity extends BaseActivity {
             @Override
             public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
                 MovieSort.SortData sortData = ((MovieSort.SortData) sortAdapter.getItem(position));
-                if(dataInitOk && jarInitOk){
-                    Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    Bundle bundle = new Bundle();
-                    bundle.putBoolean("useCache", true);
-                    intent.putExtras(bundle);
-                    HomeActivity.this.startActivity(intent);
-                }else {
+                if (dataInitOk && jarInitOk) {
+                    refreshHome();
+                } else {
                     jumpActivity(SettingActivity.class);
                 }
                 return true;
@@ -251,26 +250,34 @@ public class HomeActivity extends BaseActivity {
         tvName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(dataInitOk && jarInitOk){
-                    showSiteSwitch();
-                }else {
-                    jumpActivity(SettingActivity.class);
-                }
+                FastClickCheckUtil.check(v);
+                if (dataInitOk && jarInitOk) {
+                     String cspCachePath = FileUtils.getFilePath()+"/csp/";
+                     String jar=ApiConfig.get().getHomeSourceBean().getJar();
+                     String jarUrl=!jar.isEmpty()?jar:ApiConfig.get().getSpider();
+                     File cspCacheDir = new File(cspCachePath + MD5.string2MD5(jarUrl)+".jar");
+                     Toast.makeText(mContext, "jar缓存已清除", Toast.LENGTH_LONG).show();
+                     if (!cspCacheDir.exists()){
+                         return;
+                     }
+                     new Thread(() -> {
+                         try {
+                             FileUtils.deleteFile(cspCacheDir);
+                             ApiConfig.get().clearJarLoader();
+                             refreshHome();
+                         } catch (Exception e) {
+                             e.printStackTrace();
+                         }
+                     }).start();
+               } else {
+                     jumpActivity(SettingActivity.class);
+                 }     
             }
         });
         tvName.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                if(dataInitOk && jarInitOk){
-                    Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    Bundle bundle = new Bundle();
-                    bundle.putBoolean("useCache", true);
-                    intent.putExtras(bundle);
-                    HomeActivity.this.startActivity(intent);
-                }else {
-                    jumpActivity(SettingActivity.class);
-                }
+                jumpActivity(SettingActivity.class);
                 return true;
             }
         });
@@ -674,16 +681,12 @@ public class HomeActivity extends BaseActivity {
             ViewGroup.LayoutParams clp = cl_root.getLayoutParams();
             clp.width = AutoSizeUtils.mm2px(mSiteSwitchDialog.getContext(), 380 + 200 * spanCount);
             mSiteSwitchDialog.setTip("请选择首页数据源");
-            mSiteSwitchDialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<SourceBean>() {
+        }
+        mSiteSwitchDialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<SourceBean>() {
                 @Override
                 public void click(SourceBean value, int pos) {
                     ApiConfig.get().setSourceBean(value);
-                    Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    Bundle bundle = new Bundle();
-                    bundle.putBoolean("useCache", true);
-                    intent.putExtras(bundle);
-                    HomeActivity.this.startActivity(intent);
+                    refreshHome();
                 }
 
                 @Override
@@ -701,7 +704,15 @@ public class HomeActivity extends BaseActivity {
                     return oldItem.getKey().equals(newItem.getKey());
                 }
             }, sites, select);
-        }
         mSiteSwitchDialog.show();
     }
+
+    private void refreshHome() {
+         Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+         Bundle bundle = new Bundle();
+         bundle.putBoolean("useCache", true);
+         intent.putExtras(bundle);
+         HomeActivity.this.startActivity(intent);
+     }
 }

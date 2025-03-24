@@ -19,6 +19,7 @@ import com.github.tvbox.osc.server.ControlManager;
 import com.github.tvbox.osc.util.AES;
 import com.github.tvbox.osc.util.AdBlocker;
 import com.github.tvbox.osc.util.DefaultConfig;
+import com.github.tvbox.osc.util.FileUtils;
 import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.M3U8;
 import com.github.tvbox.osc.util.LOG;
@@ -248,7 +249,7 @@ public class ApiConfig {
         String[] urls = spider.split(";md5;");
         String jarUrl = urls[0];
         String md5 = urls.length > 1 ? urls[1].trim() : "";
-        File cache = new File(App.getInstance().getFilesDir().getAbsolutePath() + "/csp.jar");
+        File cache = new File(App.getInstance().getFilesDir().getAbsolutePath() + "/csp/"+MD5.string2MD5(jarUrl)+".jar");
 
         if (!md5.isEmpty() || useCache) {
             if (cache.exists() && (useCache || MD5.getFileMd5(cache).equalsIgnoreCase(md5))) {
@@ -259,6 +260,15 @@ public class ApiConfig {
                 }
                 return;
             }
+          } else {
+             if (Boolean.parseBoolean(jarCache) && cache.exists() && !FileUtils.isWeekAgo(cache)) {
+                 if (jarLoader.load(cache.getAbsolutePath())) {
+                     callback.success();
+                 } else {
+                     callback.error("");
+                 }
+                 return;
+             }
         }
 
         boolean isJarInImg = jarUrl.startsWith("img+");
@@ -345,10 +355,12 @@ public class ApiConfig {
         parseJson(apiUrl, sb.toString());
     }
 
+    private static  String jarCache ="true";
     private void parseJson(String apiUrl, String jsonStr) {
         JsonObject infoJson = new Gson().fromJson(jsonStr, JsonObject.class);
         // spider
         spider = DefaultConfig.safeJsonString(infoJson, "spider", "");
+        jarCache = DefaultConfig.safeJsonString(infoJson, "jarCache", "true");
         // wallpaper
         wallpaper = DefaultConfig.safeJsonString(infoJson, "wallpaper", "");
         // 远端站点源
@@ -934,4 +946,8 @@ public class ApiConfig {
         }
         return url;
     }
+
+    public void clearJarLoader() {
+         jarLoader.clear();
+     }
 }
