@@ -252,12 +252,13 @@ public class HomeActivity extends BaseActivity {
             public void onClick(View v) {
                 FastClickCheckUtil.check(v);
                 if (dataInitOk && jarInitOk) {
-                     String cspCachePath = FileUtils.getFilePath()+"/csp/";
-                     String jar=ApiConfig.get().getHomeSourceBean().getJar();
-                     String jarUrl=!jar.isEmpty()?jar:ApiConfig.get().getSpider();
-                     File cspCacheDir = new File(cspCachePath + MD5.string2MD5(jarUrl)+".jar");
+                     String cspCachePath = FileUtils.getFilePath() + "/csp/";
+                     String jar = ApiConfig.get().getHomeSourceBean().getJar();
+                     String jarUrl = !jar.isEmpty()?jar:ApiConfig.get().getSpider();
+                     File cspCacheDir = new File(cspCachePath + MD5.string2MD5(jarUrl) + ".jar");
                      Toast.makeText(mContext, "jar缓存已清除", Toast.LENGTH_LONG).show();
-                     if (!cspCacheDir.exists()){
+                     if (!cspCacheDir.exists()) {
+                         refreshHome();
                          return;
                      }
                      new Thread(() -> {
