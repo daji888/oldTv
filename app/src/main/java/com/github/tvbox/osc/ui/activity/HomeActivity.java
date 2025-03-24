@@ -48,8 +48,11 @@ import com.github.tvbox.osc.ui.tv.widget.NoScrollViewPager;
 import com.github.tvbox.osc.ui.tv.widget.ViewObj;
 import com.github.tvbox.osc.util.AppManager;
 import com.github.tvbox.osc.util.DefaultConfig;
+import com.github.tvbox.osc.util.FastClickCheckUtil;
+import com.github.tvbox.osc.util.FileUtils;
 import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.LOG;
+import com.github.tvbox.osc.util.MD5;
 import com.github.tvbox.osc.viewmodel.SourceViewModel;
 import com.orhanobut.hawk.Hawk;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
@@ -62,6 +65,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -251,24 +255,37 @@ public class HomeActivity extends BaseActivity {
         tvName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(dataInitOk && jarInitOk){
-                    showSiteSwitch();
-                }else {
-                    jumpActivity(SettingActivity.class);
+                FastClickCheckUtil.check(v);
+                 String cspCachePath = FileUtils.getFilePath() + "/csp/";
+                 String jar = ApiConfig.get().getHomeSourceBean().getJar();
+                 String jarUrl = !jar.isEmpty()?jar:ApiConfig.get().getSpider();
+                 File cspCacheDir = new File(cspCachePath + MD5.string2MD5(jarUrl) + ".jar");
+                 if (!cspCacheDir.exists()) {
+                     Toast.makeText(mContext, "jar缓存已清除", Toast.LENGTH_LONG).show();
+                     return;
                 }
+                new Thread(() -> {
+                     try {
+                         FileUtils.deleteFile(cspCacheDir);
+                     } catch (Exception e) {
+                         e.printStackTrace();
+                     }
+                 }).start();
+                 ApiConfig.get().clearJarLoader();
+                 Toast.makeText(mContext, "jar缓存已清除", Toast.LENGTH_LONG).show();
             }
         });
         tvName.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                if(dataInitOk && jarInitOk){
+                if (dataInitOk && jarInitOk) {
                     Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     Bundle bundle = new Bundle();
                     bundle.putBoolean("useCache", true);
                     intent.putExtras(bundle);
                     HomeActivity.this.startActivity(intent);
-                }else {
+                } else {
                     jumpActivity(SettingActivity.class);
                 }
                 return true;
