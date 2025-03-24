@@ -222,14 +222,9 @@ public class HomeActivity extends BaseActivity {
             @Override
             public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
                 MovieSort.SortData sortData = ((MovieSort.SortData) sortAdapter.getItem(position));
-                if(dataInitOk && jarInitOk){
-                    Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    Bundle bundle = new Bundle();
-                    bundle.putBoolean("useCache", true);
-                    intent.putExtras(bundle);
-                    HomeActivity.this.startActivity(intent);
-                }else {
+                if (dataInitOk && jarInitOk) {
+                    refreshHome();
+                } else {
                     jumpActivity(SettingActivity.class);
                 }
                 return true;
@@ -256,38 +251,30 @@ public class HomeActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 FastClickCheckUtil.check(v);
-                 String cspCachePath = FileUtils.getFilePath() + "/csp/";
-                 String jar = ApiConfig.get().getHomeSourceBean().getJar();
-                 String jarUrl = !jar.isEmpty()?jar:ApiConfig.get().getSpider();
-                 File cspCacheDir = new File(cspCachePath + MD5.string2MD5(jarUrl) + ".jar");
-                 if (!cspCacheDir.exists()) {
+                if (dataInitOk && jarInitOk) {
+                     String cspCachePath = FileUtils.getFilePath()+"/csp/";
+                     String jar=ApiConfig.get().getHomeSourceBean().getJar();
+                     String jarUrl=!jar.isEmpty()?jar:ApiConfig.get().getSpider();
+                     File cspCacheDir = new File(cspCachePath + MD5.string2MD5(jarUrl)+".jar");
                      Toast.makeText(mContext, "jar缓存已清除", Toast.LENGTH_LONG).show();
+                 if (!cspCacheDir.exists()) {
                      return;
                 }
                 new Thread(() -> {
                      try {
                          FileUtils.deleteFile(cspCacheDir);
+                         ApiConfig.get().clearJarLoader();
+                             refreshHome();
                      } catch (Exception e) {
                          e.printStackTrace();
                      }
                  }).start();
-                 ApiConfig.get().clearJarLoader();
-                 Toast.makeText(mContext, "jar缓存已清除", Toast.LENGTH_LONG).show();
             }
         });
         tvName.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                if (dataInitOk && jarInitOk) {
-                    Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    Bundle bundle = new Bundle();
-                    bundle.putBoolean("useCache", true);
-                    intent.putExtras(bundle);
-                    HomeActivity.this.startActivity(intent);
-                } else {
-                    jumpActivity(SettingActivity.class);
-                }
+                jumpActivity(SettingActivity.class);
                 return true;
             }
         });
@@ -695,12 +682,7 @@ public class HomeActivity extends BaseActivity {
                 @Override
                 public void click(SourceBean value, int pos) {
                     ApiConfig.get().setSourceBean(value);
-                    Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    Bundle bundle = new Bundle();
-                    bundle.putBoolean("useCache", true);
-                    intent.putExtras(bundle);
-                    HomeActivity.this.startActivity(intent);
+                    refreshHome();
                 }
 
                 @Override
@@ -721,4 +703,13 @@ public class HomeActivity extends BaseActivity {
         }
         mSiteSwitchDialog.show();
     }
+
+    private void refreshHome() {
+         Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+         Bundle bundle = new Bundle();
+         bundle.putBoolean("useCache", true);
+         intent.putExtras(bundle);
+         HomeActivity.this.startActivity(intent);
+     }
 }
