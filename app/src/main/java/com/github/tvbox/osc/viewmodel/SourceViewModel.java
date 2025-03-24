@@ -243,9 +243,13 @@ public class SourceViewModel extends ViewModel {
                         }
                     });
         } else if (type == 4) {
+            String extend = sourceBean.getExt();
+            extend = getFixUrl(extend);
+            if (URLEncoder.encode(extend).length() > 1000) extend = "";
             OkGo.<String>get(sourceBean.getApi())
                     .tag(sourceBean.getKey() + "_sort")
                     .params("filter", "true")
+                    .params("extend", extend)
                     .execute(new AbsCallback<String>() {
                         @Override
                         public String convertResponse(okhttp3.Response response) throws Throwable {
