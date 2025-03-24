@@ -42,6 +42,7 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -798,6 +799,15 @@ public class SourceViewModel extends ViewModel {
                 playResult.postValue(null);
             }
         });
+    }
+
+    private String getFixUrl(String content) {
+        if (content.startsWith("http://127.0.0.1")) {
+            String path = content.replaceAll("^http. + /file/", FileUtils.getRootPath() + "/");
+            path = path.replaceAll("localhost/", "/");
+            content = FileUtils.readFileToString(path,"UTF-8");
+        }
+        return content;
     }
 
     private MovieSort.SortFilter getSortFilter(JsonObject obj) {
