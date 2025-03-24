@@ -180,6 +180,9 @@ public class ApiConfig {
         builder.readTimeout(10, TimeUnit.SECONDS); //设置当前请求的读取超时时间
         builder.writeTimeout(10, TimeUnit.SECONDS); //设置当前请求的写入超时时间
         builder.connectTimeout(5, TimeUnit.SECONDS); //设置当前请求的连接超时时间
+        // 使用内部存储，将当前配置地址写入到应用的私有目录中
+        File configUrlFile = new File(App.getInstance().getFilesDir().getAbsolutePath() + "/config_url");
+        FileUtils.saveCache(configUrlFile,configUrl);
         OkGo.<String>get(configUrl)
                 .headers("User-Agent", userAgent)
                 .headers("Accept", requestAccept)
