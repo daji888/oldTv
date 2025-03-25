@@ -1871,8 +1871,6 @@ public class PlayActivity extends BaseActivity {
                  } else {
                      selector=click.trim();
                  }
-                 String js = "$(\"" + selector + "\").click();";
-                 mSysWebView.loadUrl("javascript:" + js);
                  String js = selector;
                  if (!selector.contains("click()")) js += ".click();";
                  LOG.i("echo-javascript:" + js);
