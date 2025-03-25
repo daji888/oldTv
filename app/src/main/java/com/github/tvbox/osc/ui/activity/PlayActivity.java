@@ -1860,11 +1860,27 @@ public class PlayActivity extends BaseActivity {
 
         @Override
         public void onPageFinished(WebView view, String url) {
-            super.onPageFinished(view,url);
-            String click=sourceBean.getClickSelector();
-            LOG.i("onPageFinished url:" + url);
-            if(!click.isEmpty()){
-                mSysWebView.loadUrl("javascript:" + click);
+             super.onPageFinished(view,url);
+             String click = sourceBean.getClickSelector();
+             LOG.i("echo-onPageFinished url:" + url);
+             if (!click.isEmpty()) {
+                 String selector;
+                 if (click.contains(";")) {
+                     if(!url.contains(click.split(";")[0]))return;
+                     selector=click.split(";")[1];
+                 } else {
+                     selector=click.trim();
+                 }
+                 String js = "$(\"" + selector + "\").click();";
+                 mSysWebView.loadUrl("javascript:" + js);
+                 String js = selector;
+                 if (!selector.contains("click()")) js += ".click();";
+                 LOG.i("echo-javascript:" + js);
+                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                     view.evaluateJavascript(js, null);
+                 } else {
+                     view.loadUrl("javascript:" + js);
+                 }
             }
             mHandler.sendEmptyMessage(200);
         }
