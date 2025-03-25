@@ -1874,11 +1874,30 @@ public class PlayFragment extends BaseLazyFragment {
 
         @Override
         public void onPageFinished(WebView view, String url) {
-            super.onPageFinished(view,url);
-            String click=sourceBean.getClickSelector();
-            LOG.i("onPageFinished url:" + url);
-            if (!click.isEmpty()) {
-                mSysWebView.loadUrl("javascript:" + click);
+             super.onPageFinished(view, url);
+             String clickSelector = sourceBean.getClickSelector().trim();
+             LOG.i("echo-onPageFinished url:" + url);
+             if (!clickSelector.isEmpty()) {
+                 String selector;
+                 if (clickSelector.contains(";") && !clickSelector.endsWith(";")) {
+                     String[] parts = clickSelector.split(";", 2);
+                     if (!url.contains(parts[0])) {
+                         return;
+                     }
+                     selector = parts[1].trim();
+                 } else {
+                     selector = clickSelector.trim();
+                 }
+ //                selector="document.getElementById('playleft').children[0].contentWindow.document.getElementById('start')";
+                 // 构造点击的 JS 代码
+                 String js = selector;
+                 if (!selector.contains("click()")) js += ".click();";
+                 LOG.i("echo-javascript:" + js);
+                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                     view.evaluateJavascript(js, null);
+                 } else {
+                     view.loadUrl("javascript:" + js);
+                 }
             }
             mHandler.sendEmptyMessage(200);
         }
