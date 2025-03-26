@@ -420,6 +420,7 @@ public class ApiConfig {
                 pb.setType(DefaultConfig.safeJsonInt(obj, "type", 0));
                 parseBeanList.add(pb);
             }
+            if (!parseBeanList.isEmpty()) addSuperParse();
         }
         // 获取默认解析
         if (parseBeanList != null && parseBeanList.size() > 0) {
@@ -952,5 +953,14 @@ public class ApiConfig {
 
     public void clearJarLoader() {
          jarLoader.clear();
+     }
+
+     private void addSuperParse() {
+         ParseBean superPb = new ParseBean();
+         superPb.setName("超级解析");
+         superPb.setUrl("SuperParse");
+         superPb.setExt("");
+         superPb.setType(4);
+         parseBeanList.add(0, superPb);
      }
 }
