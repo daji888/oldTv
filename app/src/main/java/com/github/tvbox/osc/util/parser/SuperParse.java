@@ -114,10 +114,10 @@ package com.github.tvbox.osc.util.parser;
                      }
                  }
              }
-             // 缓存 webview 解析的地址
              if (!webJx.isEmpty()) {
                  flagWebJx.put(flag, webJx);
              }
+             //同时进行json和web
              ExecutorService exec = Executors.newFixedThreadPool(2);
              CompletionService<JSONObject> cs = new ExecutorCompletionService<>(exec);
              List<Future<JSONObject>> tasks = new ArrayList<>();
@@ -136,7 +136,7 @@ package com.github.tvbox.osc.util.parser;
                          String encodedUrl = Base64.encodeToString(url.getBytes(),
                                  Base64.DEFAULT | Base64.URL_SAFE | Base64.NO_WRAP);
                          try {
-                             webResult.put("url", "proxy://go=MixWeb&flag=" + flag + "&url=" + encodedUrl);
+                             webResult.put("url", "proxy://go=SuperParse&flag=" + flag + "&url=" + encodedUrl);
                              webResult.put("parse", 1);
                              webResult.put("ua", Utils.UaWinChrome);
                          } catch (Exception e) {
