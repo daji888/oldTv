@@ -75,6 +75,7 @@ import com.github.tvbox.osc.util.PlayerHelper;
 import com.github.tvbox.osc.util.StringUtils;
 import com.github.tvbox.osc.util.VideoParseRuler;
 import com.github.tvbox.osc.util.XWalkUtils;
+import com.github.tvbox.osc.util.parser.SuperParse;
 import com.github.tvbox.osc.util.thunder.Jianpian;
 import com.github.tvbox.osc.util.thunder.Thunder;
 import com.github.tvbox.osc.viewmodel.SourceViewModel;
@@ -1378,7 +1379,10 @@ public class PlayActivity extends BaseActivity {
     private void doParse(ParseBean pb) {
         stopParse();
         initParseLoadFound();
-        if (pb.getType() == 0) {
+        if (pb.getType() == 4) {
+             parseMix(pb,true);
+         }
+         else if (pb.getType() == 0) {
             setTip("正在嗅探播放地址", true, false);
             mHandler.removeMessages(100);
             mHandler.sendEmptyMessageDelayed(100, 20 * 1000);
@@ -1523,74 +1527,78 @@ public class PlayActivity extends BaseActivity {
                 }
             });
         } else if (pb.getType() == 3) { // json 聚合
-            setTip("正在解析播放地址", true, false);
-            parseThreadPool = Executors.newSingleThreadExecutor();
-            LinkedHashMap<String, HashMap<String, String>> jxs = new LinkedHashMap<>();
-            String extendName = "";
-            for (ParseBean p : ApiConfig.get().getParseBeanList()) {
-                HashMap<String, String> data = new HashMap<String, String>();
-                data.put("url", p.getUrl());
-                if (p.getUrl().equals(pb.getUrl())) {
-                    extendName = p.getName();
-                }
-                data.put("type", p.getType() + "");
-                data.put("ext", p.getExt());
-                jxs.put(p.getName(), data);
-            }
-            String finalExtendName = extendName;
-            parseThreadPool.execute(new Runnable() {
-                @Override
-                public void run() {
-                    JSONObject rs = ApiConfig.get().jsonExtMix(parseFlag + "111", pb.getUrl(), finalExtendName, jxs, webUrl);
-                    if (rs == null || !rs.has("url") || rs.optString("url").isEmpty()) {
-                        setTip("解析错误", false, true);
+            parseMix(pb,false);
+         }
+     }
+ 
+     private void parseMix(ParseBean pb,boolean isSuper){
+         setTip("正在解析播放地址", true, false);
+         parseThreadPool = Executors.newSingleThreadExecutor();
+         LinkedHashMap<String, HashMap<String, String>> jxs = new LinkedHashMap<>();
+         String extendName = "";
+         for (ParseBean p : ApiConfig.get().getParseBeanList()) {
+             HashMap<String, String> data = new HashMap<String, String>();
+             data.put("url", p.getUrl());
+             if (p.getUrl().equals(pb.getUrl())) {
+                 extendName = p.getName();
+             }
+             data.put("type", p.getType() + "");
+             data.put("ext", p.getExt());
+             jxs.put(p.getName(), data);
+         }
+         String finalExtendName = extendName;
+         parseThreadPool.execute(new Runnable() {
+             @Override
+             public void run() {
+                 JSONObject rs = isSuper? SuperParse.parse(jxs,parseFlag,webUrl):ApiConfig.get().jsonExtMix(parseFlag + "111", pb.getUrl(), finalExtendName, jxs, webUrl);
+                 if (rs == null || !rs.has("url") || rs.optString("url").isEmpty()) {
+                     setTip("解析错误", false, true);
+                 } else {
+                     if (rs.has("parse") && rs.optInt("parse", 0) == 1) {
+                         if (rs.has("ua")) {
+                             webUserAgent = rs.optString("ua").trim();
+                         }
+                         runOnUiThread(new Runnable() {
+                             @Override
+                             public void run() {
+                                 String mixParseUrl = DefaultConfig.checkReplaceProxy(rs.optString("url", ""));
+                                 stopParse();
+                                 setTip("正在嗅探播放地址", true, false);
+                                 mHandler.removeMessages(100);
+                                 mHandler.sendEmptyMessageDelayed(100, 20 * 1000);
+                                 loadWebView(mixParseUrl);
+                             }
+                         });
                     } else {
-                        if (rs.has("parse") && rs.optInt("parse", 0) == 1) {
-                            if (rs.has("ua")) {
-                                webUserAgent = rs.optString("ua").trim();
-                            }
+                        HashMap<String, String> headers = null;
+                         if (rs.has("header")) {
+                             try {
+                                 JSONObject hds = rs.getJSONObject("header");
+                                 Iterator<String> keys = hds.keys();
+                                 while (keys.hasNext()) {
+                                     String key = keys.next();
+                                     if (headers == null) {
+                                         headers = new HashMap<>();
+                                     }
+                                     headers.put(key, hds.getString(key));
+                                 }
+                             } catch (Throwable th) {
+ 
+                             }
+                         }
+                         if (rs.has("jxFrom")) {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    String mixParseUrl = DefaultConfig.checkReplaceProxy(rs.optString("url", ""));
-                                    stopParse();
-                                    setTip("正在嗅探播放地址", true, false);
-                                    mHandler.removeMessages(100);
-                                    mHandler.sendEmptyMessageDelayed(100, 20 * 1000);
-                                    loadWebView(mixParseUrl);
+                                    Toast.makeText(mContext, "解析来自:" + rs.optString("jxFrom"), Toast.LENGTH_SHORT).show();
                                 }
                             });
-                        } else {
-                            HashMap<String, String> headers = null;
-                            if (rs.has("header")) {
-                                try {
-                                    JSONObject hds = rs.getJSONObject("header");
-                                    Iterator<String> keys = hds.keys();
-                                    while (keys.hasNext()) {
-                                        String key = keys.next();
-                                        if (headers == null) {
-                                            headers = new HashMap<>();
-                                        }
-                                        headers.put(key, hds.getString(key));
-                                    }
-                                } catch (Throwable th) {
-
-                                }
-                            }
-                            if (rs.has("jxFrom")) {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Toast.makeText(mContext, "解析来自:" + rs.optString("jxFrom"), Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                            }
-                            playUrl(rs.optString("url", ""), headers);
                         }
+                        playUrl(rs.optString("url", ""), headers); 
                     }
                 }
-            });
-        }
+            }
+         });
     }
 
     // webview
