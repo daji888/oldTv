@@ -15,6 +15,9 @@ import android.os.Parcelable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Gravity;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -383,14 +386,64 @@ public class BaseVideoView<P extends AbstractPlayer> extends FrameLayout
      * 继续播放
      */
     public void resume() {
-        if (isInPlaybackState()
-                && !mMediaPlayer.isPlaying()) {
-            mMediaPlayer.start();
-            setPlayState(STATE_PLAYING);
-            if (mAudioFocusHelper != null && !isMute()) {
-                mAudioFocusHelper.requestFocus();
+        if (isInPlaybackState() && !mMediaPlayer.isPlaying()) {
+             addDisplay();
+             if (mRenderView != null) {
+                 mRenderView.setScaleType(mCurrentScreenScaleType);
+                 mRenderView.setVideoSize(mVideoSize[0], mVideoSize[1]);
+             }
+             assert mRenderView != null;
+             View renderView = mRenderView.getView();
+             if (renderView instanceof SurfaceView) {
+                 final SurfaceView surfaceView = (SurfaceView) renderView;
+                 final SurfaceHolder holder = surfaceView.getHolder();
+                 if (holder.getSurface() != null && holder.getSurface().isValid()) {
+                     mMediaPlayer.setDisplay(holder);
+                     mMediaPlayer.start();
+                     setPlayState(STATE_PLAYING);
+                     if (mAudioFocusHelper != null && !isMute()) {
+                         mAudioFocusHelper.requestFocus();
+                     }
+                     mPlayerContainer.setKeepScreenOn(true);
+                 } else {
+                     holder.addCallback(new SurfaceHolder.Callback() {
+                         @Override
+                         public void surfaceCreated(SurfaceHolder holder) {
+                             mMediaPlayer.setDisplay(holder);
+                             mMediaPlayer.start();
+                             setPlayState(STATE_PLAYING);
+                             if (mAudioFocusHelper != null && !isMute()) {
+                                 mAudioFocusHelper.requestFocus();
+                             }
+                             mPlayerContainer.setKeepScreenOn(true);
+                             // 记得移除回调，避免重复调用
+                             holder.removeCallback(this);
+                         }
+ 
+                         @Override
+                         public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+                         }
+ 
+                         @Override
+                         public void surfaceDestroyed(SurfaceHolder holder) {
+                         }
+                     });
+                 }
+             } else if (renderView instanceof TextureView) {
+                 mMediaPlayer.start();
+                 setPlayState(STATE_PLAYING);
+                 if (mAudioFocusHelper != null && !isMute()) {
+                     mAudioFocusHelper.requestFocus();
+                 }
+                 mPlayerContainer.setKeepScreenOn(true);
+             } else {
+                 mMediaPlayer.start();
+                 setPlayState(STATE_PLAYING);
+                 if (mAudioFocusHelper != null && !isMute()) {
+                     mAudioFocusHelper.requestFocus();
+                 }
+                 mPlayerContainer.setKeepScreenOn(true);
             }
-            mPlayerContainer.setKeepScreenOn(true);
         }
     }
 
