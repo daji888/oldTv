@@ -931,6 +931,7 @@ public class ApiConfig {
 
     String fixContentPath(String url, String content) {
         if (content.contains("\"./")) {
+            url = url.replace("file://", "clan://localhost/");
             if (!url.startsWith("http") && !url.startsWith("clan://")) {
                 url = "http://" + url;
             }
