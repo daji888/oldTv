@@ -669,7 +669,7 @@ public class HomeActivity extends BaseActivity {
         List<SourceBean> sites = ApiConfig.get().getSwitchSourceBeanList();
         if (sites.isEmpty()) return;
         int select = sites.indexOf(ApiConfig.get().getHomeSourceBean());
-        if (select < 0) select = 0;
+        if (select < 0 || select >= sites.size()) select = 0;
         if (mSiteSwitchDialog == null) {
              mSiteSwitchDialog = new SelectDialog<>(HomeActivity.this);
              TvRecyclerView tvRecyclerView = mSiteSwitchDialog.findViewById(R.id.list);
