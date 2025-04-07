@@ -259,7 +259,7 @@ public class ApiConfig {
                 if (jarLoader.load(cache.getAbsolutePath())) {
                     callback.success();
                 } else {
-                    callback.error("从缓存加载jar失败");
+                    callback.error("md5缓存失效");
                 }
                 return;
             }
@@ -274,6 +274,7 @@ public class ApiConfig {
 
         boolean isJarInImg = jarUrl.startsWith("img+");
         jarUrl = jarUrl.replace("img+", "");
+        LOG.i("echo-load jar start:" + jarUrl);
         OkGo.<File>get(jarUrl)
                 .headers("User-Agent", userAgent)
                 .headers("Accept", requestAccept)
@@ -294,7 +295,7 @@ public class ApiConfig {
                                  byte[] imgJar = getImgJar(respData);
                                  if (imgJar == null || imgJar.length == 0) {
                                      LOG.e("echo---Generated JAR data is empty");
-                                     callback.error("JAR data is empty");
+                                     callback.error("JAR 是空的");
                                  }
                                  fos.write(imgJar);
                              } else {
@@ -327,7 +328,7 @@ public class ApiConfig {
                                  }
                              } catch (Exception e) {
                                  LOG.e("echo---jar Loader threw exception: " + e.getMessage());
-                                 callback.error("JAR加载异常: " + e.getMessage());
+                                 callback.error("JAR加载异常: ");
                              }
                          } else {
                              LOG.e("echo---jar File not found");
@@ -341,7 +342,7 @@ public class ApiConfig {
                          if (ex != null) {
                              LOG.i("echo---jar Request failed: " + ex.getMessage());
                          }
-                         callback.error(ex != null ? ex.getMessage() : "未知网络错误");
+                         callback.error("网络错误");
                      }
                  });
      }
