@@ -88,8 +88,8 @@ public class VodInfo implements Serializable {
                     seriesFlags.add(new VodSeriesFlag(urlInfo.flag));
                 }
             }
-            SourceBean sb = ApiConfig.get().getSource(video.sourceKey);
-     /*       if (sb != null) { // ssp 不排序
+    /*        SourceBean sb = ApiConfig.get().getSource(video.sourceKey);
+            if (sb != null) { // ssp 不排序
                 // 优先展示m3u8
                 Collections.sort(seriesFlags, new Comparator<VodSeriesFlag>() {
                     final String PREFIX = "m3u8";

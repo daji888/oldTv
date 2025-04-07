@@ -259,7 +259,7 @@ public class ApiConfig {
                 if (jarLoader.load(cache.getAbsolutePath())) {
                     callback.success();
                 } else {
-                    callback.error("从缓存加载jar失败");
+                    callback.error("md5缓存失效");
                 }
                 return;
             }
@@ -267,22 +267,21 @@ public class ApiConfig {
              if (Boolean.parseBoolean(jarCache) && cache.exists() && !FileUtils.isWeekAgo(cache)) {
                  if (jarLoader.load(cache.getAbsolutePath())) {
                      callback.success();
-                 } else {
-                     callback.error("");
+                     return;
                  }
-                 return;
              }
         }
 
         boolean isJarInImg = jarUrl.startsWith("img+");
         jarUrl = jarUrl.replace("img+", "");
+        LOG.i("echo-load jar start:" + jarUrl);
         OkGo.<File>get(jarUrl)
                 .headers("User-Agent", userAgent)
                 .headers("Accept", requestAccept)
                 .execute(new AbsCallback<File>() {
 
                  @Override
-                     public File convertResponse(okhttp3.Response response) throws Throwable {
+                     public File convertResponse(okhttp3.Response response) {
                          File cacheDir = cache.getParentFile();
                          assert cacheDir != null;
                          if (!cacheDir.exists()) cacheDir.mkdirs();
@@ -295,7 +294,8 @@ public class ApiConfig {
                                  LOG.i("echo---jar Response: " + respData);
                                  byte[] imgJar = getImgJar(respData);
                                  if (imgJar == null || imgJar.length == 0) {
-                                     throw new IOException("Generated JAR data is empty");
+                                     LOG.e("echo---Generated JAR data is empty");
+                                     callback.error("JAR 是空的");
                                  }
                                  fos.write(imgJar);
                              } else {
@@ -328,11 +328,11 @@ public class ApiConfig {
                                  }
                              } catch (Exception e) {
                                  LOG.e("echo---jar Loader threw exception: " + e.getMessage());
-                                 callback.error("加载异常: " + e.getMessage());
+                                 callback.error("JAR加载异常: ");
                              }
                          } else {
                              LOG.e("echo---jar File not found");
-                             callback.error("文件不存在");
+                             callback.error("JAR文件不存在");
                          }
                      }
 
@@ -342,7 +342,8 @@ public class ApiConfig {
                          if (ex != null) {
                              LOG.i("echo---jar Request failed: " + ex.getMessage());
                          }
-                         callback.error(ex != null ? ex.getMessage() : "未知网络错误");
+                         if (cache.exists()) jarLoader.load(cache.getAbsolutePath()); 
+                         callback.error("网络错误");
                      }
                  });
      }

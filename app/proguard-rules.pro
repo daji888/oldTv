@@ -240,6 +240,9 @@
 -keep class com.google.net.cronet.**{*;}
 -keep class org.chromium.net.**{*;}
 
+# Nano
+-keep class fi.iki.elonen.** { *; }
+
 # from app -> build -> outputs -> mapping -> your_app_name -> missing_rules.txt
 # Please add these rules to your existing keep rules in order to suppress warnings.
 # This is generated automatically by the Android Gradle plugin.
