@@ -286,11 +286,17 @@ public class HomeActivity extends BaseActivity {
         //mHandler.postDelayed(mFindFocus, 500);
     }
 
+    private boolean skipNextUpdate = false;
+
     private void initViewModel() {
         sourceViewModel = new ViewModelProvider(this).get(SourceViewModel.class);
         sourceViewModel.sortResult.observe(this, new Observer<AbsSortXml>() {
             @Override
             public void onChanged(AbsSortXml absXml) {
+                if (skipNextUpdate) {
+                    skipNextUpdate = false;
+                    return;
+                }
                 showSuccess();
                 if (absXml != null && absXml.classes != null && absXml.classes.sortList != null) {
                     sortAdapter.setNewData(DefaultConfig.adjustSort(ApiConfig.get().getHomeSourceBean().getKey(), absXml.classes.sortList, true));
@@ -471,6 +477,11 @@ public class HomeActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
+        //打断加载
+        if (isLoading()) {
+            refreshEmpty();
+            return;
+        }
         // 如果处于 VOD 删除模式，则退出该模式并刷新界面
         if (HawkConfig.hotVodDelete) {
             HawkConfig.hotVodDelete = false;
@@ -723,5 +734,12 @@ public class HomeActivity extends BaseActivity {
          bundle.putBoolean("useCache", true);
          intent.putExtras(bundle);
          HomeActivity.this.startActivity(intent);
+     }
+    
+    private void refreshEmpty() {
+         skipNextUpdate=true;
+         showSuccess();
+         sortAdapter.setNewData(DefaultConfig.adjustSort(ApiConfig.get().getHomeSourceBean().getKey(), new ArrayList<>(), true));
+         initViewPager(null);
      }
 }
