@@ -358,7 +358,7 @@ public class HomeActivity extends BaseActivity {
                             @Override
                             public void run() {
                                 Toast.makeText(HomeActivity.this, msg+"; 尝试加载上一次缓存的jar", Toast.LENGTH_SHORT).show();
-                                initData();
+                                refreshHome();
                             }
                         },50);
                     }
