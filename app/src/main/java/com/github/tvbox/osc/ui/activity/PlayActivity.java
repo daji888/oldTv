@@ -1207,7 +1207,7 @@ public class PlayActivity extends BaseActivity {
                          if (mController.switchPlayer()) autoRetryCount++;
                      } else {
                          autoRetryCount++;
-                         allowSwitchPlayer=true;
+                         allowSwitchPlayer = true;
                      }
                     stopParse();
                     initParseLoadFound();
