@@ -55,21 +55,20 @@ public class M3U8 {
      * @author asdfgh
      * <a href="https://github.com/asdfgh"> asdfgh </a>
      */
+
+    private static int timesNoAd = 10;  //出现超过多少次的域名不认为是广告
     private static String removeMinorityUrl(String tsUrlPre, String m3u8content) {
         String linesplit = "\n";
         if (m3u8content.contains("\r\n"))
             linesplit = "\r\n";
         String[] lines = m3u8content.split(linesplit);
 
-        HashMap<String, Integer> preUrlMap = new HashMap<>();
-        for (String line : lines) {
-            if (line.length() == 0 || line.charAt(0) == '#') {
-                continue;
-            }
+        HashMap<String, Integer> preUrlMap = new HashMap<String, Integer>();
+         for (int i = 0; i < lines.length; i++) {
+             String line = lines[i];
+             if (line.length() == 0 || line.charAt(0) == '#') continue;
             int ilast = line.lastIndexOf('.');
-            if (ilast <= 4) {
-                continue;
-            }
+            if (ilast <= 4) continue;
             String preUrl = line.substring(0, ilast - 4);
             Integer cnt = preUrlMap.get(preUrl);
             if (cnt != null) {
@@ -81,19 +80,14 @@ public class M3U8 {
         if (preUrlMap.size() <= 1) return null;
   //      if (preUrlMap.size() > 5) return null;//too many different url, can not identify ads url
         if (maxPercent(preUrlMap) < 0.8) {
-            //尝试判断域名，取同域名最多的链接，其它域名当作广告去除
+            // 用域名重建 preUrlMap
             preUrlMap.clear();
-            for (String line : lines) {
-                if (line.length() == 0 || line.charAt(0) == '#') {
-                    continue;
-                }
-                if (!line.startsWith("http://") && !line.startsWith("https://")) {
-                    return null;
-                }
-                int ifirst = line.indexOf('/', 9);//skip http:// or https://
-                if (ifirst <= 0) {
-                    continue;
-                }
+            for (int i = 0; i < lines.length; i++) {
+                 String line = lines[i];
+                 if (line.length() == 0 || line.charAt(0) == '#') continue;
+                 if (!line.startsWith("http://") && !line.startsWith("https://")) return null;
+                 int ifirst = line.indexOf('/', 9);
+                 if (ifirst <= 0) continue;
                 String preUrl = line.substring(0, ifirst);
                 Integer cnt = preUrlMap.get(preUrl);
                 if (cnt != null) {
@@ -102,11 +96,20 @@ public class M3U8 {
                     preUrlMap.put(preUrl, 1);
                 }
             }
+            
             if (preUrlMap.size() <= 1) return null;
-            if (maxPercent(preUrlMap) < 0.8) {
-                return null; //视频非广告片断占比不够大
-            }
-        }
+            // 如果所有域名都超过timesNoAd条，说明没有广告，直接返回 null
+             boolean allExceed6 = true;
+             for (Map.Entry<String, Integer> entry : preUrlMap.entrySet()) {
+                 if (entry.getValue() <= timesNoAd) {
+                     allExceed6 = false;
+                     break;
+                 }
+             }
+             if (allExceed6) return null;
+         }
+ 
+        // 找出出现次数最多的域名前缀
         int maxTimes = 0;
         String maxTimesPreUrl = "";
         for (Map.Entry<String, Integer> entry : preUrlMap.entrySet()) {
@@ -131,25 +134,49 @@ public class M3U8 {
                     if (!keyUrl.startsWith("http://") && !keyUrl.startsWith("https://")) {
                         String newKeyUrl;
                         if (keyUrl.charAt(0) == '/') {
-                            int ifirst = tsUrlPre.indexOf('/', 9);//skip https://, http://
+                            int ifirst = tsUrlPre.indexOf('/', 9);
                             newKeyUrl = tsUrlPre.substring(0, ifirst) + keyUrl;
-                        } else
+                        } else {
                             newKeyUrl = tsUrlPre + keyUrl;
+                        }    
                         lines[i] = lines[i].replace("URI=\"" + keyUrl + "\"", "URI=\"" + newKeyUrl + "\"");
                     }
                     dealedExtXKey = true;
                 }
             }
+            
             if (lines[i].length() == 0 || lines[i].charAt(0) == '#') {
                 continue;
             }
-            if (lines[i].startsWith(maxTimesPreUrl)) {
+            
+            boolean keep = false;
+             if (lines[i].startsWith("http://") || lines[i].startsWith("https://")) {
+                 int ifirst = lines[i].indexOf('/', 9);
+                 String domain;
+                 if (ifirst > 0) {
+                     domain = lines[i].substring(0, ifirst);
+                 } else {
+                     domain = lines[i];
+                 }
+                 Integer count = preUrlMap.get(domain);
+                 if (count != null && count > timesNoAd) {
+                     keep = true;
+                 } else if (domain.equals(maxTimesPreUrl)) {
+                     keep = true;
+                 }
+             } else {
+                 // 相对路径默认保留
+                 keep = true;
+             }
+ 
+             if (keep) {
                 if (!lines[i].startsWith("http://") && !lines[i].startsWith("https://")) {
                     if (lines[i].charAt(0) == '/') {
-                        int ifirst = tsUrlPre.indexOf('/', 9);//skip https://, http://
+                        int ifirst = tsUrlPre.indexOf('/', 9);
                         lines[i] = tsUrlPre.substring(0, ifirst) + lines[i];
-                    } else
+                    } else {
                         lines[i] = tsUrlPre + lines[i];
+                    }    
                 }
             } else {
                 if (i > 0 && lines[i - 1].length() > 0 && lines[i - 1].charAt(0) == '#') {
