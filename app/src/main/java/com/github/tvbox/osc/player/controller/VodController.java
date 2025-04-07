@@ -547,6 +547,7 @@ public class VodController extends BaseController {
                     updatePlayerCfgView();
                     listener.updatePlayerCfg();
                     listener.replay(false);
+                    listener.setAllowSwitchPlayer(false);
                     hideBottom();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -586,6 +587,7 @@ public class VodController extends BaseController {
                                     updatePlayerCfgView();
                                     listener.updatePlayerCfg();
                                     listener.replay(false);
+                                    listener.setAllowSwitchPlayer(false);
                                     hideBottom();
                                 }
                             } catch (Exception e) {
@@ -924,6 +926,8 @@ public class VodController extends BaseController {
         void selectAudioTrack();
 
         void selectVideoTrack();
+
+        void setAllowSwitchPlayer(boolean isAllow);
     }
 
     public void setListener(VodControlListener listener) {
