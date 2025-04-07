@@ -108,9 +108,7 @@ public class M3U8 {
             }
             
             if (preUrlMap.size() <= 1) return null;
-            // 如果所有域名都超过timesNoAd条，说明没有广告，直接返回 null
-             boolean allExceed6 = true;
-             if (maxPercent(preUrlMap) < 0.8) {
+            if (maxPercent(preUrlMap) < 0.8) {
                  return null; //视频非广告片断占比不够大
              }
              domainFiltering = true;
