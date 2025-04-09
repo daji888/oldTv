@@ -224,6 +224,7 @@ public class HomeActivity extends BaseActivity {
                 MovieSort.SortData sortData = ((MovieSort.SortData) sortAdapter.getItem(position));
                 if (dataInitOk && jarInitOk) {
                     refreshHome();
+                    Toast.makeText(mContext, "首页已刷新", Toast.LENGTH_LONG).show();
                 } else {
                     jumpActivity(SettingActivity.class);
                 }
