@@ -703,6 +703,10 @@ public class PlayFragment extends BaseLazyFragment {
             startPlayUrl(url, headers);
             return;
         }
+        if (DefaultConfig.noAd(mVodInfo.playFlag)) {
+             startPlayUrl(url, headers);
+             return;
+         }
         OkGo.getInstance().cancelTag("m3u8-1");
         OkGo.getInstance().cancelTag("m3u8-2");
         //remove ads in m3u8
