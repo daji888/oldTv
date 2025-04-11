@@ -265,6 +265,7 @@ public class ApiConfig {
             }
           } else {
              if (Boolean.parseBoolean(jarCache) && cache.exists() && !FileUtils.isWeekAgo(cache)) {
+                 LOG.i("echo-load jar jarCache:"+jarUrl);
                  if (jarLoader.load(cache.getAbsolutePath())) {
                      callback.success();
                      return;
