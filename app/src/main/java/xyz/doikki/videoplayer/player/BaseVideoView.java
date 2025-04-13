@@ -387,11 +387,6 @@ public class BaseVideoView<P extends AbstractPlayer> extends FrameLayout
      */
     public void resume() {
         if (isInPlaybackState() && !mMediaPlayer.isPlaying()) {
-             addDisplay();
-             if (mRenderView != null) {
-                 mRenderView.setScaleType(mCurrentScreenScaleType);
-                 mRenderView.setVideoSize(mVideoSize[0], mVideoSize[1]);
-             }
              assert mRenderView != null;
              View renderView = mRenderView.getView();
              if (renderView instanceof SurfaceView) {
@@ -399,24 +394,19 @@ public class BaseVideoView<P extends AbstractPlayer> extends FrameLayout
                  final SurfaceHolder holder = surfaceView.getHolder();
                  if (holder.getSurface() != null && holder.getSurface().isValid()) {
                      mMediaPlayer.setDisplay(holder);
-                     mMediaPlayer.start();
-                     setPlayState(STATE_PLAYING);
-                     if (mAudioFocusHelper != null && !isMute()) {
-                         mAudioFocusHelper.requestFocus();
-                     }
-                     mPlayerContainer.setKeepScreenOn(true);
+                     resumePlay();
                  } else {
                      holder.addCallback(new SurfaceHolder.Callback() {
                          @Override
                          public void surfaceCreated(SurfaceHolder holder) {
-                             mMediaPlayer.setDisplay(holder);
-                             mMediaPlayer.start();
-                             setPlayState(STATE_PLAYING);
-                             if (mAudioFocusHelper != null && !isMute()) {
-                                 mAudioFocusHelper.requestFocus();
+                             addDisplay();
+                             if (mRenderView != null) {
+                                 mRenderView.setScaleType(mCurrentScreenScaleType);
+                                 mRenderView.setVideoSize(mVideoSize[0], mVideoSize[1]);
                              }
-                             mPlayerContainer.setKeepScreenOn(true);
-                             // 记得移除回调，避免重复调用
+                             mMediaPlayer.setDisplay(holder);
+                             resumePlay();
+                             // 移除回调，避免重复调用
                              holder.removeCallback(this);
                          }
  
@@ -429,23 +419,29 @@ public class BaseVideoView<P extends AbstractPlayer> extends FrameLayout
                          }
                      });
                  }
-             } else if (renderView instanceof TextureView) {
-                 mMediaPlayer.start();
-                 setPlayState(STATE_PLAYING);
-                 if (mAudioFocusHelper != null && !isMute()) {
-                     mAudioFocusHelper.requestFocus();
-                 }
-                 mPlayerContainer.setKeepScreenOn(true);
              } else {
-                 mMediaPlayer.start();
-                 setPlayState(STATE_PLAYING);
-                 if (mAudioFocusHelper != null && !isMute()) {
-                     mAudioFocusHelper.requestFocus();
-                 }
-                 mPlayerContainer.setKeepScreenOn(true);
+                 resumePlay();
+             }
+             if (mRenderView != null) {
+                 // 强制请求布局（解决部分设备渲染问题）
+                 mRenderView.getView().requestLayout();
+                 mRenderView.getView().invalidate();
+             }
+             if (mRenderView != null && mRenderView.getView() != null) {
+                 // 统一设置视图可见性
+                 mRenderView.getView().setVisibility(View.VISIBLE);
             }
         }
     }
+
+    private void resumePlay() {
+         mMediaPlayer.start();
+         setPlayState(STATE_PLAYING);
+         if (mAudioFocusHelper != null && !isMute()) {
+             mAudioFocusHelper.requestFocus();
+         }
+         mPlayerContainer.setKeepScreenOn(true);
+     }            
 
     /**
      * 释放播放器
