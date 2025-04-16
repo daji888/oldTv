@@ -27,12 +27,14 @@ public class M3U8 {
     private static final Pattern REGEX_X_DISCONTINUITY = Pattern.compile("#EXT-X-DISCONTINUITY[\\s\\S]*?(?=#EXT-X-DISCONTINUITY|$)");
     private static final Pattern REGEX_MEDIA_DURATION = Pattern.compile(TAG_MEDIA_DURATION + ":([\\d\\.]+)\\b");
     private static final Pattern REGEX_URI = Pattern.compile("URI=\"(.+?)\"");
+    public static int currentAdCount;
 
     public static boolean isAd(String regex) {
         return regex.contains(TAG_DISCONTINUITY) || regex.contains(TAG_MEDIA_DURATION) || regex.contains(TAG_ENDLIST) || regex.contains(TAG_KEY) || M3U8.isDouble(regex);
     }
 
     public static String purify(String tsUrlPre, String m3u8content) {
+        currentAdCount = 0;
         if (null == m3u8content || m3u8content.length() == 0) return null;
         if (!m3u8content.startsWith("#EXTM3U")) return null;
         String result = removeMinorityUrl(tsUrlPre, m3u8content);
@@ -56,7 +58,7 @@ public class M3U8 {
      * <a href="https://github.com/asdfgh"> asdfgh </a>
      */
 
-    private static int timesNoAd = 10;  //出现超过多少次的域名不认为是广告
+    private static int timesNoAd = 15;  //出现超过多少次的域名不认为是广告
     private static String removeMinorityUrl(String tsUrlPre, String m3u8content) {
         String linesplit = "\n";
         if (m3u8content.contains("\r\n"))
@@ -111,6 +113,14 @@ public class M3U8 {
             if (maxPercent(preUrlMap) < 0.8) {
                  return null; //视频非广告片断占比不够大
              }
+             boolean allDomainsExceedThreshold = true;
+             for (Integer count : preUrlMap.values()) {
+                 if (count <= 15) {
+                     allDomainsExceedThreshold = false;
+                     break;
+                 }
+             }
+             if (allDomainsExceedThreshold) return null;
              domainFiltering = true;
          }
  
@@ -169,6 +179,7 @@ public class M3U8 {
                          lines[i - 1] = "";
                      }
                      lines[i] = "";
+                     currentAdCount += 1;
                  }
              } else {
                  // 域名过滤模式：先转换为绝对 URL
@@ -186,13 +197,14 @@ public class M3U8 {
                  String domain = (ifirst > 0) ? absoluteUrl.substring(0, ifirst) : absoluteUrl;
                  // 保留条件：域名等于出现次数最多的，或者该域名出现次数超过timesNoAd次
                  Integer cnt = preUrlMap.get(domain);
-                 if (domain.equals(maxTimesPreUrl) || (cnt != null && cnt >= timesNoAd)) {
+                 if (domain.equals(maxTimesPreUrl) || (cnt != null && cnt > timesNoAd)) {
                      lines[i] = absoluteUrl;
                  } else {
                      if (i > 0 && lines[i - 1].length() > 0 && lines[i - 1].charAt(0) == '#') {
                          lines[i - 1] = "";
                      }
                      lines[i] = "";
+                     currentAdCount += 1;
                 }
             }
         }
@@ -223,27 +235,84 @@ public class M3U8 {
     private static String clean(String line, List<String> ads) {
         boolean scan = false;
         for (String ad : ads) {
-            if (ad.contains(TAG_DISCONTINUITY) || ad.contains(TAG_MEDIA_DURATION)) line = line.replaceAll(ad, "");
+            if (ad.contains(TAG_DISCONTINUITY) || ad.contains(TAG_MEDIA_DURATION)) line = scanAd(line,ad);
             else if (isDouble(ad)) scan = true;
         }
         return scan ? scan(line, ads) : line;
     }
 
+    private static final Map<String, Pattern> patternCache = new HashMap<>();
+    private static Pattern getPattern(String regex) {
+         Pattern pattern = patternCache.get(regex);
+         if (pattern == null) {
+             pattern = Pattern.compile(regex);
+             patternCache.put(regex, pattern);
+         }
+         return pattern;
+     }
+
+    private static String scanAd(String line,String TAG_AD) {
+         Matcher m1 = getPattern(TAG_AD).matcher(line);
+         List<String> needRemoveAd = new ArrayList<>();
+         while (m1.find()) {
+             String group = m1.group();
+             String groupCleaned = group.replace(TAG_ENDLIST, "");
+             Matcher m2 = REGEX_MEDIA_DURATION.matcher(group);
+             int tCount = 0;
+             while (m2.find()) {
+                 tCount += 1;
+             }
+             needRemoveAd.add(groupCleaned);
+             currentAdCount += tCount;
+         }
+         for (String rem : needRemoveAd) {
+             line = line.replace(rem, "");
+         }
+         return line;
+     }
+
     private static String scan(String line, List<String> ads) {
         Matcher m1 = REGEX_X_DISCONTINUITY.matcher(line);
         while (m1.find()) {
             String group = m1.group();
-            BigDecimal t = BigDecimal.ZERO;
+            String groupCleaned = group.replace(TAG_ENDLIST, "");
             Matcher m2 = REGEX_MEDIA_DURATION.matcher(group);
-            while (m2.find()) t = t.add(new BigDecimal(m2.group(1)));
-            for (String ad : ads) if (t.toString().startsWith(ad)) line = line.replace(group.replace(TAG_ENDLIST, ""), "");
+            BigDecimal ft = BigDecimal.ZERO;
+             BigDecimal lt = BigDecimal.ZERO;
+             int tCount = 0;
+             while (m2.find()) {
+                 if (ft.equals(BigDecimal.ZERO))ft = new BigDecimal(m2.group(1));
+                 lt = new BigDecimal(m2.group(1));
+                 tCount+=1;
+             }
+             String ftStr = ft.toString();
+             String ltStr = lt.toString();
+             for (String ad : ads) {
+                 if (ad.startsWith("-")) {
+                     String adClean = ad.substring(1);
+                     if (ltStr.startsWith(adClean)) {
+                         needRemoveAd.add(groupCleaned);
+                         currentAdCount+=tCount;
+                         break;
+                     }
+                 } else {
+                     if (ftStr.startsWith(ad)) {
+                         needRemoveAd.add(groupCleaned);
+                         currentAdCount+=tCount;
+                         break;
+                     }
+                 }
+             }
+         }
+         for (String rem : needRemoveAd) {
+             line = line.replace(rem, "");
         }
         return line;
     }
 
     private static boolean isDouble(String ad) {
         try {
-            return Double.parseDouble(ad) > 0;
+            return Double.parseDouble(ad) != 0;
         } catch (Exception e) {
             return false;
         }
