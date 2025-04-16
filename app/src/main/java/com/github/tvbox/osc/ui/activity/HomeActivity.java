@@ -507,37 +507,31 @@ public class HomeActivity extends BaseActivity {
             // 如果 sortFocusView 存在且没有获取焦点，则请求焦点
              if (this.sortFocusView != null && !this.sortFocusView.isFocused()) {
                  this.sortFocusView.requestFocus();
-                 return;
              }
              // 如果当前不是第一个界面，则将列表设置到第一项
              else if (this.sortFocused != 0) {
                 this.mGridView.setSelection(0);
-                return;
             } else {
                 doExit();
-                return;
             }
         } else if (baseLazyFragment instanceof UserFragment && UserFragment.tvHotList1.canScrollVertically(-1)) {
              // 如果 UserFragment 列表可以向上滚动，则滚动到顶部
              UserFragment.tvHotList1.scrollToPosition(0);
              this.mGridView.setSelection(0);
-             return;
          } else {
              doExit();
-             return;     
         }
     }
 
     private void doExit() {
         // 如果两次返回间隔小于 2000 毫秒，则退出应用
         if (System.currentTimeMillis() - mExitTime < 2000) {
-            //这一段借鉴来自 q群老哥 IDCardWeb
+            AppManager.getInstance().finishAllActivity();
             EventBus.getDefault().unregister(this);
-            AppManager.getInstance().appExit(0);
             ControlManager.get().stopServer();
             finish();
+            android.os.Process.killProcess(android.os.Process.myPid());
             System.exit(0);
-        //    super.onBackPressed();
         } else {
              // 否则仅提示用户，再按一次退出应用
              mExitTime = System.currentTimeMillis();
