@@ -273,6 +273,7 @@ public class M3U8 {
 
     private static String scan(String line, List<String> ads) {
         Matcher m1 = REGEX_X_DISCONTINUITY.matcher(line);
+        List<String> needRemoveAd = new ArrayList<>();
         while (m1.find()) {
             String group = m1.group();
             String groupCleaned = group.replace(TAG_ENDLIST, "");
