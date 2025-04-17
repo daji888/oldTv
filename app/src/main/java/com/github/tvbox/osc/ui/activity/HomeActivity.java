@@ -78,6 +78,7 @@ import me.jessyan.autosize.utils.AutoSizeUtils;
 public class HomeActivity extends BaseActivity {
     private LinearLayout topLayout;
     private LinearLayout contentLayout;
+    private LinearLayout tvName1;
     private TextView tvDate;
     private TextView tvName;
     private TvRecyclerView mGridView;
@@ -132,6 +133,7 @@ public class HomeActivity extends BaseActivity {
         this.topLayout = findViewById(R.id.topLayout);
         this.tvDate = findViewById(R.id.tvDate);
         this.tvName = findViewById(R.id.tvName);
+        this.tvName1 = findViewById(R.id.tvName1);
         this.contentLayout = findViewById(R.id.contentLayout);
         this.mGridView = findViewById(R.id.mGridView);
         this.mViewPager = findViewById(R.id.mViewPager);
@@ -248,7 +250,7 @@ public class HomeActivity extends BaseActivity {
                 return false;
             }
         });
-        tvName.setOnClickListener(new View.OnClickListener() {
+        tvName1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FastClickCheckUtil.check(v);
@@ -276,7 +278,7 @@ public class HomeActivity extends BaseActivity {
                  }     
             }
         });
-        tvName.setOnLongClickListener(new View.OnLongClickListener() {
+        tvName1.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 jumpActivity(SettingActivity.class);
