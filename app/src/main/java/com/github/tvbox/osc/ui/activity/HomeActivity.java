@@ -589,6 +589,7 @@ public class HomeActivity extends BaseActivity {
                         changeTop(false);
                     } else {
                         changeTop(true);
+                        tvName1.setFocusable(false);
                     }
                 }
             }
