@@ -587,6 +587,7 @@ public class HomeActivity extends BaseActivity {
                     mViewPager.setCurrentItem(sortFocused, false);
                     if (sortFocused == 0) {
                         changeTop(false);
+                        tvName1.setFocusable(true);
                     } else {
                         changeTop(true);
                         tvName1.setFocusable(false);
