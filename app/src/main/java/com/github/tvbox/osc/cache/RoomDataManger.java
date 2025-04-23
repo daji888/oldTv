@@ -150,7 +150,7 @@ public class RoomDataManger {
         return record != null;
     }
 
-    public static List<VodCollect> getAllVodCollect() {
-        return AppDataManager.get().getVodCollectDao().getAll();
+    public static List<VodCollect> getAllVodCollect(int limit) {
+        return AppDataManager.get().getVodCollectDao().getAll(limit);
     }
 }
