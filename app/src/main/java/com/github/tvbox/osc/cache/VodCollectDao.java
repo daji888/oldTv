@@ -36,11 +36,4 @@ public interface VodCollectDao {
     @Query("DELETE FROM vodCollect")
     void deleteAll();
 
-    /**
-     * 保留最新指定条数, 其他删除.
-     * @param size 保留条数
-     * @return
-     */
-    @Query("DELETE FROM vodCollect where id NOT IN (SELECT id FROM vodCollect ORDER BY updateTime desc LIMIT :size)")
-    int reserver(int size);
 }
