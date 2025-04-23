@@ -229,10 +229,10 @@ public class PlayerHelper {
     }
 
     public static String getScaleName(int screenScaleType) {
-        String scaleText = "等比";
+        String scaleText = "原比";
         switch (screenScaleType) {
             case VideoView.SCREEN_SCALE_DEFAULT:
-                scaleText = "等比";
+                scaleText = "原比";
                 break;
             case VideoView.SCREEN_SCALE_16_9:
                 scaleText = "16:9";
