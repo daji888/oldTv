@@ -37,7 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="@dimen/vs_50"
+        android:layout_marginTop="@dimen/vs_70"
         android:text="1111111111111"
         android:shadowColor="@color/color_000000_80"
         android:shadowDx="5"
