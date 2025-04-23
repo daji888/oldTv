@@ -145,7 +145,7 @@ public class CollectActivity extends BaseActivity {
     }
 
     private void initData() {
-        List<VodCollect> allVodRecord = RoomDataManger.getAllVodCollect();
+        List<VodCollect> allVodRecord = RoomDataManger.getAllVodCollect(30);
         List<VodCollect> vodInfoList = new ArrayList<>();
         for (VodCollect vodInfo : allVodRecord) {
             vodInfoList.add(vodInfo);
