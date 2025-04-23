@@ -23,10 +23,10 @@ public class HawkConfig {
     public static final String EXO_CODEC = "exo_codec";
     public static final String PLAY_TYPE = "play_type";//0 系统 1 ijk 2 exo 10 MXPlayer
     public static final String PLAY_RENDER = "play_render"; //0 TextureView 1 SurfaceView
-    public static final String PLAY_SCALE = "play_scale"; //0 默认 1
+    public static final String PLAY_SCALE = "play_scale"; //0 原比 1 16:9 2 4:3 3 填充 4 原始 5 裁剪
     public static final String PLAY_TIME_STEP = "play_time_step"; 
     public static final String DOH_URL = "doh_url"; // DNS
-    public static final String HOME_REC = "home_rec"; // 0 豆瓣热播 1 数据源推荐 2 历史
+    public static final String HOME_REC = "home_rec"; // 0 豆瓣热播 1 数据源推荐 2 观看历史
     public static final String HISTORY_NUM = "history_num";
     public static final String SEARCH_VIEW = "search_view"; // 0 列表 1 缩略图
     public static final String LIVE_CHANNEL = "last_live_channel_name";
