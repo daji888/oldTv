@@ -255,7 +255,7 @@ public class LivePlayActivity extends BaseActivity {
         tip_epg2 = (TextView) findViewById(R.id.tv_next_program_time);//底部EPG下个节目信息
         tv_srcinfo = (TextView) findViewById(R.id.tv_source);//线路状态
         tv_curepg_left = (TextView) findViewById(R.id.tv_current_program);//当前节目
-        tv_nextepg_left= (TextView) findViewById(R.id.tv_current_program);//下个节目
+        tv_nextepg_left = (TextView) findViewById(R.id.tv_next_program);//下个节目
         ll_epg = (RelativeLayout) findViewById(R.id.ll_epg);
         tv_right_top_tipnetspeed = (TextView)findViewById(R.id.tv_right_top_tipnetspeed);
         tv_right_top_channel_name = (TextView)findViewById(R.id.tv_right_top_channel_name);
@@ -427,13 +427,13 @@ public class LivePlayActivity extends BaseActivity {
                     while (size >= 0) {
                         if (date.after(((Epginfo) arrayList.get(size)).startdateTime) & date.before(((Epginfo) arrayList.get(size)).enddateTime)) {
                      //   if (new Date().compareTo(((Epginfo) arrayList.get(size)).startdateTime) >= 0) {
-                            tip_epg1.setText(((Epginfo) arrayList.get(size)).start + " -- " + ((Epginfo) arrayList.get(size)).end);
+                            tip_epg1.setText(((Epginfo) arrayList.get(size)).start + " - " + ((Epginfo) arrayList.get(size)).end);
                             ((TextView) findViewById(R.id.tv_current_program_name)).setText(((Epginfo) arrayList.get(size)).title);
                             if (size != arrayList.size() - 1) {
-                                tip_epg2.setText(((Epginfo) arrayList.get(size + 1)).start + " -- " + ((Epginfo) arrayList.get(size + 1)).end);
+                                tip_epg2.setText(((Epginfo) arrayList.get(size + 1)).start + " - " + ((Epginfo) arrayList.get(size + 1)).end);
                                 ((TextView) findViewById(R.id.tv_next_program_name)).setText(((Epginfo) arrayList.get(size + 1)).title);
                             } else {
-                                tip_epg2.setText("00:00 -- 23:59");
+                                tip_epg2.setText("00:00 - 23:59");
                                 ((TextView) findViewById(R.id.tv_next_program_name)).setText("暂无节目信息");
                             }
                             break;
@@ -815,7 +815,7 @@ public class LivePlayActivity extends BaseActivity {
         channel_Name = currentLiveChannelItem;
         isSHIYI = false;
         isBack = false;
-        if (currentLiveChannelItem.getUrl().indexOf("PLTV/8888") !=-1) {
+        if (currentLiveChannelItem.getUrl().contains("PLTV/") || currentLiveChannelItem.getUrl().contains("TVOD/")) {
             currentLiveChannelItem.setinclude_back(true);
         } else {
             currentLiveChannelItem.setinclude_back(false);
@@ -985,7 +985,7 @@ public class LivePlayActivity extends BaseActivity {
                 String shiyiUrl = currentLiveChannelItem.getUrl();
                 if (now.compareTo(selectedData.startdateTime) < 0) {
 
-                } else if(shiyiUrl.indexOf("PLTV/8888") !=-1){
+                } else if(shiyiUrl.contains("PLTV/") || shiyiUrl.contains("TVOD/")) {
 
                     mHandler.removeCallbacks(mHideChannelListRun);
                     mHandler.postDelayed(mHideChannelListRun, 100);
@@ -993,7 +993,7 @@ public class LivePlayActivity extends BaseActivity {
                     shiyi_time = shiyiStartdate + "-" + shiyiEnddate;
                     isSHIYI = true;
                     //mCanSeek=true;
-                    if(shiyiUrl.contains("/PLTV/")){
+                    if (shiyiUrl.contains("PLTV/") || shiyiUrl.contains("TVOD/")) {
                         if (shiyiUrl.indexOf("?") <= 0) {
                             shiyiUrl = shiyiUrl.replaceAll("/PLTV/", "/TVOD/");
                             shiyiUrl += "?playseek=" + shiyi_time;
@@ -1065,7 +1065,7 @@ public class LivePlayActivity extends BaseActivity {
                 String shiyiUrl = currentLiveChannelItem.getUrl();
                 if (now.compareTo(selectedData.startdateTime) < 0) {
 
-                } else if(shiyiUrl.indexOf("PLTV/8888") !=-1){
+                } else if(shiyiUrl.contains("PLTV/") || shiyiUrl.contains("TVOD/")) {
                     mHandler.removeCallbacks(mHideChannelListRun);
                     mHandler.postDelayed(mHideChannelListRun, 100);
 
@@ -1073,7 +1073,7 @@ public class LivePlayActivity extends BaseActivity {
                     shiyi_time = shiyiStartdate + "-" + shiyiEnddate;
                     isSHIYI = true;
                     //mCanSeek=true;
-                    if (shiyiUrl.contains("/PLTV/")) {
+                    if (shiyiUrl.contains("PLTV/") || shiyiUrl.contains("TVOD/")) {
                         if (shiyiUrl.indexOf("?") <= 0) {
                             shiyiUrl = shiyiUrl.replaceAll("/PLTV/", "/TVOD/");
                             shiyiUrl += "?playseek=" + shiyi_time;
