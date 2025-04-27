@@ -103,7 +103,7 @@ public class OkGoHelper {
             th.printStackTrace();
         }
      //   builder.dns(dnsOverHttps);
-        builder.dns(new CustomDns());
+        builder.dns(new CustomDns(dnsOverHttps));
         ItvClient = builder.build();
 
         ExoMediaSourceHelper.getInstance(App.getInstance()).setOkClient(ItvClient);
@@ -195,7 +195,7 @@ public class OkGoHelper {
                 JsonObject dnsConfig = jsonArray.get(i).getAsJsonObject();
                 String name = dnsConfig.has("name") ? dnsConfig.get("name").getAsString() : "Unknown Name";
                 dnsHttpsList.add(name);
-                if (dohSelector == i) ips = dnsConfig.has("ips") ? dnsConfig.getAsJsonArray("ips") : null;
+                if (dohSelector == (i+1)) ips = dnsConfig.has("ips") ? dnsConfig.getAsJsonArray("ips") : null;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -220,22 +220,19 @@ public class OkGoHelper {
         builder.cache(new Cache(new File(App.getInstance().getCacheDir().getAbsolutePath(), "dohcache"), 10 * 1024 * 1024));
         OkHttpClient dohClient = builder.build();
         String dohUrl = getDohUrl(Hawk.get(HawkConfig.DOH_URL, 0));
-        if (!dohUrl.isEmpty()) is_doh = true;
-        DnsOverHttps.Builder dnsBuilder = new DnsOverHttps.Builder();
-        dnsBuilder.client(dohClient);
-        dnsBuilder.url(dohUrl.isEmpty() ? null : HttpUrl.get(dohUrl));
-        if (is_doh && ips != null) {
-            List<InetAddress> IPS = DohIps(ips);
-            dnsOverHttps = dnsBuilder.bootstrapDnsHosts(IPS).build();
-        } else {
-            dnsOverHttps = dnsBuilder.build();
-        }
+        dnsOverHttps = new DnsOverHttps.Builder().client(dohClient).url(dohUrl.isEmpty() ? null : HttpUrl.get(dohUrl)).bootstrapDnsHosts(ips != null ? DohIps(ips) : null).build();
     }
 
     // 自定义 DNS
     static class CustomDns implements Dns {
         private  ConcurrentHashMap<String, List<InetAddress>> map;
         private final String excludeIps = "2409:8087:6c02:14:100::14,2409:8087:6c02:14:100::18,39.134.108.253,39.134.108.245";
+        private final DnsOverHttps mDnsOverHttps;
+ 
+        // 接收外部注入的 DoH 实例
+        public CustomDns(DnsOverHttps dnsOverHttps) {
+            this.mDnsOverHttps = dnsOverHttps;
+        }
         @NonNull
         @Override
         public List<InetAddress> lookup(@NonNull String hostname) throws UnknownHostException {
@@ -250,7 +247,7 @@ public class OkGoHelper {
                 return Collections.singletonList(InetAddress.getByName(hostname));
             }
             else {
-                return  dnsOverHttps.lookup(hostname);
+                return  mDnsOverHttps.lookup(hostname);
             }
         }
 
