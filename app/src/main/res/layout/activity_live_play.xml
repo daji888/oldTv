@@ -867,25 +867,6 @@
 		android:layout_marginRight="@dimen/vs_10" >
 
 		<TextView
-			android:id="@+id/tv_right_top_epg_name"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:ellipsize="marquee"
-			android:gravity="center"
-			android:paddingTop="@dimen/vs_0"
-			android:paddingLeft="@dimen/vs_5"
-			android:paddingRight="@dimen/vs_5"
-			android:marqueeRepeatLimit="marquee_forever"
-			android:singleLine="true"
-			android:text="测试频道"
-			android:shadowColor="@color/color_000000_80"
-                        android:shadowDx="5"
-                        android:shadowDy="5"
-                        android:shadowRadius="5"
-			android:textColor="#CCFFFFFF"
-			android:textSize="@dimen/ts_20" />
-
-		<TextView
 			android:id="@+id/tv_right_top_type"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
