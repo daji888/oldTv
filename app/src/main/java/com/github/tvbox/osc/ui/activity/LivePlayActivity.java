@@ -482,13 +482,13 @@ public class LivePlayActivity extends BaseActivity {
       //      tv_right_top_epg_name.setText(channel_Name.getChannelName());
                 
             Handler handler = new Handler(Looper.getMainLooper());
-            ll_right_top_loading.setVisibility(View.VISIBLE);
+      //      ll_right_top_loading.setVisibility(View.VISIBLE);
             tv_top_l_container.setVisibility(View.VISIBLE);
             // 延迟5秒后执行隐藏操作
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    ll_right_top_loading.setVisibility(View.GONE);
+                //    ll_right_top_loading.setVisibility(View.GONE);
                     tv_top_l_container.setVisibility(View.GONE);
                 }
             }, 5000);
