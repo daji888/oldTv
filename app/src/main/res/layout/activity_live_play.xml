@@ -361,7 +361,7 @@
             android:tag="tv_top_container"
 	    android:visibility="gone"
             tools:visibility="visible"
-	    android:background="@drawable/bg_channel_list"
+	    android:background="@drawable/shape_user_focus"
             android:layout_marginLeft="@dimen/vs_20"
             android:layout_marginTop="@dimen/vs_20"
             android:orientation="vertical">
@@ -851,7 +851,7 @@
 		android:layout_gravity="center|right|top"
 		android:orientation="vertical"
 		android:id="@+id/ll_right_top_loading"
-	        android:background="@drawable/bg_channel_list"
+	        android:background="@drawable/shape_user_focus"
 		android:layout_width="@dimen/vs_190"
 		android:layout_height="@dimen/vs_70"
 		android:layout_marginTop="@dimen/vs_20"
