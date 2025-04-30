@@ -151,9 +151,10 @@ public class LivePlayActivity extends BaseActivity {
     private static Hashtable hsEpg = new Hashtable();
     private CountDownTimer countDownTimer;
   //  private CountDownTimer countDownTimerRightTop;
-    private View ll_right_top_loading;
+  //  private View ll_right_top_loading;
     private View ll_right_top_huikan;
     private View tv_top_l_container;
+    private View tv_top_r_container;
     private View divLoadEpg;
     private View divLoadEpgleft;
     private LinearLayout divEpg;
@@ -169,15 +170,16 @@ public class LivePlayActivity extends BaseActivity {
 //    private TextView tv_info_name1;
 //    private TextView tv_source1;
     private TextView tv_videosize;
-    private TextView tv_right_top_tipnetspeed;
-    private TextView tv_right_top_channel_name;
+    private TextView tv_play_load_net_speed_right_top;
+//    private TextView tv_right_top_tipnetspeed;
+//    private TextView tv_right_top_channel_name;
 //    private TextView tv_right_top_epg_name;
     private TextView tv_right_top_type;
-    private ImageView iv_circle_bg;
+//    private ImageView iv_circle_bg;
     private TextView tv_shownum ;
     private TextView txtNoEpg ;
 
-    private ObjectAnimator objectAnimator;
+//    private ObjectAnimator objectAnimator;
     public String epgStringAddress = "";
 
     private TvRecyclerView mEpgDateGridView;
@@ -246,7 +248,9 @@ public class LivePlayActivity extends BaseActivity {
    //     tv_info_name1 = findViewById(R.id.tv_info_name1);
    //     tv_source1 = findViewById(R.id.tv_source1);
         tv_videosize = findViewById(R.id.tv_videosize);
+        tv_play_load_net_speed_right_top = findViewById(R.id.tv_play_load_net_speed_right_top);
         tv_top_l_container = findViewById(R.id.tv_top_l_container);
+        tv_top_r_container = findViewById(R.id.tv_top_r_container);
 
         //EPG  findViewById  by 龍
         tip_chname = (TextView)  findViewById(R.id.tv_channel_bar_name);//底部名称
@@ -257,23 +261,23 @@ public class LivePlayActivity extends BaseActivity {
         tv_curepg_left = (TextView) findViewById(R.id.tv_current_program);//当前节目
         tv_nextepg_left = (TextView) findViewById(R.id.tv_next_program);//下个节目
         ll_epg = (RelativeLayout) findViewById(R.id.ll_epg);
-        tv_right_top_tipnetspeed = (TextView)findViewById(R.id.tv_right_top_tipnetspeed);
-        tv_right_top_channel_name = (TextView)findViewById(R.id.tv_right_top_channel_name);
+   //     tv_right_top_tipnetspeed = (TextView)findViewById(R.id.tv_right_top_tipnetspeed);
+   //     tv_right_top_channel_name = (TextView)findViewById(R.id.tv_right_top_channel_name);
    //     tv_right_top_epg_name = (TextView)findViewById(R.id.tv_right_top_epg_name);
         tv_right_top_type = (TextView)findViewById(R.id.tv_right_top_type);
-        iv_circle_bg = (ImageView) findViewById(R.id.iv_circle_bg);
+   //     iv_circle_bg = (ImageView) findViewById(R.id.iv_circle_bg);
         tv_shownum = (TextView) findViewById(R.id.tv_shownum);
         txtNoEpg = (TextView) findViewById(R.id.txtNoEpg);
-        ll_right_top_loading = findViewById(R.id.ll_right_top_loading);
+   //     ll_right_top_loading = findViewById(R.id.ll_right_top_loading);
         ll_right_top_huikan = findViewById(R.id.ll_right_top_huikan);
         divLoadEpg = (View) findViewById(R.id.divLoadEpg);
         divLoadEpgleft = (View) findViewById(R.id.divLoadEpgleft);
         divEpg = (LinearLayout) findViewById(R.id.divEPG);
-        //右上角图片旋转
+   /*     //右上角图片旋转
         objectAnimator = ObjectAnimator.ofFloat(iv_circle_bg,"rotation", 360.0f);
         objectAnimator.setDuration(5000);
         objectAnimator.setRepeatCount(-1);
-        objectAnimator.start();
+        objectAnimator.start();  */
 
         //laodao 7day replay
         mEpgDateGridView = findViewById(R.id.mEpgDateGridView);
@@ -408,7 +412,6 @@ public class LivePlayActivity extends BaseActivity {
         if (isSHIYI)
             return;
         if (channel_Name.getChannelName() != null) {
-            // tv_videosize.setText("分辨率 : " + mVideoView.getVideoSize()[0] + " X " + mVideoView.getVideoSize()[1]);
         //    ((TextView) findViewById(R.id.tv_info_name1)).setText(channel_Name.getChannelName());
             ((TextView) findViewById(R.id.tv_channel_bar_name)).setText(channel_Name.getChannelName());
             ((TextView) findViewById(R.id.tv_channel_bottom_number)).setText("" + channel_Name.getChannelNum());
@@ -478,18 +481,20 @@ public class LivePlayActivity extends BaseActivity {
             } else {
                 ((TextView) findViewById(R.id.tv_source1)).setText("线路 : " + (channel_Name.getSourceIndex() + 1) + " / " + channel_Name.getSourceNum());
             }  */
-            tv_right_top_channel_name.setText(channel_Name.getChannelName());
+      //      tv_right_top_channel_name.setText(channel_Name.getChannelName());
       //      tv_right_top_epg_name.setText(channel_Name.getChannelName());
                 
             Handler handler = new Handler(Looper.getMainLooper());
       //      ll_right_top_loading.setVisibility(View.VISIBLE);
             tv_top_l_container.setVisibility(View.VISIBLE);
+            tv_top_r_container.setVisibility(View.VISIBLE);
             // 延迟5秒后执行隐藏操作
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                 //    ll_right_top_loading.setVisibility(View.GONE);
                     tv_top_l_container.setVisibility(View.GONE);
+                    tv_top_r_container.setVisibility(View.GONE);
                 }
             }, 5000);
         }
@@ -591,7 +596,7 @@ public class LivePlayActivity extends BaseActivity {
             int keyCode = event.getKeyCode();
             if (keyCode == KeyEvent.KEYCODE_MENU) {
                 showSettingGroup();
-                showtv_top_l_container();
+                showtv_videosize();
             } else if (!isListOrSettingLayoutVisible()) {
                 switch (keyCode) {
                     case KeyEvent.KEYCODE_DPAD_UP:
@@ -611,7 +616,7 @@ public class LivePlayActivity extends BaseActivity {
                             showProgressBars(true);
                         } else {
                             showSettingGroup();
-                            showtv_top_l_container();
+                            showtv_videosize();
                         }
                         break;
                     case KeyEvent.KEYCODE_DPAD_RIGHT:
@@ -1234,7 +1239,7 @@ public class LivePlayActivity extends BaseActivity {
             @Override
             public void longPress() {
                 showSettingGroup();
-                showtv_top_l_container();
+                showtv_videosize();
             }
 
             @Override
@@ -1873,8 +1878,9 @@ public class LivePlayActivity extends BaseActivity {
         livePlayerManager.init(mVideoView);
         showTime();
         showNetSpeed();
-        showtv_right_top_tipnetspeed();
-        showtv_top_l_container();
+    //    showtv_right_top_tipnetspeed();
+        showtv_videosize();
+        showtv_play_load_net_speed_right_top();
         
         tvLeftChannelListLayout.setVisibility(View.INVISIBLE);
         tvRightSettingLayout.setVisibility(View.INVISIBLE);
@@ -1964,12 +1970,12 @@ public class LivePlayActivity extends BaseActivity {
         }
     };
 
-    private void showtv_top_l_container() {
-       tv_top_l_container.setVisibility(View.VISIBLE);
-       mHandler.post(mUpdatetv_top_l_containerRun);
+    private void showtv_videosize() {
+       tv_videosize.setVisibility(View.VISIBLE);
+       mHandler.post(mUpdatetv_videosizeRun);
     }
 
-    private Runnable mUpdatetv_top_l_containerRun = new Runnable() {
+    private Runnable mUpdatetv_videosizeRun = new Runnable() {
         @Override
         public void run() {
             if (mVideoView == null) return;
@@ -1980,7 +1986,7 @@ public class LivePlayActivity extends BaseActivity {
         }
     };
     
-    private void showtv_right_top_tipnetspeed() {
+/*    private void showtv_right_top_tipnetspeed() {
         tv_right_top_tipnetspeed.setVisibility(View.VISIBLE);
         mHandler.post(mUpdatetv_right_top_tipnetspeedRun);
     }
@@ -1993,7 +1999,22 @@ public class LivePlayActivity extends BaseActivity {
             tv_right_top_tipnetspeed.setText(speed);
             mHandler.postDelayed(this, 1000);
         }
-    };
+    };  */
+
+   private void showtv_play_load_net_speed_right_top() {
+        tv_play_load_net_speed_right_top.setVisibility(View.VISIBLE);
+        mHandler.post(mUpdatetv_play_load_net_speed_right_topRun);
+    }
+
+    private Runnable mUpdatetv_play_load_net_speed_right_topRun = new Runnable() {
+        @Override
+        public void run() {
+            if (mVideoView == null) return;
+            String speed = PlayerHelper.getDisplaySpeed(mVideoView.getTcpSpeed(), true);
+            tv_play_load_net_speed_right_top.setText("网速 : " + speed);
+            mHandler.postDelayed(this, 1000);
+        }
+    };     
 
     private void showNetSpeed() {
         if (Hawk.get(HawkConfig.LIVE_SHOW_NET_SPEED, false)) {
