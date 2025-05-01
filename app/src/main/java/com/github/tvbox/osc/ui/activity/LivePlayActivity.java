@@ -463,8 +463,8 @@ public class LivePlayActivity extends BaseActivity {
                     public void onTick(long j) {
                         if (!tip_epg1.getText().equals("暂无节目信息")) {
                             ll_epg.setVisibility(View.VISIBLE);
-                        } else {
-                            ll_epg.setVisibility(View.GONE);
+                    //    } else {
+                    //        ll_epg.setVisibility(View.GONE);
                         }    
                         tv_top_l_container.setVisibility(View.VISIBLE);
                         tv_top_r_container.setVisibility(View.VISIBLE);
