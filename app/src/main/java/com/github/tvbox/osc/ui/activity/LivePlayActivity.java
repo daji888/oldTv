@@ -8,7 +8,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.CountDownTimer;
 import android.os.Handler;
-import android.os.Looper;
+//import android.os.Looper;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
@@ -458,19 +458,27 @@ public class LivePlayActivity extends BaseActivity {
             if (countDownTimer != null) {
                countDownTimer.cancel();
             }
-            if (!tip_epg1.getText().equals("暂无节目信息")) {
-                ll_epg.setVisibility(View.VISIBLE);
+       //     if (!tip_epg1.getText().equals("暂无节目信息")) {
                 countDownTimer = new CountDownTimer(5000, 1000) {//底部epg隐藏时间设定
                     public void onTick(long j) {
+                        if (!tip_epg1.getText().equals("暂无节目信息")) {
+                            ll_epg.setVisibility(View.VISIBLE);
+                        } else {
+                            ll_epg.setVisibility(View.GONE);
+                        }    
+                        tv_top_l_container.setVisibility(View.VISIBLE);
+                        tv_top_r_container.setVisibility(View.VISIBLE);
                     }
                     public void onFinish() {
                         ll_epg.setVisibility(View.GONE);
+                        tv_top_l_container.setVisibility(View.GONE);
+                        tv_top_r_container.setVisibility(View.GONE);
                     }
                 };
                 countDownTimer.start();
-            } else {
-               ll_epg.setVisibility(View.GONE);
-            }
+        //    } else {
+        //       ll_epg.setVisibility(View.GONE);
+        //    }
             if (channel_Name == null || channel_Name.getSourceNum() <= 0) {
                 ((TextView) findViewById(R.id.tv_source)).setText("1 / 1");
             } else {
@@ -484,7 +492,7 @@ public class LivePlayActivity extends BaseActivity {
       //      tv_right_top_channel_name.setText(channel_Name.getChannelName());
       //      tv_right_top_epg_name.setText(channel_Name.getChannelName());
                 
-            Handler handler = new Handler(Looper.getMainLooper());
+      /*      Handler handler = new Handler(Looper.getMainLooper());
       //      ll_right_top_loading.setVisibility(View.VISIBLE);
             tv_top_l_container.setVisibility(View.VISIBLE);
             tv_top_r_container.setVisibility(View.VISIBLE);
@@ -496,7 +504,7 @@ public class LivePlayActivity extends BaseActivity {
                     tv_top_l_container.setVisibility(View.GONE);
                     tv_top_r_container.setVisibility(View.GONE);
                 }
-            }, 5000);
+            }, 5000);  */
         }
     }
 
