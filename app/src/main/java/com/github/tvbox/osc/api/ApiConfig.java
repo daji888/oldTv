@@ -494,6 +494,8 @@ public class ApiConfig {
                         } else {
                             Hawk.put(HawkConfig.EPG_URL, epgURL);
                         }
+                    } else if (epgURL != Hawk.get(HawkConfig.EPG_URL, "")) {
+                         Hawk.put(HawkConfig.EPG_URL, epgURL); 
                     } else {
                          Hawk.put(HawkConfig.EPG_URL, ""); 
                     }
@@ -531,6 +533,8 @@ public class ApiConfig {
                                 } else {
                                     Hawk.put(HawkConfig.EPG_URL, epgURL);
                                 }
+                            } else if (epgURL != Hawk.get(HawkConfig.EPG_URL, "")) {
+                                Hawk.put(HawkConfig.EPG_URL, epgURL); 
                             } else {
                                 Hawk.put(HawkConfig.EPG_URL, ""); 
                             }
