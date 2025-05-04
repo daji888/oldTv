@@ -712,6 +712,9 @@ public class DetailActivity extends BaseActivity {
                     mVideo.id = vodId;
                     if (TextUtils.isEmpty(mVideo.name))mVideo.name = "TVBox";
                     vodInfo = new VodInfo();
+                    if ((mVideo.pic == null || mVideo.pic.isEmpty()) && !vod_picture.isEmpty()) {
+                         mVideo.pic = vod_picture;
+                     }
                     vodInfo.setVideo(mVideo);
                     vodInfo.sourceKey = mVideo.sourceKey;
                     sourceKey = mVideo.sourceKey;
@@ -859,10 +862,12 @@ public class DetailActivity extends BaseActivity {
         Intent intent = getIntent();
         if (intent != null && intent.getExtras() != null) {
             Bundle bundle = intent.getExtras();
+            vod_picture = bundle.getString("picture", "");
             loadDetail(bundle.getString("id", null), bundle.getString("sourceKey", ""));
         }
     }
 
+    private String  vod_picture = "";
     private void loadDetail(String vid, String key) {
         if (vid != null) {
             vodId = vid;
