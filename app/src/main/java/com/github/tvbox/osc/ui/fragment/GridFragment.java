@@ -94,14 +94,14 @@ public class GridFragment extends BaseLazyFragment {
         initViewModel();
         initData();
     }
-    public boolean isFolederMode(){ return (getUITag() =='1'); }
+    public boolean isFolederMode() { return (getUITag() == '1'); }
     // 获取当前页面UI的显示模式 ‘0’ 正常模式 '1' 文件夹模式 '2' 显示缩略图的文件夹模式
-    public char getUITag(){
+    public char getUITag() {
         System.out.println(sortData);
-        return (sortData == null || sortData.flag == null || sortData.flag.length() ==0 ) ?  '0' : sortData.flag.charAt(0);
+        return (sortData == null || sortData.flag == null || sortData.flag.length() == 0 ) ?  '0' : sortData.flag.charAt(0);
     }
     // 是否允许聚合搜索 sortData.flag的第二个字符为‘1’时允许聚搜
-    public boolean enableFastSearch(){  return sortData.flag == null || sortData.flag.length() < 2 || (sortData.flag.charAt(1) == '1'); }
+    public boolean enableFastSearch() {  return sortData.flag == null || sortData.flag.length() < 2 || (sortData.flag.charAt(1) == '1'); }
     // 保存当前页面
     private void saveCurrentView() {
         if (this.mGridView == null) return;
@@ -119,7 +119,7 @@ public class GridFragment extends BaseLazyFragment {
     public boolean restoreView() {
         if (mGrids.empty()) return false;
         this.showSuccess();
-        ((ViewGroup) mGridView.getParent()).removeView(this.mGridView); // 重父窗口移除当前控件
+        ((ViewGroup) mGridView.getParent()).removeView(this.mGridView); // 重复窗口移除当前控件
         GridInfo info = mGrids.pop();// 还原上次保存的控件
         this.sortData.id = info.sortID;
         this.mGridView = info.mGridView;
@@ -129,7 +129,7 @@ public class GridFragment extends BaseLazyFragment {
         this.isLoad = info.isLoad;
         this.focusedView = info.focusedView;
         this.mGridView.setVisibility(View.VISIBLE);
-//        if(this.focusedView != null){ this.focusedView.requestFocus(); }
+//        if (this.focusedView != null) { this.focusedView.requestFocus(); }
         if (mGridView != null) mGridView.requestFocus();
         return true;
     }
@@ -151,8 +151,8 @@ public class GridFragment extends BaseLazyFragment {
         }
         mGridView.setHasFixedSize(true);
         gridAdapter = new GridAdapter(isFolederMode());
-        this.page =1;
-        this.maxPage =1;
+        this.page = 1;
+        this.maxPage = 1;
         this.isLoad = false;
     }
 
@@ -222,6 +222,7 @@ public class GridFragment extends BaseLazyFragment {
                                 jumpActivity(SearchActivity.class, bundle);
                             }
                         } else {
+                            bundle.putString("picture", video.pic);
                             jumpActivity(DetailActivity.class, bundle);
                         }
                     }
