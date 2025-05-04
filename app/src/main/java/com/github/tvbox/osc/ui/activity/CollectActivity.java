@@ -119,6 +119,7 @@ public class CollectActivity extends BaseActivity {
                             Bundle bundle = new Bundle();
                             bundle.putString("id", vodInfo.vodId);
                             bundle.putString("sourceKey", vodInfo.sourceKey);
+                            bundle.putString("picture", vodInfo.pic);
                             jumpActivity(DetailActivity.class, bundle);
                         } else {
                             Intent newIntent = new Intent(mContext, SearchActivity.class);

@@ -96,7 +96,7 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
             tvHotList2.setVisibility(View.GONE);
             tvHotList1.setHasFixedSize(true);
             tvHotList1.setLayoutManager(new V7GridLayoutManager(this.mContext, 5));
-        }else {
+        } else {
             tvHotList1.setVisibility(View.GONE);
             tvHotList2.setVisibility(View.VISIBLE);
         }
@@ -181,12 +181,13 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
                     Bundle bundle = new Bundle();
                     bundle.putString("id", vod.id);
                     bundle.putString("sourceKey", vod.sourceKey);
+                    bundle.putString("picture", vod.pic);
                     jumpActivity(DetailActivity.class, bundle);
                 } else {
                     Intent newIntent;
-                    if(Hawk.get(HawkConfig.FAST_SEARCH_MODE, false)){
+                    if (Hawk.get(HawkConfig.FAST_SEARCH_MODE, false)) {
                         newIntent = new Intent(mContext, FastSearchActivity.class);
-                    }else {
+                    } else {
                         newIntent = new Intent(mContext, SearchActivity.class);
                     }
                     newIntent.putExtra("title", vod.name);
