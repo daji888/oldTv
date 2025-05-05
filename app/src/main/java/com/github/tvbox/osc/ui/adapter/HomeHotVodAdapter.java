@@ -11,6 +11,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.api.ApiConfig;
 import com.github.tvbox.osc.bean.Movie;
+import com.github.tvbox.osc.bean.SourceBean;
 import com.github.tvbox.osc.util.DefaultConfig;
 import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.ImgUtil;
@@ -36,10 +37,17 @@ public class HomeHotVodAdapter extends BaseQuickAdapter<Movie.Video, BaseViewHol
         }
 
         TextView tvRate = helper.getView(R.id.tvRate);
-        if (Hawk.get(HawkConfig.HOME_REC, 0) == 2){
+        if (Hawk.get(HawkConfig.HOME_REC, 0) == 2) {
             tvRate.setText(ApiConfig.get().getSource(item.sourceKey).getName());
-        } else if(Hawk.get(HawkConfig.HOME_REC, 0) == 0){
+        } else if (Hawk.get(HawkConfig.HOME_REC, 0) == 0) {
             tvRate.setText("豆瓣热播");
+        } else if (Hawk.get(HawkConfig.HOME_REC, 0) == 1) {
+            SourceBean bean =  ApiConfig.get().getSource(item.sourceKey);
+            if (bean != null) {
+                tvRate.setVisibility(View.GONE);
+            } else {
+                tvRate.setText("豆瓣热播");
+            }
         } else {
             tvRate.setVisibility(View.GONE);
         }
