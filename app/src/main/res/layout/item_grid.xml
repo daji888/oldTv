@@ -20,19 +20,18 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/vs_3"
-            android:layout_marginTop="@dimen/vs_3"
-            android:layout_marginRight="@dimen/vs_3"
-            android:layout_marginBottom="@dimen/vs_3"
+            android:layout_gravity="top"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/tvYear"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/vs_5"
-                android:layout_marginRight="@dimen/vs_5"
-                android:background="@drawable/shape_thumb_bottom_name"
+                android:layout_gravity="top"
+                android:layout_marginLeft="@dimen/vs_2"
+                android:layout_marginRight="@dimen/vs_2"
+                android:layout_marginTop="@dimen/vs_10"
+                android:background="@drawable/shape_thumb_note"
                 android:ellipsize="end"
                 android:gravity="center"
                 android:paddingLeft="@dimen/vs_5"
