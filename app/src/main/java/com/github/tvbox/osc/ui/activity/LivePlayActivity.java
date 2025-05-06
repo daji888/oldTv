@@ -458,16 +458,12 @@ public class LivePlayActivity extends BaseActivity {
             if (countDownTimer != null) {
                countDownTimer.cancel();
             }
-       //     if (!tip_epg1.getText().equals("暂无节目信息")) {
+            if (!tip_epg1.getText().equals("暂无节目信息")) {
+                ll_epg.setVisibility(View.VISIBLE);
+                tv_top_l_container.setVisibility(View.VISIBLE);
+                tv_top_r_container.setVisibility(View.VISIBLE);
                 countDownTimer = new CountDownTimer(5000, 1000) {//底部epg隐藏时间设定
                     public void onTick(long j) {
-                        if (!tip_epg1.getText().equals("暂无节目信息")) {
-                            ll_epg.setVisibility(View.VISIBLE);
-                            tv_top_l_container.setVisibility(View.VISIBLE);
-                            tv_top_r_container.setVisibility(View.VISIBLE);
-                        } else {
-                            ll_epg.setVisibility(View.GONE);
-                        }   
                     }
                     public void onFinish() {
                         ll_epg.setVisibility(View.GONE);
@@ -476,9 +472,9 @@ public class LivePlayActivity extends BaseActivity {
                     }
                 };
                 countDownTimer.start();
-        //    } else {
-        //       ll_epg.setVisibility(View.GONE);
-        //    }
+            } else {
+               ll_epg.setVisibility(View.GONE);
+            }
             if (channel_Name == null || channel_Name.getSourceNum() <= 0) {
                 ((TextView) findViewById(R.id.tv_source)).setText("1 / 1");
             } else {
@@ -982,7 +978,7 @@ public class LivePlayActivity extends BaseActivity {
                 String shiyiStartdate = targetDate + selectedData.originStart.replace(":", "") + "30";
                 String shiyiEnddate = targetDate + selectedData.originEnd.replace(":", "") + "30";
                 Date now = new Date();
-                if(new Date().compareTo(selectedData.startdateTime) < 0){
+                if (new Date().compareTo(selectedData.startdateTime) < 0) {
                     return;
                 }
                 epgListAdapter.setSelectedEpgIndex(position);
@@ -1085,7 +1081,7 @@ public class LivePlayActivity extends BaseActivity {
                     mVideoView.release();
                     shiyi_time = shiyiStartdate + "-" + shiyiEnddate;
                     isSHIYI = true;
-                    //mCanSeek=true;
+                    //mCanSeek = true;
                     if (shiyiUrl.contains("PLTV/") || shiyiUrl.contains("TVOD/")) {
                         if (shiyiUrl.indexOf("?") <= 0) {
                             shiyiUrl = shiyiUrl.replaceAll("/PLTV/", "/TVOD/");
@@ -1236,7 +1232,7 @@ public class LivePlayActivity extends BaseActivity {
                    } else {
                        // Continue playback
                        mVideoView.start();
-                       tv_top_l_container.setVisibility(View.INVISIBLE);
+                       tv_top_l_container.setVisibility(View.GONE);
                    }   
                  } else {
                     showChannelList();
@@ -2322,7 +2318,7 @@ public class LivePlayActivity extends BaseActivity {
                             iv_playpause.setBackground(ContextCompat.getDrawable(LivePlayActivity.context, R.drawable.icon_play));
                         } else {
                             mVideoView.start();
-                            tv_top_l_container.setVisibility(View.INVISIBLE);
+                            tv_top_l_container.setVisibility(View.GONE);
                             iv_play.setVisibility(View.INVISIBLE);
                             countDownTimer.start();
                             iv_playpause.setBackground(ContextCompat.getDrawable(LivePlayActivity.context, R.drawable.vod_pause));
