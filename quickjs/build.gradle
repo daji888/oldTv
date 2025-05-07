@@ -3,12 +3,12 @@ plugins {
 }
 
 android {
-    namespace 'com.github.tvbox.quickjs'
-    compileSdk 35
+    namespace = 'com.github.tvbox.quickjs'
+    compileSdk = 35
 
     defaultConfig {
-        minSdk 21
-        targetSdk 28
+        minSdk = 21
+        targetSdk = 28
     }
     lint {
         disable 'UnsafeOptInUsageError'
