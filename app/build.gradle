@@ -3,16 +3,16 @@ plugins {
 }
 
 android {
-    namespace 'com.github.tvbox.osc'
-    compileSdkVersion 35
+    namespace = 'com.github.tvbox.osc'
+    compileSdkVersion = 35
 
     defaultConfig {
-        applicationId 'com.github.tvbox.osc.dj'
-        minSdkVersion 21
-        targetSdkVersion 28
-        versionCode 1
-        versionName '1.0.0'
-        multiDexEnabled true
+        applicationId = 'com.github.tvbox.osc.dj'
+        minSdkVersion = 21
+        targetSdkVersion = 28
+        versionCode = 1
+        versionName = '1.0.0'
+        multiDexEnabled = true
         //设置room的Schema的位置
         javaCompileOptions {
             annotationProcessorOptions {
@@ -28,7 +28,7 @@ android {
     buildTypes {
         debug {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            minifyEnabled false
+            minifyEnabled = false
 
             ndk {
                 abiFilters 'armeabi-v7a'
@@ -36,7 +36,7 @@ android {
         }
         release {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            minifyEnabled false
+            minifyEnabled = false
 
             ndk {
                 abiFilters 'armeabi-v7a'
@@ -62,11 +62,11 @@ android {
     }
 
     lintOptions {
-        checkReleaseBuilds false
-        abortOnError false
+        checkReleaseBuilds = false
+        abortOnError = false
     }
     buildFeatures {
-        buildConfig true
+        buildConfig = true
         dataBinding = true
     }
 }
@@ -99,7 +99,7 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.16.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
     implementation 'me.jessyan:autosize:1.2.1'
-    implementation('com.thoughtworks.xstream:xstream:1.4.20') {
+    implementation ('com.thoughtworks.xstream:xstream:1.4.20') {
         exclude group: 'xmlpull', module: 'xmlpull'
     }
     implementation 'org.greenrobot:eventbus:3.3.1'
