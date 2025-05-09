@@ -2,6 +2,7 @@ package com.github.tvbox.osc.util;
 
 import androidx.media3.common.util.UriUtil;
 
+import static com.github.tvbox.osc.util.RegexUtils.getPattern;
 import com.github.tvbox.osc.base.App;
 
 import java.math.BigDecimal;
@@ -244,16 +245,6 @@ public class M3U8 {
         }
         return scan ? scan(line, ads) : line;
     }
-
-    private static final Map<String, Pattern> patternCache = new HashMap<>();
-    private static Pattern getPattern(String regex) {
-         Pattern pattern = patternCache.get(regex);
-         if (pattern == null) {
-             pattern = Pattern.compile(regex);
-             patternCache.put(regex, pattern);
-         }
-         return pattern;
-     }
 
     private static String scanAd(String line,String TAG_AD) {
          Matcher m1 = getPattern(TAG_AD).matcher(line);
