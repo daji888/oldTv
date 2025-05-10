@@ -87,7 +87,7 @@ public class ApiConfig {
     private String requestAccept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9";
 
     private ApiConfig() {
-        jarLoader.clear();
+        clearLoader();
         sourceBeanList = new LinkedHashMap<>();
         liveChannelGroupList = new ArrayList<>();
         parseBeanList = new ArrayList<>();
@@ -982,4 +982,16 @@ public class ApiConfig {
          superPb.setType(4);
          parseBeanList.add(0, superPb);
      }
+ 
+     public void clearLoader() {
+        jarLoader.clear();
+        jsLoader.clear();
+    }
+ 
+    String miTV(String url) {
+        if (url.startsWith("p") || url.startsWith("mitv")) {
+
+        }
+        return url;
+    }
 }
