@@ -988,10 +988,4 @@ public class ApiConfig {
         jsLoader.clear();
     }
  
-    String miTV(String url) {
-        if (url.startsWith("p") || url.startsWith("mitv")) {
-
-        }
-        return url;
-    }
 }
