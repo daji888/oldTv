@@ -1307,7 +1307,7 @@ public class VodController extends BaseController {
          return url;
      }
 
-     public void evaluateScript(SourceBean sourceBean,String url, WebView web_view, XWalkView xWalk_view){
+     public void evaluateScript(SourceBean sourceBean,String url, WebView web_view, XWalkView xWalk_view) {
         String clickSelector = sourceBean.getClickSelector().trim();
         clickSelector = clickSelector.isEmpty() ? VideoParseRuler.getHostScript(url) : clickSelector;
         if (!clickSelector.isEmpty()) {
@@ -1324,7 +1324,7 @@ public class VodController extends BaseController {
             // 构造点击的 JS 代码
             String js = selector;
 //            if (!selector.contains("click()")) js += ".click();";
-            LOG.i("echo-javascript:" + js);
+//            LOG.i("echo-javascript:" + js);
             if (web_view != null) {
                 //4.4以上才支持这种写法
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
