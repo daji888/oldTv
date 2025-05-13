@@ -1200,7 +1200,6 @@ public class LivePlayActivity extends BaseActivity {
                 getEpg(liveEpgDateAdapter.getData().get(position).getDateParamVal());
             }
         });
-        liveEpgDateAdapter.setSelectedIndex(1);
 
         //手机/模拟器
         liveEpgDateAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
