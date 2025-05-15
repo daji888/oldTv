@@ -982,7 +982,7 @@ public class LivePlayActivity extends BaseActivity {
                     return;
                 }
                 epgListAdapter.setSelectedEpgIndex(position);
-                if (now.compareTo(selectedData.startdateTime) >= 0 && now.compareTo(selectedData.enddateTime) <= 0) {
+   /*             if (now.compareTo(selectedData.startdateTime) >= 0 && now.compareTo(selectedData.enddateTime) <= 0) {
                     mVideoView.release();
                     isSHIYI = false;
                     mVideoView.setUrl(currentLiveChannelItem.getUrl());
@@ -990,7 +990,7 @@ public class LivePlayActivity extends BaseActivity {
                     epgListAdapter.setShiyiSelection(-1, false,timeFormat.format(date));
                     showProgressBars(false);
                     return;
-                }
+                }  */
                 String shiyiUrl = currentLiveChannelItem.getUrl();
                 if (now.compareTo(selectedData.startdateTime) < 0) {
 
@@ -1028,8 +1028,8 @@ public class LivePlayActivity extends BaseActivity {
                     });
                     shiyi_time_c = (int) getTime(formatDate.format(nowday) + " " + selectedData.start + ":" + "30", formatDate.format(nowday) + " " + selectedData.end + ":" + "30");
                     ViewGroup.LayoutParams lp = iv_play.getLayoutParams();
-                    lp.width=videoHeight / 7;
-                    lp.height=videoHeight / 7;
+                    lp.width = videoHeight / 7;
+                    lp.height = videoHeight / 7;
               //      sBar = (SeekBar) findViewById(R.id.pb_progressbar);
               //      sBar.setMin(0);
               //      sBar.setMax(shiyi_time_c * 1000);
@@ -1062,7 +1062,7 @@ public class LivePlayActivity extends BaseActivity {
                     return;
                 }
                 epgListAdapter.setSelectedEpgIndex(position);
-                if (now.compareTo(selectedData.startdateTime) >= 0 && now.compareTo(selectedData.enddateTime) <= 0) {
+        /*        if (now.compareTo(selectedData.startdateTime) >= 0 && now.compareTo(selectedData.enddateTime) <= 0) {
                     mVideoView.release();
                     isSHIYI = false;
                     mVideoView.setUrl(currentLiveChannelItem.getUrl());
@@ -1070,7 +1070,7 @@ public class LivePlayActivity extends BaseActivity {
                     epgListAdapter.setShiyiSelection(-1, false,timeFormat.format(date));
                     showProgressBars(false);
                     return;
-                }
+                }  */
                 String shiyiUrl = currentLiveChannelItem.getUrl();
                 if (now.compareTo(selectedData.startdateTime) < 0) {
 
@@ -1108,8 +1108,8 @@ public class LivePlayActivity extends BaseActivity {
                     });
                     shiyi_time_c = (int) getTime(formatDate.format(nowday) + " " + selectedData.start + ":" + "30", formatDate.format(nowday) + " " + selectedData.end + ":" + "30");
                     ViewGroup.LayoutParams lp =  iv_play.getLayoutParams();
-                    lp.width=videoHeight / 7;
-                    lp.height=videoHeight / 7;
+                    lp.width = videoHeight / 7;
+                    lp.height = videoHeight / 7;
               //      sBar = (SeekBar) findViewById(R.id.pb_progressbar);
               //      sBar.setMin(0);
               //      sBar.setMax(shiyi_time_c * 1000);
