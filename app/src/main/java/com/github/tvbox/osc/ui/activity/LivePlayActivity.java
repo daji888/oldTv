@@ -368,13 +368,13 @@ public class LivePlayActivity extends BaseActivity {
         String finalChannelName = channelName;
         epgListAdapter.CanBack(currentLiveChannelItem.getinclude_back());
     //    epgListAdapter.updateData(date, new ArrayList<>());
-        String epg;
+        String epgUrl;
         if (epgStringAddress.contains("{name}") && epgStringAddress.contains("{date}")) {
-            epg = epgStringAddress.replace("{name}", URLEncoder.encode(epgTagName)).replace("{date}", timeFormat.format(date));
+            epgUrl = epgStringAddress.replace("{name}", URLEncoder.encode(epgTagName)).replace("{date}", timeFormat.format(date));
         } else {
-            epg = epgStringAddress + "?ch="+ URLEncoder.encode(epgTagName) + "&date=" + timeFormat.format(date);
+            epgUrl = epgStringAddress + "?ch="+ URLEncoder.encode(epgTagName) + "&date=" + timeFormat.format(date);
         }
-        UrlHttpUtil.get(epg, new CallBackUtil.CallBackString() {
+        UrlHttpUtil.get(epgUrl, new CallBackUtil.CallBackString() {
             public void onFailure(int i, String str) {
                 showEpg(date, new ArrayList());
             //    showBottomEpg();
@@ -437,7 +437,7 @@ public class LivePlayActivity extends BaseActivity {
                                 ((TextView) findViewById(R.id.tv_next_program_name)).setText(((Epginfo) arrayList.get(size + 1)).title);
                             } else {
                                 tip_epg2.setText("00:00 - 23:59");
-                                ((TextView) findViewById(R.id.tv_next_program_name)).setText("暂无节目信息");
+                                ((TextView) findViewById(R.id.tv_next_program_name)).setText("精彩节目-暂未提供节目预告信息");
                             }
                             break;
                         } else {
@@ -2197,21 +2197,21 @@ public class LivePlayActivity extends BaseActivity {
     private  String durationToString(int duration) {
         String result = "";
         int dur = duration / 1000;
-        int hour=dur/3600;
+        int hour = dur / 3600;
         int min = (dur / 60) % 60;
         int sec = dur % 60;
-        if (hour>0) {
+        if (hour > 0) {
             if (min > 9) {
                 if (sec > 9) {
-                    result =hour+":"+ min + ":" + sec;
+                    result = hour + ":" + min + ":" + sec;
                 } else {
-                    result =hour+":"+ min + ":0" + sec;
+                    result = hour + ":" + min + ":0" + sec;
                 }
             } else {
                 if (sec > 9) {
-                    result =hour+":"+ "0" + min + ":" + sec;
+                    result = hour + ":" + "0" + min + ":" + sec;
                 } else {
-                    result = hour+":"+"0" + min + ":0" + sec;
+                    result = hour + ":" + "0" + min + ":0" + sec;
                 }
             }
         } else {
@@ -2223,7 +2223,7 @@ public class LivePlayActivity extends BaseActivity {
                 }
             } else {
                 if (sec > 9) {
-                    result ="0" + min + ":" + sec;
+                    result = "0" + min + ":" + sec;
                 } else {
                     result = "0" + min + ":0" + sec;
                 }
