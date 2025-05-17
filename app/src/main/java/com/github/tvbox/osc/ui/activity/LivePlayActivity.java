@@ -415,10 +415,10 @@ public class LivePlayActivity extends BaseActivity {
         //    ((TextView) findViewById(R.id.tv_info_name1)).setText(channel_Name.getChannelName());
             ((TextView) findViewById(R.id.tv_channel_bar_name)).setText(channel_Name.getChannelName());
             ((TextView) findViewById(R.id.tv_channel_bottom_number)).setText("" + channel_Name.getChannelNum());
-            tip_epg1.setText("暂无节目信息");
-            ((TextView) findViewById(R.id.tv_current_program_name)).setText("");
-            tip_epg2.setText("暂无节目信息");
-            ((TextView) findViewById(R.id.tv_next_program_name)).setText("");
+            tip_epg1.setText("00:00 - 23:59");
+            ((TextView) findViewById(R.id.tv_current_program_name)).setText("精彩节目-暂未提供节目预告信息");
+            tip_epg2.setText("00:00 - 23:59");
+            ((TextView) findViewById(R.id.tv_next_program_name)).setText("精彩节目-暂未提供节目预告信息");
             String savedEpgKey = channel_Name.getChannelName() + "_" + liveEpgDateAdapter.getItem(liveEpgDateAdapter.getSelectedIndex()).getDatePresented();
             if (hsEpg.containsKey(savedEpgKey)) {
                 String[] epgInfo = EpgUtil.getEpgInfo(channel_Name.getChannelName());
@@ -458,7 +458,7 @@ public class LivePlayActivity extends BaseActivity {
             if (countDownTimer != null) {
                countDownTimer.cancel();
             }
-            if (!tip_epg1.getText().equals("暂无节目信息")) {
+            if (!tip_epg1.getText().equals("00:00 - 23:59")) {
                 ll_epg.setVisibility(View.VISIBLE);
                 tv_top_l_container.setVisibility(View.VISIBLE);
                 tv_top_r_container.setVisibility(View.VISIBLE);
@@ -2239,7 +2239,7 @@ public class LivePlayActivity extends BaseActivity {
             ll_epg.setVisibility(View.GONE);
         } else {
             backcontroller.setVisibility(View.GONE);
-            if (!tip_epg1.getText().equals("暂无节目信息")) {
+            if (!tip_epg1.getText().equals("00:00 - 23:59")) {
                 ll_epg.setVisibility(View.VISIBLE);
             }
         }
