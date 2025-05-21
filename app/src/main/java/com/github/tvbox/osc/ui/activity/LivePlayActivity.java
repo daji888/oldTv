@@ -623,8 +623,9 @@ public class LivePlayActivity extends BaseActivity {
                         if (isBack) {
                             showProgressBars(true);
                         } else {
-                            showSettingGroup();
-                            showtv_videosize();
+                        //    showSettingGroup();
+                        //    showtv_videosize();
+                            playPreSource();
                         }
                         break;
                     case KeyEvent.KEYCODE_DPAD_RIGHT:
