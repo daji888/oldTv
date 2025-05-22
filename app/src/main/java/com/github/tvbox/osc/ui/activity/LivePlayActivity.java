@@ -436,7 +436,7 @@ public class LivePlayActivity extends BaseActivity {
                                 tip_epg2.setText(((Epginfo) arrayList.get(size + 1)).start + " - " + ((Epginfo) arrayList.get(size + 1)).end);
                                 ((TextView) findViewById(R.id.tv_next_program_name)).setText(((Epginfo) arrayList.get(size + 1)).title);
                             } else {
-                                tip_epg2.setText("00:00 - 00:59");
+                                tip_epg2.setText("00:00 - 23:59");
                                 ((TextView) findViewById(R.id.tv_next_program_name)).setText("精彩节目-暂未提供节目预告信息");
                             }
                             break;
@@ -458,7 +458,7 @@ public class LivePlayActivity extends BaseActivity {
             if (countDownTimer != null) {
                countDownTimer.cancel();
             }
-            if (!tip_epg2.getText().equals("00:00 - 23:59")) {
+            if (!tip_epg1.getText().equals("00:00 - 23:59")) {
                 ll_epg.setVisibility(View.VISIBLE);
                 tv_top_l_container.setVisibility(View.VISIBLE);
                 tv_top_r_container.setVisibility(View.VISIBLE);
@@ -2244,7 +2244,7 @@ public class LivePlayActivity extends BaseActivity {
             ll_epg.setVisibility(View.GONE);
         } else {
             backcontroller.setVisibility(View.GONE);
-            if (!tip_epg2.getText().equals("00:00 - 23:59")) {
+            if (!tip_epg1.getText().equals("00:00 - 23:59")) {
                 ll_epg.setVisibility(View.VISIBLE);
             }
         }
