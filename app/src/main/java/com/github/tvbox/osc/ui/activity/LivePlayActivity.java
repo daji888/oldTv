@@ -614,10 +614,14 @@ public class LivePlayActivity extends BaseActivity {
                             playPrevious();
                         break;
                     case KeyEvent.KEYCODE_DPAD_DOWN:
-                        if (Hawk.get(HawkConfig.LIVE_CHANNEL_REVERSE, false))
-                            playPrevious();
-                        else
-                            playNext();
+                        if (isBack) {
+                            showChannelList();
+                        } else {
+                            if (Hawk.get(HawkConfig.LIVE_CHANNEL_REVERSE, false))
+                                playPrevious();
+                            else
+                                playNext();
+                        }    
                         break;
                     case KeyEvent.KEYCODE_DPAD_LEFT:
                         if (isBack) {
