@@ -815,6 +815,14 @@ public class LivePlayActivity extends BaseActivity {
         }
     };
 
+    private void initLiveObj() {
+        String type = livesOBJ.has("type") ? livesOBJ.get("type").getAsString() : "0";
+        if (type.equals("3")) {
+            String jarUrl = livesOBJ.has("jar") ? livesOBJ.get("jar").getAsString() : "";
+            ApiConfig.get().setLiveJar(jarUrl);
+        }
+    }
+
     private boolean playChannel(int channelGroupIndex, int liveChannelIndex, boolean changeSource) {
         if ((channelGroupIndex == currentChannelGroupIndex && liveChannelIndex == currentLiveChannelIndex && !changeSource)
                 || (changeSource && currentLiveChannelItem.getSourceNum() == 1)) {
@@ -1801,7 +1809,7 @@ public class LivePlayActivity extends BaseActivity {
             finish();
             return;
         }
-
+        initLiveObj(); 
         if (list.size() == 1 && list.get(0).getGroupName().startsWith("http://127.0.0.1")) {
             loadProxyLives(list.get(0).getGroupName());
         }
