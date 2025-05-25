@@ -36,6 +36,7 @@ public class HawkConfig {
     public static final String LIVE_SHOW_NET_SPEED = "live_show_net_speed";
     public static final String LIVE_SHOW_TIME = "live_show_time";
     public static final String LIVE_SKIP_PASSWORD = "live_skip_password";
+    public static final String LIVE_GROUP_INDEX = "live_group_index";
     public static final String LIVE_GROUP_LIST = "live_group_list";
     public static final String FAST_SEARCH_MODE = "fast_search_mode";
     public static final String SUBTITLE_TEXT_SIZE = "subtitle_text_size";
