@@ -362,10 +362,12 @@ public class ApiConfig {
     }
 
     private static  String jarCache ="true";
+    private String liveSpider = "";
     private void parseJson(String apiUrl, String jsonStr) {
         JsonObject infoJson = new Gson().fromJson(jsonStr, JsonObject.class);
         // spider
         spider = DefaultConfig.safeJsonString(infoJson, "spider", "");
+        liveSpider = DefaultConfig.safeJsonString(infoJson, "spider", "");
         jarCache = DefaultConfig.safeJsonString(infoJson, "jarCache", "true");
         // wallpaper
         wallpaper = DefaultConfig.safeJsonString(infoJson, "wallpaper", "");
@@ -519,9 +521,17 @@ public class ApiConfig {
                     JsonObject fengMiLives = infoJson.get("lives").getAsJsonArray().get(0).getAsJsonObject();
    //                 Hawk.put(HawkConfig.LIVE_PLAYER_TYPE, DefaultConfig.safeJsonInt(fengMiLives, "playerType", -1));
                     String type = fengMiLives.get("type").getAsString();
-                    if (type.equals("0")) {
+                    if (type.equals("0") || type.equals("3")) {
                         String url = fengMiLives.get("url").getAsString();
    //                     Hawk.put(HawkConfig.LIVE_URL,url);
+                        if (type.equals("3")) {
+                            String jarUrl = livesOBJ.get("jar").getAsString().trim();
+                            if (!jarUrl.isEmpty()) {
+                                jarLoader.loadLiveJar(jarUrl);
+                            } else if (!liveSpider.isEmpty()) {
+                                jarLoader.loadLiveJar(liveSpider);
+                            }
+                        }
                         //设置epg
                         // takagen99 : Getting EPG URL from File Config & put into Settings
                             if (fengMiLives.has("epg")) {
@@ -821,6 +831,11 @@ public class ApiConfig {
             liveChannelGroupList.add(liveChannelGroup);
         }
     }
+
+   public void setLiveJar(String liveJar) {
+        String jarUrl = !liveJar.isEmpty() ? liveJar : liveSpider;
+        jarLoader.setRecentJarKey(MD5.string2MD5(jarUrl));
+    } 
 
     public String getSpider() {
         return spider;
