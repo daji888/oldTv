@@ -821,7 +821,7 @@ public class LivePlayActivity extends BaseActivity {
         JsonArray live_groups = Hawk.get(HawkConfig.LIVE_GROUP_LIST, new JsonArray());
         JsonObject livesOBJ = live_groups.get(position).getAsJsonObject();
         String type = livesOBJ.has("type") ? livesOBJ.get("type").getAsString() : "0";*/
-        String type = ApiConfig.parseJson(String apiUrl, String jsonStr).livesOBJ.has("type") ? livesOBJ.get("type").getAsString() : "0";
+        String type = ApiConfig.parseJson(jsonStr).livesOBJ.has("type") ? livesOBJ.get("type").getAsString() : "0";
         if (type.equals("3")) {
             String jarUrl = livesOBJ.has("jar") ? livesOBJ.get("jar").getAsString() : "";
             ApiConfig.get().setLiveJar(jarUrl);
