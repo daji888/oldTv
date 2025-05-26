@@ -1403,8 +1403,8 @@ public class LivePlayActivity extends BaseActivity {
                 if (position < 0) return;
                 liveChannelGroupAdapter.setFocusedGroupIndex(-1);
                 liveChannelItemAdapter.setFocusedChannelIndex(position);
-                mHandler.removeCallbacks(mHideChannelListRun);
-                mHandler.postDelayed(mHideChannelListRun, 5000);
+           //     mHandler.removeCallbacks(mHideChannelListRun);
+           //     mHandler.postDelayed(mHideChannelListRun, 5000);
             }
 
             @Override
@@ -1418,13 +1418,14 @@ public class LivePlayActivity extends BaseActivity {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 FastClickCheckUtil.check(view);
+                liveChannelItemAdapter.setSelectedChannelIndex(position);
                 clickLiveChannel(position);
             }
         });
     }
 
     private void clickLiveChannel(int position) {
-        liveChannelItemAdapter.setSelectedChannelIndex(position);
+    //    liveChannelItemAdapter.setSelectedChannelIndex(position);
         playChannel(liveChannelGroupAdapter.getSelectedGroupIndex(), position, false);
         if (tvLeftChannelListLayout.getVisibility() == View.VISIBLE) {
             mHandler.removeCallbacks(mHideChannelListRun);
