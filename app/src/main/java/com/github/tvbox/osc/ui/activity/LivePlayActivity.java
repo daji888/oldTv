@@ -816,17 +816,16 @@ public class LivePlayActivity extends BaseActivity {
         }
     };
 
-    private void initLiveObj() {
-      /*  int position  =Hawk.get(HawkConfig.LIVE_GROUP_INDEX, 0);
+  /*  private void initLiveObj() {
+        int position  =Hawk.get(HawkConfig.LIVE_GROUP_INDEX, 0);
         JsonArray live_groups = Hawk.get(HawkConfig.LIVE_GROUP_LIST, new JsonArray());
         JsonObject livesOBJ = live_groups.get(position).getAsJsonObject();
-        String type = livesOBJ.has("type") ? livesOBJ.get("type").getAsString() : "0";*/
-        String type = ApiConfig.livesOBJ.has("type") ? livesOBJ.get("type").getAsString() : "0";
+        String type = livesOBJ.has("type") ? livesOBJ.get("type").getAsString() : "0";
         if (type.equals("3")) {
             String jarUrl = livesOBJ.has("jar") ? livesOBJ.get("jar").getAsString() : "";
             ApiConfig.get().setLiveJar(jarUrl);
         }
-    }  
+    }  */
 
     private boolean playChannel(int channelGroupIndex, int liveChannelIndex, boolean changeSource) {
         if ((channelGroupIndex == currentChannelGroupIndex && liveChannelIndex == currentLiveChannelIndex && !changeSource)
