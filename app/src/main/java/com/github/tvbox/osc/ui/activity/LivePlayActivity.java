@@ -1813,7 +1813,7 @@ public class LivePlayActivity extends BaseActivity {
             finish();
             return;
         }
-        initLiveObj(); 
+     //   initLiveObj(); 
         if (list.size() == 1 && list.get(0).getGroupName().startsWith("http://127.0.0.1")) {
             loadProxyLives(list.get(0).getGroupName());
         }
