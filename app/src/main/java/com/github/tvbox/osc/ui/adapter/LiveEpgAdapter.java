@@ -46,16 +46,16 @@ public class LiveEpgAdapter extends BaseQuickAdapter<Epginfo, BaseViewHolder> {
         if (value.index == selectedEpgIndex && (value.currentEpgDate.equals(shiyiDate) || value.currentEpgDate.equals(timeFormat.format(new Date())))) {
             textview.setTextColor(mContext.getResources().getColor(R.color.color_FF5F00));
             timeview.setTextColor(mContext.getResources().getColor(R.color.color_FF5F00));
-        }else {
+        } else {
             textview.setTextColor(Color.WHITE);
             timeview.setTextColor(Color.WHITE);
         }
-        if (new Date().compareTo(value.startdateTime) >= 0 && new Date().compareTo(value.enddateTime) <= 0) {
+        if ((new Date().compareTo(value.startdateTime) >= 0 && new Date().compareTo(value.enddateTime) <= 0) && source_include_back) {
             shiyi.setVisibility(View.VISIBLE);
             shiyi.setBackgroundColor(Color.YELLOW);
             shiyi.setText("直播中");
             shiyi.setTextColor(Color.RED);
-        } else if (new Date().compareTo(value.enddateTime) > 0 && source_include_back ) {
+        } else if (new Date().compareTo(value.enddateTime) > 0 && source_include_back) {
             shiyi.setVisibility(View.VISIBLE);
             shiyi.setBackgroundColor(0xff28713E);
             shiyi.setTextColor(Color.WHITE);
@@ -69,7 +69,7 @@ public class LiveEpgAdapter extends BaseQuickAdapter<Epginfo, BaseViewHolder> {
             shiyi.setVisibility(View.GONE);
         }
         textview.setText(value.title);
-        timeview.setText(value.start + "--" + value.end);
+        timeview.setText(value.start + "-" + value.end);
         Log.e("roinlong", "getView: " + selectedEpgIndex);
         if (ShiyiSelection == false) {
             Date now = new Date();
@@ -88,7 +88,7 @@ public class LiveEpgAdapter extends BaseQuickAdapter<Epginfo, BaseViewHolder> {
                 shiyi.setText("回看中");
                 shiyi.setTextColor(Color.RED);
                 shiyi.setBackgroundColor(Color.rgb(12, 255, 0));
-                if (new Date().compareTo(value.startdateTime) >= 0 && new Date().compareTo(value.enddateTime) <= 0) {
+                if ((new Date().compareTo(value.startdateTime) >= 0 && new Date().compareTo(value.enddateTime) <= 0) && source_include_back) {
                     shiyi.setVisibility(View.VISIBLE);
                     shiyi.setBackgroundColor(Color.YELLOW);
                     shiyi.setText("直播中");

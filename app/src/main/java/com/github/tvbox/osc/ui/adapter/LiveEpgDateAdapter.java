@@ -28,7 +28,7 @@ public class LiveEpgDateAdapter extends BaseQuickAdapter<LiveEpgDate, BaseViewHo
         tvGroupName.setBackgroundColor(Color.TRANSPARENT);
         if (item.getIndex() == selectedIndex) {
             tvGroupName.setTextColor(mContext.getResources().getColor(R.color.color_FF5F00));
-        }else {
+        } else {
             tvGroupName.setTextColor(mContext.getResources().getColor(R.color.color_CCFFFFFF));
         }
     }
@@ -50,7 +50,7 @@ public class LiveEpgDateAdapter extends BaseQuickAdapter<LiveEpgDate, BaseViewHo
     public void setFocusedIndex(int focusedIndex) {
         int preSelectedIndex = this.selectedIndex;
         this.focusedIndex = focusedIndex;
-        if(preSelectedIndex != -1)
+        if (preSelectedIndex != -1)
             notifyItemChanged(preSelectedIndex);
         if (this.focusedIndex != -1)
             notifyItemChanged(this.focusedIndex);

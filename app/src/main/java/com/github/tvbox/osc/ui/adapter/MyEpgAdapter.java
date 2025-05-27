@@ -21,7 +21,7 @@ public class MyEpgAdapter extends BaseAdapter {
 
     private List<Epginfo> data;
     private Context context;
-    public static float fontSize=20;
+    public static float fontSize = 20;
     private int defaultSelection = 0;
     private int defaultShiyiSelection = 0;
 
@@ -64,33 +64,30 @@ public class MyEpgAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        if(view ==null){
+        if (view == null) {
             view =  LayoutInflater.from(context).inflate(R.layout.epglist_item,viewGroup,false);
         }
         TextView textview = (TextView)view.findViewById(R.id.tv_epg_name);
         TextView timeview = (TextView)view.findViewById(R.id.tv_epg_time);
         AudioWaveView wqddg_AudioWaveView = (AudioWaveView)view.findViewById(R.id.wqddg_AudioWaveView);
         wqddg_AudioWaveView.setVisibility(View.GONE);
-        if(i < data.size()){
-
+        if (i < data.size()) {
             textview.setText(data.get(i).title);
-            timeview.setText(data.get(i).start + "--" + data.get(i).end);
+            timeview.setText(data.get(i).start + "-" + data.get(i).end);
             textview.setTextColor(Color.WHITE) ;
             timeview.setTextColor(Color.WHITE) ;
-            Log.e("roinlong", "getView: "+  i);
-               if(i == this.defaultSelection){
+            Log.e("roinlong", "getView: " +  i);
+               if (i == this.defaultSelection) {
                     wqddg_AudioWaveView.setVisibility(View.VISIBLE);
                     textview.setTextColor(Color.rgb(0, 153, 255)) ;
                     timeview.setTextColor(Color.rgb(0, 153, 255)) ;
                     textview.setFreezesText(true);
                     timeview.setFreezesText(true);
-                }else {
+                } else {
                     wqddg_AudioWaveView.setVisibility(View.GONE);
                 }
-
         }
         return view;
     }
 }
-
 
