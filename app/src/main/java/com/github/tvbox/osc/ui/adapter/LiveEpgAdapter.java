@@ -8,6 +8,7 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.github.tvbox.osc.R;
+import com.github.tvbox.osc.ui.activity.LivePlayActivity;
 import com.github.tvbox.osc.ui.tv.widget.AudioWaveView;
 import com.github.tvbox.osc.bean.Epginfo;
 
@@ -32,7 +33,7 @@ public class LiveEpgAdapter extends BaseQuickAdapter<Epginfo, BaseViewHolder> {
         super(R.layout.epglist_item, new ArrayList<>());
     }
 
-    public void CanBack( Boolean source_include_back){
+    public void CanBack( Boolean source_include_back) {
         this.source_include_back = source_include_back;
     }
 
@@ -53,8 +54,8 @@ public class LiveEpgAdapter extends BaseQuickAdapter<Epginfo, BaseViewHolder> {
         if ((new Date().compareTo(value.startdateTime) >= 0 && new Date().compareTo(value.enddateTime) <= 0) && source_include_back) {
             shiyi.setVisibility(View.VISIBLE);
             shiyi.setBackgroundColor(Color.YELLOW);
-            shiyi.setText("直播中");
             shiyi.setTextColor(Color.RED);
+            shiyi.setText("直播中");
         } else if (new Date().compareTo(value.enddateTime) > 0 && source_include_back) {
             shiyi.setVisibility(View.VISIBLE);
             shiyi.setBackgroundColor(0xff28713E);
@@ -81,32 +82,36 @@ public class LiveEpgAdapter extends BaseQuickAdapter<Epginfo, BaseViewHolder> {
                 wqddg_AudioWaveView.setVisibility(View.GONE);
             }
         } else {
-            if (value.index == this.selectedEpgIndex && value.currentEpgDate.equals(shiyiDate)) {
+            if ((value.index == this.selectedEpgIndex && value.currentEpgDate.equals(shiyiDate)) && LivePlayActivity.isBack == true) {
                 wqddg_AudioWaveView.setVisibility(View.VISIBLE);
                 textview.setFreezesText(true);
                 timeview.setFreezesText(true);
                 shiyi.setText("回看中");
                 shiyi.setTextColor(Color.RED);
                 shiyi.setBackgroundColor(Color.rgb(12, 255, 0));
-                if ((new Date().compareTo(value.startdateTime) >= 0 && new Date().compareTo(value.enddateTime) <= 0) && source_include_back) {
-                    shiyi.setVisibility(View.VISIBLE);
-                    shiyi.setBackgroundColor(Color.YELLOW);
-                    shiyi.setText("直播中");
-                    shiyi.setTextColor(Color.RED);
-                }
             } else {
                 wqddg_AudioWaveView.setVisibility(View.GONE);
             }
+            if (LivePlayActivity.isBack == false) {
+                if ((new Date().compareTo(value.startdateTime) >= 0 && new Date().compareTo(value.enddateTime) <= 0) && source_include_back) {
+                    wqddg_AudioWaveView.setVisibility(View.VISIBLE);
+                    textview.setFreezesText(true);
+                    timeview.setFreezesText(true);
+                    shiyi.setText("直播中");
+                    shiyi.setTextColor(Color.RED);
+                    shiyi.setBackgroundColor(Color.YELLOW);
+                }    
+            }
         }
-
     }
+    
     public void setShiyiSelection(int i, boolean t, String currentEpgDate) {
         this.selectedEpgIndex = i;
         this.shiyiDate = t ? currentEpgDate : null;
         ShiyiSelection = t;
         notifyItemChanged(this.selectedEpgIndex);
-
     }
+    
     public int getSelectedIndex() {
         return selectedEpgIndex;
     }
@@ -118,7 +123,6 @@ public class LiveEpgAdapter extends BaseQuickAdapter<Epginfo, BaseViewHolder> {
             notifyItemChanged(this.selectedEpgIndex);
     }
 
-
     public int getFocusedEpgIndex() {
         return focusedEpgIndex;
     }
@@ -128,4 +132,5 @@ public class LiveEpgAdapter extends BaseQuickAdapter<Epginfo, BaseViewHolder> {
         if (this.focusedEpgIndex != -1)
             notifyItemChanged(this.focusedEpgIndex);
     }
+     
 }
