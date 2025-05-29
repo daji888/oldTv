@@ -49,9 +49,9 @@ android {
 
     applicationVariants.configureEach { variant ->
         variant.outputs.configureEach { output ->
-            def buildTime = variant.versionName
+            def CommitTime = variant.versionName
             // 构建自定义文件名
-            def fileName = "TVBox-${buildTime}.apk"
+            def fileName = "TVBox-${CommitTime}.apk"
             outputFileName = fileName
         }
     }
