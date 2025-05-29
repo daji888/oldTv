@@ -196,7 +196,7 @@ public class LivePlayActivity extends BaseActivity {
     public static Date nowday = new Date();
 
     private boolean isSHIYI = false;
-    private boolean isBack = false;
+    public static boolean isBack = false;
     private static String shiyi_time;//时移时间
     private static int shiyi_time_c;//时移时间差值
     public static String playUrl;
