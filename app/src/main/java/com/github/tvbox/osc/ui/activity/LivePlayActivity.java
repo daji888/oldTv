@@ -1004,7 +1004,7 @@ public class LivePlayActivity extends BaseActivity {
                 if (now.compareTo(selectedData.startdateTime) < 0) {
 
                 } else if(shiyiUrl.contains("PLTV/") || shiyiUrl.contains("TVOD/")) {
-
+                    shiyiUrl = shiyiUrl.replaceAll("/PLTV/", "/TVOD/");
                     mHandler.removeCallbacks(mHideChannelListRun);
                     mHandler.postDelayed(mHideChannelListRun, 100);
                     mVideoView.release();
@@ -1013,7 +1013,7 @@ public class LivePlayActivity extends BaseActivity {
                     //mCanSeek=true;
                     if (shiyiUrl.contains("PLTV/") || shiyiUrl.contains("TVOD/")) {
                         if (shiyiUrl.indexOf("?") <= 0) {
-                            shiyiUrl = shiyiUrl.replaceAll("/PLTV/", "/TVOD/");
+                        //    shiyiUrl = shiyiUrl.replaceAll("/PLTV/", "/TVOD/");
                             shiyiUrl += "?playseek=" + shiyi_time;
                         } else if (shiyiUrl.indexOf("playseek") > 0) {
                             shiyiUrl = shiyiUrl.replaceAll("playseek=(.*)", "playseek=" + shiyi_time);
@@ -1084,16 +1084,16 @@ public class LivePlayActivity extends BaseActivity {
                 if (now.compareTo(selectedData.startdateTime) < 0) {
 
                 } else if(shiyiUrl.contains("PLTV/") || shiyiUrl.contains("TVOD/")) {
+                    shiyiUrl = shiyiUrl.replaceAll("/PLTV/", "/TVOD/");
                     mHandler.removeCallbacks(mHideChannelListRun);
                     mHandler.postDelayed(mHideChannelListRun, 100);
-
                     mVideoView.release();
                     shiyi_time = shiyiStartdate + "-" + shiyiEnddate;
                     isSHIYI = true;
                     //mCanSeek = true;
                     if (shiyiUrl.contains("PLTV/") || shiyiUrl.contains("TVOD/")) {
                         if (shiyiUrl.indexOf("?") <= 0) {
-                            shiyiUrl = shiyiUrl.replaceAll("/PLTV/", "/TVOD/");
+                        //    shiyiUrl = shiyiUrl.replaceAll("/PLTV/", "/TVOD/");
                             shiyiUrl += "?playseek=" + shiyi_time;
                         } else if (shiyiUrl.indexOf("playseek") > 0) {
                             shiyiUrl = shiyiUrl.replaceAll("playseek=(.*)", "playseek=" + shiyi_time);
