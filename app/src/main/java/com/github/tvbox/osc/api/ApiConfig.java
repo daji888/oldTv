@@ -518,7 +518,7 @@ public class ApiConfig {
                 if (!lives.contains("type")) {
                     loadLives(infoJson.get("lives").getAsJsonArray());
                 } else {
-                    JsonObject livesOBJ = infoJson.get("lives").getAsJsonArray().get(0).getAsJsonObject();
+                //    JsonObject livesOBJ = infoJson.get("lives").getAsJsonArray().get(0).getAsJsonObject();
    //                 Hawk.put(HawkConfig.LIVE_PLAYER_TYPE, DefaultConfig.safeJsonInt(livesOBJ, "playerType", -1));
                     String type = livesOBJ.get("type").getAsString();
                     if (type.equals("0") || type.equals("3")) {
