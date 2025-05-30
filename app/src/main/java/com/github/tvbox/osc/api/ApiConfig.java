@@ -518,11 +518,11 @@ public class ApiConfig {
                 if (!lives.contains("type")) {
                     loadLives(infoJson.get("lives").getAsJsonArray());
                 } else {
-                    JsonObject fengMiLives = infoJson.get("lives").getAsJsonArray().get(0).getAsJsonObject();
-   //                 Hawk.put(HawkConfig.LIVE_PLAYER_TYPE, DefaultConfig.safeJsonInt(fengMiLives, "playerType", -1));
-                    String type = fengMiLives.get("type").getAsString();
+                    JsonObject livesOBJ = infoJson.get("lives").getAsJsonArray().get(0).getAsJsonObject();
+   //                 Hawk.put(HawkConfig.LIVE_PLAYER_TYPE, DefaultConfig.safeJsonInt(livesOBJ, "playerType", -1));
+                    String type = livesOBJ.get("type").getAsString();
                     if (type.equals("0") || type.equals("3")) {
-                        String url = fengMiLives.get("url").getAsString();
+                        String url = livesOBJ.get("url").getAsString();
    //                     Hawk.put(HawkConfig.LIVE_URL,url);
                         if (type.equals("3")) {
                             String jarUrl = livesOBJ.get("jar").getAsString().trim();
@@ -534,8 +534,8 @@ public class ApiConfig {
                         }
                         //设置epg
                         // takagen99 : Getting EPG URL from File Config & put into Settings
-                            if (fengMiLives.has("epg")) {
-                                String epg = fengMiLives.get("epg").getAsString();
+                            if (livesOBJ.has("epg")) {
+                                String epg = livesOBJ.get("epg").getAsString();
                                 System.out.println("EPG URL :" + epg);
                                 putEPGHistory(epg);
                                 // Overwrite with EPG URL from Settings
