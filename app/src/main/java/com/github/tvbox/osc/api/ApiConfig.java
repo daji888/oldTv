@@ -91,6 +91,7 @@ public class ApiConfig {
         sourceBeanList = new LinkedHashMap<>();
         liveChannelGroupList = new ArrayList<>();
         parseBeanList = new ArrayList<>();
+        Hawk.put(HawkConfig.LIVE_GROUP_LIST, new JsonArray());
     }
 
     public static ApiConfig get() {
@@ -444,7 +445,11 @@ public class ApiConfig {
         String epgURL = Hawk.get(HawkConfig.EPG_URL, "");
         String liveURL_final = null;
         try {
-          if (infoJson.has("lives") && infoJson.get("lives").getAsJsonArray() != null) {  
+          if (infoJson.has("lives") && infoJson.get("lives").getAsJsonArray() != null) {
+            JsonArray lives_groups = infoJson.get("lives").getAsJsonArray();
+            int live_group_index = Hawk.get(HawkConfig.LIVE_GROUP_INDEX, 0);
+            if (live_group_index > lives_groups.size() - 1) Hawk.put(HawkConfig.LIVE_GROUP_INDEX, 0);
+            Hawk.put(HawkConfig.LIVE_GROUP_LIST, lives_groups);
             JsonObject livesOBJ = infoJson.get("lives").getAsJsonArray().get(0).getAsJsonObject();
             String lives = livesOBJ.toString();
             int index = lives.indexOf("proxy://");
