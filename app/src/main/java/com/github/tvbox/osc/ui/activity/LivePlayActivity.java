@@ -360,11 +360,18 @@ public class LivePlayActivity extends BaseActivity {
         String channelName = channel_Name.getChannelName();
         SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd");
         timeFormat.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
-        String[] epgInfo = EpgUtil.getEpgInfo(channelName);
         String epgTagName = channelName;
-        updateChannelIcon(channelName, epgInfo == null ? null : epgInfo[0]);
-        if (epgInfo != null && !epgInfo[1].isEmpty()) {
-            epgTagName = epgInfo[1];
+        if (logoUrl == null || logoUrl.isEmpty()) {
+            String[] epgInfo = EpgUtil.getEpgInfo(channelName);
+            if (epgInfo != null && !epgInfo[1].isEmpty()) {
+                epgTagName = epgInfo[1];
+            }
+            updateChannelIcon(channelName, epgInfo == null ? null : epgInfo[0]);
+        } else if (logoUrl.equals("false")) {
+            updateChannelIcon(channelName, null);
+        } else {
+            String logo = logoUrl.replace("{name}", epgTagName);
+            updateChannelIcon(channelName, logo);
         }
         String finalChannelName = channelName;
         epgListAdapter.CanBack(currentLiveChannelItem.getinclude_back());
@@ -816,11 +823,15 @@ public class LivePlayActivity extends BaseActivity {
         }
     };
 
+    private String logoUrl = null;
     private void initLiveObj() {
         int position = Hawk.get(HawkConfig.LIVE_GROUP_INDEX, 0);
         JsonArray live_groups = Hawk.get(HawkConfig.LIVE_GROUP_LIST, new JsonArray());
         JsonObject livesOBJ = live_groups.get(position).getAsJsonObject();
         String type = livesOBJ.has("type") ? livesOBJ.get("type").getAsString() : "0";
+        if (livesOBJ.has("logo")) {
+            logoUrl = livesOBJ.get("logo").getAsString();
+        }
         if (type.equals("3")) {
             String jarUrl = livesOBJ.has("jar") ? livesOBJ.get("jar").getAsString() : "";
             ApiConfig.get().setLiveJar(jarUrl);
