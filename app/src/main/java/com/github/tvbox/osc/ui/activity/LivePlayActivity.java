@@ -67,6 +67,7 @@ import com.github.tvbox.osc.util.urlhttp.CallBackUtil;
 import com.github.tvbox.osc.util.urlhttp.UrlHttpUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import org.apache.commons.lang3.StringUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.AbsCallback;
@@ -814,6 +815,17 @@ public class LivePlayActivity extends BaseActivity {
             tvChannelInfo.setVisibility(View.INVISIBLE);
         }
     };
+
+    private void initLiveObj() {
+        int position = Hawk.get(HawkConfig.LIVE_GROUP_INDEX, 0);
+        JsonArray live_groups = Hawk.get(HawkConfig.LIVE_GROUP_LIST, new JsonArray());
+        JsonObject livesOBJ = live_groups.get(position).getAsJsonObject();
+        String type = livesOBJ.has("type") ? livesOBJ.get("type").getAsString() : "0";
+        if (type.equals("3")) {
+            String jarUrl = livesOBJ.has("jar") ? livesOBJ.get("jar").getAsString() : "";
+            ApiConfig.get().setLiveJar(jarUrl);
+        }
+    }  
 
     private boolean playChannel(int channelGroupIndex, int liveChannelIndex, boolean changeSource) {
         if ((channelGroupIndex == currentChannelGroupIndex && liveChannelIndex == currentLiveChannelIndex && !changeSource)
@@ -1802,7 +1814,7 @@ public class LivePlayActivity extends BaseActivity {
             finish();
             return;
         }
-
+        initLiveObj(); 
         if (list.size() == 1 && list.get(0).getGroupName().startsWith("http://127.0.0.1")) {
             loadProxyLives(list.get(0).getGroupName());
         }
