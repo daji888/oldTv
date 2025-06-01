@@ -515,6 +515,15 @@ public class ApiConfig {
                     } else {
                         Hawk.put(HawkConfig.LIVE_PLAY_TYPE,Hawk.get(HawkConfig.PLAY_TYPE, 0)); 
                     }
+                    //设置UA
+                    if (livesOBJ.has("ua")) {
+                       String ua = livesOBJ.get("ua").getAsString();
+                       HashMap<String,String> liveHeader = new HashMap<>();
+                       liveHeader.put("User-Agent", ua);
+                       Hawk.put(HawkConfig.LIVE_WEB_HEADER, liveHeader);
+                    } else {
+                       Hawk.put(HawkConfig.LIVE_WEB_HEADER,null);
+                    }
 
  //               LiveChannelGroup liveChannelGroup = new LiveChannelGroup();
  //               liveChannelGroup.setGroupName(url);
@@ -561,6 +570,15 @@ public class ApiConfig {
                                 Hawk.put(HawkConfig.LIVE_PLAY_TYPE,livePlayType);
                             } else {
                                 Hawk.put(HawkConfig.LIVE_PLAY_TYPE,Hawk.get(HawkConfig.PLAY_TYPE, 0));
+                            }
+                            //设置UA
+                            if (livesOBJ.has("ua")) {
+                                String ua = livesOBJ.get("ua").getAsString();
+                                HashMap<String,String> liveHeader = new HashMap<>();
+                                liveHeader.put("User-Agent", ua);
+                                Hawk.put(HawkConfig.LIVE_WEB_HEADER, liveHeader);
+                            } else {
+                                Hawk.put(HawkConfig.LIVE_WEB_HEADER,null);
                             }
 
                         if (url.startsWith("http")) {
