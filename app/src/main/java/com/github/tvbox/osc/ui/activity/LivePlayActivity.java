@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.IntEvaluator;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 import android.os.CountDownTimer;
@@ -89,11 +90,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.github.tvbox.osc.player.MyVideoView;
 import xyz.doikki.videoplayer.player.AbstractPlayer;
@@ -142,6 +147,7 @@ public class LivePlayActivity extends BaseActivity {
 
     private List<LiveChannelGroup> liveChannelGroupList = new ArrayList<>();
     private int currentLiveChannelIndex = -1;
+    private int currentLiveLookBackIndex = -1;
     private int currentLiveChangeSourceTimes = 0;
     private LiveChannelItem currentLiveChannelItem = null;
     private LivePlayerManager livePlayerManager = new LivePlayerManager();
@@ -149,7 +155,7 @@ public class LivePlayActivity extends BaseActivity {
 
 //EPG   by 龍
     private static LiveChannelItem  channel_Name = null;
-    private static Hashtable hsEpg = new Hashtable();
+    private static Hashtable<String, ArrayList<Epginfo>> hsEpg = new Hashtable<>();
     private CountDownTimer countDownTimer;
   //  private CountDownTimer countDownTimerRightTop;
   //  private View ll_right_top_loading;
@@ -417,8 +423,9 @@ public class LivePlayActivity extends BaseActivity {
 
     //显示底部EPG
     private void showBottomEpg() {
-        if (isSHIYI)
+        if (isSHIYI) {
             return;
+        }    
         if (channel_Name.getChannelName() != null) {
         //    ((TextView) findViewById(R.id.tv_info_name1)).setText(channel_Name.getChannelName());
             ((TextView) findViewById(R.id.tv_channel_bar_name)).setText(channel_Name.getChannelName());
@@ -532,7 +539,7 @@ public class LivePlayActivity extends BaseActivity {
         }
     }
 
-
+    @SuppressLint("NotifyDataSetChanged")
     //频道列表
     public  void divLoadEpgRight(View view) {
         mHandler.removeCallbacks(mHideChannelListRun);
@@ -704,8 +711,17 @@ public class LivePlayActivity extends BaseActivity {
             return;
         }
         if (tvLeftChannelListLayout.getVisibility() == View.INVISIBLE) {
+            if (currentLiveLookBackIndex > -1) {
+                mRightEpgList.setSelectedPosition(currentLiveLookBackIndex);
+                mRightEpgList.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mRightEpgList.smoothScrollToPosition(currentLiveLookBackIndex);
+                    }
+                });
+            }
             refreshChannelList(currentChannelGroupIndex);
-             mHandler.postDelayed(mFocusCurrentChannelAndShowChannelList, 50);
+            mHandler.postDelayed(mFocusCurrentChannelAndShowChannelList, 50);
         } else {
             mHandler.removeCallbacks(mHideChannelListRun);
             mHandler.post(mHideChannelListRun);
@@ -822,13 +838,20 @@ public class LivePlayActivity extends BaseActivity {
             tvChannelInfo.setVisibility(View.INVISIBLE);
         }
     };
-
+    
+    private JsonObject catchup = null;
+    private Boolean hasCatchup = false;
     private String logoUrl = null;
     private void initLiveObj() {
         int position = Hawk.get(HawkConfig.LIVE_GROUP_INDEX, 0);
         JsonArray live_groups = Hawk.get(HawkConfig.LIVE_GROUP_LIST, new JsonArray());
         JsonObject livesOBJ = live_groups.get(position).getAsJsonObject();
         String type = livesOBJ.has("type") ? livesOBJ.get("type").getAsString() : "0";
+        if (livesOBJ.has("catchup")) {
+            catchup = livesOBJ.getAsJsonObject("catchup");
+            LOG.i("echo-catchup :" + catchup.toString());
+            hasCatchup = true;
+        }
         if (livesOBJ.has("logo")) {
             logoUrl = livesOBJ.get("logo").getAsString();
         }
@@ -836,7 +859,11 @@ public class LivePlayActivity extends BaseActivity {
             String jarUrl = livesOBJ.has("jar") ? livesOBJ.get("jar").getAsString() : "";
             ApiConfig.get().setLiveJar(jarUrl);
         }
-    }  
+    } 
+
+    private HashMap<String,String> liveWebHeader() {
+        return Hawk.get(HawkConfig.LIVE_WEB_HEADER);
+    }
 
     private boolean playChannel(int channelGroupIndex, int liveChannelIndex, boolean changeSource) {
         if ((channelGroupIndex == currentChannelGroupIndex && liveChannelIndex == currentLiveChannelIndex && !changeSource)
@@ -854,9 +881,11 @@ public class LivePlayActivity extends BaseActivity {
         }
 
         channel_Name = currentLiveChannelItem;
+        currentLiveLookBackIndex = -1;
+        epgListAdapter.setSelectedEpgIndex(-1);
         isSHIYI = false;
         isBack = false;
-        if (currentLiveChannelItem.getUrl().contains("PLTV/") || currentLiveChannelItem.getUrl().contains("TVOD/")) {
+        if (hasCatchup || currentLiveChannelItem.getUrl().contains("PLTV/") || currentLiveChannelItem.getUrl().contains("TVOD/")) {
             currentLiveChannelItem.setinclude_back(true);
         } else {
             currentLiveChannelItem.setinclude_back(false);
@@ -866,7 +895,8 @@ public class LivePlayActivity extends BaseActivity {
         backcontroller.setVisibility(View.GONE);
         ll_right_top_huikan.setVisibility(View.GONE);
         if (mVideoView != null) {
-            mVideoView.setUrl(currentLiveChannelItem.getUrl());
+            if (liveWebHeader() != null) LOG.i("echo-" + liveWebHeader().toString());
+            mVideoView.setUrl(currentLiveChannelItem.getUrl(), liveWebHeader());
             mVideoView.start();
         }
         // showChannelInfo();
@@ -998,15 +1028,18 @@ public class LivePlayActivity extends BaseActivity {
                 epgListAdapter.setFocusedEpgIndex(position);
             }
 
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onItemClick(TvRecyclerView parent, View itemView, int position) {
-
+                if (position == currentLiveLookBackIndex) return;
+                currentLiveLookBackIndex = position;  
                 Date date = liveEpgDateAdapter.getSelectedIndex() < 0 ? new Date() :
                         liveEpgDateAdapter.getData().get(liveEpgDateAdapter.getSelectedIndex()).getDateParamVal();
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
                 dateFormat.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
                 Epginfo selectedData = epgListAdapter.getItem(position);
                 String targetDate = dateFormat.format(date);
+                assert selectedData != null;
                 String shiyiStartdate = targetDate + selectedData.originStart.replace(":", "") + "30";
                 String shiyiEnddate = targetDate + selectedData.originEnd.replace(":", "") + "30";
                 Date now = new Date();
@@ -1017,16 +1050,17 @@ public class LivePlayActivity extends BaseActivity {
    /*             if (now.compareTo(selectedData.startdateTime) >= 0 && now.compareTo(selectedData.enddateTime) <= 0) {
                     mVideoView.release();
                     isSHIYI = false;
-                    mVideoView.setUrl(currentLiveChannelItem.getUrl());
+                    mVideoView.setUrl(currentLiveChannelItem.getUrl(), liveWebHeader());
                     mVideoView.start();
                     epgListAdapter.setShiyiSelection(-1, false,timeFormat.format(date));
+                    epgListAdapter.notifyDataSetChanged();
                     showProgressBars(false);
                     return;
                 }  */
                 String shiyiUrl = currentLiveChannelItem.getUrl();
                 if (now.compareTo(selectedData.startdateTime) < 0) {
 
-                } else if(shiyiUrl.contains("PLTV/") || shiyiUrl.contains("TVOD/")) {
+                } else if(hasCatchup || shiyiUrl.contains("PLTV/") || shiyiUrl.contains("TVOD/")) {
                     shiyiUrl = shiyiUrl.replaceAll("/PLTV/", "/TVOD/");
                     mHandler.removeCallbacks(mHideChannelListRun);
                     mHandler.postDelayed(mHideChannelListRun, 100);
@@ -1034,7 +1068,37 @@ public class LivePlayActivity extends BaseActivity {
                     shiyi_time = shiyiStartdate + "-" + shiyiEnddate;
                     isSHIYI = true;
                     //mCanSeek=true;
-                    if (shiyiUrl.contains("PLTV/") || shiyiUrl.contains("TVOD/")) {
+                    if (hasCatchup) {
+                        String replace = catchup.get("replace").getAsString();
+                        String source = catchup.get("source").getAsString();
+                        String[] parts = replace.split(",");
+                        String left = parts.length > 0 ? parts[0].trim() : "";
+                        String right = parts.length > 1 ? parts[1].trim() : "";
+                        shiyiUrl = shiyiUrl.replaceAll(left, right);
+                        // 已知参数
+                        String startHHmm = selectedData.originStart.replace(":", "");
+                        String endHHmm = selectedData.originEnd.replace(":", "");
+                        // 正则表达式：匹配 ${(b)...} 或 ${(e)...}
+                        Pattern pattern = Pattern.compile("\\$\\{\\((b|e)\\)(.*?)\\}");
+                        Matcher matcher = pattern.matcher(source);
+                        Map<String, String> valueMap = new HashMap<>();
+                        valueMap.put("b", targetDate + "T" + startHHmm);
+                        valueMap.put("e", targetDate + "T" + endHHmm);
+                        StringBuffer result = new StringBuffer();
+                        while (matcher.find()) {
+                            String type = matcher.group(1); // 捕获 b 或 e
+                            String patternPart = matcher.group(2);
+                            // 生成替换值（如 "20231023T1500"）
+                            String replacement = valueMap.get(type);
+                            // 将 ${(b)yyyyMMdd'T'HHmm} 替换为 "20231023T1500"
+                            assert replacement != null;
+                            matcher.appendReplacement(result, replacement);
+                        }
+                        matcher.appendTail(result);
+                        LOG.i("echo-shiyiurl:" + shiyiUrl);
+                        if (shiyiUrl.endsWith("&")) shiyiUrl = shiyiUrl.substring(0, shiyiUrl.length() - 1);
+                        shiyiUrl += result.toString();
+                    } else {
                         if (shiyiUrl.indexOf("?") <= 0) {
                         //    shiyiUrl = shiyiUrl.replaceAll("/PLTV/", "/TVOD/");
                             shiyiUrl += "?playseek=" + shiyi_time;
@@ -1043,11 +1107,11 @@ public class LivePlayActivity extends BaseActivity {
                         } else {
                             shiyiUrl += "&playseek=" + shiyi_time;
                         }
-                        Log.d("PLTV播放地址", "playUrl   " + shiyiUrl);
                     }
+                    LOG.i("echo-回看地址playUrl :" + shiyiUrl);
                     playUrl = shiyiUrl;
 
-                    mVideoView.setUrl(playUrl);
+                    mVideoView.setUrl(playUrl, liveWebHeader());
                     mVideoView.start();
                     epgListAdapter.setShiyiSelection(position, true, timeFormat.format(date));
                     epgListAdapter.notifyDataSetChanged();
@@ -1079,14 +1143,18 @@ public class LivePlayActivity extends BaseActivity {
 
         //手机/模拟器
         epgListAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Date date = liveEpgDateAdapter.getSelectedIndex() < 0 ? new Date() :
                         liveEpgDateAdapter.getData().get(liveEpgDateAdapter.getSelectedIndex()).getDateParamVal();
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+                @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
                 dateFormat.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
                 Epginfo selectedData = epgListAdapter.getItem(position);
                 String targetDate = dateFormat.format(date);
+                assert selectedData != null;
+                LOG.i("echo-targetDate" + targetDate);
+                LOG.i("echo-targethm" + selectedData.originStart.replace(":", ""));
                 String shiyiStartdate = targetDate + selectedData.originStart.replace(":", "") + "30";
                 String shiyiEnddate = targetDate + selectedData.originEnd.replace(":", "") + "30";
                 Date now = new Date();
@@ -1097,16 +1165,17 @@ public class LivePlayActivity extends BaseActivity {
         /*        if (now.compareTo(selectedData.startdateTime) >= 0 && now.compareTo(selectedData.enddateTime) <= 0) {
                     mVideoView.release();
                     isSHIYI = false;
-                    mVideoView.setUrl(currentLiveChannelItem.getUrl());
+                    mVideoView.setUrl(currentLiveChannelItem.getUrl(), liveWebHeader());
                     mVideoView.start();
                     epgListAdapter.setShiyiSelection(-1, false,timeFormat.format(date));
+                    epgListAdapter.notifyDataSetChanged();
                     showProgressBars(false);
                     return;
                 }  */
                 String shiyiUrl = currentLiveChannelItem.getUrl();
                 if (now.compareTo(selectedData.startdateTime) < 0) {
 
-                } else if(shiyiUrl.contains("PLTV/") || shiyiUrl.contains("TVOD/")) {
+                } else if(hasCatchup || shiyiUrl.contains("PLTV/") || shiyiUrl.contains("TVOD/")) {
                     shiyiUrl = shiyiUrl.replaceAll("/PLTV/", "/TVOD/");
                     mHandler.removeCallbacks(mHideChannelListRun);
                     mHandler.postDelayed(mHideChannelListRun, 100);
@@ -1114,7 +1183,37 @@ public class LivePlayActivity extends BaseActivity {
                     shiyi_time = shiyiStartdate + "-" + shiyiEnddate;
                     isSHIYI = true;
                     //mCanSeek = true;
-                    if (shiyiUrl.contains("PLTV/") || shiyiUrl.contains("TVOD/")) {
+                    if (hasCatchup) {
+                        String replace = catchup.get("replace").getAsString();
+                        String source = catchup.get("source").getAsString();
+                        String[] parts = replace.split(",");
+                        String left = parts.length > 0 ? parts[0].trim() : "";
+                        String right = parts.length > 1 ? parts[1].trim() : "";
+                        shiyiUrl = shiyiUrl.replaceAll(left, right);
+                        // 已知参数
+                        String startHHmm = selectedData.originStart.replace(":", "");
+                        String endHHmm = selectedData.originEnd.replace(":", "");
+                        // 正则表达式：匹配 ${(b)...} 或 ${(e)...}
+                        Pattern pattern = Pattern.compile("\\$\\{\\((b|e)\\)(.*?)\\}");
+                        Matcher matcher = pattern.matcher(source);
+                        Map<String, String> valueMap = new HashMap<>();
+                        valueMap.put("b", targetDate + "T" + startHHmm);
+                        valueMap.put("e", targetDate + "T" + endHHmm);
+                        StringBuffer result = new StringBuffer();
+                        while (matcher.find()) {
+                            String type = matcher.group(1); // 捕获 b 或 e
+                            String patternPart = matcher.group(2);
+                            // 生成替换值（如 "20231023T1500"）
+                            String replacement = valueMap.get(type);
+                            // 将 ${(b)yyyyMMdd'T'HHmm} 替换为 "20231023T1500"
+                            assert replacement != null;
+                            matcher.appendReplacement(result, replacement);
+                        }
+                        matcher.appendTail(result);
+                        LOG.i("echo-shiyiurl:" + shiyiUrl);
+                        if (shiyiUrl.endsWith("&")) shiyiUrl = shiyiUrl.substring(0, shiyiUrl.length() - 1);
+                        shiyiUrl += result.toString();
+                    } else {
                         if (shiyiUrl.indexOf("?") <= 0) {
                         //    shiyiUrl = shiyiUrl.replaceAll("/PLTV/", "/TVOD/");
                             shiyiUrl += "?playseek=" + shiyi_time;
@@ -1123,13 +1222,13 @@ public class LivePlayActivity extends BaseActivity {
                         } else {
                             shiyiUrl += "&playseek=" + shiyi_time;
                         }
-                        Log.d("PLTV播放地址", "playUrl   " + shiyiUrl);
                     }
+                    LOG.i("echo-回看地址playUrl :" + shiyiUrl);
                     playUrl = shiyiUrl;
-
-                    mVideoView.setUrl(playUrl);
+                    if (liveWebHeader() != null) LOG.i("echo-liveWebHeader :" + liveWebHeader().toString());
+                    mVideoView.setUrl(playUrl, liveWebHeader());
                     mVideoView.start();
-                    epgListAdapter.setShiyiSelection(position, true,timeFormat.format(date));
+                    epgListAdapter.setShiyiSelection(position, true, timeFormat.format(date));
                     epgListAdapter.notifyDataSetChanged();
                     mRightEpgList.setSelectedPosition(position);
                     mRightEpgList.post(new Runnable() {
@@ -1180,8 +1279,8 @@ public class LivePlayActivity extends BaseActivity {
         liveEpgDateAdapter = new LiveEpgDateAdapter();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
-        SimpleDateFormat datePresentFormat = new SimpleDateFormat("M-d EE");
-        SimpleDateFormat datePresentFormat1 = new SimpleDateFormat("M-d");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat datePresentFormat = new SimpleDateFormat("M-d EE");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat datePresentFormat1 = new SimpleDateFormat("M-d");
         calendar.add(Calendar.DAY_OF_MONTH, 1);
         for (int i = 0; i < 9; i++) {
             Date dateIns = calendar.getTime();
