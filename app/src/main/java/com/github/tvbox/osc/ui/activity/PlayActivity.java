@@ -847,6 +847,11 @@ public class PlayActivity extends BaseActivity {
             if (trackInfo != null && trackInfo.getSubtitle().size() > 0) {
                 mController.mSubtitleView.hasInternal = true;
             }
+            //默认选中第一个音轨 一般第一个音轨是国语
+            if (trackInfo != null && trackInfo.getAudio().size() > 1) {
+                int firsIndex = trackInfo.getAudio().get(0).trackId;
+                ((IjkmPlayer)(mVideoView.getMediaPlayer())).setTrack(firsIndex);
+            }
             ((IjkmPlayer)(mVideoView.getMediaPlayer())).setOnTimedTextListener(new IMediaPlayer.OnTimedTextListener() {
                 @Override
                 public void onTimedText(IMediaPlayer mp, IjkTimedText text) {
@@ -894,21 +899,21 @@ public class PlayActivity extends BaseActivity {
                 if (mController.mSubtitleView.hasInternal) {
                     mController.mSubtitleView.isInternal = true;
                     if (mediaPlayer instanceof IjkmPlayer) {
-                        if (trackInfo != null && trackInfo.getSubtitle().size()>0) {
+                        if (trackInfo != null && trackInfo.getSubtitle().size() > 0) {
                         List<TrackInfoBean> subtitleTrackList = trackInfo.getSubtitle();
                         int selectedIndex = trackInfo.getSubtitleSelected(true);
-                        boolean hasCh =false;
+                        boolean hasCh = false;
                         for(TrackInfoBean subtitleTrackInfoBean : subtitleTrackList) {
                             String lowerLang = subtitleTrackInfoBean.language.toLowerCase();
                             if (lowerLang.startsWith("zh") || lowerLang.startsWith("ch")) {
-                                hasCh=true;
+                                hasCh = true;
                                 if (selectedIndex != subtitleTrackInfoBean.trackId) {
                                     ((IjkmPlayer)(mVideoView.getMediaPlayer())).setTrack(subtitleTrackInfoBean.trackId);
                                     break;
                                 }
                             }
                         }
-                        if(!hasCh)((IjkmPlayer)(mVideoView.getMediaPlayer())).setTrack(subtitleTrackList.get(0).trackId);
+                        if (!hasCh) ((IjkmPlayer)(mVideoView.getMediaPlayer())).setTrack(subtitleTrackList.get(0).trackId);
                      }
                    }     
                 }
