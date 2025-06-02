@@ -170,6 +170,8 @@ public class LivePlayActivity extends BaseActivity {
     TextView tip_chname;
     TextView tip_epg1;
     TextView tip_epg2;
+    TextView tv_current_program_name;
+    TextView tv_next_program_name;
     TextView tv_srcinfo;
     TextView tv_curepg_left;
     TextView tv_nextepg_left;
@@ -262,8 +264,10 @@ public class LivePlayActivity extends BaseActivity {
         //EPG  findViewById  by 龍
         tip_chname = (TextView)  findViewById(R.id.tv_channel_bar_name);//底部名称
         tv_channelnum = (TextView) findViewById(R.id.tv_channel_bottom_number); //底部数字
-        tip_epg1 = (TextView) findViewById(R.id.tv_current_program_time);//底部EPG当前节目信息
-        tip_epg2 = (TextView) findViewById(R.id.tv_next_program_time);//底部EPG下个节目信息
+        tip_epg1 = (TextView) findViewById(R.id.tv_current_program_time);//底部EPG当前节目起止时间
+        tip_epg2 = (TextView) findViewById(R.id.tv_next_program_time);//底部EPG下个节目起止时间
+        tv_current_program_name = (TextView) findViewById(R.id.tv_current_program_name);//底部EPG当前节目信息
+        tv_next_program_name = (TextView) findViewById(R.id.tv_next_program_name);//底部EPG下个节目信息
         tv_srcinfo = (TextView) findViewById(R.id.tv_source);//线路状态
         tv_curepg_left = (TextView) findViewById(R.id.tv_current_program);//当前节目
         tv_nextepg_left = (TextView) findViewById(R.id.tv_next_program);//下个节目
@@ -327,6 +331,8 @@ public class LivePlayActivity extends BaseActivity {
 
     private void showEpg(Date date, ArrayList<Epginfo> arrayList) {
         if (arrayList != null && arrayList.size() > 0) {
+            Epginfo epgbcinfo = new Epginfo(date, "精彩节目", date, "00:00", ((Epginfo) arrayList.get(0)).start, 0);
+            arrayList.add(0, epgbcinfo);
             epgdata = arrayList;
             epgListAdapter.CanBack(currentLiveChannelItem.getinclude_back());
             epgListAdapter.setNewData(epgdata);
@@ -354,7 +360,7 @@ public class LivePlayActivity extends BaseActivity {
             }
         } else {
             Epginfo epgbcinfo = new Epginfo(date, "精彩节目-暂未提供节目预告信息", date, "00:00", "23:59", 0);
-            arrayList.add(epgbcinfo);
+            arrayList.add(0, epgbcinfo);
             epgdata = arrayList;
             epgListAdapter.setNewData(epgdata);
 
@@ -395,15 +401,15 @@ public class LivePlayActivity extends BaseActivity {
             }
 
             public void onResponse(String paramString) {
-                ArrayList arrayList = new ArrayList();
+                ArrayList<Epginfo> arrayList = new ArrayList<Epginfo>();
        //         Log.d("返回的EPG信息", paramString);
                 try {
                     if (paramString.contains("epg_data")) {
                         final JSONArray jSONArray = new JSONObject(paramString).optJSONArray("epg_data");
                         if (jSONArray != null)
-                            for (int b = 0; b < jSONArray.length(); b++) {
+                            for (int b = 1; b < jSONArray.length(); b++) {
                                 JSONObject jSONObject = jSONArray.getJSONObject(b);
-                                Epginfo epgbcinfo = new Epginfo(date,jSONObject.optString("title"), date, jSONObject.optString("start"), jSONObject.optString("end"),b);
+                                Epginfo epgbcinfo = new Epginfo(date, jSONObject.optString("title"), date, jSONObject.optString("start"), jSONObject.optString("end"), b);
                                 arrayList.add(epgbcinfo);
        //                         Log.d("EPG信息:", day + "  " + jSONObject.optString("start") + " - " + jSONObject.optString("end") + "  " + jSONObject.optString("title"));
                             }
@@ -452,7 +458,7 @@ public class LivePlayActivity extends BaseActivity {
                                 ((TextView) findViewById(R.id.tv_next_program_name)).setText(((Epginfo) arrayList.get(size + 1)).title);
                             } else {
                                 tip_epg2.setText("00:00 - 23:59");
-                                ((TextView) findViewById(R.id.tv_next_program_name)).setText("精彩节目-暂未提供节目预告信息");
+                                ((TextView) findViewById(R.id.tv_next_program_name)).setText("精彩节目-明日继续");
                             }
                             break;
                         } else {
@@ -1060,7 +1066,7 @@ public class LivePlayActivity extends BaseActivity {
                 String shiyiUrl = currentLiveChannelItem.getUrl();
                 if (now.compareTo(selectedData.startdateTime) < 0) {
 
-                } else if(hasCatchup || shiyiUrl.contains("PLTV/") || shiyiUrl.contains("TVOD/")) {
+                } else if (hasCatchup || shiyiUrl.contains("PLTV/") || shiyiUrl.contains("TVOD/")) {
                     shiyiUrl = shiyiUrl.replaceAll("/PLTV/", "/TVOD/");
                     mHandler.removeCallbacks(mHideChannelListRun);
                     mHandler.postDelayed(mHideChannelListRun, 100);
@@ -1175,7 +1181,7 @@ public class LivePlayActivity extends BaseActivity {
                 String shiyiUrl = currentLiveChannelItem.getUrl();
                 if (now.compareTo(selectedData.startdateTime) < 0) {
 
-                } else if(hasCatchup || shiyiUrl.contains("PLTV/") || shiyiUrl.contains("TVOD/")) {
+                } else if (hasCatchup || shiyiUrl.contains("PLTV/") || shiyiUrl.contains("TVOD/")) {
                     shiyiUrl = shiyiUrl.replaceAll("/PLTV/", "/TVOD/");
                     mHandler.removeCallbacks(mHideChannelListRun);
                     mHandler.postDelayed(mHideChannelListRun, 100);
