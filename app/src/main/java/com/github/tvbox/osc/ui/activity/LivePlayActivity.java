@@ -1988,8 +1988,14 @@ public class LivePlayActivity extends BaseActivity {
             
             @Override
             public void onError(Response<String> response) {
+                Toast.makeText(App.getInstance(), "加载错误,请重试", Toast.LENGTH_SHORT).show();
+                JsonArray live_groups = Hawk.get(HawkConfig.LIVE_GROUP_LIST, new JsonArray());
+                Hawk.put(HawkConfig.LIVE_GROUP_INDEX, Hawk.get(HawkConfig.LIVE_GROUP_INDEX, 0) + 1);
+                if (Hawk.get(HawkConfig.LIVE_GROUP_INDEX, 0) > live_groups.size() - 1) {
+                    Hawk.put(HawkConfig.LIVE_GROUP_INDEX, 0);
+                }
                 super.onError(response);
-                Toast.makeText(App.getInstance(), getString(R.string.act_live_play_network_error), Toast.LENGTH_LONG).show();
+             //   Toast.makeText(App.getInstance(), getString(R.string.act_live_play_network_error), Toast.LENGTH_LONG).show();
                 finish();
             }
         });
