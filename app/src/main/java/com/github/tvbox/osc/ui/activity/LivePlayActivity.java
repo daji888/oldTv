@@ -331,8 +331,10 @@ public class LivePlayActivity extends BaseActivity {
 
     private void showEpg(Date date, ArrayList<Epginfo> arrayList) {
         if (arrayList != null && arrayList.size() > 0) {
-            Epginfo epgbcinfo = new Epginfo(date, "精彩节目", date, "00:00", ((Epginfo) arrayList.get(0)).start, 0);
-            arrayList.add(0, epgbcinfo);
+            if (!((Epginfo) arrayList.get(0)).start.equals("00:00")) {
+                Epginfo epgbcinfo = new Epginfo(date, "精彩节目", date, "00:00", ((Epginfo) arrayList.get(0)).start, 0);
+                arrayList.add(0, epgbcinfo);
+            }   
             epgdata = arrayList;
             epgListAdapter.CanBack(currentLiveChannelItem.getinclude_back());
             epgListAdapter.setNewData(epgdata);
@@ -407,14 +409,23 @@ public class LivePlayActivity extends BaseActivity {
                     if (paramString.contains("epg_data")) {
                         final JSONArray jSONArray = new JSONObject(paramString).optJSONArray("epg_data");
                         if (jSONArray != null)
-                            for (int b = 1; b < jSONArray.length(); b++) {
+                            for (int b = 0; b < jSONArray.length(); b++) {
                                 JSONObject jSONObject = jSONArray.getJSONObject(b);
                                 Epginfo epgbcinfo = new Epginfo(date, jSONObject.optString("title"), date, jSONObject.optString("start"), jSONObject.optString("end"), b);
-                                arrayList.add(epgbcinfo);
-       //                         Log.d("EPG信息:", day + "  " + jSONObject.optString("start") + " - " + jSONObject.optString("end") + "  " + jSONObject.optString("title"));
-                            }
+                         //       Log.d("EPG信息:", day + "  " + jSONObject.optString("start") + " - " + jSONObject.optString("end") + "  " + jSONObject.optString("title"));
+                                if (jSONObject.optString("start").equals("00:00")) { 
+                                    arrayList.add(epgbcinfo);
+                                }
+                             }
+                            for (int b = 0; b < jSONArray.length(); b++) {
+                                JSONObject jSONObject = jSONArray.getJSONObject(b);
+                                Epginfo epgbcinfo = new Epginfo(date, jSONObject.optString("title"), date, jSONObject.optString("start"), jSONObject.optString("end"), b + 1);
+                         //       Log.d("EPG信息:", day + "  " + jSONObject.optString("start") + " - " + jSONObject.optString("end") + "  " + jSONObject.optString("title"));
+                                if (!jSONObject.optString("start").equals("00:00")) { 
+                                    arrayList.add(epgbcinfo);
+                                }
+                             }   
                     }
-
                 } catch (JSONException jSONException) {
                     jSONException.printStackTrace();
                 }
