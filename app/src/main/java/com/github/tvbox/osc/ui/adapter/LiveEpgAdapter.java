@@ -51,7 +51,7 @@ public class LiveEpgAdapter extends BaseQuickAdapter<Epginfo, BaseViewHolder> {
             textview.setTextColor(Color.WHITE);
             timeview.setTextColor(Color.WHITE);
         }
-        if ((new Date().compareTo(value.startdateTime) >= 0 && new Date().compareTo(value.enddateTime) <= 0) && source_include_back) {
+        if (new Date().compareTo(value.startdateTime) >= 0 && new Date().compareTo(value.enddateTime) <= 0) {
             shiyi.setVisibility(View.VISIBLE);
             shiyi.setBackgroundColor(Color.YELLOW);
             shiyi.setTextColor(Color.RED);
@@ -93,7 +93,7 @@ public class LiveEpgAdapter extends BaseQuickAdapter<Epginfo, BaseViewHolder> {
                 wqddg_AudioWaveView.setVisibility(View.GONE);
             }
             if (LivePlayActivity.isBack == false) {
-                if ((new Date().compareTo(value.startdateTime) >= 0 && new Date().compareTo(value.enddateTime) <= 0) && source_include_back) {
+                if (new Date().compareTo(value.startdateTime) >= 0 && new Date().compareTo(value.enddateTime) <= 0) {
                     wqddg_AudioWaveView.setVisibility(View.VISIBLE);
                     textview.setFreezesText(true);
                     timeview.setFreezesText(true);
