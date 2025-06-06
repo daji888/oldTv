@@ -142,7 +142,7 @@ public class LivePlayActivity extends BaseActivity {
     private int selectedChannelNumber = 0;
     private TextView tvSelectedChannel;
 
-    public static  int currentChannelGroupIndex = 0;
+    public static int currentChannelGroupIndex = 0;
     private Handler mHandler = new Handler();
 
     private List<LiveChannelGroup> liveChannelGroupList = new ArrayList<>();
@@ -293,8 +293,8 @@ public class LivePlayActivity extends BaseActivity {
         //laodao 7day replay
         mEpgDateGridView = findViewById(R.id.mEpgDateGridView);
         Hawk.put(HawkConfig.NOW_DATE, formatDate.format(new Date()));
-        day=formatDate.format(new Date());
-        nowday=new Date();
+        day = formatDate.format(new Date());
+        nowday = new Date();
 
         mRightEpgList = (TvRecyclerView) findViewById(R.id.lv_epg);
         //EPG频道名称
@@ -331,10 +331,6 @@ public class LivePlayActivity extends BaseActivity {
 
     private void showEpg(Date date, ArrayList<Epginfo> arrayList) {
         if (arrayList != null && arrayList.size() > 0) {
-            if (!((Epginfo) arrayList.get(0)).start.equals("00:00")) {
-                Epginfo epgbcinfo = new Epginfo(date, "精彩节目", date, "00:00", ((Epginfo) arrayList.get(0)).start, 0);
-                arrayList.add(0, epgbcinfo);
-            }   
             epgdata = arrayList;
             epgListAdapter.CanBack(currentLiveChannelItem.getinclude_back());
             epgListAdapter.setNewData(epgdata);
@@ -351,7 +347,11 @@ public class LivePlayActivity extends BaseActivity {
             if (i >= 0 && new Date().compareTo(epgdata.get(i).enddateTime) <= 0) {
                 mRightEpgList.setSelectedPosition(i);
                 mRightEpgList.setSelection(i);
-                epgListAdapter.setSelectedEpgIndex(i);
+                if (!((Epginfo) arrayList.get(0)).title.equals("精彩节目")) {
+                    epgListAdapter.setSelectedEpgIndex(i + 1);
+                } else { 
+                    epgListAdapter.setSelectedEpgIndex(i);
+                }
                 int finalI = i;
                 mRightEpgList.post(new Runnable() {
                     @Override
@@ -411,20 +411,14 @@ public class LivePlayActivity extends BaseActivity {
                         if (jSONArray != null)
                             for (int b = 0; b < jSONArray.length(); b++) {
                                 JSONObject jSONObject = jSONArray.getJSONObject(b);
-                                Epginfo epgbcinfo = new Epginfo(date, jSONObject.optString("title"), date, jSONObject.optString("start"), jSONObject.optString("end"), b);
-                         //       Log.d("EPG信息:", day + "  " + jSONObject.optString("start") + " - " + jSONObject.optString("end") + "  " + jSONObject.optString("title"));
-                                if (jSONObject.optString("start").equals("00:00")) { 
-                                    arrayList.add(epgbcinfo);
-                                }
-                             }
-                            for (int b = 0; b < jSONArray.length(); b++) {
-                                JSONObject jSONObject = jSONArray.getJSONObject(b);
                                 Epginfo epgbcinfo = new Epginfo(date, jSONObject.optString("title"), date, jSONObject.optString("start"), jSONObject.optString("end"), b + 1);
                          //       Log.d("EPG信息:", day + "  " + jSONObject.optString("start") + " - " + jSONObject.optString("end") + "  " + jSONObject.optString("title"));
-                                if (!jSONObject.optString("start").equals("00:00")) { 
-                                    arrayList.add(epgbcinfo);
-                                }
-                             }   
+                                arrayList.add(epgbcinfo);
+                            }
+                            if (!((Epginfo) arrayList.get(0)).start.equals("00:00")) {
+                                Epginfo epgbcinfo = new Epginfo(date, "精彩节目", date, "00:00", ((Epginfo) arrayList.get(0)).start, 0);
+                                arrayList.add(0, epgbcinfo);
+                            } 
                     }
                 } catch (JSONException jSONException) {
                     jSONException.printStackTrace();
@@ -1280,7 +1274,7 @@ public class LivePlayActivity extends BaseActivity {
         Date firstday = new Date(nowday.getTime() - 6 * 24 * 60 * 60 * 1000);
         for (int i = 0; i < 8; i++) {
             LiveDayListGroup daylist = new LiveDayListGroup();
-            Date newday= new Date(firstday.getTime() + i * 24 * 60 * 60 * 1000);
+            Date newday = new Date(firstday.getTime() + i * 24 * 60 * 60 * 1000);
             String day = formatDate1.format(newday);
             daylist.setGroupIndex(i);
             daylist.setGroupName(day);
