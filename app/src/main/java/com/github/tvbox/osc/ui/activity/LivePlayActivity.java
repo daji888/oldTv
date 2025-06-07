@@ -331,6 +331,10 @@ public class LivePlayActivity extends BaseActivity {
 
     private void showEpg(Date date, ArrayList<Epginfo> arrayList) {
         if (arrayList != null && arrayList.size() > 0) {
+            if (!((Epginfo) arrayList.get(0)).start.equals("00:00")) {
+                Epginfo epgbcinfo = new Epginfo(date, "精彩节目", date, "00:00", ((Epginfo) arrayList.get(0)).start, 0);
+                arrayList.add(0, epgbcinfo);
+            } 
             epgdata = arrayList;
             epgListAdapter.CanBack(currentLiveChannelItem.getinclude_back());
             epgListAdapter.setNewData(epgdata);
@@ -415,10 +419,6 @@ public class LivePlayActivity extends BaseActivity {
                          //       Log.d("EPG信息:", day + "  " + jSONObject.optString("start") + " - " + jSONObject.optString("end") + "  " + jSONObject.optString("title"));
                                 arrayList.add(epgbcinfo);
                             }
-                            if (!((Epginfo) arrayList.get(0)).start.equals("00:00")) {
-                                Epginfo epgbcinfo = new Epginfo(date, "精彩节目", date, "00:00", ((Epginfo) arrayList.get(0)).start, 0);
-                                arrayList.add(0, epgbcinfo);
-                            } 
                     }
                 } catch (JSONException jSONException) {
                     jSONException.printStackTrace();
@@ -1124,7 +1124,12 @@ public class LivePlayActivity extends BaseActivity {
 
                     mVideoView.setUrl(playUrl, liveWebHeader());
                     mVideoView.start();
-                    epgListAdapter.setShiyiSelection(position, true, timeFormat.format(date));
+                //    epgListAdapter.setShiyiSelection(position, true, timeFormat.format(date));
+                    if (epgListAdapter.getItem(0).title.equals("精彩节目")) {
+                        epgListAdapter.setShiyiSelection(position, true, timeFormat.format(date));
+                    } else { 
+                        epgListAdapter.setShiyiSelection(position + 1, true, timeFormat.format(date));
+                    }
                     epgListAdapter.notifyDataSetChanged();
                     mRightEpgList.setSelectedPosition(position);
                     mRightEpgList.post(new Runnable() {
@@ -1239,7 +1244,12 @@ public class LivePlayActivity extends BaseActivity {
                     if (liveWebHeader() != null) LOG.i("echo-liveWebHeader :" + liveWebHeader().toString());
                     mVideoView.setUrl(playUrl, liveWebHeader());
                     mVideoView.start();
-                    epgListAdapter.setShiyiSelection(position, true, timeFormat.format(date));
+                //    epgListAdapter.setShiyiSelection(position, true, timeFormat.format(date));
+                    if (epgListAdapter.getItem(0).title.equals("精彩节目")) {
+                        epgListAdapter.setShiyiSelection(position, true, timeFormat.format(date));
+                    } else { 
+                        epgListAdapter.setShiyiSelection(position + 1, true, timeFormat.format(date));
+                    }
                     epgListAdapter.notifyDataSetChanged();
                     mRightEpgList.setSelectedPosition(position);
                     mRightEpgList.post(new Runnable() {
