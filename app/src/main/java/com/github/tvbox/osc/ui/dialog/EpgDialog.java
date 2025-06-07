@@ -83,6 +83,8 @@ public class EpgDialog extends BaseDialog {
                     history.add("http://cdn.1678520.xyz/epg/?ch={name}&date={date}");
                 if (!history.contains("https://epg.crestekk.cn/api/diyp/?ch={name}&date={date}"))
                     history.add("https://epg.crestekk.cn/api/diyp/?ch={name}&date={date}");
+                if (!history.contains("https://iptv.crestekk.cn/epgphp/index.php?ch={name}&date={date}"))
+                    history.add("https://iptv.crestekk.cn/epgphp/index.php?ch={name}&date={date}");
                 String current = Hawk.get(HawkConfig.EPG_URL, "");
                 int idx = 0;
                 if (history.contains(current))
