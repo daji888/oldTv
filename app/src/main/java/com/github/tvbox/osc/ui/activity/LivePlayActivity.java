@@ -238,7 +238,8 @@ public class LivePlayActivity extends BaseActivity {
         context = this;
         epgStringAddress = Hawk.get(HawkConfig.EPG_URL,"");
         if (epgStringAddress == null || epgStringAddress.length() < 5)
-             epgStringAddress = "http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}";
+             epgStringAddress = "https://epg.51zmt.top:8001/api/diyp/?ch={name}&date={date}";
+         //    epgStringAddress = "https://iptv.crestekk.cn/epgphp/index.php?ch={name}&date={date}";
          //    epgStringAddress = "http://epg.crestekk.cn/api/diyp/?ch={name}&date={date}";  
 
         setLoadSir(findViewById(R.id.live_root));
