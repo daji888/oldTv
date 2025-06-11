@@ -298,6 +298,7 @@ public class PlayActivity extends BaseActivity {
 
             @Override
             public void prepared() {
+                initAudioView();
                 initSubtitleView();
             }
 
@@ -839,6 +840,18 @@ public class PlayActivity extends BaseActivity {
         });
     }
 
+    private void initAudioView() {
+        AbstractPlayer mediaPlayer = mVideoView.getMediaPlayer();
+        TrackInfo trackInfo = null;
+        if (mVideoView.getMediaPlayer() instanceof IjkmPlayer) {
+            //默认选中第一个音轨 一般第一个音轨是国语
+            if (trackInfo != null && trackInfo.getAudio().size() > 1) {
+                int firsIndex = trackInfo.getAudio().get(0).trackId;
+                ((IjkmPlayer)(mVideoView.getMediaPlayer())).setTrack(firsIndex);
+            }
+         }
+     }   
+
     private void initSubtitleView() {
         AbstractPlayer mediaPlayer = mVideoView.getMediaPlayer();
         TrackInfo trackInfo = null;
@@ -846,11 +859,6 @@ public class PlayActivity extends BaseActivity {
             trackInfo = ((IjkmPlayer)(mVideoView.getMediaPlayer())).getTrackInfo();
             if (trackInfo != null && trackInfo.getSubtitle().size() > 0) {
                 mController.mSubtitleView.hasInternal = true;
-            }
-            //默认选中第一个音轨 一般第一个音轨是国语
-            if (trackInfo != null && trackInfo.getAudio().size() > 1) {
-                int firsIndex = trackInfo.getAudio().get(0).trackId;
-                ((IjkmPlayer)(mVideoView.getMediaPlayer())).setTrack(firsIndex);
             }
             ((IjkmPlayer)(mVideoView.getMediaPlayer())).setOnTimedTextListener(new IMediaPlayer.OnTimedTextListener() {
                 @Override
