@@ -464,7 +464,11 @@ public class LivePlayActivity extends BaseActivity {
                                 ((TextView) findViewById(R.id.tv_next_program_name)).setText(((Epginfo) arrayList.get(size + 1)).title);
                             } else {
                                 tip_epg2.setText("00:00 - 23:59");
-                                ((TextView) findViewById(R.id.tv_next_program_name)).setText("精彩节目-明日继续");
+                                if (((TextView) findViewById(R.id.tv_current_program_name)).equals("精彩节目-暂未提供节目预告信息")) {
+                                    ((TextView) findViewById(R.id.tv_next_program_name)).setText("精彩节目-暂未提供节目预告信息");
+                                } else {    
+                                    ((TextView) findViewById(R.id.tv_next_program_name)).setText("精彩节目-明日继续");
+                                }    
                             }
                             break;
                         } else {
@@ -500,7 +504,9 @@ public class LivePlayActivity extends BaseActivity {
                 };
                 countDownTimer.start();
             } else {
-               ll_epg.setVisibility(View.GONE);
+                ll_epg.setVisibility(View.GONE);
+                tv_top_l_container.setVisibility(View.GONE);
+                tv_top_r_container.setVisibility(View.GONE);
             }
             if (channel_Name == null || channel_Name.getSourceNum() <= 0) {
                 ((TextView) findViewById(R.id.tv_source)).setText("1 / 1");
