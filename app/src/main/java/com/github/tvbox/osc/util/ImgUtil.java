@@ -145,11 +145,12 @@ public class ImgUtil {
 
         String header = null;
         String referer = null;
-        String ua = UA.random();
+        String ua = null;
+        String uaio = UA.random();
         String cookie = null;
 
         if (url.contains("doubanio.com") && !url.contains("@Referer=") && !url.contains("@User-Agent=")) {
-            url += "@Referer=https://api.douban.com/@User-Agent=" + ua;
+            url += "@Referer=https://api.douban.com/@User-Agent=" + uaio;
         }
 
         //检查链接里面是否有自定义header
@@ -165,7 +166,7 @@ public class ImgUtil {
         if (url.contains("@User-Agent=")) ua = url.split("@User-Agent=")[1].split("@")[0];
         if (url.contains("@Referer=")) referer = url.split("@Referer=")[1].split("@")[0];
         url = url.split("@")[0];
-        if(TextUtils.isEmpty(url)) return null;
+        if (TextUtils.isEmpty(url)) return null;
 
         /*   AuthInfo authInfo = new AuthInfo(url);
         url = authInfo.url; */
