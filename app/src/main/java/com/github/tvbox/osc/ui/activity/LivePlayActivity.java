@@ -464,7 +464,7 @@ public class LivePlayActivity extends BaseActivity {
                                 ((TextView) findViewById(R.id.tv_next_program_name)).setText(((Epginfo) arrayList.get(size + 1)).title);
                             } else {
                                 tip_epg2.setText("00:00 - 23:59");
-                                if (((TextView) findViewById(R.id.tv_current_program_name)).equals("精彩节目-暂未提供节目预告信息")) {
+                                if (((TextView) findViewById(R.id.tv_current_program_name)).getText().equals("精彩节目-暂未提供节目预告信息")) {
                                     ((TextView) findViewById(R.id.tv_next_program_name)).setText("精彩节目-暂未提供节目预告信息");
                                 } else {    
                                     ((TextView) findViewById(R.id.tv_next_program_name)).setText("精彩节目-明日继续");
