@@ -566,13 +566,13 @@ public class LivePlayActivity extends BaseActivity {
         divEpg.setVisibility(View.VISIBLE);
         divLoadEpgleft.setVisibility(View.VISIBLE);
         divLoadEpg.setVisibility(View.GONE);
-     //   mRightEpgList.setSelectedPosition(epgListAdapter.getSelectedIndex());
         if (!epgListAdapter.getItem(0).title.equals("精彩节目")) {
             mRightEpgList.setSelectedPosition(epgListAdapter.getSelectedIndex() - 1);
         } else { 
             mRightEpgList.setSelectedPosition(epgListAdapter.getSelectedIndex());
         }
         epgListAdapter.notifyDataSetChanged();
+        mEpgDateGridView.requestFocus();
     }
     //频道群列表
     public  void divLoadEpgLeft(View view) {
@@ -582,6 +582,7 @@ public class LivePlayActivity extends BaseActivity {
         divEpg.setVisibility(View.GONE);
         divLoadEpgleft.setVisibility(View.GONE);
         divLoadEpg.setVisibility(View.VISIBLE);
+        mLiveChannelView.requestFocus();
     }
 
 
