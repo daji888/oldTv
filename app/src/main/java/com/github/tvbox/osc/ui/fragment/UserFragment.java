@@ -91,7 +91,7 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
 
     @Override
     protected void onFragmentResume() {
-        if(Hawk.get(HawkConfig.HOME_REC_STYLE, false)){
+        if (Hawk.get(HawkConfig.HOME_REC_STYLE, false)) {
             tvHotList1.setVisibility(View.VISIBLE);
             tvHotList2.setVisibility(View.GONE);
             tvHotList1.setHasFixedSize(true);
@@ -133,12 +133,12 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
         tvHistory = findViewById(R.id.tvHistory);
         tvPush = findViewById(R.id.tvPush);
         tvExit = findViewById(R.id.tvExit);
-        tvLive1 = (TextView) findViewById(R.id.tvLive1);
-        tvSearch1 = (TextView) findViewById(R.id.tvSearch1);
-        tvSetting1 = (TextView) findViewById(R.id.tvSetting1);
-        tvCollect1 = (TextView) findViewById(R.id.tvFavorite1);
-        tvHistory1 = (TextView) findViewById(R.id.tvHistory1);
-        tvPush1 = (TextView) findViewById(R.id.tvPush1);
+        tvLive1 = findViewById(R.id.tvLive1);
+        tvSearch1 = findViewById(R.id.tvSearch1);
+        tvSetting1 = findViewById(R.id.tvSetting1);
+        tvCollect1 = findViewById(R.id.tvFavorite1);
+        tvHistory1 = findViewById(R.id.tvHistory1);
+        tvPush1 = findViewById(R.id.tvPush1);
         tvExit1 = findViewById(R.id.tvExit1);
         tvLive.setOnClickListener(this);
         tvSearch.setOnClickListener(this);
@@ -177,7 +177,7 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
                     VodInfo vodInfo = RoomDataManger.getVodInfo(vod.sourceKey, vod.id);
                     RoomDataManger.deleteVodRecord(vod.sourceKey, vodInfo);
                     Toast.makeText(mContext, "已删除当前记录", Toast.LENGTH_SHORT).show();
-               } else if (vod.id != null && !vod.id.isEmpty()) {
+                } else if (vod.id != null && !vod.id.isEmpty()) {
                     Bundle bundle = new Bundle();
                     bundle.putString("id", vod.id);
                     bundle.putString("sourceKey", vod.sourceKey);
