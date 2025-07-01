@@ -1906,8 +1906,8 @@ public class LivePlayActivity extends BaseActivity {
                         ArrayList<String> liveHistory = Hawk.get(HawkConfig.LIVE_HISTORY, new ArrayList<String>());
                         if (liveHistory.isEmpty())
                             return;
-                        if (!liveHistory.contains("https://gh-proxy.com/raw.githubusercontent.com/daji888/ys/master/tv.txt"))
-                            liveHistory.add("https://gh-proxy.com/raw.githubusercontent.com/daji888/ys/master/tv.txt");
+                        if (!liveHistory.contains("https://ghproxy.net/raw.githubusercontent.com/daji888/ys/master/tv.txt"))
+                            liveHistory.add("https://ghproxy.net/raw.githubusercontent.com/daji888/ys/master/tv.txt");
                         String current = Hawk.get(HawkConfig.LIVE_URL, "");
                         int idx = 0;
                         if (liveHistory.contains(current))
