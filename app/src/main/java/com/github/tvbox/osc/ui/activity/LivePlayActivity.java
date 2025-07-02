@@ -559,7 +559,7 @@ public class LivePlayActivity extends BaseActivity {
 
     @SuppressLint("NotifyDataSetChanged")
     //节目信息列表
-    public  void divLoadEpgRight(View view) {
+    public void divLoadEpgRight(View view) {
         mHandler.removeCallbacks(mHideChannelListRun);
         mHandler.postDelayed(mHideChannelListRun, 5000);
         mChannelGroupView.setVisibility(View.GONE);
@@ -572,10 +572,14 @@ public class LivePlayActivity extends BaseActivity {
             mRightEpgList.setSelectedPosition(epgListAdapter.getSelectedIndex());
         }
         epgListAdapter.notifyDataSetChanged();
-        mEpgDateGridView.requestFocus();
+        if (mEpgDateGridView != null) {
+            mEpgDateGridView.requestFocus();
+        } else { 
+            mLiveChannelView.requestFocus();
+        }
     }
     //频道群列表
-    public  void divLoadEpgLeft(View view) {
+    public void divLoadEpgLeft(View view) {
         mHandler.removeCallbacks(mHideChannelListRun);
         mHandler.postDelayed(mHideChannelListRun, 5000);
         mChannelGroupView.setVisibility(View.VISIBLE);
