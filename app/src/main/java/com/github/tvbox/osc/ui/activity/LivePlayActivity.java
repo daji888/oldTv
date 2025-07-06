@@ -38,7 +38,6 @@ import com.github.tvbox.osc.base.BaseActivity;
 import com.github.tvbox.osc.bean.Epginfo;
 import com.github.tvbox.osc.bean.LiveChannelGroup;
 import com.github.tvbox.osc.bean.LiveChannelItem;
-import com.github.tvbox.osc.bean.LiveDayListGroup;
 import com.github.tvbox.osc.bean.LiveEpgDate;
 import com.github.tvbox.osc.bean.LivePlayerManager;
 import com.github.tvbox.osc.bean.LiveSettingGroup;
@@ -184,8 +183,6 @@ public class LivePlayActivity extends BaseActivity {
     private LiveEpgDateAdapter liveEpgDateAdapter;
     private LiveEpgAdapter epgListAdapter;
 
-    private List<LiveDayListGroup> liveDayList = new ArrayList<>();
-
     //laodao 7day replay
     public static SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
     public static SimpleDateFormat formatDate1 = new SimpleDateFormat("MM-dd");
@@ -293,7 +290,6 @@ public class LivePlayActivity extends BaseActivity {
 
         initEpgDateView();
         initEpgListView();
-        initDayList();
         initVideoView();
         initChannelGroupView();
         initLiveChannelView();
@@ -1212,21 +1208,7 @@ public class LivePlayActivity extends BaseActivity {
             }
         });
     }
-    //laoda 生成7天回放日期列表数据
-    private void initDayList() {
-        liveDayList.clear();
-        Date firstday = new Date(nowday.getTime() - 6 * 24 * 60 * 60 * 1000);
-        for (int i = 0; i < 8; i++) {
-            LiveDayListGroup daylist = new LiveDayListGroup();
-            Date newday = new Date(firstday.getTime() + i * 24 * 60 * 60 * 1000);
-            String day = formatDate1.format(newday);
-            daylist.setGroupIndex(i);
-            daylist.setGroupName(day);
-            liveDayList.add(daylist);
-        }
-
-
-    }
+   
     //kens 7天回放数据绑定和展示
     private void initEpgDateView() {
         mEpgDateGridView.setHasFixedSize(true);
