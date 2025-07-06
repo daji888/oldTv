@@ -1,12 +1,10 @@
 package com.github.tvbox.osc.ui.adapter;
 
-import android.graphics.Color;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.github.tvbox.osc.R;
-import com.github.tvbox.osc.bean.LiveChannelGroup;
 import com.github.tvbox.osc.bean.LiveEpgDate;
 
 import java.util.ArrayList;
@@ -18,18 +16,17 @@ public class LiveEpgDateAdapter extends BaseQuickAdapter<LiveEpgDate, BaseViewHo
     private int focusedIndex = -1;
 
     public LiveEpgDateAdapter() {
-        super(R.layout.item_live_channel_group, new ArrayList<>());
+        super(R.layout.item_live_epgdate, new ArrayList<>());
     }
 
     @Override
     protected void convert(BaseViewHolder holder, LiveEpgDate item) {
-        TextView tvGroupName = holder.getView(R.id.tvChannelGroupName);
-        tvGroupName.setText(item.getDatePresented());
-        tvGroupName.setBackgroundColor(Color.TRANSPARENT);
+        TextView tvLiveEpgDate = holder.getView(R.id.tvLiveEpgDate);
+        tvLiveEpgDate.setText(item.getDatePresented());
         if (item.getIndex() == selectedIndex) {
-            tvGroupName.setTextColor(mContext.getResources().getColor(R.color.color_FF5F00));
+            tvLiveEpgDate.setTextColor(mContext.getResources().getColor(R.color.color_FF5F00));
         } else {
-            tvGroupName.setTextColor(mContext.getResources().getColor(R.color.color_CCFFFFFF));
+            tvLiveEpgDate.setTextColor(mContext.getResources().getColor(R.color.color_CCFFFFFF));
         }
     }
 
