@@ -192,7 +192,6 @@ public class LivePlayActivity extends BaseActivity {
     private boolean isSHIYI = false;
     public static boolean isBack = false;
     private static String shiyi_time;//时移时间
-    private static int shiyi_time_c;//时移时间差值
     public static String playUrl;
     //kenson
     private ImageView imgLiveIcon;
@@ -1071,18 +1070,9 @@ public class LivePlayActivity extends BaseActivity {
                             mRightEpgList.smoothScrollToPosition(position);
                         }
                     });
-                    shiyi_time_c = (int) getTime(formatDate.format(nowday) + " " + selectedData.start + ":" + "30", formatDate.format(nowday) + " " + selectedData.end + ":" + "30");
                     ViewGroup.LayoutParams lp = iv_play.getLayoutParams();
                     lp.width = videoHeight / 7;
                     lp.height = videoHeight / 7;
-              //      sBar = (SeekBar) findViewById(R.id.pb_progressbar);
-              //      sBar.setMin(0);
-              //      sBar.setMax(shiyi_time_c * 1000);
-              //      sBar.setKeyProgressIncrement(shiyi_time_c * 10);
-              //      sBar.setProgress((int)  mVideoView.getCurrentPosition());
-              //      tv_currentpos.setText(durationToString((int) mVideoView.getCurrentPosition()));
-              //      tv_duration.setText(durationToString(shiyi_time_c * 1000));
-              //      ((TextView) findViewById(R.id.tv_pause_progress_text)).setText((durationToString((int) mVideoView.getCurrentPosition())) + " / " + (durationToString(shiyi_time_c * 1000)));
                     showProgressBars(true);
                     ll_right_top_huikan.setVisibility(View.VISIBLE);
                     isBack = true;
@@ -1189,18 +1179,9 @@ public class LivePlayActivity extends BaseActivity {
                             mRightEpgList.smoothScrollToPosition(position);
                         }
                     });
-                    shiyi_time_c = (int) getTime(formatDate.format(nowday) + " " + selectedData.start + ":" + "30", formatDate.format(nowday) + " " + selectedData.end + ":" + "30");
                     ViewGroup.LayoutParams lp =  iv_play.getLayoutParams();
                     lp.width = videoHeight / 7;
                     lp.height = videoHeight / 7;
-              //      sBar = (SeekBar) findViewById(R.id.pb_progressbar);
-              //      sBar.setMin(0);
-              //      sBar.setMax(shiyi_time_c * 1000);
-              //      sBar.setKeyProgressIncrement(shiyi_time_c * 10);
-              //      sBar.setProgress((int)  mVideoView.getCurrentPosition());
-              //      tv_currentpos.setText(durationToString((int) mVideoView.getCurrentPosition()));
-              //      tv_duration.setText(durationToString(shiyi_time_c * 1000));
-              //      ((TextView) findViewById(R.id.tv_pause_progress_text)).setText((durationToString((int) mVideoView.getCurrentPosition())) + " / " + (durationToString(shiyi_time_c * 1000)));
                     showProgressBars(true);
                     ll_right_top_huikan.setVisibility(View.VISIBLE);
                     isBack = true;
@@ -1925,7 +1906,6 @@ public class LivePlayActivity extends BaseActivity {
                     Hawk.put(HawkConfig.LIVE_GROUP_INDEX, 0);
                 }
                 super.onError(response);
-             //   Toast.makeText(App.getInstance(), getString(R.string.act_live_play_network_error), Toast.LENGTH_LONG).show();
                 finish();
             }
         });
@@ -2225,62 +2205,6 @@ public class LivePlayActivity extends BaseActivity {
         }
         return true;
     }
-
-    //计算两个时间相差的秒数
-    public static long getTime(String startTime, String endTime)  {
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        long eTime = 0;
-        try {
-            eTime = df.parse(endTime).getTime();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        long sTime = 0;
-        try {
-            sTime = df.parse(startTime).getTime();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        long diff = (eTime - sTime) / 1000;
-        return diff;
-    }
-    private  String durationToString(int duration) {
-        String result = "";
-        int dur = duration / 1000;
-        int hour = dur / 3600;
-        int min = (dur / 60) % 60;
-        int sec = dur % 60;
-        if (hour > 0) {
-            if (min > 9) {
-                if (sec > 9) {
-                    result = hour + ":" + min + ":" + sec;
-                } else {
-                    result = hour + ":" + min + ":0" + sec;
-                }
-            } else {
-                if (sec > 9) {
-                    result = hour + ":" + "0" + min + ":" + sec;
-                } else {
-                    result = hour + ":" + "0" + min + ":0" + sec;
-                }
-            }
-        } else {
-            if (min > 9) {
-                if (sec > 9) {
-                    result = min + ":" + sec;
-                } else {
-                    result = min + ":0" + sec;
-                }
-            } else {
-                if (sec > 9) {
-                    result = "0" + min + ":" + sec;
-                } else {
-                    result = "0" + min + ":0" + sec;
-                }
-            }
-        }
-        return result;
-    }
     
     public void showProgressBars( boolean show) {
         sBar.requestFocus();
@@ -2399,12 +2323,12 @@ public class LivePlayActivity extends BaseActivity {
                     if (mVideoView != null) {
                         sBar = (SeekBar) findViewById(R.id.pb_progressbar);
                 //        sBar.setMin(0);
-                        sBar.setMax(shiyi_time_c * 1000);
-                        sBar.setKeyProgressIncrement(shiyi_time_c * 10);
+                        sBar.setMax((int) mVideoView.getDuration());
+                        sBar.setKeyProgressIncrement((int) mVideoView.getDuration() / 100);
                         sBar.setProgress((int) mVideoView.getCurrentPosition());
-                        tv_currentpos.setText(durationToString((int) mVideoView.getCurrentPosition()));
-                        tv_duration.setText(durationToString(shiyi_time_c * 1000));
-                        ((TextView) findViewById(R.id.tv_pause_progress_text)).setText((durationToString((int) mVideoView.getCurrentPosition())) + " / " + (durationToString(shiyi_time_c * 1000)));
+                        tv_currentpos.setText(stringForTime((int) mVideoView.getCurrentPosition()));
+                        tv_duration.setText(stringForTime((int) mVideoView.getDuration()));
+                        ((TextView) findViewById(R.id.tv_pause_progress_text)).setText((stringForTime((int) mVideoView.getCurrentPosition())) + " / " + (stringForTime((int) mVideoView.getDuration())));
                     }
                 }
 
