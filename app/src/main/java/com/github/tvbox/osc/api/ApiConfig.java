@@ -488,14 +488,14 @@ public class ApiConfig {
 //                    extUrlFix = Base64.encodeToString(extUrlFix.getBytes("UTF-8"), Base64.DEFAULT | Base64.URL_SAFE | Base64.NO_WRAP);
 //                    url = url.replace(extUrl, extUrlFix);
                 }
-//                System.out.println("urlLive :"+url);
+//                System.out.println("urlLive :" + url);
 
                 //设置epg
                 // takagen99 : Getting EPG URL from File Config & put into Settings
                     if (livesOBJ.has("epg")) {
                         String epg = livesOBJ.get("epg").getAsString();
                         System.out.println("EPG URL :" + epg);
-                        putEPGHistory(epg);
+                        putEpgHistory(epg);
                         // Overwrite with EPG URL from Settings
                         if (StringUtils.isBlank(epgURL)) {
                             Hawk.put(HawkConfig.EPG_URL, epg);
@@ -510,8 +510,8 @@ public class ApiConfig {
                 
                     //直播播放器类型
                     if (livesOBJ.has("playerType")) {
-                        String livePlayType =livesOBJ.get("playerType").getAsString();
-                        Hawk.put(HawkConfig.LIVE_PLAY_TYPE,livePlayType);
+                        String livePlayType = livesOBJ.get("playerType").getAsString();
+                        Hawk.put(HawkConfig.LIVE_PLAY_TYPE, livePlayType);
                     } else {
                         Hawk.put(HawkConfig.LIVE_PLAY_TYPE,Hawk.get(HawkConfig.PLAY_TYPE, 0)); 
                     }
@@ -522,7 +522,7 @@ public class ApiConfig {
                        liveHeader.put("User-Agent", ua);
                        Hawk.put(HawkConfig.LIVE_WEB_HEADER, liveHeader);
                     } else {
-                       Hawk.put(HawkConfig.LIVE_WEB_HEADER,null);
+                       Hawk.put(HawkConfig.LIVE_WEB_HEADER, null);
                     }
 
  //               LiveChannelGroup liveChannelGroup = new LiveChannelGroup();
@@ -537,7 +537,7 @@ public class ApiConfig {
                     String type = livesOBJ.get("type").getAsString();
                     if (type.equals("0") || type.equals("3")) {
                         String url = livesOBJ.get("url").getAsString();
-   //                     Hawk.put(HawkConfig.LIVE_URL,url);
+   //                     Hawk.put(HawkConfig.LIVE_URL, url);
                         if (type.equals("3")) {
                             String jarUrl = livesOBJ.get("jar").getAsString().trim();
                             if (!jarUrl.isEmpty()) {
@@ -551,7 +551,7 @@ public class ApiConfig {
                             if (livesOBJ.has("epg")) {
                                 String epg = livesOBJ.get("epg").getAsString();
                                 System.out.println("EPG URL :" + epg);
-                                putEPGHistory(epg);
+                                putEpgHistory(epg);
                                 // Overwrite with EPG URL from Settings
                                 if (StringUtils.isBlank(epgURL)) {
                                     Hawk.put(HawkConfig.EPG_URL, epg);
@@ -567,9 +567,9 @@ public class ApiConfig {
                             //直播播放器类型
                             if (livesOBJ.has("playerType")) {
                                 String livePlayType = livesOBJ.get("playerType").getAsString();
-                                Hawk.put(HawkConfig.LIVE_PLAY_TYPE,livePlayType);
+                                Hawk.put(HawkConfig.LIVE_PLAY_TYPE, livePlayType);
                             } else {
-                                Hawk.put(HawkConfig.LIVE_PLAY_TYPE,Hawk.get(HawkConfig.PLAY_TYPE, 0));
+                                Hawk.put(HawkConfig.LIVE_PLAY_TYPE, Hawk.get(HawkConfig.PLAY_TYPE, 0));
                             }
                             //设置UA
                             if (livesOBJ.has("ua")) {
@@ -578,7 +578,7 @@ public class ApiConfig {
                                 liveHeader.put("User-Agent", ua);
                                 Hawk.put(HawkConfig.LIVE_WEB_HEADER, liveHeader);
                             } else {
-                                Hawk.put(HawkConfig.LIVE_WEB_HEADER,null);
+                                Hawk.put(HawkConfig.LIVE_WEB_HEADER, null);
                             }
 
                         if (url.startsWith("http")) {
@@ -791,23 +791,23 @@ public class ApiConfig {
 
     private void putLiveHistory(String url) {
         if (!url.isEmpty()) {
-            ArrayList<String> liveHistory = Hawk.get(HawkConfig.LIVE_HISTORY, new ArrayList<String>());
-            if (!liveHistory.contains(url))
-                liveHistory.add(0, url);
-            if (liveHistory.size() > 30)
-                liveHistory.remove(30);
-            Hawk.put(HawkConfig.LIVE_HISTORY, liveHistory);
+            ArrayList<String> history = Hawk.get(HawkConfig.LIVE_HISTORY, new ArrayList<String>());
+            if (!history.contains(url))
+                history.add(0, url);
+            if (history.size() > 30)
+                history.remove(30);
+            Hawk.put(HawkConfig.LIVE_HISTORY, history);
         }
     }
 
-    public static void putEPGHistory(String url) {
-        if (!url.isEmpty()) {
-            ArrayList<String> epgHistory = Hawk.get(HawkConfig.EPG_HISTORY, new ArrayList<String>());
-            if (!epgHistory.contains(url))
-                epgHistory.add(0, url);
-            if (epgHistory.size() > 30)
-                epgHistory.remove(30);
-            Hawk.put(HawkConfig.EPG_HISTORY, epgHistory);
+    public static void putEpgHistory(String epg) {
+        if (!epg.isEmpty()) {
+            ArrayList<String> history = Hawk.get(HawkConfig.EPG_HISTORY, new ArrayList<String>());
+            if (!history.contains(epg))
+                history.add(0, epg);
+            if (history.size() > 30)
+                history.remove(30);
+            Hawk.put(HawkConfig.EPG_HISTORY, history);
         }
     }
 
