@@ -26,6 +26,7 @@ public class Jianpian {
                 if (!TextUtils.isEmpty(App.burl)) {
                     App.getp2p().P2Pdoxpause(App.burl.getBytes("GBK"));
                     App.getp2p().P2Pdoxdel(App.burl.getBytes("GBK"));
+                }    
                 App.burl = replace;
                 App.getp2p().P2Pdoxstart(replace.getBytes("GBK"));
                 App.getp2p().P2Pdoxadd(replace.getBytes("GBK"));
