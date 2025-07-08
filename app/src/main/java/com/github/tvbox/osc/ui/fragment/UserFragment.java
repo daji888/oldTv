@@ -73,8 +73,7 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
     private TextView tvExit1;
     public static HomeHotVodAdapter homeHotVodAdapter;
     private List<Movie.Video> homeSourceRec;
-    public static TvRecyclerView tvHotList1;
-    public static TvRecyclerView tvHotList2;
+    public static TvRecyclerView tvHotList;
 
     public static UserFragment newInstance() {
         return new UserFragment();
@@ -92,13 +91,11 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
     @Override
     protected void onFragmentResume() {
         if (Hawk.get(HawkConfig.HOME_REC_STYLE, false)) {
-            tvHotList1.setVisibility(View.VISIBLE);
-            tvHotList2.setVisibility(View.GONE);
-            tvHotList1.setHasFixedSize(true);
-            tvHotList1.setLayoutManager(new V7GridLayoutManager(this.mContext, 5));
+            tvHotList.setHasFixedSize(true);
+            tvHotList.setLayoutManager(new V7GridLayoutManager(this.mContext, 5));
         } else {
-            tvHotList1.setVisibility(View.GONE);
-            tvHotList2.setVisibility(View.VISIBLE);
+            tvHotList.setHasFixedSize(true);
+            tvHotList.setLayoutManager(new V7LinearLayoutManager(this.mContext, V7LinearLayoutManager.HORIZONTAL, false));
         }
         super.onFragmentResume();
         if (Hawk.get(HawkConfig.HOME_REC, 0) == 2) {
@@ -161,8 +158,7 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
         tvPush1.setOnFocusChangeListener(focusChangeListener);
         tvCollect1.setOnFocusChangeListener(focusChangeListener);
         tvExit1.setOnFocusChangeListener(focusChangeListener);
-        tvHotList1 = findViewById(R.id.tvHotList1);
-        tvHotList2 = findViewById(R.id.tvHotList2);
+        tvHotList = findViewById(R.id.tvHotList);
         homeHotVodAdapter = new HomeHotVodAdapter();
         homeHotVodAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
@@ -216,7 +212,7 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
             }    
         });
 
-        tvHotList1.setOnItemListener(new TvRecyclerView.OnItemListener() {
+        tvHotList.setOnItemListener(new TvRecyclerView.OnItemListener() {
             @Override
             public void onItemPreSelected(TvRecyclerView parent, View itemView, int position) {
                 itemView.animate().scaleX(1.0f).scaleY(1.0f).setDuration(300).setInterpolator(new BounceInterpolator()).start();
@@ -232,25 +228,7 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
 
             }
         });
-        tvHotList1.setAdapter(homeHotVodAdapter);
-        tvHotList2.setOnItemListener(new TvRecyclerView.OnItemListener() {
-            @Override
-            public void onItemPreSelected(TvRecyclerView parent, View itemView, int position) {
-                itemView.animate().scaleX(1.0f).scaleY(1.0f).setDuration(300).setInterpolator(new BounceInterpolator()).start();
-            }
-
-            @Override
-            public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
-                itemView.animate().scaleX(1.1f).scaleY(1.1f).setDuration(300).setInterpolator(new BounceInterpolator()).start();
-            }
-
-            @Override
-            public void onItemClick(TvRecyclerView parent, View itemView, int position) {
-
-            }
-        });
-        tvHotList2.setAdapter(homeHotVodAdapter);
-
+        tvHotList.setAdapter(homeHotVodAdapter);
         initHomeHotVod(homeHotVodAdapter);
     }
 
