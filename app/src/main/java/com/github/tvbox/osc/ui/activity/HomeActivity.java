@@ -150,7 +150,8 @@ public class HomeActivity extends BaseActivity {
                       }
                   });
               }
-          });
+        });
+        
         this.mGridView.setOnItemListener(new TvRecyclerView.OnItemListener() {
             public void onItemPreSelected(TvRecyclerView tvRecyclerView, View view, int position) {
                 if (view != null && !HomeActivity.this.isDownOrUp) {
@@ -234,11 +235,16 @@ public class HomeActivity extends BaseActivity {
 
         this.mGridView.setOnInBorderKeyEventListener(new TvRecyclerView.OnInBorderKeyEventListener() {
             public final boolean onInBorderKeyEvent(int direction, View view) {
+                BaseLazyFragment baseLazyFragment = fragments.get(sortFocused);
+                if (!(baseLazyFragment instanceof GridFragment) && direction == View.FOCUS_UP) {
+                    tvName.setFocusable(true);
+                } else {
+                    tvName.setFocusable(false);
+                }
                 if (direction != View.FOCUS_DOWN) {
                     return false;
                 }
                 isDownOrUp = true;
-                BaseLazyFragment baseLazyFragment = fragments.get(sortFocused);
                 if (!(baseLazyFragment instanceof GridFragment)) {
                     return false;
                 }
@@ -248,6 +254,7 @@ public class HomeActivity extends BaseActivity {
                 return false;
             }
         });
+        
         tvName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -276,6 +283,7 @@ public class HomeActivity extends BaseActivity {
                  }     
             }
         });
+        
         tvName.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -450,7 +458,6 @@ public class HomeActivity extends BaseActivity {
     }
 
     private void initViewPager(AbsSortXml absXml) {
-        tvName.setFocusable(true);
         if (sortAdapter.getData().size() > 0) {
             for (MovieSort.SortData data : sortAdapter.getData()) {
                 if (data.id.equals("my0")) {
@@ -515,9 +522,9 @@ public class HomeActivity extends BaseActivity {
             } else {
                 doExit();
             }
-        } else if (baseLazyFragment instanceof UserFragment && UserFragment.tvHotList1.canScrollVertically(-1)) {
+        } else if (baseLazyFragment instanceof UserFragment && UserFragment.tvHotList.canScrollVertically(-1)) {
              // 如果 UserFragment 列表可以向上滚动，则滚动到顶部
-             UserFragment.tvHotList1.scrollToPosition(0);
+             UserFragment.tvHotList.scrollToPosition(0);
              this.mGridView.setSelection(0);
          } else {
              doExit();
@@ -586,10 +593,8 @@ public class HomeActivity extends BaseActivity {
                     mViewPager.setCurrentItem(sortFocused, false);
                     if (sortFocused == 0) {
                         changeTop(false);
-                        tvName.setFocusable(true);
                     } else {
                         changeTop(true);
-                        tvName.setFocusable(false);
                     }
                 }
             }
