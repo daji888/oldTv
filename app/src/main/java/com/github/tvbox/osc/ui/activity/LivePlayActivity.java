@@ -970,7 +970,11 @@ public class LivePlayActivity extends BaseActivity {
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
                 mHandler.removeCallbacks(mHideChannelListRun);
                 mHandler.postDelayed(mHideChannelListRun, 5000);
-                epgListAdapter.setFocusedEpgIndex(position);
+                if (epgListAdapter.getItem(0).title.equals("精彩节目")) {
+                    epgListAdapter.setFocusedEpgIndex(position);
+                } else { 
+                    epgListAdapter.setFocusedEpgIndex(position + 1);
+                }
             }
 
             @SuppressLint("NotifyDataSetChanged")
@@ -991,7 +995,11 @@ public class LivePlayActivity extends BaseActivity {
                 if (new Date().compareTo(selectedData.startdateTime) < 0) {
                     return;
                 }
-                epgListAdapter.setSelectedEpgIndex(position);
+                if (epgListAdapter.getItem(0).title.equals("精彩节目")) {
+                    epgListAdapter.setSelectedEpgIndex(position);
+                } else { 
+                    epgListAdapter.setSelectedEpgIndex(position + 1);
+                }
    /*             if (now.compareTo(selectedData.startdateTime) >= 0 && now.compareTo(selectedData.enddateTime) <= 0) {
                     mVideoView.release();
                     isSHIYI = false;
@@ -1100,7 +1108,11 @@ public class LivePlayActivity extends BaseActivity {
                 if (new Date().compareTo(selectedData.startdateTime) < 0) {
                     return;
                 }
-                epgListAdapter.setSelectedEpgIndex(position);
+                if (epgListAdapter.getItem(0).title.equals("精彩节目")) {
+                    epgListAdapter.setSelectedEpgIndex(position);
+                } else { 
+                    epgListAdapter.setSelectedEpgIndex(position + 1);
+                }
         /*        if (now.compareTo(selectedData.startdateTime) >= 0 && now.compareTo(selectedData.enddateTime) <= 0) {
                     mVideoView.release();
                     isSHIYI = false;
