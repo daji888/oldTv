@@ -292,8 +292,10 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
         try {
             JsonObject infoJson = new Gson().fromJson(json, JsonObject.class);
             JsonArray array = infoJson.getAsJsonArray("data");
-            for (JsonElement ele : array) {
-                JsonObject obj = (JsonObject) ele;
+            int limit = Math.min(array.size(), 30);
+            for (int i = 0; i < limit; i++) {  // 改用索引循环
+                JsonElement ele = array.get(i);
+                JsonObject obj = ele.getAsJsonObject();
                 Movie.Video vod = new Movie.Video();
                 vod.name = obj.get("title").getAsString();
                 vod.note = obj.get("rate").getAsString();
