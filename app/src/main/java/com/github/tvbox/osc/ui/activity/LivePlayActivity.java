@@ -2342,14 +2342,16 @@ public class LivePlayActivity extends BaseActivity {
                 @Override
                 public void onTick(long arg0) {
                     if (mVideoView != null) {
+                        long duration = mVideoView.getDuration();
+                        long currentPosition = mVideoView.getCurrentPosition();
                         sBar = (SeekBar) findViewById(R.id.pb_progressbar);
                 //        sBar.setMin(0);
-                        sBar.setMax((int) mVideoView.getDuration());
-                        sBar.setKeyProgressIncrement((int) mVideoView.getDuration() / 100);
-                        sBar.setProgress((int) mVideoView.getCurrentPosition());
-                        tv_currentpos.setText(stringForTime((int) mVideoView.getCurrentPosition()));
-                        tv_duration.setText(stringForTime((int) mVideoView.getDuration()));
-                        ((TextView) findViewById(R.id.tv_pause_progress_text)).setText((stringForTime((int) mVideoView.getCurrentPosition())) + " / " + (stringForTime((int) mVideoView.getDuration())));
+                        sBar.setMax((int) duration);
+                        sBar.setKeyProgressIncrement((int) duration / 100);
+                        sBar.setProgress((int) currentPosition);
+                        tv_currentpos.setText(stringForTime((int) currentPosition));
+                        tv_duration.setText(stringForTime((int) duration));
+                        ((TextView) findViewById(R.id.tv_pause_progress_text)).setText((stringForTime((int) currentPosition)) + " / " + (stringForTime((int) duration)));
                     }
                 }
 
