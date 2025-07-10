@@ -93,6 +93,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -515,17 +516,25 @@ public class LivePlayActivity extends BaseActivity {
         divEpg.setVisibility(View.VISIBLE);
         divLoadEpgleft.setVisibility(View.VISIBLE);
         divLoadEpg.setVisibility(View.GONE);
-        if (!epgListAdapter.getItem(0).title.equals("精彩节目")) {
-            mRightEpgList.setSelectedPosition(epgListAdapter.getSelectedIndex() - 1);
-        } else { 
-            mRightEpgList.setSelectedPosition(epgListAdapter.getSelectedIndex());
-        }
-        epgListAdapter.notifyDataSetChanged();
         if (mEpgDateGridView != null) {
-            mEpgDateGridView.requestFocus();
+            mEpgDateGridView.post(new Runnable() {
+                @Override
+                public void run() {
+                    View mChild = Objects.requireNonNull(mEpgDateGridView.getLayoutManager()).findViewByPosition(liveEpgDateAdapter.getSelectedIndex());
+                    if (mChild != null) {
+                        mEpgDateGridView.setSelectedPosition(liveEpgDateAdapter.getSelectedIndex());
+                        mChild.requestFocus();
+                    }
+                }
+             });   
         } else { 
             mLiveChannelView.requestFocus();
         }
+    /*    if (!epgListAdapter.getItem(0).title.equals("精彩节目")) {
+            mRightEpgList.setSelectedPosition(epgListAdapter.getSelectedIndex() - 1);
+        } else { 
+            mRightEpgList.setSelectedPosition(epgListAdapter.getSelectedIndex());
+        } */
     }
     //频道群列表
     public void divLoadEpgLeft(View view) {
