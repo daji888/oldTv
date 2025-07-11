@@ -123,6 +123,7 @@ public class LivePlayActivity extends BaseActivity {
     private TextView tvChannelInfo;
     private TextView tvTime;
     private TextView tvNetSpeed;
+    private TextView tv_play_load_net_speed;
     private LinearLayout tvLeftChannelListLayout;
     private TvRecyclerView mChannelGroupView;
     private TvRecyclerView mLiveChannelView;
@@ -241,6 +242,7 @@ public class LivePlayActivity extends BaseActivity {
         tvTime = findViewById(R.id.tvTime);
         tvNetSpeed = findViewById(R.id.tvNetSpeed);
         tv_videosize = findViewById(R.id.tv_videosize);
+        tv_play_load_net_speed = findViewById(R.id.tv_play_load_net_speed);
         tv_play_load_net_speed_right_top = findViewById(R.id.tv_play_load_net_speed_right_top);
         tv_top_l_container = findViewById(R.id.tv_top_l_container);
         tv_top_r_container = findViewById(R.id.tv_top_r_container);
@@ -1322,7 +1324,11 @@ public class LivePlayActivity extends BaseActivity {
                     case MyVideoView.STATE_PAUSED:
                         break;
                     case MyVideoView.STATE_PREPARED:
+                        tv_play_load_net_speed.setVisibility(View.GONE);
+                        break;
                     case MyVideoView.STATE_BUFFERED:
+                        tv_play_load_net_speed.setVisibility(View.GONE);
+                        break;
                     case MyVideoView.STATE_PLAYING:
                         currentLiveChangeSourceTimes = 0;
                         mHandler.removeCallbacks(mConnectTimeoutChangeSourceRun);
@@ -1334,6 +1340,8 @@ public class LivePlayActivity extends BaseActivity {
                         break;
                     case MyVideoView.STATE_PREPARING:
                     case MyVideoView.STATE_BUFFERING:
+                        tv_play_load_net_speed.setVisibility(View.VISIBLE);
+                        mHandler.post(mUpdatetv_play_load_net_speedRun);
                         mHandler.removeCallbacks(mConnectTimeoutChangeSourceRun);
                         mHandler.postDelayed(mConnectTimeoutChangeSourceRun, (Hawk.get(HawkConfig.LIVE_CONNECT_TIMEOUT, 5) + 1) * 5000);
                         break;
@@ -2078,6 +2086,16 @@ public class LivePlayActivity extends BaseActivity {
         }
     };     
 
+    private Runnable mUpdatetv_play_load_net_speedRun = new Runnable() {
+        @Override
+        public void run() {
+            if (mVideoView == null) return;
+            String speed = PlayerHelper.getDisplaySpeed(mVideoView.getTcpSpeed(), true);
+            tv_play_load_net_speed.setText(speed);
+            mHandler.postDelayed(this, 1000);
+        }
+    };     
+    
     private void showNetSpeed() {
         if (Hawk.get(HawkConfig.LIVE_SHOW_NET_SPEED, false)) {
             mHandler.post(mUpdateNetSpeedRun);
