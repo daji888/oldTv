@@ -833,80 +833,21 @@
 			android:textSize="@dimen/ts_20" />
 	</LinearLayout>
 
-
-	<!--右上角动态状态栏-->
-	<RelativeLayout
-		android:layout_gravity="center|right|top"
-		android:orientation="vertical"
-		android:id="@+id/ll_right_top_loading"
-		android:visibility="gone"
-                tools:visibility="visible"
-	        android:background="@drawable/shape_user_focus"
-		android:layout_width="@dimen/vs_190"
-		android:layout_height="@dimen/vs_70"
-		android:layout_marginTop="@dimen/vs_20"
-		android:layout_marginRight="@dimen/vs_20"
-		android:minWidth="@dimen/vs_220">
-		<ImageView
-			android:id="@+id/iv_circle_bg"
-			android:layout_width="@dimen/vs_40"
-			android:layout_height="@dimen/vs_40"
-			android:layout_marginRight="@dimen/vs_10"
-			android:src="@drawable/app_icon"
-			android:layout_alignParentTop="true"
-			android:layout_alignParentRight="true"
-			android:layout_alignParentBottom="true" />
-		<ImageView
-			android:layout_width="@dimen/vs_40"
-			android:layout_height="@dimen/vs_40"
-			android:layout_margin="@dimen/vs_10"
-			android:layout_alignLeft="@+id/iv_circle_bg"
-			android:layout_alignTop="@+id/iv_circle_bg"
-			android:layout_alignRight="@+id/iv_circle_bg"
-			android:layout_alignBottom="@+id/iv_circle_bg" />
-
-		<com.github.tvbox.osc.ui.tv.widget.MarqueeTextView
-			android:id="@+id/tv_right_top_channel_name"
-			android:layout_width="@dimen/vs_150"
-			android:layout_height="wrap_content"
-			android:layout_alignParentTop="true"
-			android:layout_marginEnd="@dimen/vs_5"
-			android:layout_marginRight="@dimen/vs_5"
-			android:layout_toStartOf="@+id/iv_circle_bg"
-			android:layout_toLeftOf="@+id/iv_circle_bg"
-			android:ellipsize="marquee"
-			android:gravity="center"
-			android:marqueeRepeatLimit="marquee_forever"
-			android:singleLine="true"
-			android:text="测试频道"
-			android:shadowColor="@color/color_000000_80"
-                        android:shadowDx="5"
-                        android:shadowDy="5"
-                        android:shadowRadius="5"
-			android:textColor="#FFFCFFFF"
-			android:textSize="@dimen/ts_30" />
-
-		<TextView
-			android:id="@+id/tv_right_top_tipnetspeed"
-			android:layout_width="@dimen/vs_150"
-			android:layout_height="wrap_content"
-			android:layout_alignParentBottom="true"
-			android:layout_gravity="center"
-			android:layout_marginEnd="@dimen/vs_5"
-			android:layout_marginRight="@dimen/vs_5"
-			android:layout_toStartOf="@+id/iv_circle_bg"
-			android:layout_toLeftOf="@+id/iv_circle_bg"
-			android:gravity="center"
-			android:singleLine="true"
-			android:text=""
-			android:shadowColor="@color/color_000000_80"
-                        android:shadowDx="5"
-                        android:shadowDy="5"
-                        android:shadowRadius="5"
-			tools:text="0Kb/s"
-			android:textColor="#FFFCFFFF"
-			android:textSize="@dimen/ts_20" />
-	</RelativeLayout>
-
+        <TextView
+            android:id="@+id/tv_play_load_net_speed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/vs_40"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:tag="play_load_net_speed"
+            android:text="0"
+            android:shadowColor="@color/color_000000_80"
+            android:shadowDx="5"
+            android:shadowDy="5"
+            android:shadowRadius="5"
+            android:textColor="@color/color_FFFFFF"
+            android:textSize="@dimen/ts_20" />
 
 </FrameLayout>
