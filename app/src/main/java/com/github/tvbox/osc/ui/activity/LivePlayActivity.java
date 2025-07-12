@@ -1340,8 +1340,10 @@ public class LivePlayActivity extends BaseActivity {
                         break;
                     case MyVideoView.STATE_PREPARING:
                     case MyVideoView.STATE_BUFFERING:
-                        tv_play_load_net_speed.setVisibility(View.VISIBLE);
-                        mHandler.post(mUpdatetv_play_load_net_speedRun);
+                        if (iv_play.getVisibility() != View.VISIBLE) {
+                            tv_play_load_net_speed.setVisibility(View.VISIBLE);
+                            mHandler.post(mUpdatetv_play_load_net_speedRun);
+                        }
                         mHandler.removeCallbacks(mConnectTimeoutChangeSourceRun);
                         mHandler.postDelayed(mConnectTimeoutChangeSourceRun, (Hawk.get(HawkConfig.LIVE_CONNECT_TIMEOUT, 5) + 1) * 5000);
                         break;
