@@ -1325,10 +1325,8 @@ public class LivePlayActivity extends BaseActivity {
                         break;
                     case MyVideoView.STATE_PREPARED:
                         tv_play_load_net_speed.setVisibility(View.GONE);
-                        break;
                     case MyVideoView.STATE_BUFFERED:
                         tv_play_load_net_speed.setVisibility(View.GONE);
-                        break;
                     case MyVideoView.STATE_PLAYING:
                         currentLiveChangeSourceTimes = 0;
                         mHandler.removeCallbacks(mConnectTimeoutChangeSourceRun);
