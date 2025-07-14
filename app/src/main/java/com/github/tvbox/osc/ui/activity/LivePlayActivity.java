@@ -532,11 +532,12 @@ public class LivePlayActivity extends BaseActivity {
         } else { 
             mLiveChannelView.requestFocus();
         }
-    /*    if (!epgListAdapter.getItem(0).title.equals("精彩节目")) {
+        if (!epgListAdapter.getItem(0).title.equals("精彩节目")) {
             mRightEpgList.setSelectedPosition(epgListAdapter.getSelectedIndex() - 1);
         } else { 
             mRightEpgList.setSelectedPosition(epgListAdapter.getSelectedIndex());
-        } */
+        }
+        epgListAdapter.notifyDataSetChanged();
     }
     //频道群列表
     public void divLoadEpgLeft(View view) {
@@ -1327,6 +1328,7 @@ public class LivePlayActivity extends BaseActivity {
                         tv_play_load_net_speed.setVisibility(View.GONE);
                     case MyVideoView.STATE_BUFFERED:
                         tv_play_load_net_speed.setVisibility(View.GONE);
+                        mHandler.removeCallbacks(mUpdatetv_play_load_net_speedRun);
                     case MyVideoView.STATE_PLAYING:
                         currentLiveChangeSourceTimes = 0;
                         mHandler.removeCallbacks(mConnectTimeoutChangeSourceRun);
