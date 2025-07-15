@@ -189,7 +189,6 @@ public class LivePlayActivity extends BaseActivity {
     public static SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
     public static SimpleDateFormat formatDate1 = new SimpleDateFormat("MM-dd");
     public static String day = formatDate.format(new Date());
-    public static Date nowday = new Date();
 
     private boolean isSHIYI = false;
     public static boolean isBack = false;
@@ -232,7 +231,7 @@ public class LivePlayActivity extends BaseActivity {
         mVideoView = findViewById(R.id.mVideoView);
         
         tvSelectedChannel = findViewById(R.id.tv_selected_channel);
-        tvLeftChannelListLayout = findViewById(R.id.tvLeftChannnelListLayout);
+        tvLeftChannelListLayout = findViewById(R.id.tvLeftChannelListLayout);
         mChannelGroupView = findViewById(R.id.mGroupGridView);
         mLiveChannelView = findViewById(R.id.mChannelGridView);
         tvRightSettingLayout = findViewById(R.id.tvRightSettingLayout);
@@ -268,11 +267,10 @@ public class LivePlayActivity extends BaseActivity {
 
         //laodao 7day replay
         mEpgDateGridView = findViewById(R.id.mEpgDateGridView);
+        mRightEpgList = (TvRecyclerView) findViewById(R.id.lv_epg);
         Hawk.put(HawkConfig.NOW_DATE, formatDate.format(new Date()));
         day = formatDate.format(new Date());
-        nowday = new Date();
-
-        mRightEpgList = (TvRecyclerView) findViewById(R.id.lv_epg);
+        
         //EPG频道名称
         imgLiveIcon = findViewById(R.id.img_live_icon);
         liveIconNullBg = findViewById(R.id.live_icon_null_bg);
@@ -305,7 +303,7 @@ public class LivePlayActivity extends BaseActivity {
     private List<Epginfo> epgdata = new ArrayList<>();
 
     private void showEpg(Date date, ArrayList<Epginfo> arrayList) {
-        if (arrayList != null && arrayList.size() > 0) {
+        if (mRightEpgList.getVisibility() == View.VISIBLE && arrayList != null && arrayList.size() > 0) {
             if (!((Epginfo) arrayList.get(0)).start.equals("00:00")) {
                 Epginfo epgbcinfo = new Epginfo(date, "精彩节目", date, "00:00", ((Epginfo) arrayList.get(0)).start, 0);
                 arrayList.add(0, epgbcinfo);
@@ -344,8 +342,6 @@ public class LivePlayActivity extends BaseActivity {
             arrayList.add(0, epgbcinfo);
             epgdata = arrayList;
             epgListAdapter.setNewData(epgdata);
-
-            //  mEpgInfoGridView.setAdapter(epgListAdapter);
         }
     }
 
@@ -516,6 +512,7 @@ public class LivePlayActivity extends BaseActivity {
         mHandler.postDelayed(mHideChannelListRun, 5000);
         mChannelGroupView.setVisibility(View.GONE);
         divEpg.setVisibility(View.VISIBLE);
+        mRightEpgList.setVisibility(View.VISIBLE);
         divLoadEpgleft.setVisibility(View.VISIBLE);
         divLoadEpg.setVisibility(View.GONE);
         if (mEpgDateGridView != null) {
@@ -545,6 +542,7 @@ public class LivePlayActivity extends BaseActivity {
         mHandler.postDelayed(mHideChannelListRun, 5000);
         mChannelGroupView.setVisibility(View.VISIBLE);
         divEpg.setVisibility(View.GONE);
+        mRightEpgList.setVisibility(View.GONE);
         divLoadEpgleft.setVisibility(View.GONE);
         divLoadEpg.setVisibility(View.VISIBLE);
         mLiveChannelView.requestFocus();
