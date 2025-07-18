@@ -299,6 +299,7 @@ public class PlayActivity extends BaseActivity {
             @Override
             public void prepared() {
                 initAudioView();
+                initVideoView();
                 initSubtitleView();
             }
 
@@ -852,6 +853,18 @@ public class PlayActivity extends BaseActivity {
          }
      }   
 
+    private void initVideoView() {
+        AbstractPlayer mediaPlayer = mVideoView.getMediaPlayer();
+        TrackInfo trackInfo = null;
+        if (mVideoView.getMediaPlayer() instanceof EXOmPlayer) {
+            //默认选中第一个视轨 一般第一个视轨分辨率最高
+            if (trackInfo != null && trackInfo.getVideo().size() > 1) {
+                TrackInfoBean firsVideo = trackInfo.getVideo().get(0);
+                ((EXOmPlayer)(mVideoView.getMediaPlayer())).selectExoTrack(firsVideo);
+            }
+         }
+     }
+    
     private void initSubtitleView() {
         AbstractPlayer mediaPlayer = mVideoView.getMediaPlayer();
         TrackInfo trackInfo = null;
