@@ -66,29 +66,9 @@ public class LiveChannelItem {
         this.channelUrls = channelUrls;
         sourceNum = channelUrls.size();
     }
-    public void preSource() {
-        sourceIndex--;
-        if (sourceIndex < 0) sourceIndex = sourceNum - 1;
-    }
-    public void nextSource() {
-        sourceIndex++;
-        if (sourceIndex == sourceNum) sourceIndex = 0;
-    }
-
-    public void setSourceIndex(int sourceIndex) {
-        this.sourceIndex = sourceIndex;
-    }
-
-    public int getSourceIndex() {
-        return sourceIndex;
-    }
 
     public String getUrl() {
         return channelUrls.get(sourceIndex);
-    }
-
-    public int getSourceNum() {
-        return sourceNum;
     }
 
     public ArrayList<String> getChannelSourceNames() {
@@ -101,6 +81,28 @@ public class LiveChannelItem {
 
     public String getSourceName() {
         return channelSourceNames.get(sourceIndex);
+    }
+
+    public void setSourceIndex(int sourceIndex) {
+        this.sourceIndex = sourceIndex;
+    }
+
+    public int getSourceIndex() {
+        return sourceIndex;
+    }
+
+    public int getSourceNum() {
+        return sourceNum;
+    }
+
+    public void preSource() {
+        sourceIndex--;
+        if (sourceIndex < 0) sourceIndex = sourceNum - 1;
+    }
+    
+    public void nextSource() {
+        sourceIndex++;
+        if (sourceIndex == sourceNum) sourceIndex = 0;
     }
 
     @Override
