@@ -14,6 +14,7 @@ import com.github.tvbox.osc.bean.IJKCode;
 import com.github.tvbox.osc.bean.EXOCode;
 import com.github.tvbox.osc.bean.LiveChannelGroup;
 import com.github.tvbox.osc.bean.LiveChannelItem;
+import com.github.tvbox.osc.bean.LiveSourceBean;
 import com.github.tvbox.osc.bean.ParseBean;
 import com.github.tvbox.osc.bean.SourceBean;
 import com.github.tvbox.osc.server.ControlManager;
@@ -66,7 +67,9 @@ import okhttp3.OkHttpClient;
 public class ApiConfig {
     private static ApiConfig instance;
     private LinkedHashMap<String, SourceBean> sourceBeanList;
+    private LinkedHashMap<String, LiveSourceBean> livesourceBeanList;
     private SourceBean mHomeSource;
+    private LiveSourceBean mLiveSource;
     private ParseBean mDefaultParse;
     private List<LiveChannelGroup> liveChannelGroupList;
     private List<ParseBean> parseBeanList;
@@ -78,6 +81,7 @@ public class ApiConfig {
     public String wallpaper = "";
 
     private SourceBean emptyHome = new SourceBean();
+    private LiveSourceBean emptyLive = new LiveSourceBean();
 
     private JarLoader jarLoader = new JarLoader();
     private JsLoader jsLoader = new JsLoader();
@@ -89,6 +93,7 @@ public class ApiConfig {
     private ApiConfig() {
         clearLoader();
         sourceBeanList = new LinkedHashMap<>();
+        livesourceBeanList = new LinkedHashMap<>();
         liveChannelGroupList = new ArrayList<>();
         parseBeanList = new ArrayList<>();
         Hawk.put(HawkConfig.LIVE_GROUP_LIST, new JsonArray());
@@ -362,7 +367,7 @@ public class ApiConfig {
         parseJson(apiUrl, sb.toString());
     }
 
-    private static  String jarCache ="true";
+    private static  String jarCache = "true";
     private String liveSpider = "";
     private void parseJson(String apiUrl, String jsonStr) {
         JsonObject infoJson = new Gson().fromJson(jsonStr, JsonObject.class);
@@ -406,7 +411,7 @@ public class ApiConfig {
             if (sh == null) {
                  assert firstSite != null;
                  setSourceBean(firstSite);
-             }
+            }
             else
                 setSourceBean(sh);
         }
@@ -445,8 +450,40 @@ public class ApiConfig {
         String epgURL = Hawk.get(HawkConfig.EPG_URL, "");
         String liveURL_final = null;
         try {
+          LiveSourceBean firstLive = null; 
           if (infoJson.has("lives") && infoJson.get("lives").getAsJsonArray() != null) {  
             JsonArray lives_groups = infoJson.get("lives").getAsJsonArray();
+            for (JsonElement opt : lives_groups) {
+                JsonObject obj = (JsonObject) opt;
+                LiveSourceBean lb = new LiveSourceBean();
+                lb.setName(obj.has("name") ? obj.get("name").getAsString().trim() : "");
+                String liveUrl = obj.get("url").getAsString().trim();
+                lb.setLiveUrl(liveUrl);
+                lb.setUa(obj.has("ua") ? obj.get("ua").getAsString().trim() : "");
+                lb.setType(obj.get("type").getAsInt());
+                lb.setPlayerType(DefaultConfig.safeJsonInt(obj, "playerType", -1));
+                lb.setEpgUrl(DefaultConfig.safeJsonString(obj, "epg", ""));
+                lb.setLogeUrl(DefaultConfig.safeJsonString(obj, "logo", ""));
+                if (obj.has("ext") && (obj.get("ext").isJsonObject() || obj.get("ext").isJsonArray())) {
+                    lb.setExt(obj.get("ext").toString());
+                } else {
+                    lb.setExt(DefaultConfig.safeJsonString(obj, "ext", ""));
+                }
+                lb.setJar(DefaultConfig.safeJsonString(obj, "jar", ""));
+                if (firstLive == null)
+                    firstLive = lb;
+                livesourceBeanList.put(liveUrl, lb);
+            }
+            if (livesourceBeanList != null && livesourceBeanList.size() > 0) {
+                String live = Hawk.get(HawkConfig.LIVE_API, "");
+                LiveSourceBean sh = getLiveSource(live);
+                if (sh == null) {
+                     assert firstLive != null;
+                     setLiveSourceBean(firstLive);
+                }
+                else
+                    setLiveSourceBean(sh);
+            }
             int live_group_index = Hawk.get(HawkConfig.LIVE_GROUP_INDEX, 0);
             if (live_group_index > lives_groups.size() - 1) Hawk.put(HawkConfig.LIVE_GROUP_INDEX, 0);
             Hawk.put(HawkConfig.LIVE_GROUP_LIST, lives_groups);
@@ -467,7 +504,7 @@ public class ApiConfig {
                     } else {
                         extUrlFix = new String(Base64.decode(extUrl, Base64.DEFAULT | Base64.URL_SAFE | Base64.NO_WRAP), "UTF-8");
                     }
-//                    System.out.println("extUrlFix :"+extUrlFix);
+//                    System.out.println("extUrlFix :" + extUrlFix);
                     if (extUrlFix.startsWith("clan://")) {
                         extUrlFix = clanContentFix(clanToAddress(apiUrl), extUrlFix);
                     }
@@ -513,7 +550,7 @@ public class ApiConfig {
                         String livePlayType = livesOBJ.get("playerType").getAsString();
                         Hawk.put(HawkConfig.LIVE_PLAY_TYPE, livePlayType);
                     } else {
-                        Hawk.put(HawkConfig.LIVE_PLAY_TYPE,Hawk.get(HawkConfig.PLAY_TYPE, 0)); 
+                        Hawk.put(HawkConfig.LIVE_PLAY_TYPE, Hawk.get(HawkConfig.PLAY_TYPE, 0)); 
                     }
                     //设置UA
                     if (livesOBJ.has("ua")) {
@@ -532,8 +569,6 @@ public class ApiConfig {
                 if (!lives.contains("type")) {
                     loadLives(infoJson.get("lives").getAsJsonArray());
                 } else {
-                //    JsonObject livesOBJ = infoJson.get("lives").getAsJsonArray().get(0).getAsJsonObject();
-   //                 Hawk.put(HawkConfig.LIVE_PLAYER_TYPE, DefaultConfig.safeJsonInt(livesOBJ, "playerType", -1));
                     String type = livesOBJ.get("type").getAsString();
                     if (type.equals("0") || type.equals("3")) {
                         String url = livesOBJ.get("url").getAsString();
@@ -905,9 +940,20 @@ public class ApiConfig {
         return sourceBeanList.get(key);
     }
 
+    public LiveSourceBean getLiveSource(String LiveUrl) {
+        if (!livesourceBeanList.containsKey(LiveUrl))
+            return null;
+        return livesourceBeanList.get(LiveUrl);
+    }
+
     public void setSourceBean(SourceBean sourceBean) {
         this.mHomeSource = sourceBean;
         Hawk.put(HawkConfig.HOME_API, sourceBean.getKey());
+    }
+
+    public void setLiveSourceBean(LiveSourceBean livesourceBean) {
+        this.mLiveSource = livesourceBean;
+        Hawk.put(HawkConfig.LIVE_API, livesourceBean.getLiveUrl());
     }
 
     public void setDefaultParse(ParseBean parseBean) {
@@ -926,6 +972,10 @@ public class ApiConfig {
         return new ArrayList<>(sourceBeanList.values());
     }
 
+    public List<LiveSourceBean> getLiveSourceBeanList() {
+        return new ArrayList<>(livesourceBeanList.values());
+    }
+
     public List<SourceBean> getSwitchSourceBeanList() {
          List<SourceBean> filteredList = new ArrayList<>();
          for (SourceBean bean : sourceBeanList.values()) {
@@ -934,7 +984,15 @@ public class ApiConfig {
              }
          }
          return filteredList;
-     }
+    }
+
+    public List<LiveSourceBean> getSwitchLiveSourceBeanList() {
+         List<LiveSourceBean> filteredList = new ArrayList<>();
+         for (LiveSourceBean bean : livesourceBeanList.values()) {
+                 filteredList.add(bean);
+         }
+         return filteredList;
+    }
 
     public List<ParseBean> getParseBeanList() {
         return parseBeanList;
@@ -946,6 +1004,10 @@ public class ApiConfig {
 
     public SourceBean getHomeSourceBean() {
         return mHomeSource == null ? emptyHome : mHomeSource;
+    }
+
+    public LiveSourceBean getLiveSourceBean() {
+        return mLiveSource == null ? emptyLive : mLiveSource;
     }
 
     public List<LiveChannelGroup> getChannelGroupList() {
