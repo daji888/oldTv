@@ -11,6 +11,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.github.tvbox.osc.R;
+import com.github.tvbox.osc.api.ApiConfig;
+import com.github.tvbox.osc.bean.LiveSourceBean;
 import com.github.tvbox.osc.event.RefreshEvent;
 import com.github.tvbox.osc.server.ControlManager;
 import com.github.tvbox.osc.ui.adapter.ApiHistoryDialogAdapter;
@@ -76,9 +78,16 @@ public class LiveDialog extends BaseDialog {
         findViewById(R.id.apiHistory).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                List<LiveSourceBean> lives = ApiConfig.get().getSwitchLiveSourceBeanList();
                 ArrayList<String> history = Hawk.get(HawkConfig.LIVE_HISTORY, new ArrayList<String>());
+                for (LiveSourceBean live : lives) {
+                    if (!live.getLiveUrl().isEmpty()) {
+                        if (!history.contains(live.getLiveUrl()))
+                            history.add(live.getLiveUrl());
+                    }
+                }
                 if (!history.contains("https://ghproxy.net/raw.githubusercontent.com/daji888/ys/master/tv.txt"))
-                    history.add("https://ghproxy.net/raw.githubusercontent.com/daji888/ys/master/tv.txt");
+                    history.add(0, "https://ghproxy.net/raw.githubusercontent.com/daji888/ys/master/tv.txt");
                 String current = Hawk.get(HawkConfig.LIVE_URL, "");
                 int idx = 0;
                 if (history.contains(current))
