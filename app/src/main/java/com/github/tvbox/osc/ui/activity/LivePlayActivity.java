@@ -42,6 +42,7 @@ import com.github.tvbox.osc.bean.LiveEpgDate;
 import com.github.tvbox.osc.bean.LivePlayerManager;
 import com.github.tvbox.osc.bean.LiveSettingGroup;
 import com.github.tvbox.osc.bean.LiveSettingItem;
+import com.github.tvbox.osc.bean.LiveSourceBean;
 import com.github.tvbox.osc.player.controller.LiveController;
 import com.github.tvbox.osc.ui.adapter.ApiHistoryDialogAdapter;
 import com.github.tvbox.osc.ui.adapter.LiveChannelGroupAdapter;
@@ -1816,11 +1817,19 @@ public class LivePlayActivity extends BaseActivity {
                 switch (position) {
                     case 0:
                         // takagen99 : Added Live History list selection - 直播列表
+                        List<LiveSourceBean> lives = ApiConfig.get().getSwitchLiveSourceBeanList();
                         ArrayList<String> liveHistory = Hawk.get(HawkConfig.LIVE_HISTORY, new ArrayList<String>());
                         if (liveHistory.isEmpty())
                             return;
+                        for (LiveSourceBean live : lives) {
+                            if (!live.getLiveUrl().isEmpty()) {
+                                if (!liveHistory.contains(live.getLiveUrl()))
+                                    liveHistory.add(live.getLiveUrl());
+                                Hawk.put(HawkConfig.LIVE_HISTORY, liveHistory);
+                            }
+                        }
                         if (!liveHistory.contains("https://ghproxy.net/raw.githubusercontent.com/daji888/ys/master/tv.txt"))
-                            liveHistory.add("https://ghproxy.net/raw.githubusercontent.com/daji888/ys/master/tv.txt");
+                            liveHistory.add(0, "https://ghproxy.net/raw.githubusercontent.com/daji888/ys/master/tv.txt");
                         String current = Hawk.get(HawkConfig.LIVE_URL, "");
                         int idx = 0;
                         if (liveHistory.contains(current))
