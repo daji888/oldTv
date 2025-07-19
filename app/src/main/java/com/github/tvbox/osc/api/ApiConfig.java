@@ -69,7 +69,6 @@ public class ApiConfig {
     private LinkedHashMap<String, SourceBean> sourceBeanList;
     private LinkedHashMap<String, LiveSourceBean> livesourceBeanList;
     private SourceBean mHomeSource;
-    private LiveSourceBean mLiveSource;
     private ParseBean mDefaultParse;
     private List<LiveChannelGroup> liveChannelGroupList;
     private List<ParseBean> parseBeanList;
@@ -474,16 +473,6 @@ public class ApiConfig {
                     firstLive = lb;
                 livesourceBeanList.put(liveUrl, lb);
             }
-            if (livesourceBeanList != null && livesourceBeanList.size() > 0) {
-                String live = Hawk.get(HawkConfig.LIVE_API, "");
-                LiveSourceBean sh = getLiveSource(live);
-                if (sh == null) {
-                     assert firstLive != null;
-                     setLiveSourceBean(firstLive);
-                }
-                else
-                    setLiveSourceBean(sh);
-            }
             int live_group_index = Hawk.get(HawkConfig.LIVE_GROUP_INDEX, 0);
             if (live_group_index > lives_groups.size() - 1) Hawk.put(HawkConfig.LIVE_GROUP_INDEX, 0);
             Hawk.put(HawkConfig.LIVE_GROUP_LIST, lives_groups);
@@ -572,7 +561,6 @@ public class ApiConfig {
                     String type = livesOBJ.get("type").getAsString();
                     if (type.equals("0") || type.equals("3")) {
                         String url = livesOBJ.get("url").getAsString();
-   //                     Hawk.put(HawkConfig.LIVE_URL, url);
                         if (type.equals("3")) {
                             String jarUrl = livesOBJ.get("jar").getAsString().trim();
                             if (!jarUrl.isEmpty()) {
@@ -940,20 +928,9 @@ public class ApiConfig {
         return sourceBeanList.get(key);
     }
 
-    public LiveSourceBean getLiveSource(String LiveUrl) {
-        if (!livesourceBeanList.containsKey(LiveUrl))
-            return null;
-        return livesourceBeanList.get(LiveUrl);
-    }
-
     public void setSourceBean(SourceBean sourceBean) {
         this.mHomeSource = sourceBean;
         Hawk.put(HawkConfig.HOME_API, sourceBean.getKey());
-    }
-
-    public void setLiveSourceBean(LiveSourceBean livesourceBean) {
-        this.mLiveSource = livesourceBean;
-        Hawk.put(HawkConfig.LIVE_API, livesourceBean.getLiveUrl());
     }
 
     public void setDefaultParse(ParseBean parseBean) {
@@ -1004,10 +981,6 @@ public class ApiConfig {
 
     public SourceBean getHomeSourceBean() {
         return mHomeSource == null ? emptyHome : mHomeSource;
-    }
-
-    public LiveSourceBean getLiveSourceBean() {
-        return mLiveSource == null ? emptyLive : mLiveSource;
     }
 
     public List<LiveChannelGroup> getChannelGroupList() {
