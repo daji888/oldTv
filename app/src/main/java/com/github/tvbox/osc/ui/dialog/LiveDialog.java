@@ -84,6 +84,7 @@ public class LiveDialog extends BaseDialog {
                     if (!live.getLiveUrl().isEmpty()) {
                         if (!history.contains(live.getLiveUrl()))
                             history.add(live.getLiveUrl());
+                        Hawk.put(HawkConfig.LIVE_HISTORY, history);
                     }
                 }
                 if (!history.contains("https://ghproxy.net/raw.githubusercontent.com/daji888/ys/master/tv.txt"))
