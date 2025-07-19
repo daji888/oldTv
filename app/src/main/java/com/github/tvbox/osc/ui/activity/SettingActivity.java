@@ -43,7 +43,6 @@ public class SettingActivity extends BaseActivity {
     private int sortFocused = 0;
     private Handler mHandler = new Handler();
     private String homeSourceKey;
-    private String liveSourceUrl;
     private String currentApi;
     private String currentLive;
     private String currentEpg;
@@ -113,7 +112,6 @@ public class SettingActivity extends BaseActivity {
         currentLive = Hawk.get(HawkConfig.LIVE_URL, "");
         currentEpg = Hawk.get(HawkConfig.EPG_URL, "");
         homeSourceKey = ApiConfig.get().getHomeSourceBean().getKey();
-        liveSourceUrl = ApiConfig.get().getLiveSourceBean().getLiveUrl();
         homeRec = Hawk.get(HawkConfig.HOME_REC, 0);
         dnsOpt = Hawk.get(HawkConfig.DOH_URL, 0);
         List<String> sortList = new ArrayList<>();
@@ -183,12 +181,12 @@ public class SettingActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if ((homeSourceKey != null && !homeSourceKey.equals(Hawk.get(HawkConfig.HOME_API, ""))) || (liveSourceUrl != null && !liveSourceUrl.equals(Hawk.get(HawkConfig.LIVE_API, ""))) ||
+        if ((homeSourceKey != null && !homeSourceKey.equals(Hawk.get(HawkConfig.HOME_API, ""))) ||
                 !currentApi.equals(Hawk.get(HawkConfig.API_URL, "")) || !currentLive.equals(Hawk.get(HawkConfig.LIVE_URL, "")) || !currentEpg.equals(Hawk.get(HawkConfig.EPG_URL, "")) ||
                 homeRec != Hawk.get(HawkConfig.HOME_REC, 0) ||
                 dnsOpt != Hawk.get(HawkConfig.DOH_URL, 0)) {
             AppManager.getInstance().finishAllActivity();
-            if (currentApi.equals(Hawk.get(HawkConfig.API_URL, "")) & currentLive.equals(Hawk.get(HawkConfig.LIVE_URL, "")) & liveSourceUrl.equals(Hawk.get(HawkConfig.LIVE_API, "")) & currentEpg.equals(Hawk.get(HawkConfig.EPG_URL, ""))) {
+            if (currentApi.equals(Hawk.get(HawkConfig.API_URL, "")) & currentLive.equals(Hawk.get(HawkConfig.LIVE_URL, "")) & currentEpg.equals(Hawk.get(HawkConfig.EPG_URL, ""))) {
                 Bundle bundle = new Bundle();
                 bundle.putBoolean("useCache", true);
                 jumpActivity(HomeActivity.class, bundle);
