@@ -3,6 +3,7 @@ package com.github.tvbox.osc.ui.dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.widget.TextView;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 
@@ -13,6 +14,7 @@ import com.owen.tvrecyclerview.widget.TvRecyclerView;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Objects;
 
 public class ApiHistoryDialog extends BaseDialog {
     public ApiHistoryDialog(@NonNull @NotNull Context context) {
@@ -34,7 +36,18 @@ public class ApiHistoryDialog extends BaseDialog {
         adapter.setData(data, select);
         TvRecyclerView tvRecyclerView = ((TvRecyclerView) findViewById(R.id.list));
         tvRecyclerView.setAdapter(adapter);
-        tvRecyclerView.setSelectedPosition(select);
+        if (tvRecyclerView != null) {
+            tvRecyclerView.post(new Runnable() {
+                @Override
+                public void run() {
+                    View mChild = Objects.requireNonNull(tvRecyclerView.getLayoutManager()).findViewByPosition(select);
+                    if (mChild != null) {
+                        tvRecyclerView.setSelectedPosition(select);
+                        mChild.requestFocus();
+                    }
+                }
+             });   
+        }
         tvRecyclerView.post(new Runnable() {
             @Override
             public void run() {

@@ -76,8 +76,12 @@ public class ApiHistoryDialogAdapter extends ListAdapter<String, ApiHistoryDialo
     public void onBindViewHolder(@NonNull @NotNull ApiHistoryDialogAdapter.SelectViewHolder holder, int position) {
         String value = data.get(position);
         String name = value;
-        if (select.equals(value))
+        if (select.equals(value)) {
             name = "√ " + name;
+            ((TextView) holder.itemView.findViewById(R.id.tvName)).setTextColor(0xffFF9900);
+        } else {
+            ((TextView) holder.itemView.findViewById(R.id.tvName)).setTextColor(0xFFFFFFFF);
+        }
         ((TextView) holder.itemView.findViewById(R.id.tvName)).setText(name);
         holder.itemView.findViewById(R.id.tvName).setOnClickListener(new View.OnClickListener() {
             @Override
