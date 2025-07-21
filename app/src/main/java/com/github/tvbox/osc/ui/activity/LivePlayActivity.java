@@ -324,7 +324,9 @@ public class LivePlayActivity extends BaseActivity {
             i = size;
             if (i >= 0 && new Date().compareTo(epgdata.get(i).enddateTime) <= 0) {
                 mRightEpgList.setSelectedPosition(i);
-            //    mRightEpgList.setSelection(i);
+                if (divEpg.getVisibility() == View.VISIBLE) {
+                    mRightEpgList.setSelection(i);
+                }
                 if (((Epginfo) arrayList.get(0)).title.equals("精彩节目")) {
                     epgListAdapter.setSelectedEpgIndex(i);
                 } else { 
