@@ -304,7 +304,7 @@ public class LivePlayActivity extends BaseActivity {
     private List<Epginfo> epgdata = new ArrayList<>();
 
     private void showEpg(Date date, ArrayList<Epginfo> arrayList) {
-        if (mRightEpgList.getVisibility() == View.VISIBLE && arrayList != null && arrayList.size() > 0) {
+        if (arrayList != null && arrayList.size() > 0) {
             if (!((Epginfo) arrayList.get(0)).start.equals("00:00")) {
                 Epginfo epgbcinfo = new Epginfo(date, "精彩节目", date, "00:00", ((Epginfo) arrayList.get(0)).start, 0);
                 arrayList.add(0, epgbcinfo);
@@ -324,11 +324,11 @@ public class LivePlayActivity extends BaseActivity {
             i = size;
             if (i >= 0 && new Date().compareTo(epgdata.get(i).enddateTime) <= 0) {
                 mRightEpgList.setSelectedPosition(i);
-                mRightEpgList.setSelection(i);
-                if (!((Epginfo) arrayList.get(0)).title.equals("精彩节目")) {
-                    epgListAdapter.setSelectedEpgIndex(i + 1);
-                } else { 
+            //    mRightEpgList.setSelection(i);
+                if (((Epginfo) arrayList.get(0)).title.equals("精彩节目")) {
                     epgListAdapter.setSelectedEpgIndex(i);
+                } else { 
+                    epgListAdapter.setSelectedEpgIndex(i + 1);
                 }
                 int finalI = i;
                 mRightEpgList.post(new Runnable() {
@@ -513,16 +513,20 @@ public class LivePlayActivity extends BaseActivity {
         mHandler.postDelayed(mHideChannelListRun, 5000);
         mChannelGroupView.setVisibility(View.GONE);
         divEpg.setVisibility(View.VISIBLE);
-        mRightEpgList.setVisibility(View.VISIBLE);
         divLoadEpgleft.setVisibility(View.VISIBLE);
         divLoadEpg.setVisibility(View.GONE);
-        if (mEpgDateGridView != null) {
-            mEpgDateGridView.post(new Runnable() {
+        mEpgDateGridView.setSelectedPosition(liveEpgDateAdapter.getSelectedIndex());
+        if (mRightEpgList != null) {
+            mRightEpgList.post(new Runnable() {
                 @Override
                 public void run() {
-                    View mChild = Objects.requireNonNull(mEpgDateGridView.getLayoutManager()).findViewByPosition(liveEpgDateAdapter.getSelectedIndex());
+                    View mChild = Objects.requireNonNull(mRightEpgList.getLayoutManager()).findViewByPosition(epgListAdapter.getSelectedIndex());
                     if (mChild != null) {
-                        mEpgDateGridView.setSelectedPosition(liveEpgDateAdapter.getSelectedIndex());
+                        if (epgListAdapter.getItem(0).title.equals("精彩节目")) {
+                            mRightEpgList.setSelectedPosition(epgListAdapter.getSelectedIndex());
+                        } else {
+                            mRightEpgList.setSelectedPosition(epgListAdapter.getSelectedIndex() - 1);
+                        }
                         mChild.requestFocus();
                     }
                 }
@@ -530,20 +534,15 @@ public class LivePlayActivity extends BaseActivity {
         } else { 
             mLiveChannelView.requestFocus();
         }
-        if (!epgListAdapter.getItem(0).title.equals("精彩节目")) {
-            mRightEpgList.setSelectedPosition(epgListAdapter.getSelectedIndex() - 1);
-        } else { 
-            mRightEpgList.setSelectedPosition(epgListAdapter.getSelectedIndex());
-        }
         epgListAdapter.notifyDataSetChanged();
     }
+    
     //频道群列表
     public void divLoadEpgLeft(View view) {
         mHandler.removeCallbacks(mHideChannelListRun);
         mHandler.postDelayed(mHideChannelListRun, 5000);
         mChannelGroupView.setVisibility(View.VISIBLE);
         divEpg.setVisibility(View.GONE);
-        mRightEpgList.setVisibility(View.GONE);
         divLoadEpgleft.setVisibility(View.GONE);
         divLoadEpg.setVisibility(View.VISIBLE);
         mLiveChannelView.requestFocus();
