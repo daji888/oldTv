@@ -1841,14 +1841,14 @@ public class LivePlayActivity extends BaseActivity {
                             @Override
                             public void click(String liveURL) {
                                 Hawk.put(HawkConfig.LIVE_URL, liveURL);
-                                liveChannelGroupList.clear();
-                                try {
-                                    liveURL = Base64.encodeToString(liveURL.getBytes("UTF-8"), Base64.DEFAULT | Base64.URL_SAFE | Base64.NO_WRAP);
-                                    liveURL = "http://127.0.0.1:9978/proxy?do=live&type=txt&ext=" + liveURL;
-                                    loadProxyLives(liveURL);
-                                } catch (Throwable th) {
-                                    th.printStackTrace();
-                                }
+                                int position = (int) liveHistory.indexOf(liveURL);
+                                if (position == Hawk.get(HawkConfig.LIVE_GROUP_INDEX, 0))
+                                    jumpActivity(HomeActivity.class);
+                                JsonArray live_groups = Hawk.get(HawkConfig.LIVE_GROUP_LIST, new JsonArray());
+                                JsonObject livesOBJ = live_groups.get(position).getAsJsonObject();
+                                Hawk.put(HawkConfig.LIVE_GROUP_INDEX, position);
+                                ApiConfig.get().loadLiveApi(livesOBJ);
+                                recreate();
                                 dialog.dismiss();
                             }
 
@@ -2255,7 +2255,7 @@ public class LivePlayActivity extends BaseActivity {
         return true;
     }
     
-    public void showProgressBars( boolean show) {
+    public void showProgressBars(boolean show) {
         sBar.requestFocus();
         if (show) {
             backcontroller.setVisibility(View.VISIBLE);
