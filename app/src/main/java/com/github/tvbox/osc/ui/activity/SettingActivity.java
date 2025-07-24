@@ -186,10 +186,18 @@ public class SettingActivity extends BaseActivity {
                 homeRec != Hawk.get(HawkConfig.HOME_REC, 0) ||
                 dnsOpt != Hawk.get(HawkConfig.DOH_URL, 0)) {
             AppManager.getInstance().finishAllActivity();
-            if (currentApi.equals(Hawk.get(HawkConfig.API_URL, "")) & currentLive.equals(Hawk.get(HawkConfig.LIVE_URL, "")) & currentEpg.equals(Hawk.get(HawkConfig.EPG_URL, ""))) {
+            if (currentApi.equals(Hawk.get(HawkConfig.API_URL, ""))) {
                 Bundle bundle = new Bundle();
                 bundle.putBoolean("useCache", true);
                 jumpActivity(HomeActivity.class, bundle);
+            } else if (currentLive.equals(Hawk.get(HawkConfig.LIVE_URL, ""))) {
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("useCache", true);
+                jumpActivity(HomeActivity.class, bundle);
+            } else if (currentEpg.equals(Hawk.get(HawkConfig.EPG_URL, ""))) {
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("useCache", true);
+                jumpActivity(HomeActivity.class, bundle);    
             } else {
                 jumpActivity(HomeActivity.class);
             }
