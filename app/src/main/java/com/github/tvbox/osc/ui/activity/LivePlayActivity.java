@@ -100,7 +100,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.github.tvbox.osc.player.MyVideoView;
-import xyz.doikki.videoplayer.player.AbstractPlayer;
 import com.github.tvbox.osc.player.TrackInfo;
 import com.github.tvbox.osc.player.TrackInfoBean;
 import com.github.tvbox.osc.player.EXOmPlayer;
@@ -111,6 +110,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.annotation.NonNull;
 import org.jetbrains.annotations.NotNull;
 
+import xyz.doikki.videoplayer.player.AbstractPlayer;
 import static xyz.doikki.videoplayer.util.PlayerUtils.stringForTime;
 
 /**
@@ -212,7 +212,7 @@ public class LivePlayActivity extends BaseActivity {
     private  boolean show = false;
     boolean mIsDragging;
 
-    TextView tv_pause_progress_text;
+    private TextView tv_pause_progress_text;
 
     @Override
     protected int getLayoutResID() {
@@ -522,11 +522,15 @@ public class LivePlayActivity extends BaseActivity {
             mRightEpgList.post(new Runnable() {
                 @Override
                 public void run() {
-                    View mChild = Objects.requireNonNull(mRightEpgList.getLayoutManager()).findViewByPosition(epgListAdapter.getSelectedIndex());
-                    if (mChild != null) {
-                        if (epgListAdapter.getItem(0).title.equals("精彩节目")) {
+                    if (epgListAdapter.getItem(0).title.equals("精彩节目")) {
+                        View mChild = Objects.requireNonNull(mRightEpgList.getLayoutManager()).findViewByPosition(epgListAdapter.getSelectedIndex());
+                        if (mChild != null) {
                             mRightEpgList.setSelectedPosition(epgListAdapter.getSelectedIndex());
-                        } else {
+                        }
+                        mChild.requestFocus();
+                    } else {
+                        View mChild = Objects.requireNonNull(mRightEpgList.getLayoutManager()).findViewByPosition(epgListAdapter.getSelectedIndex() - 1);
+                        if (mChild != null) {    
                             mRightEpgList.setSelectedPosition(epgListAdapter.getSelectedIndex() - 1);
                         }
                         mChild.requestFocus();
@@ -547,7 +551,7 @@ public class LivePlayActivity extends BaseActivity {
         divEpg.setVisibility(View.GONE);
         divLoadEpgleft.setVisibility(View.GONE);
         divLoadEpg.setVisibility(View.VISIBLE);
-        mLiveChannelView.requestFocus();
+    //    mLiveChannelView.requestFocus();
     }
 
 
