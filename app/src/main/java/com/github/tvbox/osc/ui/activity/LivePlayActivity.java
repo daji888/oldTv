@@ -212,8 +212,6 @@ public class LivePlayActivity extends BaseActivity {
     private  boolean show = false;
     boolean mIsDragging;
 
-//    private TextView tv_pause_progress_text;
-
     @Override
     protected int getLayoutResID() {
         return R.layout.activity_live_play;
@@ -286,8 +284,6 @@ public class LivePlayActivity extends BaseActivity {
         tv_duration = (TextView) findViewById(R.id.tv_duration);
         iv_playpause = findViewById(R.id.iv_playpause);
         iv_play = findViewById(R.id.iv_play);
-
-  //      tv_pause_progress_text = findViewById(R.id.tv_pause_progress_text);
 
         initEpgDateView();
         initEpgListView();
@@ -2376,7 +2372,6 @@ public class LivePlayActivity extends BaseActivity {
                     if (mVideoView != null) {
                         long duration = mVideoView.getDuration();
                         long currentPosition = mVideoView.getCurrentPosition();
-                        sBar = (SeekBar) findViewById(R.id.pb_progressbar);
                 //        sBar.setMin(0);
                         sBar.setMax((int) duration);
                         sBar.setKeyProgressIncrement((int) duration / 100);
