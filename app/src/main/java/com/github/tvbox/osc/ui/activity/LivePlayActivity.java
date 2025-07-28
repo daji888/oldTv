@@ -212,7 +212,7 @@ public class LivePlayActivity extends BaseActivity {
     private  boolean show = false;
     boolean mIsDragging;
 
-    private TextView tv_pause_progress_text;
+//    private TextView tv_pause_progress_text;
 
     @Override
     protected int getLayoutResID() {
@@ -287,7 +287,7 @@ public class LivePlayActivity extends BaseActivity {
         iv_playpause = findViewById(R.id.iv_playpause);
         iv_play = findViewById(R.id.iv_play);
 
-        tv_pause_progress_text = findViewById(R.id.tv_pause_progress_text);
+  //      tv_pause_progress_text = findViewById(R.id.tv_pause_progress_text);
 
         initEpgDateView();
         initEpgListView();
