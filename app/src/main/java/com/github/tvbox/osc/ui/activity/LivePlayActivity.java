@@ -1320,22 +1320,23 @@ public class LivePlayActivity extends BaseActivity {
 
             @Override
             public void playStateChanged(int playState) {
+                mHandler.removeCallbacks(mConnectTimeoutChangeSourceRun);
                 switch (playState) {
                     case MyVideoView.STATE_IDLE:
                     case MyVideoView.STATE_PAUSED:
                         break;
                     case MyVideoView.STATE_PREPARED:
                         tv_play_load_net_speed.setVisibility(View.GONE);
+                        break;
                     case MyVideoView.STATE_BUFFERED:
                         tv_play_load_net_speed.setVisibility(View.GONE);
                         mHandler.removeCallbacks(mUpdatetv_play_load_net_speedRun);
+                        break;
                     case MyVideoView.STATE_PLAYING:
                         currentLiveChangeSourceTimes = 0;
-                        mHandler.removeCallbacks(mConnectTimeoutChangeSourceRun);
                         break;
                     case MyVideoView.STATE_ERROR:
                     case MyVideoView.STATE_PLAYBACK_COMPLETED:
-                        mHandler.removeCallbacks(mConnectTimeoutChangeSourceRun);
                         mHandler.postDelayed(mConnectTimeoutChangeSourceRun, 2000);
                         break;
                     case MyVideoView.STATE_PREPARING:
@@ -1344,7 +1345,6 @@ public class LivePlayActivity extends BaseActivity {
                             tv_play_load_net_speed.setVisibility(View.VISIBLE);
                             mHandler.post(mUpdatetv_play_load_net_speedRun);
                         }
-                        mHandler.removeCallbacks(mConnectTimeoutChangeSourceRun);
                         mHandler.postDelayed(mConnectTimeoutChangeSourceRun, (Hawk.get(HawkConfig.LIVE_CONNECT_TIMEOUT, 5) + 1) * 5000);
                         break;
                 }
@@ -1831,6 +1831,8 @@ public class LivePlayActivity extends BaseActivity {
                         }
                         if (!liveHistory.contains("https://ghproxy.net/raw.githubusercontent.com/daji888/ys/master/tv.txt"))
                             liveHistory.add(0, "https://ghproxy.net/raw.githubusercontent.com/daji888/ys/master/tv.txt");
+                        if (!liveHistory.contains("https://ghfast.top/raw.githubusercontent.com/daji888/ys/master/tv.txt"))
+                            liveHistory.add(0, "https://ghfast.top/raw.githubusercontent.com/daji888/ys/master/tv.txt");
                         String current = Hawk.get(HawkConfig.LIVE_URL, "");
                         int idx = 0;
                         if (liveHistory.contains(current))
