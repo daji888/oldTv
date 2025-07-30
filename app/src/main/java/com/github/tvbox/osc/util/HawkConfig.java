@@ -49,7 +49,7 @@ public class HawkConfig {
     public static final String HOME_DEFAULT_SHOW = "home_default_show";  //启动时直接进直播的开关
     public static final String VIDEO_PURIFY = "video_purify";  //去除部分广告
 //    public static final String LIVE_PLAYER_TYPE = "live_player_type"; // 0 系统 1 ijk 2 exo
-    public static final String LIVE_PLAY_TYPE = "live_play_type";//0 系统 1 ijk 2 exo 10 MXPlayer
+//    public static final String LIVE_PLAY_TYPE = "live_play_type";//0 系统 1 ijk 2 exo 10 MXPlayer
     public static final String PLAYER_IS_LIVE = "player_is_live";
     public static final String LIVE_WEB_HEADER = "live_web_header";
     public static final String DOH_JSON = "doh_json";
