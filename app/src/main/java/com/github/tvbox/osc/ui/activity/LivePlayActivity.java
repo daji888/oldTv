@@ -630,8 +630,6 @@ public class LivePlayActivity extends BaseActivity {
                         if (isBack) {
                             showProgressBars(true);
                         } else {
-                        //    showSettingGroup();
-                        //    showtv_videosize();
                             playPreSource();
                         }
                         break;
@@ -1352,14 +1350,19 @@ public class LivePlayActivity extends BaseActivity {
 
             @Override
             public void changeSource(int direction) {
-                if (direction > 0)
+                if (direction > 0) {
                     if (isBack) {  //手机换源和显示时移控制栏
                         showProgressBars(true);
                     } else {
                         playNextSource();
                     }
-                else
-                    playPreSource();
+                } else if (direction < 0) {
+                    if (isBack) {  //手机换源和显示时移控制栏
+                        showProgressBars(true);
+                    } else {
+                        playPreSource();
+                    }
+                }
             }
         });
         controller.setCanChangePosition(false);
