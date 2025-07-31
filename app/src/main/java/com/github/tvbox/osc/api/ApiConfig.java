@@ -658,16 +658,16 @@ public class ApiConfig {
         }  
     }
 
-/*    private void putLiveHistory(String url) {
+    private void putLiveHistory(String url) {
         if (!url.isEmpty()) {
             ArrayList<String> history = Hawk.get(HawkConfig.LIVE_HISTORY, new ArrayList<String>());
             if (!history.contains(url))
-                history.add(0, url);
+                history.add(url);
             if (history.size() > 30)
                 history.remove(30);
             Hawk.put(HawkConfig.LIVE_HISTORY, history);
         }
-    }  */
+    }
 
     public static void putEpgHistory(String epg) {
         if (!epg.isEmpty()) {
@@ -753,7 +753,7 @@ public class ApiConfig {
                     
                     // takagen99: Capture Live URL into Config
                         System.out.println("Live URL :" + extUrlFix);
-                    //    putLiveHistory(extUrlFix);
+                        putLiveHistory(extUrlFix);
                         // Overwrite with Live URL from Settings
                         if (StringUtils.isBlank(liveURL)) {
                             Hawk.put(HawkConfig.LIVE_URL, extUrlFix);
@@ -778,7 +778,7 @@ public class ApiConfig {
                         if (url.startsWith("http")) {
                             // takagen99: Capture Live URL into Settings
                                 System.out.println("Live URL :" + url);
-                            //    putLiveHistory(url);
+                                putLiveHistory(url);
                                 // Overwrite with Live URL from Settings
                                 if (StringUtils.isBlank(liveURL)) {
                                     Hawk.put(HawkConfig.LIVE_URL, url);
