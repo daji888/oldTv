@@ -1356,7 +1356,7 @@ public class LivePlayActivity extends BaseActivity {
                     } else {
                         playNextSource();
                     }
-                } else if (direction < 0) {
+                } else {
                     if (isBack) {  //手机换源和显示时移控制栏
                         showProgressBars(true);
                     } else {
