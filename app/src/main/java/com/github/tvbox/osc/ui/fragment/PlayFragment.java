@@ -538,8 +538,7 @@ public class PlayFragment extends BaseLazyFragment {
                 name = name.replace("N/A，", "");
                 name = name.replace("，N/A", "");
        //         name = name.replace(" ", "");
-       //         return name + (StringUtils.isEmpty(val.language) ? "" : "，" + val.language);
-                return name;
+                return name + (StringUtils.isEmpty(val.language) ? "" : "，" + val.language);
             }
         }, new DiffUtil.ItemCallback<TrackInfoBean>() {
             @Override
@@ -571,7 +570,7 @@ public class PlayFragment extends BaseLazyFragment {
             return;
         }
         List<TrackInfoBean> bean = trackInfo.getSubtitle();
-   //     if (bean.size() < 1) return;
+        if (bean.size() < 1) return;
         SelectDialog<TrackInfoBean> dialog = new SelectDialog<>(getActivity());
         dialog.setTip("切换内置字幕");
         dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<TrackInfoBean>() {

@@ -242,7 +242,7 @@ public class IjkmPlayer extends IjkPlayer {
                 String trackName = (data.getVideo().size() + 1) + "、" + info.getInfoInline();
                 TrackInfoBean t = new TrackInfoBean();
                 t.name = trackName;
-            //    t.language = info.getLanguage();
+                t.language = info.getLanguage();
                 t.trackId = index;
                 t.selected = index == videoSelected;
                 data.addVideo(t);
