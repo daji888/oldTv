@@ -451,9 +451,9 @@ public class ApiConfig {
             for (JsonElement opt : lives_groups) {
                 JsonObject obj = (JsonObject) opt;
                 LiveSourceBean lb = new LiveSourceBean();
+                lb.setName(obj.has("name") ? obj.get("name").getAsString().trim() : "");
                 String liveUrl = obj.get("url").getAsString().trim();
                 lb.setLiveUrl(liveUrl);
-             /*   lb.setName(obj.has("name") ? obj.get("name").getAsString().trim() : "");
                 lb.setUa(obj.has("ua") ? obj.get("ua").getAsString().trim() : "");
                 lb.setType(obj.get("type").getAsInt());
                 lb.setPlayerType(DefaultConfig.safeJsonInt(obj, "playerType", -1));
@@ -464,7 +464,7 @@ public class ApiConfig {
                 } else {
                     lb.setExt(DefaultConfig.safeJsonString(obj, "ext", ""));
                 }
-                lb.setJar(DefaultConfig.safeJsonString(obj, "jar", ""));  */
+                lb.setJar(DefaultConfig.safeJsonString(obj, "jar", ""));
                 if (firstLive == null)
                     firstLive = lb;
                 livesourceBeanList.put(liveUrl, lb);
