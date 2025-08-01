@@ -1770,8 +1770,7 @@ public class LivePlayActivity extends BaseActivity {
                                 name = name.replace("N/A，", "");
                                 name = name.replace("，N/A", "");
                         //        name = name.replace(" ", "");
-                        //        return name + (StringUtils.isEmpty(val.language) ? "" : "，" + val.language);
-                                return name;
+                                return name + (StringUtils.isEmpty(val.language) ? "" : "，" + val.language);
                             }
                         }, new DiffUtil.ItemCallback<TrackInfoBean>() {
                             @Override
@@ -1846,6 +1845,10 @@ public class LivePlayActivity extends BaseActivity {
                             @Override
                             public void click(String liveURL) {
                                 Hawk.put(HawkConfig.LIVE_URL, liveURL);
+                                if (mVideoView != null) {
+                                    mVideoView.release();
+                                    mVideoView = null;
+                                }
                                 int position = (int) liveHistory.indexOf(liveURL);
                                 if (position == Hawk.get(HawkConfig.LIVE_GROUP_INDEX, 0))
                                     jumpActivity(HomeActivity.class);
