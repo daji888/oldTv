@@ -451,20 +451,20 @@ public class ApiConfig {
             for (JsonElement opt : lives_groups) {
                 JsonObject obj = (JsonObject) opt;
                 LiveSourceBean lb = new LiveSourceBean();
-            //    lb.setName(obj.has("name") ? obj.get("name").getAsString().trim() : "");
                 String liveUrl = obj.get("url").getAsString().trim();
                 lb.setLiveUrl(liveUrl);
-            //    lb.setUa(obj.has("ua") ? obj.get("ua").getAsString().trim() : "");
-            //    lb.setType(obj.get("type").getAsInt());
-            //    lb.setPlayerType(DefaultConfig.safeJsonInt(obj, "playerType", -1));
-            //    lb.setEpgUrl(DefaultConfig.safeJsonString(obj, "epg", ""));
-            //    lb.setLogeUrl(DefaultConfig.safeJsonString(obj, "logo", ""));
+             /*   lb.setName(obj.has("name") ? obj.get("name").getAsString().trim() : "");
+                lb.setUa(obj.has("ua") ? obj.get("ua").getAsString().trim() : "");
+                lb.setType(obj.get("type").getAsInt());
+                lb.setPlayerType(DefaultConfig.safeJsonInt(obj, "playerType", -1));
+                lb.setEpgUrl(DefaultConfig.safeJsonString(obj, "epg", ""));
+                lb.setLogeUrl(DefaultConfig.safeJsonString(obj, "logo", ""));
                 if (obj.has("ext") && (obj.get("ext").isJsonObject() || obj.get("ext").isJsonArray())) {
                     lb.setExt(obj.get("ext").toString());
                 } else {
                     lb.setExt(DefaultConfig.safeJsonString(obj, "ext", ""));
                 }
-             //   lb.setJar(DefaultConfig.safeJsonString(obj, "jar", ""));
+                lb.setJar(DefaultConfig.safeJsonString(obj, "jar", ""));  */
                 if (firstLive == null)
                     firstLive = lb;
                 livesourceBeanList.put(liveUrl, lb);
