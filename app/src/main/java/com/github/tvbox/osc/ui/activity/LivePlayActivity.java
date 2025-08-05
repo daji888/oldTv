@@ -840,7 +840,7 @@ public class LivePlayActivity extends BaseActivity {
         epgListAdapter.setSelectedEpgIndex(-1);
         isSHIYI = false;
         isBack = false;
-        if (hasCatchup || currentLiveChannelItem.getUrl().contains("PLTV/") || currentLiveChannelItem.getUrl().contains("TVOD/")) {
+        if (hasCatchup || currentLiveChannelItem.getUrl().contains("/PLTV/") || currentLiveChannelItem.getUrl().contains("/TVOD/")) {
             currentLiveChannelItem.setinclude_back(true);
         } else {
             currentLiveChannelItem.setinclude_back(false);
@@ -1022,7 +1022,7 @@ public class LivePlayActivity extends BaseActivity {
                 String shiyiUrl = currentLiveChannelItem.getUrl();
                 if (now.compareTo(selectedData.startdateTime) < 0) {
 
-                } else if (hasCatchup || shiyiUrl.contains("PLTV/") || shiyiUrl.contains("TVOD/")) {
+                } else if (hasCatchup || shiyiUrl.contains("/PLTV/") || shiyiUrl.contains("/TVOD/")) {
                     shiyiUrl = shiyiUrl.replaceAll("/PLTV/", "/TVOD/");
                     mHandler.removeCallbacks(mHideChannelListRun);
                     mHandler.postDelayed(mHideChannelListRun, 100);
@@ -1135,7 +1135,7 @@ public class LivePlayActivity extends BaseActivity {
                 String shiyiUrl = currentLiveChannelItem.getUrl();
                 if (now.compareTo(selectedData.startdateTime) < 0) {
 
-                } else if (hasCatchup || shiyiUrl.contains("PLTV/") || shiyiUrl.contains("TVOD/")) {
+                } else if (hasCatchup || shiyiUrl.contains("/PLTV/") || shiyiUrl.contains("/TVOD/")) {
                     shiyiUrl = shiyiUrl.replaceAll("/PLTV/", "/TVOD/");
                     mHandler.removeCallbacks(mHideChannelListRun);
                     mHandler.postDelayed(mHideChannelListRun, 100);
@@ -1822,10 +1822,10 @@ public class LivePlayActivity extends BaseActivity {
                         ArrayList<String> liveHistory = Hawk.get(HawkConfig.LIVE_HISTORY, new ArrayList<String>());
                         if (liveHistory.isEmpty())
                             return;
-                        if (!liveHistory.contains("https://ghproxy.net/raw.githubusercontent.com/daji888/ys/master/tv.txt"))
-                            liveHistory.add(0, "https://ghproxy.net/raw.githubusercontent.com/daji888/ys/master/tv.txt");
                         if (!liveHistory.contains("https://ghfast.top/raw.githubusercontent.com/daji888/ys/master/tv.txt"))
                             liveHistory.add(0, "https://ghfast.top/raw.githubusercontent.com/daji888/ys/master/tv.txt");
+                        if (!liveHistory.contains("https://ghproxy.net/raw.githubusercontent.com/daji888/ys/master/tv.txt"))
+                            liveHistory.add(0, "https://ghproxy.net/raw.githubusercontent.com/daji888/ys/master/tv.txt");
                         String current = Hawk.get(HawkConfig.LIVE_URL, "");
                         int idx = 0;
                         if (liveHistory.contains(current))
