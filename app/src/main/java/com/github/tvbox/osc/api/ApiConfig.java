@@ -473,14 +473,14 @@ public class ApiConfig {
             if (live_group_index > lives_groups.size() - 1) Hawk.put(HawkConfig.LIVE_GROUP_INDEX, 0);
             Hawk.put(HawkConfig.LIVE_GROUP_LIST, lives_groups);
             JsonObject livesOBJ = lives_groups.get(live_group_index).getAsJsonObject();
-            loadLiveApi(livesOBJ);
             String lives = livesOBJ.toString();
             int index = lives.indexOf("proxy://");
             if (index == -1) {
                 if (!lives.contains("type")) {
                     loadLives(infoJson.get("lives").getAsJsonArray());
                 }
-             }
+            }
+            loadLiveApi(livesOBJ);
           }   
         //video parse rule for host
         if (infoJson.has("rules")) {
