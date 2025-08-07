@@ -1338,7 +1338,7 @@ public class LivePlayActivity extends BaseActivity {
                         break;
                     case MyVideoView.STATE_PREPARING:
                     case MyVideoView.STATE_BUFFERING:
-                        if (iv_play.getVisibility() != View.VISIBLE) {
+                        if (((View) findViewById(R.id.tv_pause_container)).getVisibility() != View.VISIBLE) {
                             tv_play_load_net_speed.setVisibility(View.VISIBLE);
                             mHandler.post(mUpdatetv_play_load_net_speedRun);
                         }
