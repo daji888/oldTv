@@ -90,12 +90,11 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
 
     @Override
     protected void onFragmentResume() {
+        tvHotList.setHasFixedSize(true);
         if (Hawk.get(HawkConfig.HOME_REC_STYLE, false)) {
-            tvHotList.setHasFixedSize(true);
             tvHotList.setLayoutManager(new V7GridLayoutManager(this.mContext, 5));
         } else {
-            tvHotList.setHasFixedSize(true);
-            tvHotList.setLayoutManager(new V7LinearLayoutManager(this.mContext, V7LinearLayoutManager.HORIZONTAL, false));
+            tvHotList.setLayoutManager(new V7LinearLayoutManager(this.mContext, 0, false));
         }
         super.onFragmentResume();
         if (Hawk.get(HawkConfig.HOME_REC, 0) == 2) {
