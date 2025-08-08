@@ -451,7 +451,7 @@ public class ApiConfig {
             for (JsonElement opt : lives_groups) {
                 JsonObject obj = (JsonObject) opt;
                 LiveSourceBean lb = new LiveSourceBean();
-                String liveUrl = obj.get("url").getAsString().trim();
+                String liveUrl = (obj.has("name") ? obj.get("url").getAsString().trim() : "");
                 lb.setLiveUrl(liveUrl);
              /*   lb.setName(obj.has("name") ? obj.get("name").getAsString().trim() : "");
                 lb.setUa(obj.has("ua") ? obj.get("ua").getAsString().trim() : "");
