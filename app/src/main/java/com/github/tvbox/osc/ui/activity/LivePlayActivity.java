@@ -802,7 +802,7 @@ public class LivePlayActivity extends BaseActivity {
         int position = Hawk.get(HawkConfig.LIVE_GROUP_INDEX, 0);
         JsonArray live_groups = Hawk.get(HawkConfig.LIVE_GROUP_LIST, new JsonArray());
         JsonObject livesOBJ = live_groups.get(position).getAsJsonObject();
-        String type = livesOBJ.get("type").getAsString();
+        String type = livesOBJ.has("type") ? livesOBJ.get("type").getAsString() : "";
         if (livesOBJ.has("catchup")) {
             catchup = livesOBJ.getAsJsonObject("catchup");
             LOG.i("echo-catchup :" + catchup.toString());
