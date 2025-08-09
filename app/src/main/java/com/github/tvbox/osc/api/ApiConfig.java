@@ -767,6 +767,7 @@ public class ApiConfig {
                         liveURL_final = extUrlFix;
                 }
             } else {
+                if (lives.contains("type")) {
                     String type = livesOBJ.get("type").getAsString();
                     if (type.equals("0") || type.equals("3")) {
                         String url = livesOBJ.get("url").getAsString();
@@ -795,6 +796,7 @@ public class ApiConfig {
                         liveChannelGroupList.clear();
                         return;
                     }
+                 }
             }
             
              // takagen99: Load Live Channel from settings URL (WIP)
