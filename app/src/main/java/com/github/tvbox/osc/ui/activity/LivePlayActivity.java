@@ -219,7 +219,7 @@ public class LivePlayActivity extends BaseActivity {
     @Override
     protected void init() {
         context = this;
-        epgStringAddress = Hawk.get(HawkConfig.EPG_URL,"");
+        epgStringAddress = Hawk.get(HawkConfig.EPG_URL, "");
         if (epgStringAddress == null || epgStringAddress.length() < 5)
              epgStringAddress = "https://epg.51zmt.top:8001/api/diyp/?ch={name}&date={date}";
          //    epgStringAddress = "https://iptv.crestekk.cn/epgphp/index.php?ch={name}&date={date}";
@@ -546,7 +546,6 @@ public class LivePlayActivity extends BaseActivity {
         divEpg.setVisibility(View.GONE);
         divLoadEpgleft.setVisibility(View.GONE);
         divLoadEpg.setVisibility(View.VISIBLE);
-    //    mLiveChannelView.requestFocus();
     }
 
 
@@ -833,7 +832,9 @@ public class LivePlayActivity extends BaseActivity {
             currentLiveChannelItem = getLiveChannels(currentChannelGroupIndex).get(currentLiveChannelIndex);
             Hawk.put(HawkConfig.LIVE_CHANNEL, currentLiveChannelItem.getChannelName());
             livePlayerManager.getLiveChannelPlayer(mVideoView, currentLiveChannelItem.getChannelName());
-        }
+        } else {
+            Hawk.put(HawkConfig.LIVE_SOURCE, currentLiveChannelItem.getSourceIndex());
+        }   
 
         channel_Name = currentLiveChannelItem;
         currentLiveLookBackIndex = -1;
@@ -1836,6 +1837,7 @@ public class LivePlayActivity extends BaseActivity {
                             @Override
                             public void click(String liveURL) {
                                 Hawk.put(HawkConfig.LIVE_URL, liveURL);
+                                Hawk.delete(HawkConfig.LIVE_SOURCE);
                                 if (mVideoView != null) {
                                     mVideoView.release();
                                     mVideoView = null;
@@ -1934,7 +1936,7 @@ public class LivePlayActivity extends BaseActivity {
             
             @Override
             public void onError(Response<String> response) {
-                Toast.makeText(App.getInstance(), "加载错误,请重试", Toast.LENGTH_SHORT).show();
+                Toast.makeText(App.getInstance(), "加载错误，请重试", Toast.LENGTH_SHORT).show();
                 JsonArray live_groups = Hawk.get(HawkConfig.LIVE_GROUP_LIST, new JsonArray());
                 Hawk.put(HawkConfig.LIVE_GROUP_INDEX, Hawk.get(HawkConfig.LIVE_GROUP_INDEX, 0) + 1);
                 if (Hawk.get(HawkConfig.LIVE_GROUP_INDEX, 0) > live_groups.size() - 1) {
@@ -2168,7 +2170,13 @@ public class LivePlayActivity extends BaseActivity {
             clickLiveChannel(liveChannelIndex);
             mChannelGroupView.scrollToPosition(groupIndex);
             mLiveChannelView.scrollToPosition(liveChannelIndex);
-            playChannel(groupIndex, liveChannelIndex, false);
+            int pos = Hawk.get(HawkConfig.LIVE_SOURCE, -1);
+            if (pos > -1) {
+                currentLiveChannelItem.setSourceIndex(Hawk.get(HawkConfig.LIVE_SOURCE));
+                playChannel(groupIndex, liveChannelIndex, true);
+            } else {
+                playChannel(groupIndex, liveChannelIndex, false);
+            }    
         }
     }
 
