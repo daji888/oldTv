@@ -92,11 +92,11 @@ public class LivePlayerManager {
                         playerTypeIndex = 2;
                     break;
                 case 2:
-                    if (exoCodec.equals("硬软")) {
+                    if (exoCodec.equals("硬解")) {
                         playerTypeIndex = 3;
-                    } else if (exoCodec.equals("软硬")) {
+                    } else if (exoCodec.equals("硬软")) {
                         playerTypeIndex = 4;
-                    } else if (exoCodec.equals("硬解")) {
+                    } else if (exoCodec.equals("软硬")) {
                         playerTypeIndex = 5;
                     }    
                     break;
@@ -134,15 +134,15 @@ public class LivePlayerManager {
                     break;
                 case 3:
                     playerConfig.put("pl", 2);
-                    playerConfig.put("exo", "硬软");
+                    playerConfig.put("exo", "硬解");
                     break;
                 case 4:
                     playerConfig.put("pl", 2);
-                    playerConfig.put("exo", "软硬");
+                    playerConfig.put("exo", "硬软");
                     break;
                 case 5:
                     playerConfig.put("pl", 2);
-                    playerConfig.put("exo", "硬解");
+                    playerConfig.put("exo", "软硬");
                     break;
             }
         } catch (JSONException e) {
