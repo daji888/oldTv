@@ -532,7 +532,7 @@ public class HomeActivity extends BaseActivity {
     }
 
     private void doExit() {
-        // 如果两次返回间隔小于 2000 毫秒，则退出应用
+    /*    // 如果两次返回间隔小于 2000 毫秒，则退出应用
         if (System.currentTimeMillis() - mExitTime < 2000) {
             AppManager.getInstance().finishAllActivity();
             EventBus.getDefault().unregister(this);
@@ -544,7 +544,13 @@ public class HomeActivity extends BaseActivity {
              // 否则仅提示用户，再按一次退出应用
              mExitTime = System.currentTimeMillis();
              Toast.makeText(mContext, "再按一次返回键退出应用", Toast.LENGTH_SHORT).show();
-        }
+        }  */
+        AppManager.getInstance().finishAllActivity();
+        EventBus.getDefault().unregister(this);
+        ControlManager.get().stopServer();
+        finish();
+        android.os.Process.killProcess(android.os.Process.myPid());
+        System.exit(0);
     }
 
     @Override
