@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/vs_10"
-            android:text="@string/dia_reset"
+            android:text="确定重置将清除全部数据！"
             android:shadowColor="@color/color_000000_80"
             android:shadowDx="5"
             android:shadowDy="5"
