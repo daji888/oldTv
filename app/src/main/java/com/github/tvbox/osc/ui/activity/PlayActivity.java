@@ -450,7 +450,6 @@ public class PlayActivity extends BaseActivity {
                 String name = val.name.replace("AUDIO，", "");
                 name = name.replace("N/A，", "");
                 name = name.replace("，N/A", "");
-                name = name.replace(" ", "");
                 return name + (StringUtils.isEmpty(val.language) ? "" : "，" + val.language);
             }
         }, new DiffUtil.ItemCallback<TrackInfoBean>() {
@@ -520,7 +519,6 @@ public class PlayActivity extends BaseActivity {
                 String name = val.name.replace("VIDEO，", "");
                 name = name.replace("N/A，", "");
                 name = name.replace("，N/A", "");
-                name = name.replace(" ", "");
                 return name + (StringUtils.isEmpty(val.language) ? "" : "，" + val.language);
             }
         }, new DiffUtil.ItemCallback<TrackInfoBean>() {
