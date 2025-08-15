@@ -2,6 +2,7 @@ package com.github.tvbox.osc.player;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.media3.common.C;
@@ -10,14 +11,19 @@ import androidx.media3.common.MimeTypes;
 import androidx.media3.common.Player;
 import androidx.media3.common.TrackGroup;
 import androidx.media3.common.Tracks;
+import androidx.media3.exoplayer.DefaultRenderersFactory;
+import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.exoplayer.source.TrackGroupArray;
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
 import androidx.media3.exoplayer.trackselection.MappingTrackSelector;
-import androidx.media3.exoplayer.DefaultRenderersFactory;
+import androidx.media3.exoplayer.util.EventLogger;
 import com.github.tvbox.osc.util.StringUtils;
 import com.github.tvbox.osc.api.ApiConfig;
 import com.github.tvbox.osc.bean.EXOCode;
+
 import xyz.doikki.videoplayer.exo.ExoMediaPlayer;
+import xyz.doikki.videoplayer.player.VideoViewManager;
+
 import java.util.LinkedHashMap;
 
 public class EXOmPlayer extends ExoMediaPlayer {
@@ -25,7 +31,6 @@ public class EXOmPlayer extends ExoMediaPlayer {
     private String videoId = "";
     private String subtitleId = "";
     private EXOCode exocodec = null;
-    private static DefaultRenderersFactory mRenderersFactory;
 
     public EXOmPlayer(Context context, EXOCode exocodec) {
         super(context);
@@ -43,8 +48,18 @@ public class EXOmPlayer extends ExoMediaPlayer {
                 try {
                     mRenderersFactory = new DefaultRenderersFactory(mAppContext);
                     mRenderersFactory.setExtensionRendererMode(extensionRendererMode);
+                    mMediaPlayer = new ExoPlayer.Builder(mAppContext)
+                        .setLoadControl(mLoadControl)
+                        .setRenderersFactory(mRenderersFactory)
+                        .setTrackSelector(mTrackSelector)
+                        .build();
+                    //播放器日志
+                    if (VideoViewManager.getConfig().mIsEnableLog && mTrackSelector instanceof MappingTrackSelector) {
+                        mMediaPlayer.addAnalyticsListener(new EventLogger((MappingTrackSelector) mTrackSelector, "ExoPlayer"));
+                    }
+                    mMediaPlayer.addListener(this);
                 } catch (Exception e) {
-                    mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON);
+                    Toast.makeText(mAppContext, "切换 EXO 解码器失败：" + e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         }
