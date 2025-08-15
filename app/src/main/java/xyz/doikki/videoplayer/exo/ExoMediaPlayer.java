@@ -113,7 +113,6 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
             mMediaPlayer.addListener(this);
         }    
         setOptions();
-        System.gc();
     }
 
     public DefaultTrackSelector getTrackSelector() {
@@ -129,7 +128,6 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
         this.headers = headers;
         mMediaSource = mMediaSourceHelper.getMediaSource(path, headers, false, errorCode);
         errorCode = -1;
-        System.gc();
     }
 
     @Override
@@ -142,7 +140,6 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
         try {
             if (mMediaPlayer == null)
                 return;
-            System.gc();
             mMediaPlayer.setPlayWhenReady(true);
         } catch (Exception e) {
             Toast.makeText(mAppContext, "播放失败:" + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -154,7 +151,6 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
         if (mMediaPlayer == null)
             return;
         mMediaPlayer.setPlayWhenReady(false);
-        System.gc();
     }
 
     @Override
@@ -163,7 +159,6 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
             return;
         mMediaPlayer.stop();
         mMediaPlayer.clearMediaItems();
-        System.gc();
     }
 
     @SuppressLint("UnsafeOptInUsageError")
@@ -194,7 +189,6 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
             mIsPreparing = false;
         }
         setOptions();
-        System.gc();
     }
 
     @Override
@@ -231,7 +225,6 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
         lastTimeStamp = 0;
         mIsPreparing = false;
         mSpeedPlaybackParameters = null;
-        System.gc();
     }
 
     @Override
