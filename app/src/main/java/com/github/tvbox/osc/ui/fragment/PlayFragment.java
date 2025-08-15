@@ -432,7 +432,10 @@ public class PlayFragment extends BaseLazyFragment {
             return;
         }
         List<TrackInfoBean> bean = trackInfo.getAudio();
-        if (bean.size() < 1) return;
+        if (bean.size() < 1) {
+            Toast.makeText(mContext, "没有音轨", Toast.LENGTH_SHORT).show();
+            return;
+        }
         SelectDialog<TrackInfoBean> dialog = new SelectDialog<>(getActivity());
         dialog.setTip("切换音轨");
         dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<TrackInfoBean>() {
@@ -469,7 +472,7 @@ public class PlayFragment extends BaseLazyFragment {
                 String name = val.name.replace("AUDIO，", "");
                 name = name.replace("N/A，", "");
                 name = name.replace("，N/A", "");
-        //        name = name.replace(" ", "");
+                name = name.replace(" ", "");
                 return name + (StringUtils.isEmpty(val.language) ? "" : "，" + val.language);
             }
         }, new DiffUtil.ItemCallback<TrackInfoBean>() {
@@ -500,7 +503,10 @@ public class PlayFragment extends BaseLazyFragment {
             return;
         }
         List<TrackInfoBean> bean = trackInfo.getVideo();
-        if (bean.size() < 1) return;
+        if (bean.size() < 1) {
+            Toast.makeText(mContext, "没有视轨", Toast.LENGTH_SHORT).show();
+            return;
+        }
         SelectDialog<TrackInfoBean> dialog = new SelectDialog<>(getActivity());
         dialog.setTip("切换视轨");
         dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<TrackInfoBean>() {
@@ -537,7 +543,7 @@ public class PlayFragment extends BaseLazyFragment {
                 String name = val.name.replace("VIDEO，", "");
                 name = name.replace("N/A，", "");
                 name = name.replace("，N/A", "");
-       //         name = name.replace(" ", "");
+                name = name.replace(" ", "");
                 return name + (StringUtils.isEmpty(val.language) ? "" : "，" + val.language);
             }
         }, new DiffUtil.ItemCallback<TrackInfoBean>() {
@@ -570,7 +576,10 @@ public class PlayFragment extends BaseLazyFragment {
             return;
         }
         List<TrackInfoBean> bean = trackInfo.getSubtitle();
-        if (bean.size() < 1) return;
+        if (bean.size() < 1) {
+            Toast.makeText(mContext, "没有内置字幕", Toast.LENGTH_SHORT).show();
+            return;
+        }
         SelectDialog<TrackInfoBean> dialog = new SelectDialog<>(getActivity());
         dialog.setTip("切换内置字幕");
         dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<TrackInfoBean>() {
