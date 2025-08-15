@@ -44,7 +44,7 @@ public class IjkMediaFormat implements IMediaFormat {
     public static final String KEY_IJK_CHANNEL_UI = "ijk-channel-ui";
 
     // Codec
-    public static final String CODEC_NAME_H264 = "H264";
+    public static final String CODEC_NAME_H264 = "h264";
 
     public final IjkMediaMeta.IjkStreamMeta mMediaFormat;
 
