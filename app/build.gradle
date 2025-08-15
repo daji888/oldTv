@@ -115,7 +115,7 @@ dependencies {
     implementation "androidx.media3:media3-exoplayer-midi:1.8.0"
     implementation "androidx.media3:media3-datasource-rtmp:1.8.0"
     implementation "androidx.media3:media3-datasource-okhttp:1.8.0"
-//    implementation "androidx.media3:media3-ui:1.8.0"
+    implementation "androidx.media3:media3-ui:1.8.0"
     implementation "androidx.media3:media3-common:1.8.0"
 
 //    implementation 'xyz.doikki.android.dkplayer:dkplayer-ui:3.3.7'

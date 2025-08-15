@@ -25,6 +25,7 @@ import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
 import androidx.media3.exoplayer.trackselection.MappingTrackSelector;
 import androidx.media3.exoplayer.trackselection.TrackSelectionArray;
 import androidx.media3.exoplayer.util.EventLogger;
+import androidx.media3.ui.DefaultTrackNameProvider;
 
 import com.github.tvbox.osc.base.App;
 import com.github.tvbox.osc.util.HawkConfig;
@@ -51,7 +52,7 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     protected static ExoPlayer mMediaPlayer;
     protected static MediaSource mMediaSource;
     protected static ExoMediaSourceHelper mMediaSourceHelper;
-    protected ExoTrackNameProvider trackNameProvider;
+    protected DefaultTrackNameProvider trackNameProvider;
     protected TrackSelectionArray mTrackSelections;
     private static PlaybackParameters mSpeedPlaybackParameters;
     private static boolean mIsPreparing;
@@ -280,7 +281,7 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     @Override
     public void onTracksChanged(Tracks tracks) {
         if (trackNameProvider == null)
-            trackNameProvider = new ExoTrackNameProvider(mAppContext.getResources());
+            trackNameProvider = new DefaultTrackNameProvider(mAppContext.getResources());
     }
 
     @Override
