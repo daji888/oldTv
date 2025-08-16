@@ -97,7 +97,7 @@ public class SearchActivity extends BaseActivity {
         initView();
         initViewModel();
         initData();
-        hasKeyBoard = true;
+        hasKeyBoard = false;
         isSearchBack = false;
     }
 
@@ -155,8 +155,8 @@ public class SearchActivity extends BaseActivity {
         if (hasKeyBoard) {
             tvSearch.requestFocus();
             tvSearch.requestFocusFromTouch();
-        }else {
-            if(!isSearchBack){
+        } else {
+            if (!isSearchBack) {
                 etSearch.requestFocus();
                 etSearch.requestFocusFromTouch();
             }
@@ -180,11 +180,11 @@ public class SearchActivity extends BaseActivity {
         wordAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                if(Hawk.get(HawkConfig.FAST_SEARCH_MODE, false)){
+                if (Hawk.get(HawkConfig.FAST_SEARCH_MODE, false)) {
                     Bundle bundle = new Bundle();
                     bundle.putString("title", wordAdapter.getItem(position));
                     jumpActivity(FastSearchActivity.class, bundle);
-                }else {
+                } else {
                     search(wordAdapter.getItem(position));
                 }
             }
@@ -229,11 +229,11 @@ public class SearchActivity extends BaseActivity {
                 hasKeyBoard = true;
                 String wd = etSearch.getText().toString().trim();
                 if (!TextUtils.isEmpty(wd)) {
-                    if(Hawk.get(HawkConfig.FAST_SEARCH_MODE, false)){
+                    if (Hawk.get(HawkConfig.FAST_SEARCH_MODE, false)) {
                         Bundle bundle = new Bundle();
                         bundle.putString("title", wd);
                         jumpActivity(FastSearchActivity.class, bundle);
-                    }else {
+                    } else {
                         search(wd);
                     }
                 } else {
@@ -445,11 +445,11 @@ public class SearchActivity extends BaseActivity {
         if (intent != null && intent.hasExtra("title")) {
             String title = intent.getStringExtra("title");
             showLoading();
-            if(Hawk.get(HawkConfig.FAST_SEARCH_MODE, false)){
+            if (Hawk.get(HawkConfig.FAST_SEARCH_MODE, false)) {
                 Bundle bundle = new Bundle();
                 bundle.putString("title", title);
                 jumpActivity(FastSearchActivity.class, bundle);
-            }else {
+            } else {
                 search(title);
             }
         }
@@ -489,11 +489,11 @@ public class SearchActivity extends BaseActivity {
         if (event.type == ServerEvent.SERVER_SEARCH) {
             String title = (String) event.obj;
             showLoading();
-            if(Hawk.get(HawkConfig.FAST_SEARCH_MODE, false)){
+            if (Hawk.get(HawkConfig.FAST_SEARCH_MODE, false)) {
                 Bundle bundle = new Bundle();
                 bundle.putString("title", title);
                 jumpActivity(FastSearchActivity.class, bundle);
-            }else{
+            } else{
                 search(title);
             }
         }
