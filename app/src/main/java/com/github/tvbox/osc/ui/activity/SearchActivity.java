@@ -283,21 +283,6 @@ public class SearchActivity extends BaseActivity {
         etSearch.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
-                if (keyEvent.getAction() == KeyEvent.ACTION_DOWN && (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    String wd = etSearch.getText().toString().trim();
-                    if (!TextUtils.isEmpty(wd)) {
-                        if (Hawk.get(HawkConfig.FAST_SEARCH_MODE, false)) {
-                            Bundle bundle = new Bundle();
-                            bundle.putString("title", wd);
-                            jumpActivity(FastSearchActivity.class, bundle);
-                        } else {
-                            search(wd);
-                        }
-                    } else {
-                        Toast.makeText(mContext, "输入内容不能为空", Toast.LENGTH_SHORT).show();
-                    }
-                    return true;
-                }
                 if (isKeyboardHidden()) {
                     if (keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
                         if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
@@ -319,6 +304,21 @@ public class SearchActivity extends BaseActivity {
                         }
                     }
                 }
+            /*    if (keyEvent.getAction() == KeyEvent.ACTION_DOWN && (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    String wd = etSearch.getText().toString().trim();
+                    if (!TextUtils.isEmpty(wd)) {
+                        if (Hawk.get(HawkConfig.FAST_SEARCH_MODE, false)) {
+                            Bundle bundle = new Bundle();
+                            bundle.putString("title", wd);
+                            jumpActivity(FastSearchActivity.class, bundle);
+                        } else {
+                            search(wd);
+                        }
+                    } else {
+                        Toast.makeText(mContext, "输入内容不能为空", Toast.LENGTH_SHORT).show();
+                    }
+                    return true;
+                }  */
                 return false;
             }
         });
