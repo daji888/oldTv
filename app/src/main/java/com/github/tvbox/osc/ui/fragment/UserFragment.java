@@ -320,52 +320,38 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
                 v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(300).setInterpolator(new BounceInterpolator()).start();
             if (tvLive.hasFocus()) {
                 tvLive1.setTextColor(Color.RED);
-                tvLive1.getPaint().setFakeBoldText(true);
             } else {
                 tvLive1.setTextColor(Color.GREEN);
-                tvLive1.getPaint().setFakeBoldText(false);
             }
             if (tvSearch.hasFocus()) {
                 tvSearch1.setTextColor(Color.RED);
-                tvSearch1.getPaint().setFakeBoldText(true);
             } else {
                 tvSearch1.setTextColor(Color.GREEN);
-                tvSearch1.getPaint().setFakeBoldText(false);
             }
             if (tvSetting.hasFocus()) {
                 tvSetting1.setTextColor(Color.RED);
-                tvSetting1.getPaint().setFakeBoldText(true);
             } else {
                 tvSetting1.setTextColor(Color.GREEN); 
-                tvSetting1.getPaint().setFakeBoldText(false);
             }
             if (tvCollect.hasFocus()) {
                 tvCollect1.setTextColor(Color.RED);
-                tvCollect1.getPaint().setFakeBoldText(true);
             } else {
                 tvCollect1.setTextColor(Color.GREEN);
-                tvCollect1.getPaint().setFakeBoldText(false);
             }
             if (tvHistory.hasFocus()) {
                 tvHistory1.setTextColor(Color.RED);
-                tvHistory1.getPaint().setFakeBoldText(true);
             } else {
                 tvHistory1.setTextColor(Color.GREEN); 
-                tvHistory1.getPaint().setFakeBoldText(false);
             }
             if (tvPush.hasFocus()) {
                 tvPush1.setTextColor(Color.RED);
-                tvPush1.getPaint().setFakeBoldText(true);
             } else {
                 tvPush1.setTextColor(Color.GREEN);
-                tvPush1.getPaint().setFakeBoldText(false);
             }
             if (tvExit.hasFocus()) {
                 tvExit1.setTextColor(Color.RED);
-                tvExit1.getPaint().setFakeBoldText(true);
             } else {
                 tvExit1.setTextColor(Color.GREEN); 
-                tvExit1.getPaint().setFakeBoldText(false);
             }
         }
     };
