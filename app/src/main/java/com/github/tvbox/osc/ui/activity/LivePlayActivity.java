@@ -1703,6 +1703,7 @@ public class LivePlayActivity extends BaseActivity {
                 @Override
                 public void click(String liveURL) {
                     Hawk.put(HawkConfig.LIVE_URL, liveURL);
+                    Hawk.delete(HawkConfig.LIVE_SOURCE);
                     if (mVideoView != null) {
                         mVideoView.release();
                         mVideoView = null;
