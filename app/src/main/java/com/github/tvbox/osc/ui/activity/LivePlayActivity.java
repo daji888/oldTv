@@ -2196,6 +2196,9 @@ public class LivePlayActivity extends BaseActivity {
             int pos = Hawk.get(HawkConfig.LIVE_SOURCE, -1);
             if (pos > -1) {
                 currentLiveChannelItem.setSourceIndex(Hawk.get(HawkConfig.LIVE_SOURCE));
+                if (pos > currentLiveChannelItem.getSourceNum() - 1) {
+                    currentLiveChannelItem.setSourceIndex(0);
+                }    
                 playChannel(groupIndex, liveChannelIndex, true);
             } else {
                 playChannel(groupIndex, liveChannelIndex, false);
