@@ -16,13 +16,8 @@ import androidx.media3.common.PlaybackParameters;
 import androidx.media3.common.Player;
 import androidx.media3.common.Tracks;
 import androidx.media3.common.VideoSize;
-import androidx.media3.exoplayer.DefaultLoadControl;
-import androidx.media3.exoplayer.DefaultRenderersFactory;
 import androidx.media3.exoplayer.ExoPlayer;
-import androidx.media3.exoplayer.LoadControl;
 import androidx.media3.exoplayer.source.MediaSource;
-import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
-import androidx.media3.exoplayer.trackselection.MappingTrackSelector;
 import androidx.media3.exoplayer.trackselection.TrackSelectionArray;
 import androidx.media3.exoplayer.util.EventLogger;
 
@@ -35,7 +30,6 @@ import com.orhanobut.hawk.Hawk;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import okhttp3.Dns;
@@ -56,10 +50,6 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     private static PlaybackParameters mSpeedPlaybackParameters;
     private static boolean mIsPreparing;
 
-    public static LoadControl mLoadControl;
-    public static DefaultRenderersFactory mRenderersFactory;
-    public static DefaultTrackSelector mTrackSelector;
-
     private int errorCode = -100;
     private String path;
     private Map<String, String> headers;
@@ -74,18 +64,9 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     @SuppressLint("UnsafeOptInUsageError")
     @Override
     public void initPlayer() {
-        if (mTrackSelector == null) {
-            mTrackSelector = new DefaultTrackSelector(mAppContext);
-        }
-        if (mLoadControl == null) {
-            mLoadControl = new DefaultLoadControl();
-        }
-        mTrackSelector.setParameters(mTrackSelector.getParameters().buildUpon().setPreferredTextLanguage(Locale.getDefault().getISO3Language()).setTunnelingEnabled(true));
         setOptions();
-    }
-
-    public DefaultTrackSelector getTrackSelector() {
-        return mTrackSelector;
+        //准备好就开始播放
+        mMediaPlayer.setPlayWhenReady(true);
     }
 
     @Override
@@ -244,8 +225,6 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
 
     @Override
     public void setOptions() {
-        //准备好就开始播放
-        mMediaPlayer.setPlayWhenReady(true);
     }
 
     @Override
