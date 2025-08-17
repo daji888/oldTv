@@ -1534,6 +1534,7 @@ public class LivePlayActivity extends BaseActivity {
 
             @Override
             public void onItemClick(TvRecyclerView parent, View itemView, int position) {
+                clickSettingGroup(position);
             }
         });
 
@@ -1543,10 +1544,189 @@ public class LivePlayActivity extends BaseActivity {
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 FastClickCheckUtil.check(view);
                 selectSettingGroup(position, false);
+                clickSettingGroup(position);
             }
         });
     }
 
+    private void clickSettingGroup(int position) {
+        if (position == 5) {
+            AbstractPlayer mediaPlayer = mVideoView.getMediaPlayer();
+            TrackInfo trackInfo = null;
+            if (mediaPlayer instanceof IjkmPlayer) {
+                trackInfo = ((IjkmPlayer)mediaPlayer).getTrackInfo();
+            }
+            if (mediaPlayer instanceof EXOmPlayer) {
+                trackInfo = ((EXOmPlayer) mediaPlayer).getTrackInfo();
+            } 
+            if (trackInfo == null) {
+                Toast.makeText(mContext, "没有音轨", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            List<TrackInfoBean> bean = trackInfo.getAudio();
+            if (bean.size() < 1) {
+                Toast.makeText(mContext, "没有音轨", Toast.LENGTH_SHORT).show();
+                return;
+            }    
+            SelectDialog<TrackInfoBean> dialog = new SelectDialog<>(LivePlayActivity.this);
+            dialog.setTip("切换音轨");
+            dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<TrackInfoBean>() {
+                @Override
+                public void click(TrackInfoBean value, int pos) {
+                    try {
+                        for (TrackInfoBean audio : bean) {
+                            audio.selected = audio.trackId == value.trackId;
+                        }
+                        mediaPlayer.pause();
+                        long progress = mediaPlayer.getCurrentPosition();//保存当前进度，ijk 切换轨道 会有快进几秒
+                        if (mediaPlayer instanceof IjkmPlayer) {
+                            ((IjkmPlayer)mediaPlayer).setTrack(value.trackId);
+                        }
+                        if (mediaPlayer instanceof EXOmPlayer) {
+                            ((EXOmPlayer) mediaPlayer).selectExoTrack(value);
+                        }
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                mediaPlayer.seekTo(progress);
+                                mediaPlayer.start();
+                            }
+                        }, 800);
+                        dialog.dismiss();
+                    } catch (Exception e) {
+                        LOG.e("切换音轨出错");
+                    }
+                }
+
+                @Override
+                public String getDisplay(TrackInfoBean val) {
+                    String name = val.name.replace("AUDIO，", "");
+                    name = name.replace("N/A，", "");
+                    name = name.replace("，N/A", "");
+                    return name + (com.github.tvbox.osc.util.StringUtils.isEmpty(val.language) ? "" : "，" + val.language);
+                    }
+            }, new DiffUtil.ItemCallback<TrackInfoBean>() {
+                @Override
+                public boolean areItemsTheSame(@NonNull @NotNull TrackInfoBean oldItem, @NonNull @NotNull TrackInfoBean newItem) {
+                    return oldItem.trackId == newItem.trackId;
+                }
+
+                @Override
+                public boolean areContentsTheSame(@NonNull @NotNull TrackInfoBean oldItem, @NonNull @NotNull TrackInfoBean newItem) {
+                    return oldItem.trackId == newItem.trackId;
+                }
+            }, bean, trackInfo.getAudioSelected(false));
+            dialog.show();
+        } else if (position == 6) {
+            AbstractPlayer mediaPlayer = mVideoView.getMediaPlayer();
+            TrackInfo trackInfo = null;
+            if (mediaPlayer instanceof IjkmPlayer) {
+                trackInfo = ((IjkmPlayer)mediaPlayer).getTrackInfo();
+            }
+            if (mediaPlayer instanceof EXOmPlayer) {
+                trackInfo = ((EXOmPlayer) mediaPlayer).getTrackInfo();
+            } 
+            if (trackInfo == null) {
+                Toast.makeText(mContext, "没有视轨", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            List<TrackInfoBean> bean = trackInfo.getVideo();
+            if (bean.size() < 1) {
+                Toast.makeText(mContext, "没有视轨", Toast.LENGTH_SHORT).show();
+                return;
+            }  
+            SelectDialog<TrackInfoBean> dialog = new SelectDialog<>(LivePlayActivity.this);
+            dialog.setTip("切换视轨");
+            dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<TrackInfoBean>() {
+                @Override
+                public void click(TrackInfoBean value, int pos) {
+                    try {
+                        for (TrackInfoBean video : bean) {
+                            video.selected = video.trackId == value.trackId;
+                        }
+                        mediaPlayer.pause();
+                        long progress = mediaPlayer.getCurrentPosition();//保存当前进度，ijk 切换轨道 会有快进几秒
+                        if (mediaPlayer instanceof IjkmPlayer) {
+                            ((IjkmPlayer)mediaPlayer).setTrack(value.trackId);
+                        }
+                        if (mediaPlayer instanceof EXOmPlayer) {
+                            ((EXOmPlayer) mediaPlayer).selectExoTrack(value);
+                        }
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                mediaPlayer.seekTo(progress);
+                                mediaPlayer.start();
+                            }
+                        }, 800);
+                        dialog.dismiss();
+                    } catch (Exception e) {
+                        LOG.e("切换视轨出错");
+                    }
+                }
+
+                @Override
+                public String getDisplay(TrackInfoBean val) {
+                    String name = val.name.replace("VIDEO，", "");
+                    name = name.replace("N/A，", "");
+                    name = name.replace("，N/A", "");
+                    return name + (StringUtils.isEmpty(val.language) ? "" : "，" + val.language);
+                }
+            }, new DiffUtil.ItemCallback<TrackInfoBean>() {
+                @Override
+                public boolean areItemsTheSame(@NonNull @NotNull TrackInfoBean oldItem, @NonNull @NotNull TrackInfoBean newItem) {
+                    return oldItem.trackId == newItem.trackId;
+                }
+
+                @Override
+                public boolean areContentsTheSame(@NonNull @NotNull TrackInfoBean oldItem, @NonNull @NotNull TrackInfoBean newItem) {
+                    return oldItem.trackId == newItem.trackId;
+                }
+            }, bean, trackInfo.getVideoSelected(false));
+            dialog.show();
+        } else if (position == 7) {
+            // takagen99 : Added Live History list selection - 直播列表
+            ArrayList<String> liveHistory = Hawk.get(HawkConfig.LIVE_HISTORY, new ArrayList<String>());
+            if (liveHistory.isEmpty())
+                return;
+            if (!liveHistory.contains("https://ghfast.top/raw.githubusercontent.com/daji888/ys/master/tv.txt"))
+                liveHistory.add(0, "https://ghfast.top/raw.githubusercontent.com/daji888/ys/master/tv.txt");
+            if (!liveHistory.contains("https://ghproxy.net/raw.githubusercontent.com/daji888/ys/master/tv.txt"))
+                liveHistory.add(0, "https://ghproxy.net/raw.githubusercontent.com/daji888/ys/master/tv.txt");
+            String current = Hawk.get(HawkConfig.LIVE_URL, "");
+            int idx = 0;
+            if (liveHistory.contains(current))
+                idx = liveHistory.indexOf(current);
+            ApiHistoryDialog dialog = new ApiHistoryDialog(LivePlayActivity.this);
+            dialog.setTip("切换直播");
+            dialog.setAdapter(new ApiHistoryDialogAdapter.SelectDialogInterface() {
+                @Override
+                public void click(String liveURL) {
+                    Hawk.put(HawkConfig.LIVE_URL, liveURL);
+                    Hawk.delete(HawkConfig.LIVE_SOURCE);
+                    if (mVideoView != null) {
+                        mVideoView.release();
+                        mVideoView = null;
+                    }
+                    JsonArray live_groups = Hawk.get(HawkConfig.LIVE_GROUP_LIST, new JsonArray());
+                    JsonObject livesOBJ = live_groups.get(position).getAsJsonObject();
+                    Hawk.put(HawkConfig.LIVE_GROUP_INDEX, position);
+                    ApiConfig.get().loadLiveApi(livesOBJ);
+                    recreate();
+                    dialog.dismiss();
+                }
+
+                @Override
+                public void del(String value, ArrayList<String> data) {
+                    Hawk.put(HawkConfig.LIVE_HISTORY, data);
+                }
+            }, liveHistory, idx);
+            dialog.show();
+        } else if (position == 8) {
+            finish();
+        }    
+    }
+    
     private void selectSettingGroup(int position, boolean focus) {
         if (!isCurrentLiveChannelValid()) return;
         if (focus) {
@@ -1647,145 +1827,7 @@ public class LivePlayActivity extends BaseActivity {
             case 3://超时换源
                 Hawk.put(HawkConfig.LIVE_CONNECT_TIMEOUT, position);
                 break;
-            case 4://音轨
-                switch (position) {
-                    case 0:
-                        AbstractPlayer mediaPlayer = mVideoView.getMediaPlayer();
-                        TrackInfo trackInfo = null;
-                        if (mediaPlayer instanceof IjkmPlayer) {
-                            trackInfo = ((IjkmPlayer)mediaPlayer).getTrackInfo();
-                        }
-                        if (mediaPlayer instanceof EXOmPlayer) {
-                            trackInfo = ((EXOmPlayer) mediaPlayer).getTrackInfo();
-                        } 
-                        if (trackInfo == null) {
-                            Toast.makeText(mContext, "没有音轨", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        List<TrackInfoBean> bean = trackInfo.getAudio();
-                        if (bean.size() < 1) return;
-                        SelectDialog<TrackInfoBean> dialog = new SelectDialog<>(LivePlayActivity.this);
-                        dialog.setTip("切换音轨");
-                        dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<TrackInfoBean>() {
-                            @Override
-                            public void click(TrackInfoBean value, int pos) {
-                                try {
-                                    for (TrackInfoBean audio : bean) {
-                                        audio.selected = audio.trackId == value.trackId;
-                                    }
-                                    mediaPlayer.pause();
-                                    long progress = mediaPlayer.getCurrentPosition();//保存当前进度，ijk 切换轨道 会有快进几秒
-                                    if (mediaPlayer instanceof IjkmPlayer) {
-                                        ((IjkmPlayer)mediaPlayer).setTrack(value.trackId);
-                                    }
-                                    if (mediaPlayer instanceof EXOmPlayer) {
-                                        ((EXOmPlayer) mediaPlayer).selectExoTrack(value);
-                                    }
-                                    new Handler().postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            mediaPlayer.seekTo(progress);
-                                            mediaPlayer.start();
-                                        }
-                                    }, 800);
-                                    dialog.dismiss();
-                                } catch (Exception e) {
-                                    LOG.e("切换音轨出错");
-                                }
-                            }
-
-                            @Override
-                            public String getDisplay(TrackInfoBean val) {
-                                String name = val.name.replace("AUDIO，", "");
-                                name = name.replace("N/A，", "");
-                                name = name.replace("，N/A", "");
-                                return name + (com.github.tvbox.osc.util.StringUtils.isEmpty(val.language) ? "" : "，" + val.language);
-                            }
-                        }, new DiffUtil.ItemCallback<TrackInfoBean>() {
-                            @Override
-                            public boolean areItemsTheSame(@NonNull @NotNull TrackInfoBean oldItem, @NonNull @NotNull TrackInfoBean newItem) {
-                                return oldItem.trackId == newItem.trackId;
-                            }
-
-                            @Override
-                            public boolean areContentsTheSame(@NonNull @NotNull TrackInfoBean oldItem, @NonNull @NotNull TrackInfoBean newItem) {
-                                return oldItem.trackId == newItem.trackId;
-                            }
-                        }, bean, trackInfo.getAudioSelected(false));
-                        dialog.show();
-                        break;
-                }
-                break;
-            case 5://视轨
-                switch (position) {
-                    case 0:
-                        AbstractPlayer mediaPlayer = mVideoView.getMediaPlayer();
-                        TrackInfo trackInfo = null;
-                        if (mediaPlayer instanceof IjkmPlayer) {
-                            trackInfo = ((IjkmPlayer)mediaPlayer).getTrackInfo();
-                        }
-                        if (mediaPlayer instanceof EXOmPlayer) {
-                            trackInfo = ((EXOmPlayer) mediaPlayer).getTrackInfo();
-                        } 
-                        if (trackInfo == null) {
-                            Toast.makeText(mContext, "没有视轨", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        List<TrackInfoBean> bean = trackInfo.getVideo();
-                        if (bean.size() < 1) return;
-                        SelectDialog<TrackInfoBean> dialog = new SelectDialog<>(LivePlayActivity.this);
-                        dialog.setTip("切换视轨");
-                        dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<TrackInfoBean>() {
-                            @Override
-                            public void click(TrackInfoBean value, int pos) {
-                                try {
-                                     for (TrackInfoBean video : bean) {
-                                         video.selected = video.trackId == value.trackId;
-                                    }
-                                    mediaPlayer.pause();
-                                    long progress = mediaPlayer.getCurrentPosition();//保存当前进度，ijk 切换轨道 会有快进几秒
-                                    if (mediaPlayer instanceof IjkmPlayer) {
-                                        ((IjkmPlayer)mediaPlayer).setTrack(value.trackId);
-                                    }
-                                    if (mediaPlayer instanceof EXOmPlayer) {
-                                        ((EXOmPlayer) mediaPlayer).selectExoTrack(value);
-                                    }
-                                    new Handler().postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            mediaPlayer.seekTo(progress);
-                                            mediaPlayer.start();
-                                        }
-                                    }, 800);
-                                    dialog.dismiss();
-                                } catch (Exception e) {
-                                    LOG.e("切换视轨出错");
-                                }
-                             }
-
-                            @Override
-                            public String getDisplay(TrackInfoBean val) {
-                                String name = val.name.replace("VIDEO，", "");
-                                name = name.replace("N/A，", "");
-                                name = name.replace("，N/A", "");
-                                return name + (StringUtils.isEmpty(val.language) ? "" : "，" + val.language);
-                            }
-                        }, new DiffUtil.ItemCallback<TrackInfoBean>() {
-                            @Override
-                            public boolean areItemsTheSame(@NonNull @NotNull TrackInfoBean oldItem, @NonNull @NotNull TrackInfoBean newItem) {
-                                return oldItem.trackId == newItem.trackId;
-                            }
-
-                            @Override
-                            public boolean areContentsTheSame(@NonNull @NotNull TrackInfoBean oldItem, @NonNull @NotNull TrackInfoBean newItem) {
-                                return oldItem.trackId == newItem.trackId;
-                            }
-                        }, bean, trackInfo.getVideoSelected(false));
-                        dialog.show();
-                        break;
-                }
-                break;
-            case 6://偏好设置
+            case 4://偏好设置
                 boolean select = false;
                 switch (position) {
                     case 0:
@@ -1813,54 +1855,33 @@ public class LivePlayActivity extends BaseActivity {
                         break;
                 }
                 liveSettingItemAdapter.selectItem(position, select, false);
+                break;    
+            case 5://音轨
+                switch (position) {
+                    case 0:
+                        clickSettingGroup(5);
+                        break;
+                }
                 break;
+            case 6://视轨
+                switch (position) {
+                    case 0:
+                        clickSettingGroup(6);
+                        break;
+                }
+                break;
+            
             case 7:// 直播历史 takagen99 : Live History
                 switch (position) {
                     case 0:
-                        // takagen99 : Added Live History list selection - 直播列表
-                        ArrayList<String> liveHistory = Hawk.get(HawkConfig.LIVE_HISTORY, new ArrayList<String>());
-                        if (liveHistory.isEmpty())
-                            return;
-                        if (!liveHistory.contains("https://ghfast.top/raw.githubusercontent.com/daji888/ys/master/tv.txt"))
-                            liveHistory.add(0, "https://ghfast.top/raw.githubusercontent.com/daji888/ys/master/tv.txt");
-                        if (!liveHistory.contains("https://ghproxy.net/raw.githubusercontent.com/daji888/ys/master/tv.txt"))
-                            liveHistory.add(0, "https://ghproxy.net/raw.githubusercontent.com/daji888/ys/master/tv.txt");
-                        String current = Hawk.get(HawkConfig.LIVE_URL, "");
-                        int idx = 0;
-                        if (liveHistory.contains(current))
-                            idx = liveHistory.indexOf(current);
-                        ApiHistoryDialog dialog = new ApiHistoryDialog(LivePlayActivity.this);
-                        dialog.setTip("切换直播");
-                        dialog.setAdapter(new ApiHistoryDialogAdapter.SelectDialogInterface() {
-                            @Override
-                            public void click(String liveURL) {
-                                Hawk.put(HawkConfig.LIVE_URL, liveURL);
-                                Hawk.delete(HawkConfig.LIVE_SOURCE);
-                                if (mVideoView != null) {
-                                    mVideoView.release();
-                                    mVideoView = null;
-                                }
-                                JsonArray live_groups = Hawk.get(HawkConfig.LIVE_GROUP_LIST, new JsonArray());
-                                JsonObject livesOBJ = live_groups.get(position).getAsJsonObject();
-                                Hawk.put(HawkConfig.LIVE_GROUP_INDEX, position);
-                                ApiConfig.get().loadLiveApi(livesOBJ);
-                                recreate();
-                                dialog.dismiss();
-                            }
-
-                            @Override
-                            public void del(String value, ArrayList<String> data) {
-                                Hawk.put(HawkConfig.LIVE_HISTORY, data);
-                            }
-                        }, liveHistory, idx);
-                        dialog.show();
+                        clickSettingGroup(7);
                         break;
                 }
                 break;
             case 8:// 退出直播 takagen99 : Added Exit Option
                 switch (position) {
                     case 0:
-                        finish();
+                        clickSettingGroup(8);
                         break;
                 }
                 break;
@@ -1985,24 +2006,24 @@ public class LivePlayActivity extends BaseActivity {
     }
 
     private void initLiveSettingGroupList() {
-        ArrayList<String> groupNames = new ArrayList<>(Arrays.asList("线路选择", "画面比例", "播放解码", "超时换源", "音轨选项", "视轨选项", "偏好设置", "直播地址", "退出直播"));
+        ArrayList<String> groupNames = new ArrayList<>(Arrays.asList("线路选择", "画面比例", "播放解码", "超时换源", "偏好设置", "音轨选项", "视轨选项", "直播地址", "退出直播"));
         ArrayList<ArrayList<String>> itemsArrayList = new ArrayList<>();
         ArrayList<String> sourceItems = new ArrayList<>();
         ArrayList<String> scaleItems = new ArrayList<>(Arrays.asList("原比", "16:9", "4:3", "填充", "原始", "裁剪"));
         ArrayList<String> playerDecoderItems = new ArrayList<>(Arrays.asList("系统硬解", "IJK硬解", "IJK软解", "EXO硬解", "EXO硬软", "EXO软硬"));
         ArrayList<String> timeoutItems = new ArrayList<>(Arrays.asList("5s", "10s", "15s", "20s", "25s", "30s"));
+        ArrayList<String> personalSettingItems = new ArrayList<>(Arrays.asList("显示时间", "显示网速", "换台反转", "跨选分类", "关闭密码"));
         ArrayList<String> AudioItems = new ArrayList<>(Arrays.asList("音轨列表"));
         ArrayList<String> VideoItems = new ArrayList<>(Arrays.asList("视轨列表"));
-        ArrayList<String> personalSettingItems = new ArrayList<>(Arrays.asList("显示时间", "显示网速", "换台反转", "跨选分类", "关闭密码"));
         ArrayList<String> liveAddItems = new ArrayList<>(Arrays.asList("地址列表"));
         ArrayList<String> exitConfirmItems = new ArrayList<>(Arrays.asList("确定"));
         itemsArrayList.add(sourceItems);
         itemsArrayList.add(scaleItems);
         itemsArrayList.add(playerDecoderItems);
         itemsArrayList.add(timeoutItems);
+        itemsArrayList.add(personalSettingItems);
         itemsArrayList.add(AudioItems);
         itemsArrayList.add(VideoItems);
-        itemsArrayList.add(personalSettingItems);
         itemsArrayList.add(liveAddItems);
         itemsArrayList.add(exitConfirmItems);
 
@@ -2022,13 +2043,13 @@ public class LivePlayActivity extends BaseActivity {
             liveSettingGroupList.add(liveSettingGroup);
         }
         liveSettingGroupList.get(3).getLiveSettingItems().get(Hawk.get(HawkConfig.LIVE_CONNECT_TIMEOUT, 5)).setItemSelected(true);
-        liveSettingGroupList.get(4).getLiveSettingItems().get(0).setItemSelected(true);
+        liveSettingGroupList.get(4).getLiveSettingItems().get(0).setItemSelected(Hawk.get(HawkConfig.LIVE_SHOW_TIME, false));
+        liveSettingGroupList.get(4).getLiveSettingItems().get(1).setItemSelected(Hawk.get(HawkConfig.LIVE_SHOW_NET_SPEED, false));
+        liveSettingGroupList.get(4).getLiveSettingItems().get(2).setItemSelected(Hawk.get(HawkConfig.LIVE_CHANNEL_REVERSE, false));
+        liveSettingGroupList.get(4).getLiveSettingItems().get(3).setItemSelected(Hawk.get(HawkConfig.LIVE_CROSS_GROUP, false));
+        liveSettingGroupList.get(4).getLiveSettingItems().get(4).setItemSelected(Hawk.get(HawkConfig.LIVE_SKIP_PASSWORD, false));
         liveSettingGroupList.get(5).getLiveSettingItems().get(0).setItemSelected(true);
-        liveSettingGroupList.get(6).getLiveSettingItems().get(0).setItemSelected(Hawk.get(HawkConfig.LIVE_SHOW_TIME, false));
-        liveSettingGroupList.get(6).getLiveSettingItems().get(1).setItemSelected(Hawk.get(HawkConfig.LIVE_SHOW_NET_SPEED, false));
-        liveSettingGroupList.get(6).getLiveSettingItems().get(2).setItemSelected(Hawk.get(HawkConfig.LIVE_CHANNEL_REVERSE, false));
-        liveSettingGroupList.get(6).getLiveSettingItems().get(3).setItemSelected(Hawk.get(HawkConfig.LIVE_CROSS_GROUP, false));
-        liveSettingGroupList.get(6).getLiveSettingItems().get(4).setItemSelected(Hawk.get(HawkConfig.LIVE_SKIP_PASSWORD, false));
+        liveSettingGroupList.get(6).getLiveSettingItems().get(0).setItemSelected(true);
         liveSettingGroupList.get(7).getLiveSettingItems().get(0).setItemSelected(true);
         liveSettingGroupList.get(8).getLiveSettingItems().get(0).setItemSelected(true);
     }
