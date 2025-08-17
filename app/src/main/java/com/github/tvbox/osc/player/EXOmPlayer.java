@@ -12,7 +12,9 @@ import androidx.media3.common.Player;
 import androidx.media3.common.TrackGroup;
 import androidx.media3.common.Tracks;
 import androidx.media3.exoplayer.DefaultRenderersFactory;
+import androidx.media3.exoplayer.DefaultLoadControl;
 import androidx.media3.exoplayer.ExoPlayer;
+import androidx.media3.exoplayer.LoadControl;
 import androidx.media3.exoplayer.source.TrackGroupArray;
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
 import androidx.media3.exoplayer.trackselection.MappingTrackSelector;
@@ -32,6 +34,10 @@ public class EXOmPlayer extends ExoMediaPlayer {
     private String subtitleId = "";
     private EXOCode exocodec = null;
 
+    private LoadControl mLoadControl;
+    private DefaultRenderersFactory mRenderersFactory;
+    private DefaultTrackSelector mTrackSelector;
+
     public EXOmPlayer(Context context, EXOCode exocodec) {
         super(context);
         this.exocodec = exocodec;
@@ -48,6 +54,9 @@ public class EXOmPlayer extends ExoMediaPlayer {
                 try {
                     mRenderersFactory = new DefaultRenderersFactory(mAppContext);
                     mRenderersFactory.setExtensionRendererMode(extensionRendererMode);
+                    mTrackSelector = new DefaultTrackSelector(mAppContext);
+                    mLoadControl = new DefaultLoadControl();
+                    mTrackSelector.setParameters(mTrackSelector.getParameters().buildUpon().setPreferredTextLanguage(Locale.getDefault().getISO3Language()).setTunnelingEnabled(true));
                     mMediaPlayer = new ExoPlayer.Builder(mAppContext)
                         .setLoadControl(mLoadControl)
                         .setRenderersFactory(mRenderersFactory)
