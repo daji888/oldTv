@@ -1707,6 +1707,7 @@ public class LivePlayActivity extends BaseActivity {
                         mVideoView.release();
                         mVideoView = null;
                     }
+                    int position = Hawk.get(HawkConfig.LIVE_GROUP_INDEX, 0);
                     JsonArray live_groups = Hawk.get(HawkConfig.LIVE_GROUP_LIST, new JsonArray());
                     JsonObject livesOBJ = live_groups.get(position).getAsJsonObject();
                     Hawk.put(HawkConfig.LIVE_GROUP_INDEX, position);
