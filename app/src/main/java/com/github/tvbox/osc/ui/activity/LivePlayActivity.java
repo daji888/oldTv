@@ -318,7 +318,7 @@ public class LivePlayActivity extends BaseActivity {
             }
             i = size;
             if (i >= 0 && new Date().compareTo(epgdata.get(i).enddateTime) <= 0) {
-                mRightEpgList.setSelectedPosition(i);
+            //    mRightEpgList.setSelectedPosition(i);
                 if (divEpg.getVisibility() == View.VISIBLE) {
                     mRightEpgList.setSelection(i);
                 }
@@ -513,27 +513,10 @@ public class LivePlayActivity extends BaseActivity {
         divLoadEpgleft.setVisibility(View.VISIBLE);
         divLoadEpg.setVisibility(View.GONE);
         mEpgDateGridView.setSelectedPosition(liveEpgDateAdapter.getSelectedIndex());
-        if (mRightEpgList != null) {
-            mRightEpgList.post(new Runnable() {
-                @Override
-                public void run() {
-                    if (epgListAdapter.getItem(0).title.equals("精彩节目")) {
-                        View mChild = Objects.requireNonNull(mRightEpgList.getLayoutManager()).findViewByPosition(epgListAdapter.getSelectedIndex());
-                        if (mChild != null) {
-                            mRightEpgList.setSelectedPosition(epgListAdapter.getSelectedIndex());
-                        }
-                        mChild.requestFocus();
-                    } else {
-                        View mChild = Objects.requireNonNull(mRightEpgList.getLayoutManager()).findViewByPosition(epgListAdapter.getSelectedIndex() - 1);
-                        if (mChild != null) {    
-                            mRightEpgList.setSelectedPosition(epgListAdapter.getSelectedIndex() - 1);
-                        }
-                        mChild.requestFocus();
-                    }
-                }
-             });   
-        } else { 
-            mLiveChannelView.requestFocus();
+        if (epgListAdapter.getItem(0).title.equals("精彩节目")) {
+            mRightEpgList.setSelection(epgListAdapter.getSelectedIndex());
+        } else {
+            mRightEpgList.setSelection(epgListAdapter.getSelectedIndex() - 1);
         }
         epgListAdapter.notifyDataSetChanged();
     }
@@ -546,6 +529,8 @@ public class LivePlayActivity extends BaseActivity {
         divEpg.setVisibility(View.GONE);
         divLoadEpgleft.setVisibility(View.GONE);
         divLoadEpg.setVisibility(View.VISIBLE);
+        mChannelGroupView.setSelectedPosition(liveChannelGroupAdapter.getSelectedGroupIndex());
+        mLiveChannelView.requestFocus();
     }
 
 
