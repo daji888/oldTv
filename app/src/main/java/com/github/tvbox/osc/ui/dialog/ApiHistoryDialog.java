@@ -36,18 +36,8 @@ public class ApiHistoryDialog extends BaseDialog {
         adapter.setData(data, select);
         TvRecyclerView tvRecyclerView = ((TvRecyclerView) findViewById(R.id.list));
         tvRecyclerView.setAdapter(adapter);
-        if (tvRecyclerView != null) {
-            tvRecyclerView.post(new Runnable() {
-                @Override
-                public void run() {
-                    View mChild = Objects.requireNonNull(tvRecyclerView.getLayoutManager()).findViewByPosition(select);
-                    if (mChild != null) {
-                        tvRecyclerView.setSelectedPosition(select);
-                        mChild.requestFocus();
-                    }
-                }
-             });   
-        }
+    //    tvRecyclerView.setSelectedPosition(select);
+        tvRecyclerView.setSelection(select);
         tvRecyclerView.post(new Runnable() {
             @Override
             public void run() {
