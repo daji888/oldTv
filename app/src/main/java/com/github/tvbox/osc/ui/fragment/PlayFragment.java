@@ -319,8 +319,6 @@ public class PlayFragment extends BaseLazyFragment {
 
             @Override
             public void prepared() {
-                initAudioView();
-                initVideoView();
                 initSubtitleView();
             }
 
@@ -381,9 +379,9 @@ public class PlayFragment extends BaseLazyFragment {
                         });
                     }
                 });
-                if(mVodInfo.playFlag.contains("Ali")||mVodInfo.playFlag.contains("parse")){
+                if (mVodInfo.playFlag.contains("Ali") || mVodInfo.playFlag.contains("parse")) {
                     searchSubtitleDialog.setSearchWord(mVodInfo.playNote);
-                }else {
+                } else {
                     searchSubtitleDialog.setSearchWord(mVodInfo.name);
                 }
                 searchSubtitleDialog.show();
@@ -422,7 +420,7 @@ public class PlayFragment extends BaseLazyFragment {
         AbstractPlayer mediaPlayer = mVideoView.getMediaPlayer();
         TrackInfo trackInfo = null;
         if (mediaPlayer instanceof IjkmPlayer) {
-            trackInfo = ((IjkmPlayer)mediaPlayer).getTrackInfo();
+            trackInfo = ((IjkmPlayer) mediaPlayer).getTrackInfo();
         }
         if (mediaPlayer instanceof EXOmPlayer) {
             trackInfo = ((EXOmPlayer) mediaPlayer).getTrackInfo();
@@ -436,6 +434,16 @@ public class PlayFragment extends BaseLazyFragment {
             Toast.makeText(mContext, "没有音轨", Toast.LENGTH_SHORT).show();
             return;
         }
+        if (mediaPlayer instanceof IjkmPlayer) {
+            //默认选中第一个音轨 一般第一个音轨是国语
+            if (trackInfo != null && bean.size() > 1) {
+                int firsIndex = bean.get(0).trackId;
+                for (TrackInfoBean audio : bean) {
+                    audio.selected = audio.trackId == firsIndex;
+                }
+                ((IjkmPlayer) mediaPlayer).setTrack(firsIndex);
+            }
+         }
         SelectDialog<TrackInfoBean> dialog = new SelectDialog<>(getActivity());
         dialog.setTip("切换音轨");
         dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<TrackInfoBean>() {
@@ -492,7 +500,7 @@ public class PlayFragment extends BaseLazyFragment {
         AbstractPlayer mediaPlayer = mVideoView.getMediaPlayer();
         TrackInfo trackInfo = null;
         if (mediaPlayer instanceof IjkmPlayer) {
-            trackInfo = ((IjkmPlayer)mediaPlayer).getTrackInfo();
+            trackInfo = ((IjkmPlayer) mediaPlayer).getTrackInfo();
         }
         if (mediaPlayer instanceof EXOmPlayer) {
             trackInfo = ((EXOmPlayer) mediaPlayer).getTrackInfo();
@@ -505,6 +513,16 @@ public class PlayFragment extends BaseLazyFragment {
         if (bean.size() < 1) {
             Toast.makeText(mContext, "没有视轨", Toast.LENGTH_SHORT).show();
             return;
+        }
+        if (mediaPlayer instanceof EXOmPlayer) {
+            //默认选中第一个视轨 一般第一个视轨分辨率最高
+            if (trackInfo != null && bean.size() > 1) {
+                TrackInfoBean firsVideo = bean.get(0);
+                for (TrackInfoBean video : bean) {
+                    video.selected = video.trackId == firsVideo.trackId;
+                }
+                ((EXOmPlayer) mediaPlayer).selectExoTrack(firsVideo);
+            }
         }
         SelectDialog<TrackInfoBean> dialog = new SelectDialog<>(getActivity());
         dialog.setTip("切换视轨");
@@ -881,30 +899,6 @@ public class PlayFragment extends BaseLazyFragment {
             }
         });
     }
-
-    private void initAudioView() {
-        AbstractPlayer mediaPlayer = mVideoView.getMediaPlayer();
-        TrackInfo trackInfo = null;
-        if (mVideoView.getMediaPlayer() instanceof IjkmPlayer) {
-            //默认选中第一个音轨 一般第一个音轨是国语
-            if (trackInfo != null && trackInfo.getAudio().size() > 1) {
-                int firsIndex = trackInfo.getAudio().get(0).trackId;
-                ((IjkmPlayer)(mVideoView.getMediaPlayer())).setTrack(firsIndex);
-            }
-         }
-     }   
-
-    private void initVideoView() {
-        AbstractPlayer mediaPlayer = mVideoView.getMediaPlayer();
-        TrackInfo trackInfo = null;
-        if (mVideoView.getMediaPlayer() instanceof EXOmPlayer) {
-            //默认选中第一个视轨 一般第一个视轨分辨率最高
-            if (trackInfo != null && trackInfo.getVideo().size() > 1) {
-                TrackInfoBean firsVideo = trackInfo.getVideo().get(0);
-                ((EXOmPlayer)(mVideoView.getMediaPlayer())).selectExoTrack(firsVideo);
-            }
-         }
-     }
     
     private void initSubtitleView() {
         AbstractPlayer mediaPlayer = mVideoView.getMediaPlayer();
