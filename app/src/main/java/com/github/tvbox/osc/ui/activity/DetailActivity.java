@@ -507,29 +507,29 @@ public class DetailActivity extends BaseActivity {
             else
                 v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(300).setInterpolator(new BounceInterpolator()).start();
             if (tvPlay.hasFocus()) {
-                tvPlay.setTextColor(Color.GREEN);
-            } else {
                 tvPlay.setTextColor(Color.YELLOW);
+            } else {
+                tvPlay.setTextColor(Color.GREEN);
             }
             if (tvQuickSearch.hasFocus()) {
-                tvQuickSearch.setTextColor(Color.GREEN);
-            } else {
                 tvQuickSearch.setTextColor(Color.YELLOW);
+            } else {
+                tvQuickSearch.setTextColor(Color.GREEN);
             }
             if (tvSort.hasFocus()) {
-                tvSort.setTextColor(Color.GREEN);
+                tvSort.setTextColor(Color.YELLOW);
             } else {
-                tvSort.setTextColor(Color.YELLOW); 
+                tvSort.setTextColor(Color.GREEN); 
             }
             if (tvCollect.hasFocus()) {
-                tvCollect.setTextColor(Color.GREEN);
-            } else {
                 tvCollect.setTextColor(Color.YELLOW);
+            } else {
+                tvCollect.setTextColor(Color.GREEN);
             }
             if (tvSynopsis.hasFocus()) {
-                tvSynopsis.setTextColor(Color.GREEN);
+                tvSynopsis.setTextColor(Color.YELLOW);
             } else {
-                tvSynopsis.setTextColor(Color.YELLOW); 
+                tvSynopsis.setTextColor(Color.GREEN); 
             }
         }
     };
