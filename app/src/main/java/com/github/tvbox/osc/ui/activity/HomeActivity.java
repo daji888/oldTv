@@ -237,7 +237,12 @@ public class HomeActivity extends BaseActivity {
             public final boolean onInBorderKeyEvent(int direction, View view) {
                 BaseLazyFragment baseLazyFragment = fragments.get(sortFocused);
                 if (!(baseLazyFragment instanceof GridFragment) && direction == View.FOCUS_UP) {
-                    tvName.setFocusable(true);
+                    SourceBean home = ApiConfig.get().getHomeSourceBean();
+                    if (home != null && home.getName() != null && !home.getName().isEmpty()) {
+                        tvName.setFocusable(true);
+                    } else {
+                        tvName.setFocusable(false);
+                    }
                 } else {
                     tvName.setFocusable(false);
                 }
