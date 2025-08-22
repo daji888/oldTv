@@ -509,27 +509,27 @@ public class DetailActivity extends BaseActivity {
             if (tvPlay.hasFocus()) {
                 tvPlay.setTextColor(Color.YELLOW);
             } else {
-                tvPlay.setTextColor(Color.GREEN);
+                tvPlay.setTextColor(0xD9FFFFFF);
             }
             if (tvQuickSearch.hasFocus()) {
                 tvQuickSearch.setTextColor(Color.YELLOW);
             } else {
-                tvQuickSearch.setTextColor(Color.GREEN);
+                tvQuickSearch.setTextColor(0xD9FFFFFF);
             }
             if (tvSort.hasFocus()) {
                 tvSort.setTextColor(Color.YELLOW);
             } else {
-                tvSort.setTextColor(Color.GREEN); 
+                tvSort.setTextColor(0xD9FFFFFF); 
             }
             if (tvCollect.hasFocus()) {
                 tvCollect.setTextColor(Color.YELLOW);
             } else {
-                tvCollect.setTextColor(Color.GREEN);
+                tvCollect.setTextColor(0xD9FFFFFF);
             }
             if (tvSynopsis.hasFocus()) {
                 tvSynopsis.setTextColor(Color.YELLOW);
             } else {
-                tvSynopsis.setTextColor(Color.GREEN); 
+                tvSynopsis.setTextColor(0xD9FFFFFF); 
             }
         }
     };
