@@ -4,9 +4,7 @@
     <string name="app_name">TVBox</string>
     
     // EXO Player
-    <string name="exo_track_selection_title_video">视频</string>
     <string name="exo_track_selection_title_audio">音频</string>
-    <string name="exo_track_selection_title_text">文字</string>
     <string name="exo_track_selection_none">无</string>
     <string name="exo_track_selection_auto">自动</string>
     <string name="exo_track_unknown">未知</string>
