@@ -4,7 +4,6 @@ import android.net.Uri;
 
 import androidx.collection.ArrayMap;
 
-import com.github.tvbox.osc.bean.Doh;
 import com.github.catvod.utils.Path;
 import com.github.catvod.utils.Util;
 import com.github.tvbox.osc.util.OkGoHelper;
@@ -43,14 +42,8 @@ public class OkHttp {
     }
 
     public static Dns dns() {
-//        return get().dns != null ? get().dns : Dns.SYSTEM; // 由于 setDoh(Doh doh)没有被调用导致这里选择的是 Dns.SYSTEM
-        return get().dns != null ? get().dns : OkGoHelper.dnsOverHttps;
-    }
-
-    public void setDoh(Doh doh) {
-        OkHttpClient dohClient = new OkHttpClient.Builder().cache(new Cache(Path.doh(), CACHE)).hostnameVerifier(SSLCompat.VERIFIER).sslSocketFactory(new SSLCompat(), SSLCompat.TM).build();
-        dns = doh.getUrl().isEmpty() ? null : new DnsOverHttps.Builder().client(dohClient).url(HttpUrl.get(doh.getUrl())).bootstrapDnsHosts(doh.getHosts()).build();
-        client = null;
+        return get().dns != null ? get().dns : Dns.SYSTEM;
+    //    return get().dns != null ? get().dns : OkGoHelper.dnsOverHttps;
     }
 
     public void setProxy(String proxy) {
