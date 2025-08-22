@@ -72,9 +72,11 @@ public class OkGoHelper {
             + "{\"name\": \"腾讯\", \"url\": \"https://doh.pub/dns-query\"},"
             + "{\"name\": \"阿里\", \"url\": \"https://dns.alidns.com/dns-query\"},"
             + "{\"name\": \"360\", \"url\": \"https://doh.360.cn/dns-query\"},"
+            + "{\"name\": \"DNSWatch\", \"url\": \"https://resolver2.dns.watch/dns-query\"},"
             + "{\"name\": \"Google\", \"url\": \"https://dns.google/dns-query\"},"
             + "{\"name\": \"AdGuard\", \"url\": \"https://dns.adguard.com/dns-query\"},"
-            + "{\"name\": \"Quad9\", \"url\": \"https://dns.quad9.net/dns-query\"}"
+            + "{\"name\": \"Quad9\", \"url\": \"https://dns.quad9.net/dns-query\"},"
+            + "{\"name\": \"Cloudflare\", \"url\": \"https://cloudflare-dns.com/dns-query\"}"
             + "]";
 
     static OkHttpClient ItvClient = null;
@@ -122,27 +124,7 @@ public class OkGoHelper {
     public static Map<String,String> myHosts = null;
 
     public static String getDohUrl(int type) {
-   /*     switch (type) {
-            case 1: {
-                return "https://doh.pub/dns-query";
-            }
-            case 2: {
-                return "https://dns.alidns.com/dns-query";
-            }
-            case 3: {
-                return "https://doh.360.cn/dns-query";
-            }
-            case 4: {
-                // return "https://1.1.1.1/dns-query";   // takagen99 - removed Cloudflare
-                return "https://dns.google/dns-query";
-            }
-            case 5: {
-                return "https://dns.adguard.com/dns-query";
-            }
-            case 6: {
-                return "https://dns.quad9.net/dns-query";
-            }  */
-        String json = Hawk.get(HawkConfig.DOH_JSON,"");
+        String json = Hawk.get(HawkConfig.DOH_JSON, "");
         if (json.isEmpty()) json = dnsConfigJson;
         JsonArray jsonArray = JsonParser.parseString(json).getAsJsonArray();
         if (type >= 1 && type < dnsHttpsList.size()) {
@@ -154,10 +136,10 @@ public class OkGoHelper {
 
     public static void setDnsList() {
         dnsHttpsList.clear();
-        String json = Hawk.get(HawkConfig.DOH_JSON,"");
+        String json = Hawk.get(HawkConfig.DOH_JSON, "");
         if (json.isEmpty()) json = dnsConfigJson;
         JsonArray jsonArray = JsonParser.parseString(json).getAsJsonArray();
-        dnsHttpsList.add("运营商");
+        dnsHttpsList.add(0, "运营商");
         for (int i = 0; i < jsonArray.size(); i++) {
             JsonObject dnsConfig = jsonArray.get(i).getAsJsonObject();
             String name = dnsConfig.has("name") ? dnsConfig.get("name").getAsString() : "Unknown Name";
@@ -186,8 +168,8 @@ public class OkGoHelper {
         Integer dohSelector = Hawk.get(HawkConfig.DOH_URL, 0);
         JsonArray ips = null;
         try {
-            dnsHttpsList.add("运营商");
-            String json = Hawk.get(HawkConfig.DOH_JSON,"");
+            dnsHttpsList.add(0, "运营商");
+            String json = Hawk.get(HawkConfig.DOH_JSON, "");
             if (json.isEmpty()) json = dnsConfigJson;
             JsonArray jsonArray = JsonParser.parseString(json).getAsJsonArray();
             if (dohSelector + 1 > jsonArray.size()) Hawk.put(HawkConfig.DOH_URL, 0);
@@ -195,7 +177,7 @@ public class OkGoHelper {
                 JsonObject dnsConfig = jsonArray.get(i).getAsJsonObject();
                 String name = dnsConfig.has("name") ? dnsConfig.get("name").getAsString() : "Unknown Name";
                 dnsHttpsList.add(name);
-                if (dohSelector == (i+1)) ips = dnsConfig.has("ips") ? dnsConfig.getAsJsonArray("ips") : null;
+                if (dohSelector == (i + 1)) ips = dnsConfig.has("ips") ? dnsConfig.getAsJsonArray("ips") : null;
             }
         } catch (Exception e) {
             e.printStackTrace();
