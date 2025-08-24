@@ -75,7 +75,7 @@ public class App extends MultiDexApplication {
         // 首页选项
         putDefault(HawkConfig.HOME_REC, 1);                  //推荐: 0=豆瓣热播, 1=站点推荐, 2=观看历史
         putDefault(HawkConfig.HOME_REC_STYLE, true);         //首页多行: true=是, false=否
-        putDefault(HawkConfig.HISTORY_NUM, 2);               //历史条数: 0=50条, 1=100条, 2=200条
+        putDefault(HawkConfig.HISTORY_NUM, 2);               //历史条数: 0=30条, 1=50条, 2=100条
         // 播放器选项
         putDefault(HawkConfig.SHOW_PREVIEW, false);          //小屏预览: true=开启, false=关闭
         putDefault(HawkConfig.PLAY_RENDER, 1);               //渲染方式: 0=Textureview, 1=Surfaceview
@@ -86,7 +86,7 @@ public class App extends MultiDexApplication {
         // 系统选项
         putDefault(HawkConfig.SEARCH_VIEW, 0);               //搜索展示: 0=文字列表, 1=缩略图
         putDefault(HawkConfig.PARSE_WEBVIEW, true);          //嗅探Webview: true=系统自带, false=XWalkView
-        putDefault(HawkConfig.DOH_URL, 0);                   //DNS: 0=运营商, 1=腾讯, 2=阿里, 3=360, 4=Google, 5=AdGuard, 6=Quad9
+        putDefault(HawkConfig.DOH_URL, 0);                   //DNS: 0=运营商, 1=腾讯, 2=阿里, 3=360, 4=114, 5=DNSWatch, 6=Google, 7=AdGuard, 8=Quad9, 9=Cloudflare
         putDefault(HawkConfig.API_URL, "https://www.饭太硬.com/tv/");
         putDefault(HawkConfig.LIVE_URL, "https://ghproxy.net/raw.githubusercontent.com/daji888/ys/master/tv.txt");
         putDefault(HawkConfig.EPG_URL, "https://epg.51zmt.top:8001/api/diyp/?ch={name}&date={date}");
