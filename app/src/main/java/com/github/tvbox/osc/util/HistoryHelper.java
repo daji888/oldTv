@@ -1,18 +1,18 @@
 package com.github.tvbox.osc.util;
 
 public class HistoryHelper {
-    private static Integer[] hisNumArray = {50,100,200};
+    private static Integer[] hisNumArray = {30, 50, 100};
 
-    public static final String getHistoryNumName(int index){
+    public static final String getHistoryNumName(int index) {
         Integer value = getHisNum(index);
         return value + "条";
     }
 
-    public static final int getHisNum(int index){
+    public static final int getHisNum(int index) {
         Integer value = null;
-        if(index>=0 && index < hisNumArray.length){
+        if (index >= 0 && index < hisNumArray.length) {
             value = hisNumArray[index];
-        }else{
+        } else {
             value = hisNumArray[0];
         }
         return value;
