@@ -54,7 +54,15 @@ public class EXOmPlayer extends ExoMediaPlayer {
                 int extensionRendererMode = Integer.parseInt(value);
                 try {
                     mRenderersFactory = new DefaultRenderersFactory(mAppContext);
-                    mRenderersFactory.setExtensionRendererMode(extensionRendererMode);
+                    if (extensionRendererMode == 0) {
+                        mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF);
+                    } else if (extensionRendererMode == 1) {
+                        mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON);
+                    } else if (extensionRendererMode == 2) {
+                        mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER);
+                    } else {
+                        mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON);
+                    }    
                     if (mTrackSelector == null) {
                         mTrackSelector = new DefaultTrackSelector(mAppContext);
                     }
