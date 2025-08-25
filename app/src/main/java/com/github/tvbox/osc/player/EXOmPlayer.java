@@ -50,12 +50,17 @@ public class EXOmPlayer extends ExoMediaPlayer {
         LinkedHashMap<String, String> options = exocodecTmp.getOption();
         if (options != null) {
             for (String key : options.keySet()) {
-                int extensionRendererMode = Integer.parseInt(key.trim());
+                String value = options.get(key);
+                int extensionRendererMode = Integer.parseInt(value);
                 try {
                     mRenderersFactory = new DefaultRenderersFactory(mAppContext);
                     mRenderersFactory.setExtensionRendererMode(extensionRendererMode);
-                    mTrackSelector = new DefaultTrackSelector(mAppContext);
-                    mLoadControl = new DefaultLoadControl();
+                    if (mTrackSelector == null) {
+                        mTrackSelector = new DefaultTrackSelector(mAppContext);
+                    }
+                    if (mLoadControl == null) {
+                        mLoadControl = new DefaultLoadControl();
+                    }
                     mTrackSelector.setParameters(mTrackSelector.getParameters().buildUpon().setPreferredTextLanguage(Locale.getDefault().getISO3Language()).setTunnelingEnabled(true));
                     mMediaPlayer = new ExoPlayer.Builder(mAppContext)
                         .setLoadControl(mLoadControl)
