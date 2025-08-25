@@ -52,37 +52,33 @@ public class EXOmPlayer extends ExoMediaPlayer {
             for (String key : options.keySet()) {
                 String value = options.get(key);
                 int extensionRendererMode = Integer.parseInt(value);
-                try {
-                    mRenderersFactory = new DefaultRenderersFactory(mAppContext);
-                    if (extensionRendererMode == 0) {
-                        mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF);
-                    } else if (extensionRendererMode == 1) {
-                        mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON);
-                    } else if (extensionRendererMode == 2) {
-                        mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER);
-                    } else {
-                        mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON);
-                    }    
-                    if (mTrackSelector == null) {
-                        mTrackSelector = new DefaultTrackSelector(mAppContext);
-                    }
-                    if (mLoadControl == null) {
-                        mLoadControl = new DefaultLoadControl();
-                    }
-                    mTrackSelector.setParameters(mTrackSelector.getParameters().buildUpon().setPreferredTextLanguage(Locale.getDefault().getISO3Language()).setTunnelingEnabled(true));
-                    mMediaPlayer = new ExoPlayer.Builder(mAppContext)
-                        .setLoadControl(mLoadControl)
-                        .setRenderersFactory(mRenderersFactory)
-                        .setTrackSelector(mTrackSelector)
-                        .build();
-                    //播放器日志
-                    if (VideoViewManager.getConfig().mIsEnableLog && mTrackSelector instanceof MappingTrackSelector) {
-                        mMediaPlayer.addAnalyticsListener(new EventLogger((MappingTrackSelector) mTrackSelector, "ExoPlayer"));
-                    }
-                    mMediaPlayer.addListener(this);
-                } catch (Exception e) {
-                    Toast.makeText(mAppContext, "切换 EXO 解码器失败：" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                mRenderersFactory = new DefaultRenderersFactory(mAppContext);
+                if (extensionRendererMode == 0) {
+                    mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF);
+                } else if (extensionRendererMode == 1) {
+                    mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON);
+                } else if (extensionRendererMode == 2) {
+                    mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER);
+                } else {
+                    mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON);
+                }    
+                if (mTrackSelector == null) {
+                    mTrackSelector = new DefaultTrackSelector(mAppContext);
                 }
+                if (mLoadControl == null) {
+                    mLoadControl = new DefaultLoadControl();
+                }
+                mTrackSelector.setParameters(mTrackSelector.getParameters().buildUpon().setPreferredTextLanguage(Locale.getDefault().getISO3Language()).setTunnelingEnabled(true));
+                mMediaPlayer = new ExoPlayer.Builder(mAppContext)
+                    .setLoadControl(mLoadControl)
+                    .setRenderersFactory(mRenderersFactory)
+                    .setTrackSelector(mTrackSelector)
+                    .build();
+                //播放器日志
+                if (VideoViewManager.getConfig().mIsEnableLog && mTrackSelector instanceof MappingTrackSelector) {
+                    mMediaPlayer.addAnalyticsListener(new EventLogger((MappingTrackSelector) mTrackSelector, "ExoPlayer"));
+                }
+                mMediaPlayer.addListener(this);
             }
         }
         super.setOptions();
