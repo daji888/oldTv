@@ -50,8 +50,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
         LinkedHashMap<String, String> options = exocodecTmp.getOption();
         if (options != null) {
             for (String key : options.keySet()) {
-                String[] opt = key.split("\\|");
-                int extensionRendererMode = Integer.parseInt(opt[0].trim());
+                int extensionRendererMode = Integer.parseInt(key.trim());
                 try {
                     mRenderersFactory = new DefaultRenderersFactory(mAppContext);
                     mRenderersFactory.setExtensionRendererMode(extensionRendererMode);
