@@ -83,7 +83,7 @@ public class ExoTrackNameProvider {
     private String buildAudioChannelString(Format format) {
       int channelCount = format.channelCount;
       if (channelCount == Format.NO_VALUE || channelCount < 1) {
-        return "";
+        return "无声道";
       }
       switch (channelCount) {
         case 1:
@@ -112,6 +112,8 @@ public class ExoTrackNameProvider {
 
     private String buildLanguageString(Format format) {
       @Nullable String language = format.language;
+      if ("chs".equals(language)) language = "中文";
+      if ("cht".equals(language)) language = "繁中";  
       if (TextUtils.isEmpty(language) || C.LANGUAGE_UNDETERMINED.equals(language)) {
         return "";
       }
