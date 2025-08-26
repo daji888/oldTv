@@ -16,12 +16,18 @@ import androidx.media3.common.PlaybackParameters;
 import androidx.media3.common.Player;
 import androidx.media3.common.Tracks;
 import androidx.media3.common.VideoSize;
+import androidx.media3.exoplayer.DefaultLoadControl;
+import androidx.media3.exoplayer.DefaultRenderersFactory;
 import androidx.media3.exoplayer.ExoPlayer;
+import androidx.media3.exoplayer.LoadControl;
 import androidx.media3.exoplayer.source.MediaSource;
+import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
+import androidx.media3.exoplayer.trackselection.MappingTrackSelector;
 import androidx.media3.exoplayer.trackselection.TrackSelectionArray;
 import androidx.media3.exoplayer.util.EventLogger;
 
 import com.github.tvbox.osc.base.App;
+import com.github.tvbox.osc.player.EXOmPlayer;
 import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.LOG;
 import com.github.tvbox.osc.util.PlayerHelper;
@@ -30,6 +36,7 @@ import com.orhanobut.hawk.Hawk;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import okhttp3.Dns;
@@ -41,14 +48,18 @@ import xyz.doikki.videoplayer.util.PlayerUtils;
 
 public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
 
-    public static Context mAppContext;
-    protected static ExoPlayer mMediaPlayer;
-    protected static MediaSource mMediaSource;
-    protected static ExoMediaSourceHelper mMediaSourceHelper;
+    protected Context mAppContext;
+    protected ExoPlayer mMediaPlayer;
+    protected MediaSource mMediaSource;
+    protected ExoMediaSourceHelper mMediaSourceHelper;
     protected ExoTrackNameProvider trackNameProvider;
     protected TrackSelectionArray mTrackSelections;
-    private static PlaybackParameters mSpeedPlaybackParameters;
-    private static boolean mIsPreparing;
+    private PlaybackParameters mSpeedPlaybackParameters;
+    private boolean mIsPreparing;
+
+    private LoadControl mLoadControl;
+    public DefaultRenderersFactory mRenderersFactory;
+    private DefaultTrackSelector mTrackSelector;
 
     private int errorCode = -100;
     private String path;
@@ -64,9 +75,32 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     @SuppressLint("UnsafeOptInUsageError")
     @Override
     public void initPlayer() {
+        mRenderersFactory = new DefaultRenderersFactory(mAppContext);
         setOptions();
+        if (mTrackSelector == null) {
+            mTrackSelector = new DefaultTrackSelector(mAppContext);
+        }
+        if (mLoadControl == null) {
+            mLoadControl = new DefaultLoadControl();
+        }
+        mTrackSelector.setParameters(mTrackSelector.getParameters().buildUpon().setPreferredTextLanguage(Locale.getDefault().getISO3Language()).setTunnelingEnabled(true));
+        mMediaPlayer = new ExoPlayer.Builder(mAppContext)
+            .setLoadControl(mLoadControl)
+            .setRenderersFactory(mRenderersFactory)
+            .setTrackSelector(mTrackSelector)
+            .build();
+        //播放器日志
+        if (VideoViewManager.getConfig().mIsEnableLog && mTrackSelector instanceof MappingTrackSelector) {
+            mMediaPlayer.addAnalyticsListener(new EventLogger((MappingTrackSelector) mTrackSelector, "ExoPlayer"));
+        }
+        mMediaPlayer.addListener(this);
+   //     setOptions();
         //准备好就开始播放
         mMediaPlayer.setPlayWhenReady(true);
+    }
+
+    public DefaultTrackSelector getTrackSelector() {
+        return mTrackSelector;
     }
 
     @Override
@@ -225,6 +259,8 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
 
     @Override
     public void setOptions() {
+        //准备好就开始播放
+    //    mMediaPlayer.setPlayWhenReady(true);
     }
 
     @Override
