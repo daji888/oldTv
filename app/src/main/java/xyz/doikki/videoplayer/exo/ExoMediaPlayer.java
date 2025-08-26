@@ -27,7 +27,6 @@ import androidx.media3.exoplayer.trackselection.TrackSelectionArray;
 import androidx.media3.exoplayer.util.EventLogger;
 
 import com.github.tvbox.osc.base.App;
-import com.github.tvbox.osc.player.EXOmPlayer;
 import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.LOG;
 import com.github.tvbox.osc.util.PlayerHelper;
