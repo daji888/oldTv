@@ -2,7 +2,6 @@ package com.github.tvbox.osc.player;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.media3.common.C;
@@ -12,32 +11,22 @@ import androidx.media3.common.Player;
 import androidx.media3.common.TrackGroup;
 import androidx.media3.common.Tracks;
 import androidx.media3.exoplayer.DefaultRenderersFactory;
-import androidx.media3.exoplayer.DefaultLoadControl;
-import androidx.media3.exoplayer.ExoPlayer;
-import androidx.media3.exoplayer.LoadControl;
 import androidx.media3.exoplayer.source.TrackGroupArray;
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
 import androidx.media3.exoplayer.trackselection.MappingTrackSelector;
-import androidx.media3.exoplayer.util.EventLogger;
 import com.github.tvbox.osc.util.StringUtils;
 import com.github.tvbox.osc.api.ApiConfig;
 import com.github.tvbox.osc.bean.EXOCode;
 
 import xyz.doikki.videoplayer.exo.ExoMediaPlayer;
-import xyz.doikki.videoplayer.player.VideoViewManager;
 
 import java.util.LinkedHashMap;
-import java.util.Locale;
 
 public class EXOmPlayer extends ExoMediaPlayer {
     private String audioId = "";
     private String videoId = "";
     private String subtitleId = "";
     private EXOCode exocodec = null;
-
-    private LoadControl mLoadControl;
-    private DefaultRenderersFactory mRenderersFactory;
-    private DefaultTrackSelector mTrackSelector;
 
     public EXOmPlayer(Context context, EXOCode exocodec) {
         super(context);
@@ -50,42 +39,16 @@ public class EXOmPlayer extends ExoMediaPlayer {
         LinkedHashMap<String, String> options = exocodecTmp.getOption();
         if (options != null) {
             for (String key : options.keySet()) {
-                String value = options.get(key);
-                int extensionRendererMode = Integer.parseInt(value);
-                mRenderersFactory = new DefaultRenderersFactory(mAppContext);
-                if (extensionRendererMode == 0) {
+                if (key == "DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF") {
                     mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF);
-                } else if (extensionRendererMode == 1) {
+                } else if (key == "DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON") {
                     mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON);
-                } else if (extensionRendererMode == 2) {
+                } else if (key == "DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER") {
                     mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER);
-                } else {
-                    mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON);
                 }    
-                if (mTrackSelector == null) {
-                    mTrackSelector = new DefaultTrackSelector(mAppContext);
-                }
-                if (mLoadControl == null) {
-                    mLoadControl = new DefaultLoadControl();
-                }
-                mTrackSelector.setParameters(mTrackSelector.getParameters().buildUpon().setPreferredTextLanguage(Locale.getDefault().getISO3Language()).setTunnelingEnabled(true));
-                mMediaPlayer = new ExoPlayer.Builder(mAppContext)
-                    .setLoadControl(mLoadControl)
-                    .setRenderersFactory(mRenderersFactory)
-                    .setTrackSelector(mTrackSelector)
-                    .build();
-                //播放器日志
-                if (VideoViewManager.getConfig().mIsEnableLog && mTrackSelector instanceof MappingTrackSelector) {
-                    mMediaPlayer.addAnalyticsListener(new EventLogger((MappingTrackSelector) mTrackSelector, "ExoPlayer"));
-                }
-                mMediaPlayer.addListener(this);
             }
         }
         super.setOptions();
-    }
-
-    public DefaultTrackSelector getTrackSelector() {
-        return mTrackSelector;
     }
 
     @SuppressLint("UnsafeOptInUsageError")
