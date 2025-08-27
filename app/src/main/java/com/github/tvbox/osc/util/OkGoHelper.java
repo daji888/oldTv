@@ -146,7 +146,7 @@ public class OkGoHelper {
             String name = dnsConfig.has("name") ? dnsConfig.get("name").getAsString() : "未知";
             dnsHttpsList.add(name);
         }
-        if (Hawk.get(HawkConfig.DOH_URL, 0) > dnsHttpsList.size()) Hawk.put(HawkConfig.DOH_URL, 0);
+        if (Hawk.get(HawkConfig.DOH_URL, 0) + 1 > dnsHttpsList.size()) Hawk.put(HawkConfig.DOH_URL, 0);
     }
 
     private static List<InetAddress> DohIps(JsonArray ips) {
@@ -168,17 +168,21 @@ public class OkGoHelper {
         Integer dohSelector = Hawk.get(HawkConfig.DOH_URL, 0);
         JsonArray ips = null;
         try {
-            dnsHttpsList.add(0, "运营商");
             String json = Hawk.get(HawkConfig.DOH_JSON, "");
             if (json.isEmpty()) json = dnsConfigJson;
             JsonArray jsonArray = JsonParser.parseString(json).getAsJsonArray();
-            if (dohSelector > jsonArray.size()) Hawk.put(HawkConfig.DOH_URL, 0);
+            dnsHttpsList.add(0, "运营商");
             for (int i = 0; i < jsonArray.size(); i++) {
                 JsonObject dnsConfig = jsonArray.get(i).getAsJsonObject();
                 String name = dnsConfig.has("name") ? dnsConfig.get("name").getAsString() : "未知";
                 dnsHttpsList.add(name);
-                if (dohSelector == i) ips = dnsConfig.has("ips") ? dnsConfig.getAsJsonArray("ips") : null;
+                if (dnsConfig.has("url")) {
+                    if (dohSelector == i + 1) ips = dnsConfig.has("ips") ? dnsConfig.getAsJsonArray("ips") : null;
+                }  else {
+                    if (dohSelector == i) ips = dnsConfig.has("ips") ? dnsConfig.getAsJsonArray("ips") : null;
+                }
             }
+            if (dohSelector + 1 > dnsHttpsList.size()) Hawk.put(HawkConfig.DOH_URL, 0);
         } catch (Exception e) {
             e.printStackTrace();
         }
