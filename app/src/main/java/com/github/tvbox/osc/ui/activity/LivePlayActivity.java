@@ -849,6 +849,13 @@ public class LivePlayActivity extends BaseActivity {
         playChannel(groupChannelIndex[0], groupChannelIndex[1], false);
     }
 
+    public void playCurrent() {
+        if (!isCurrentLiveChannelValid()) {
+            return;
+        }
+        playChannel(currentChannelGroupIndex, currentLiveChannelIndex, true);
+    }
+
     private void playPrevious() {
         if (!isCurrentLiveChannelValid()) return;
         Integer[] groupChannelIndex = getNextChannel(-1);
@@ -1317,18 +1324,31 @@ public class LivePlayActivity extends BaseActivity {
                         break;
                     case MyVideoView.STATE_PLAYING:
                         currentLiveChangeSourceTimes = 0;
+                        mHandler.removeCallbacks(mConnectTimeoutReplayRun);
                         break;
                     case MyVideoView.STATE_ERROR:
                     case MyVideoView.STATE_PLAYBACK_COMPLETED:
-                        mHandler.postDelayed(mConnectTimeoutChangeSourceRun, 2000);
+                        mHandler.removeCallbacks(mConnectTimeoutReplayRun);
+                        if (Hawk.get(HawkConfig.LIVE_CONNECT_TIMEOUT, 0) == 0 ) {
+                            //缓冲30s重新播放
+                            mHandler.postDelayed(mConnectTimeoutReplayRun, 30 * 1000L);
+                        } else {
+                            mHandler.post(mConnectTimeoutChangeSourceRun);
+                        }
                         break;
                     case MyVideoView.STATE_PREPARING:
                     case MyVideoView.STATE_BUFFERING:
+                        mHandler.removeCallbacks(mConnectTimeoutReplayRun);
                         if (((View) findViewById(R.id.tv_pause_container)).getVisibility() != View.VISIBLE) {
                             tv_play_load_net_speed.setVisibility(View.VISIBLE);
                             mHandler.post(mUpdatetv_play_load_net_speedRun);
                         }
-                        mHandler.postDelayed(mConnectTimeoutChangeSourceRun, (Hawk.get(HawkConfig.LIVE_CONNECT_TIMEOUT, 5) + 1) * 5000);
+                        if (Hawk.get(HawkConfig.LIVE_CONNECT_TIMEOUT, 0) == 0 ) {
+                            //缓冲30s重新播放
+                            mHandler.postDelayed(mConnectTimeoutReplayRun, 30 * 1000L);
+                        } else {
+                            mHandler.postDelayed(mConnectTimeoutChangeSourceRun, (Hawk.get(HawkConfig.LIVE_CONNECT_TIMEOUT, 0)) * 5000L);
+                        }
                         break;
                 }
             }
@@ -1369,6 +1389,13 @@ public class LivePlayActivity extends BaseActivity {
             } else {
                 playNextSource();
             }
+        }
+    };
+
+    private final Runnable mConnectTimeoutReplayRun = new Runnable() {
+        @Override
+        public void run() {
+            playCurrent();
         }
     };
 
@@ -1997,7 +2024,7 @@ public class LivePlayActivity extends BaseActivity {
         ArrayList<String> sourceItems = new ArrayList<>();
         ArrayList<String> scaleItems = new ArrayList<>(Arrays.asList("原比", "16:9", "4:3", "填充", "原始", "裁剪"));
         ArrayList<String> playerDecoderItems = new ArrayList<>(Arrays.asList("系统硬解", "IJK硬解", "IJK软解", "EXO硬解", "EXO硬软", "EXO软硬"));
-        ArrayList<String> timeoutItems = new ArrayList<>(Arrays.asList("5s", "10s", "15s", "20s", "25s", "30s"));
+        ArrayList<String> timeoutItems = new ArrayList<>(Arrays.asList("关", "5s", "10s", "15s", "20s", "25s", "30s"));
         ArrayList<String> personalSettingItems = new ArrayList<>(Arrays.asList("显示时间", "显示网速", "换台反转", "跨选分类", "关闭密码"));
         ArrayList<String> AudioItems = new ArrayList<>(Arrays.asList("音轨列表"));
         ArrayList<String> VideoItems = new ArrayList<>(Arrays.asList("视轨列表"));
@@ -2028,7 +2055,7 @@ public class LivePlayActivity extends BaseActivity {
             liveSettingGroup.setLiveSettingItems(liveSettingItemList);
             liveSettingGroupList.add(liveSettingGroup);
         }
-        liveSettingGroupList.get(3).getLiveSettingItems().get(Hawk.get(HawkConfig.LIVE_CONNECT_TIMEOUT, 5)).setItemSelected(true);
+        liveSettingGroupList.get(3).getLiveSettingItems().get(Hawk.get(HawkConfig.LIVE_CONNECT_TIMEOUT, 0)).setItemSelected(true);
         liveSettingGroupList.get(4).getLiveSettingItems().get(0).setItemSelected(Hawk.get(HawkConfig.LIVE_SHOW_TIME, false));
         liveSettingGroupList.get(4).getLiveSettingItems().get(1).setItemSelected(Hawk.get(HawkConfig.LIVE_SHOW_NET_SPEED, false));
         liveSettingGroupList.get(4).getLiveSettingItems().get(2).setItemSelected(Hawk.get(HawkConfig.LIVE_CHANNEL_REVERSE, false));
