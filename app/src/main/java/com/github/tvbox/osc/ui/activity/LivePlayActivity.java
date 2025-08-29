@@ -853,7 +853,7 @@ public class LivePlayActivity extends BaseActivity {
         if (!isCurrentLiveChannelValid()) {
             return;
         }
-        playChannel(currentChannelGroupIndex, currentLiveChannelIndex, true);
+        playChannel(currentChannelGroupIndex, currentLiveChannelIndex, false);
     }
 
     private void playPrevious() {
