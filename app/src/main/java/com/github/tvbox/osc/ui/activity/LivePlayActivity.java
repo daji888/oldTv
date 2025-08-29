@@ -814,15 +814,13 @@ public class LivePlayActivity extends BaseActivity {
         if (!changeSource) {
             currentChannelGroupIndex = channelGroupIndex;
             currentLiveChannelIndex = liveChannelIndex;
-         //   currentLiveChannelGroup = liveChannelGroupList.get(currentLiveChannelIndex);
             currentLiveChannelItem = getLiveChannels(currentChannelGroupIndex).get(currentLiveChannelIndex);
-            Hawk.put(HawkConfig.LIVE_GROUP, liveChannelGroupList.get(currentLiveChannelIndex).getGroupName());
+        //    Hawk.put(HawkConfig.LIVE_GROUP, liveChannelGroupList.get(currentLiveChannelIndex).getGroupName());
             Hawk.put(HawkConfig.LIVE_CHANNEL, currentLiveChannelItem.getChannelName());
             livePlayerManager.getLiveChannelPlayer(mVideoView, currentLiveChannelItem.getChannelName());
         } else {
-        //    currentChannelGroupIndex = channelGroupIndex;
-        //    currentLiveChannelGroupName = getLiveChannelGroupName(currentChannelGroupIndex);
-        //    Hawk.put(HawkConfig.LIVE_GROUP, currentLiveChannelGroupName);
+            currentChannelGroupIndex = channelGroupIndex;
+            Hawk.put(HawkConfig.LIVE_GROUP, liveChannelGroupList.get(currentLiveChannelIndex).getGroupName());
             Hawk.put(HawkConfig.LIVE_SOURCE, currentLiveChannelItem.getSourceIndex());
         }   
 
