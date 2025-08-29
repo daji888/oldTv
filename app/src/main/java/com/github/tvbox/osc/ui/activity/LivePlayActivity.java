@@ -814,7 +814,9 @@ public class LivePlayActivity extends BaseActivity {
         if (!changeSource) {
             currentChannelGroupIndex = channelGroupIndex;
             currentLiveChannelIndex = liveChannelIndex;
+            currentLiveChannelGroupName = getLiveChannelGroupName(currentChannelGroupIndex);
             currentLiveChannelItem = getLiveChannels(currentChannelGroupIndex).get(currentLiveChannelIndex);
+            Hawk.put(HawkConfig.LIVE_GROUP, currentLiveChannelGroupName.getGroupName());
             Hawk.put(HawkConfig.LIVE_CHANNEL, currentLiveChannelItem.getChannelName());
             livePlayerManager.getLiveChannelPlayer(mVideoView, currentLiveChannelItem.getChannelName());
         } else {
@@ -1981,12 +1983,13 @@ public class LivePlayActivity extends BaseActivity {
     }
 
     private void initLiveState() {
+        String lastChannelGroupName = Hawk.get(HawkConfig.LIVE_GROUP, "");
         String lastChannelName = Hawk.get(HawkConfig.LIVE_CHANNEL, "");
         int lastChannelGroupIndex = -1;
         int lastLiveChannelIndex = -1;
         for (LiveChannelGroup liveChannelGroup : liveChannelGroupList) {
             for (LiveChannelItem liveChannelItem : liveChannelGroup.getLiveChannels()) {
-                if (liveChannelItem.getChannelName().equals(lastChannelName)) {
+                if (liveChannelGroup.getGroupName().equals(lastChannelGroupName) && liveChannelItem.getChannelName().equals(lastChannelName) || liveChannelItem.getChannelName().equals(lastChannelName)) {
                     lastChannelGroupIndex = liveChannelGroup.getGroupIndex();
                     lastLiveChannelIndex = liveChannelItem.getChannelIndex();
                     break;
@@ -2234,7 +2237,11 @@ public class LivePlayActivity extends BaseActivity {
             }
             return false;
         }
-    } 
+    }
+
+    private String getLiveChannelGroupName(int groupIndex) {
+        return liveChannelGroupList.get(groupIndex).getGroupName();
+    }    
 
     private ArrayList<LiveChannelItem> getLiveChannels(int groupIndex) {
         if (!isNeedInputPassword(groupIndex)) {
