@@ -2243,7 +2243,7 @@ public class LivePlayActivity extends BaseActivity {
         }
     }
 
-    private ArrayList<LiveChannelGroup> getLiveChannelGroup(int groupIndex) {
+    private List<LiveChannelGroup> getLiveChannelGroup(int groupIndex) {
         if (!isNeedInputPassword(groupIndex)) {
             return liveChannelGroupList.get(groupIndex);
         } else {
