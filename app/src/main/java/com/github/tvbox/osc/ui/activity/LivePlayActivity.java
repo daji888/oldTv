@@ -817,7 +817,7 @@ public class LivePlayActivity extends BaseActivity {
             currentLiveChannelIndex = liveChannelIndex;
             currentLiveChannelGroupName = getLiveChannelGroupName(currentChannelGroupIndex);
             currentLiveChannelItem = getLiveChannels(currentChannelGroupIndex).get(currentLiveChannelIndex);
-            Hawk.put(HawkConfig.LIVE_GROUP, currentLiveChannelGroupName.getGroupName());
+            Hawk.put(HawkConfig.LIVE_GROUP, currentLiveChannelGroupName);
             Hawk.put(HawkConfig.LIVE_CHANNEL, currentLiveChannelItem.getChannelName());
             livePlayerManager.getLiveChannelPlayer(mVideoView, currentLiveChannelItem.getChannelName());
         } else {
