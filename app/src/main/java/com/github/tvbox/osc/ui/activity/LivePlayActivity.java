@@ -148,7 +148,7 @@ public class LivePlayActivity extends BaseActivity {
     private int currentLiveChannelIndex = -1;
     private int currentLiveLookBackIndex = -1;
     private int currentLiveChangeSourceTimes = 0;
-    private String currentLiveChannelGroupName;
+    private LiveChannelGroup currentLiveChannelGroup = null;
     private LiveChannelItem currentLiveChannelItem = null;
     private LivePlayerManager livePlayerManager = new LivePlayerManager();
     private ArrayList<Integer> channelGroupPasswordConfirmed = new ArrayList<>();
@@ -815,9 +815,9 @@ public class LivePlayActivity extends BaseActivity {
         if (!changeSource) {
             currentChannelGroupIndex = channelGroupIndex;
             currentLiveChannelIndex = liveChannelIndex;
-            currentLiveChannelGroupName = getLiveChannelGroupName(currentChannelGroupIndex);
+            currentLiveChannelGroup = getLiveChannelGroup(currentChannelGroupIndex);
             currentLiveChannelItem = getLiveChannels(currentChannelGroupIndex).get(currentLiveChannelIndex);
-            Hawk.put(HawkConfig.LIVE_GROUP, currentLiveChannelGroupName);
+            Hawk.put(HawkConfig.LIVE_GROUP, currentLiveChannelGroup.getChannelName());
             Hawk.put(HawkConfig.LIVE_CHANNEL, currentLiveChannelItem.getChannelName());
             livePlayerManager.getLiveChannelPlayer(mVideoView, currentLiveChannelItem.getChannelName());
         } else {
@@ -2243,8 +2243,12 @@ public class LivePlayActivity extends BaseActivity {
         }
     }
 
-    private String getLiveChannelGroupName(int groupIndex) {
-        return liveChannelGroupList.get(groupIndex).getGroupName();
+    private ArrayList<LiveChannelGroup> getLiveChannelGroup(int groupIndex) {
+        if (!isNeedInputPassword(groupIndex)) {
+            return liveChannelGroupList.get(groupIndex);
+        } else {
+            return new ArrayList<>();
+        }    
     }    
 
     private ArrayList<LiveChannelItem> getLiveChannels(int groupIndex) {
