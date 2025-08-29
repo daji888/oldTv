@@ -39,11 +39,12 @@ public class EXOmPlayer extends ExoMediaPlayer {
         LinkedHashMap<String, String> options = exocodecTmp.getOption();
         if (options != null) {
             for (String key : options.keySet()) {
-                if (key == "DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF") {
+                String extensionRendererMode = key.trim();
+                if (extensionRendererMode.equals("EXTENSION_RENDERER_MODE_OFF")) {
                     mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF);
-                } else if (key == "DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON") {
+                } else if (extensionRendererMode.equals("EXTENSION_RENDERER_MODE_ON")) {
                     mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON);
-                } else if (key == "DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER") {
+                } else if (extensionRendererMode.equals("EXTENSION_RENDERER_MODE_PREFER")) {
                     mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER);
                 }    
             }
