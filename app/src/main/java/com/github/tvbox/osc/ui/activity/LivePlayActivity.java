@@ -853,7 +853,7 @@ public class LivePlayActivity extends BaseActivity {
         if (!isCurrentLiveChannelValid()) {
             return;
         }
-        playChannel(currentChannelGroupIndex, currentLiveChannelIndex, true);
+        playChannel(currentChannelGroupIndex, currentLiveChannelIndex, false);
     }
 
     private void playPrevious() {
@@ -1329,12 +1329,7 @@ public class LivePlayActivity extends BaseActivity {
                     case MyVideoView.STATE_ERROR:
                     case MyVideoView.STATE_PLAYBACK_COMPLETED:
                         mHandler.removeCallbacks(mConnectTimeoutReplayRun);
-                        if (Hawk.get(HawkConfig.LIVE_CONNECT_TIMEOUT, 0) == 0 ) {
-                            //缓冲30s重新播放
-                            mHandler.postDelayed(mConnectTimeoutReplayRun, 30 * 1000L);
-                        } else {
-                            mHandler.post(mConnectTimeoutChangeSourceRun);
-                        }
+                        mHandler.post(mConnectTimeoutChangeSourceRun);
                         break;
                     case MyVideoView.STATE_PREPARING:
                     case MyVideoView.STATE_BUFFERING:
