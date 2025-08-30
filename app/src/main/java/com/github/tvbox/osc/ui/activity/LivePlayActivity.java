@@ -1988,9 +1988,16 @@ public class LivePlayActivity extends BaseActivity {
         int lastLiveChannelIndex = -1;
         for (LiveChannelGroup liveChannelGroup : liveChannelGroupList) {
             for (LiveChannelItem liveChannelItem : liveChannelGroup.getLiveChannels()) {
-                if (liveChannelGroup.getGroupName().equals(lastChannelGroupName) && liveChannelItem.getChannelName().equals(lastChannelName) || liveChannelItem.getChannelName().equals(lastChannelName)) {
+                if (liveChannelGroup.getGroupName().equals(lastChannelGroupName) && liveChannelItem.getChannelName().equals(lastChannelName)) {
+                    Integer[] groupChannelIndex = getNextChannel(0);
+                    lastChannelGroupIndex = groupChannelIndex[0];
+                    lastLiveChannelIndex = groupChannelIndex[1];
+                //    lastChannelGroupIndex = liveChannelGroup.getGroupIndex();
+                //    lastLiveChannelIndex = liveChannelItem.getChannelIndex();
+                } else if (liveChannelItem.getChannelName().equals(lastChannelName)) {
                     lastChannelGroupIndex = liveChannelGroup.getGroupIndex();
                     lastLiveChannelIndex = liveChannelItem.getChannelIndex();
+                }    
                     break;
                 }
             }
