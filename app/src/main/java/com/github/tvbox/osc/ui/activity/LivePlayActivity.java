@@ -1995,11 +1995,9 @@ public class LivePlayActivity extends BaseActivity {
                 } else if (liveChannelItem.getChannelName().equals(lastChannelName)) {
                     lastChannelGroupIndex = liveChannelGroup.getGroupIndex();
                     lastLiveChannelIndex = liveChannelItem.getChannelIndex();
-                }    
+                }
                 break;
             }
-            if (lastChannelGroupIndex != -1) break;
-        }
         if (lastChannelGroupIndex == -1) {
             lastChannelGroupIndex = getFirstNoPasswordChannelGroup();
             if (lastChannelGroupIndex == -1)
