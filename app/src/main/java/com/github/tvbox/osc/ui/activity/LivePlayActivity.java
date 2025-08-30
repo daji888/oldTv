@@ -1998,6 +1998,8 @@ public class LivePlayActivity extends BaseActivity {
                 }
                 break;
             }
+            if (lastChannelGroupIndex != -1) break;
+        }
         if (lastChannelGroupIndex == -1) {
             lastChannelGroupIndex = getFirstNoPasswordChannelGroup();
             if (lastChannelGroupIndex == -1)
