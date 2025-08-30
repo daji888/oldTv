@@ -1992,14 +1992,11 @@ public class LivePlayActivity extends BaseActivity {
                     Integer[] groupChannelIndex = getNextChannel(0);
                     lastChannelGroupIndex = groupChannelIndex[0];
                     lastLiveChannelIndex = groupChannelIndex[1];
-                //    lastChannelGroupIndex = liveChannelGroup.getGroupIndex();
-                //    lastLiveChannelIndex = liveChannelItem.getChannelIndex();
                 } else if (liveChannelItem.getChannelName().equals(lastChannelName)) {
                     lastChannelGroupIndex = liveChannelGroup.getGroupIndex();
                     lastLiveChannelIndex = liveChannelItem.getChannelIndex();
                 }    
-                    break;
-                }
+                break;
             }
             if (lastChannelGroupIndex != -1) break;
         }
