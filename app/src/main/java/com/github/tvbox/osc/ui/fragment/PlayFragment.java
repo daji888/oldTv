@@ -1712,6 +1712,10 @@ public class PlayFragment extends BaseLazyFragment {
          playUrl(rs.optString("url", ""), headers);
      }
 
+    public MyVideoView getPlayer() {
+        return mVideoView;
+    }
+
     // webview
     private XWalkView mXwalkWebView;
     private WebView mSysWebView;
