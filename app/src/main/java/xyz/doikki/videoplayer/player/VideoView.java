@@ -23,4 +23,9 @@ public class VideoView extends BaseVideoView<AbstractPlayer> {
     public VideoView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
+
+    public AbstractPlayer getMediaPlayer() {
+        return mMediaPlayer;
+    }
+    
 }
