@@ -422,8 +422,7 @@ public class LivePlayActivity extends BaseActivity {
                     Date date = new Date();
                     int size = arrayList.size() - 1;
                     while (size >= 0) {
-                        if (date.after(((Epginfo) arrayList.get(size)).startdateTime) & date.before(((Epginfo) arrayList.get(size)).enddateTime)) {
-                    //    if (new Date().compareTo(((Epginfo) arrayList.get(size)).startdateTime) >= 0) {
+                        if (new Date().compareTo(((Epginfo) arrayList.get(size)).startdateTime) >= 0 & new Date().compareTo(((Epginfo) arrayList.get(size)).enddateTime) <= 0) {
                             tip_epg1.setText(((Epginfo) arrayList.get(size)).start + " - " + ((Epginfo) arrayList.get(size)).end);
                             ((TextView) findViewById(R.id.tv_current_program_name)).setText(((Epginfo) arrayList.get(size)).title);
                             if (size != arrayList.size() - 1) {
