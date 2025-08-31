@@ -98,7 +98,6 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.github.tvbox.osc.player.MyVideoView;
 import com.github.tvbox.osc.player.TrackInfo;
 import com.github.tvbox.osc.player.TrackInfoBean;
 import com.github.tvbox.osc.player.EXOmPlayer;
@@ -110,6 +109,7 @@ import androidx.annotation.NonNull;
 import org.jetbrains.annotations.NotNull;
 
 import xyz.doikki.videoplayer.player.AbstractPlayer;
+import xyz.doikki.videoplayer.player.VideoView;
 import static xyz.doikki.videoplayer.util.PlayerUtils.stringForTime;
 
 /**
@@ -119,7 +119,7 @@ import static xyz.doikki.videoplayer.util.PlayerUtils.stringForTime;
  */
 public class LivePlayActivity extends BaseActivity {
     public static Context context;
-    private MyVideoView mVideoView;
+    private VideoView mVideoView;
     private TextView tvChannelInfo;
     private TextView tvTime;
     private TextView tvNetSpeed;
@@ -1311,27 +1311,27 @@ public class LivePlayActivity extends BaseActivity {
             public void playStateChanged(int playState) {
                 mHandler.removeCallbacks(mConnectTimeoutChangeSourceRun);
                 switch (playState) {
-                    case MyVideoView.STATE_IDLE:
-                    case MyVideoView.STATE_PAUSED:
+                    case VideoView.STATE_IDLE:
+                    case VideoView.STATE_PAUSED:
                         break;
-                    case MyVideoView.STATE_PREPARED:
+                    case VideoView.STATE_PREPARED:
                         tv_play_load_net_speed.setVisibility(View.GONE);
                         break;
-                    case MyVideoView.STATE_BUFFERED:
+                    case VideoView.STATE_BUFFERED:
                         tv_play_load_net_speed.setVisibility(View.GONE);
                         mHandler.removeCallbacks(mUpdatetv_play_load_net_speedRun);
                         break;
-                    case MyVideoView.STATE_PLAYING:
+                    case VideoView.STATE_PLAYING:
                         currentLiveChangeSourceTimes = 0;
                         mHandler.removeCallbacks(mConnectTimeoutReplayRun);
                         break;
-                    case MyVideoView.STATE_ERROR:
-                    case MyVideoView.STATE_PLAYBACK_COMPLETED:
+                    case VideoView.STATE_ERROR:
+                    case VideoView.STATE_PLAYBACK_COMPLETED:
                         mHandler.removeCallbacks(mConnectTimeoutReplayRun);
                         mHandler.post(mConnectTimeoutChangeSourceRun);
                         break;
-                    case MyVideoView.STATE_PREPARING:
-                    case MyVideoView.STATE_BUFFERING:
+                    case VideoView.STATE_PREPARING:
+                    case VideoView.STATE_BUFFERING:
                         mHandler.removeCallbacks(mConnectTimeoutReplayRun);
                         if (((View) findViewById(R.id.tv_pause_container)).getVisibility() != View.VISIBLE) {
                             tv_play_load_net_speed.setVisibility(View.VISIBLE);
