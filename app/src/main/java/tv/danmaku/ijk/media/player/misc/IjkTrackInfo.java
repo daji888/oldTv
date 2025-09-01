@@ -84,18 +84,14 @@ public class IjkTrackInfo implements ITrackInfo {
                 out.append(mStreamMeta.getSampleRateInline());
                 out.append("，");
                 out.append(mStreamMeta.getBitrateInline());
-                out.append("，");
-                out.append(getLanguage());
                 break;
             case MEDIA_TRACK_TYPE_TIMEDTEXT:
                 out.append("TIMEDTEXT");
                 out.append("，");
-                out.append(getLanguage());
+                out.append(mStreamMeta.mLanguage);
                 break;
             case MEDIA_TRACK_TYPE_SUBTITLE:
                 out.append("SUBTITLE");
-                out.append("，");
-                out.append(getLanguage());
                 break;
             default:
                 out.append("未知");

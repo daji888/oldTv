@@ -16,14 +16,12 @@ public class IjkMediaMeta {
     public static final String IJKM_KEY_VIDEO_STREAM = "video";
     public static final String IJKM_KEY_AUDIO_STREAM = "audio";
     public static final String IJKM_KEY_TIMEDTEXT_STREAM = "timedtext";
-    public static final String IJKM_KEY_SUBTITLE_STREAM = "timedtext";
 
     // stream meta
     public static final String IJKM_KEY_TYPE = "type";
     public static final String IJKM_VAL_TYPE__VIDEO = "video";
     public static final String IJKM_VAL_TYPE__AUDIO = "audio";
     public static final String IJKM_VAL_TYPE__TIMEDTEXT = "timedtext";
-    public static final String IJKM_VAL_TYPE__SUBTITLE = "timedtext";
     public static final String IJKM_VAL_TYPE__UNKNOWN = "unknown";
     public static final String IJKM_KEY_LANGUAGE = "language";
 
@@ -195,6 +193,9 @@ public class IjkMediaMeta {
     private static String convertLang(String text) {
         if ("chi".equals(text)) return "中文";
         if ("zho".equals(text)) return "中文";
+        if ("chs".equals(text)) return "中文";
+        if ("cht".equals(text)) return "繁中";
+        if ("en".equals(text)) return "英语";
         if ("eng".equals(text)) return "英语";
         if ("jpn".equals(text)) return "日语";
         if ("kor".equals(text)) return "韩语";
