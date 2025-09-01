@@ -62,7 +62,7 @@ public class Connect {
     }
 
     private static Request getRequest(String url, Req req, Headers headers) {
-        if (req.getMethod().equalsIgnoreCase("post")) {
+        if (req.getMethod().equalsIgnoreCase("post") && !req.getPostType().equals("post-form")) {
             return new Request.Builder().url(url).tag("js_okhttp_tag").headers(headers).post(getPostBody(req, headers.get(HttpHeaders.CONTENT_TYPE))).build();
         } else if (req.getMethod().equalsIgnoreCase("header")) {
             return new Request.Builder().url(url).tag("js_okhttp_tag").headers(headers).head().build();
@@ -75,16 +75,11 @@ public class Connect {
         if (req.getData() != null && req.getPostType().equals("json")) return getJsonBody(req);
         if (req.getData() != null && req.getPostType().equals("form")) return getFormBody(req);
         if (req.getData() != null && req.getPostType().equals("form-data")) return getFormDataBody(req);
-        if (req.getData() != null && req.getPostType().equals("raw")) return getRawBody(req);
         if (req.getBody() != null && contentType != null) return RequestBody.create(MediaType.get(contentType), req.getBody());
         return RequestBody.create(null, "");
     }
 
     private static RequestBody getJsonBody(Req req) {
-        return RequestBody.create(MediaType.get("application/json; charset=utf-8"), req.getData().toString());
-    }
-
-    private static RequestBody getRawBody(Req req) {
         return RequestBody.create(MediaType.get("application/json; charset=utf-8"), req.getData().toString());
     }
 
