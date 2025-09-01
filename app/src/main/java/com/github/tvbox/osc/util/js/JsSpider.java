@@ -3,6 +3,7 @@ package com.github.tvbox.osc.util.js;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Base64;
+
 import com.github.catvod.crawler.Spider;
 import com.github.tvbox.osc.util.FileUtils;
 import com.github.tvbox.osc.util.LOG;
@@ -355,23 +356,28 @@ public class JsSpider extends Spider {
         JSObject object = new JSUtils<String>().toObj(ctx, params);
         JSONArray array = ((JSArray) jsObject.getJSFunction("proxy").call(object)).toJsonArray();
         boolean headerAvailable = array.length() > 3 && array.opt(3) != null;
-        Object[] result = new Object[4];
-        result[0] = array.opt(0);
-        result[1] = array.opt(1);
-        result[2] = getStream(array.opt(2));
-        result[3] = headerAvailable ? getHeader(array.opt(3)) : null;
+        int code = array.optInt(0);
+        String mime = array.optString(1);
+        ByteArrayInputStream input = getStream(array.opt(2));
+        Map<String, String> headers = null;
+        if (array.length() > 3) {
+            headers = headerAvailable ? getHeader(array.opt(3)) : null;
+        }
         if (array.length() > 4) {
             try {
-                if ( array.optInt(4) == 1) {
+                int type = array.optInt(4);
+                if (type == 1) {
                     String content = array.optString(2);
-                    if (content.contains("base64,")) content = content.substring(content.indexOf("base64,") + 7);
-                    result[2] = new ByteArrayInputStream(Base64.decode(content, Base64.DEFAULT));
+                    if (content.contains("base64,"))
+                        content = content.substring(content.indexOf("base64,") + 7);
+                    LOG.e(content);
+                    input = new ByteArrayInputStream(Base64.decode(content, Base64.DEFAULT));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        return result;
+        return new Object[]{code, mime, input, headers};
     }
 
     private Map<String, String> getHeader(Object headerRaw) {
@@ -422,20 +428,6 @@ public class JsSpider extends Spider {
         }
         return result;
     }
-
-   /* private Object[] proxy2(Map<String, String> params) throws Exception {
-        String url = params.get("url");
-        String header = params.get("header");
-        JSArray array = submit(() -> new JSUtils<String>().toArray(ctx, Arrays.asList(url.split("/")))).get();
-        Object object = submit(() -> ctx.parse(header)).get();
-        String json = (String) call("proxy", array, object);
-        Res res = Res.objectFrom(json);
-        Object[] result = new Object[3];
-        result[0] = 200;
-        result[1] = "application/octet-stream";
-        result[2] = new ByteArrayInputStream(Base64.decode(res.getContent(), Base64.DEFAULT));
-        return result;
-    }*/
 
     private ByteArrayInputStream getStream(Object o) {
         if (o instanceof JSONArray) {
