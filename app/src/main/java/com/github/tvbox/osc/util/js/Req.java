@@ -74,6 +74,13 @@ public class Req {
         return Json.toMap(getHeaders());
     }
 
+    public String getContentType() {
+        Map<String, String> header = getHeader();
+        List<String> keys = Arrays.asList("Content-Type", "content-type");
+        for (String key : keys) if (header.containsKey(key)) return Objects.requireNonNull(header.get(key));
+        return "application/json";
+    }
+    
     public String getCharset() {
         Map<String, String> header = getHeader();
         List<String> keys = Arrays.asList("Content-Type", "content-type");
