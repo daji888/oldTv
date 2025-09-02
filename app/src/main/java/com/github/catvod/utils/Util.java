@@ -158,4 +158,18 @@ public class Util {
         int group = (int) (Math.log10(size) / Math.log10(1024));
         return "[" + new DecimalFormat("###0.#").format(size / Math.pow(1024, group)) + " " + UNITS[group] + "] ";
     }
+
+    public static String getIp() {
+        try {
+            String ip = getHostAddress("wlan");
+            if (!ip.isEmpty()) return ip;
+            ip = getHostAddress("eth");
+            if (!ip.isEmpty()) return ip;
+            ip = getWifiAddress();
+            if (!ip.isEmpty()) return ip;
+            return getHostAddress("");
+        } catch (Exception e) {
+            return "";
+        }
+    }
 }
