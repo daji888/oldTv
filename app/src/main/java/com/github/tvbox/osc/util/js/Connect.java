@@ -72,6 +72,7 @@ public class Connect {
     }
 
     private static RequestBody getPostBody(Req req, String contentType) {
+        if (req.getData() != null && req.getContentType().equals("application/json")) return getJsonBody(req);
     //    if (req.getData() != null && req.getPostType().equals("json")) return getJsonBody(req);
     //    if (req.getData() != null && req.getPostType().equals("form")) return getFormBody(req);
     //    if (req.getData() != null && req.getPostType().equals("form-data")) return getFormDataBody(req);
@@ -79,11 +80,11 @@ public class Connect {
         return RequestBody.create(null, "");
     }
 
-  /*  private static RequestBody getJsonBody(Req req) {
+    private static RequestBody getJsonBody(Req req) {
         return RequestBody.create(req.getData().toString(), MediaType.get("application/json; charset=utf-8"));
     }
 
-    private static RequestBody getFormBody(Req req) {
+  /*  private static RequestBody getFormBody(Req req) {
         FormBody.Builder formBody = new FormBody.Builder();
         Map<String, String> params = Json.toMap(req.getData());
         for (String key : params.keySet()) formBody.add(key, params.get(key));
