@@ -1,6 +1,8 @@
 package com.github.catvod.utils;
 
+import android.content.Context;
 import android.net.Uri;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.provider.Settings;
 import android.text.TextUtils;
@@ -12,11 +14,17 @@ import com.google.common.net.HttpHeaders;
 import java.io.File;
 import java.io.FileInputStream;
 import java.math.BigInteger;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
+import java.util.Formatter;
+import java.util.Locale;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.Formatter;
 
 public class Util {
 
@@ -157,5 +165,39 @@ public class Util {
         if (size <= 0) return "";
         int group = (int) (Math.log10(size) / Math.log10(1024));
         return "[" + new DecimalFormat("###0.#").format(size / Math.pow(1024, group)) + " " + UNITS[group] + "] ";
+    }
+
+    public static String getIp() {
+        try {
+            String ip = getHostAddress("wlan");
+            if (!ip.isEmpty()) return ip;
+            ip = getHostAddress("eth");
+            if (!ip.isEmpty()) return ip;
+            ip = getWifiAddress();
+            if (!ip.isEmpty()) return ip;
+            return getHostAddress("");
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    private static String getWifiAddress() {
+        WifiManager manager = (WifiManager) Init.context().getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        int ip = manager.getConnectionInfo().getIpAddress();
+        return ip == 0 ? "" : String.format(Locale.getDefault(), "%d.%d.%d.%d", ip & 0xFF, (ip >> 8) & 0xFF, (ip >> 16) & 0xFF, (ip >> 24) & 0xFF);
+    }
+
+    private static String getHostAddress(String keyword) throws SocketException {
+        for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
+            NetworkInterface nif = en.nextElement();
+            if (!keyword.isEmpty() && !nif.getName().startsWith(keyword)) continue;
+            for (Enumeration<InetAddress> addresses = nif.getInetAddresses(); addresses.hasMoreElements(); ) {
+                InetAddress addr = addresses.nextElement();
+                if (!addr.isLoopbackAddress() && addr instanceof Inet4Address) {
+                    return addr.getHostAddress();
+                }
+            }
+        }
+        return "";
     }
 }

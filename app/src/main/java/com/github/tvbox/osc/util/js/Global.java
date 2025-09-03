@@ -3,8 +3,11 @@ package com.github.tvbox.osc.util.js;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
+import com.github.catvod.net.OkHttp;
+import com.github.catvod.utils.Util;
 import com.github.tvbox.osc.server.ControlManager;
 import com.github.tvbox.osc.util.js.rsa.RSAEncrypt;
+import com.github.tvbox.osc.util.Proxy;
 import com.whl.quickjs.wrapper.ContextSetter;
 import com.whl.quickjs.wrapper.Function;
 import com.whl.quickjs.wrapper.JSArray;
@@ -27,6 +30,7 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 public class Global {
+    private QuickJSContext ctx;
     private QuickJSContext runtime;
     public ExecutorService executor;
     private final Timer timer;
@@ -79,6 +83,13 @@ public class Global {
         return new JSUtils<String>().toArray(runtime, HtmlParser.parseDomForList(html, p1, list_text, list_url, add_url));
     }
 
+    @Keep
+    @Function
+    public JSArray batchFetch(JSObject options) {
+        String json = OkHttp.stringPost("http://" + Util.getIp() + ":" + Proxy.getPort() + "/bf", ((JSArray) options).toJsonArray().toString());
+        return (JSArray) ctx.parse(json);
+    }
+    
     @Keep
     @Function
     public String s2t(String text) {
