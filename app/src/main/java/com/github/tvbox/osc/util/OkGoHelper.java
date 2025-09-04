@@ -72,7 +72,7 @@ public class OkGoHelper {
             + "{\"name\": \"腾讯\", \"url\": \"https://doh.pub/dns-query\"},"
             + "{\"name\": \"阿里\", \"url\": \"https://dns.alidns.com/dns-query\"},"
             + "{\"name\": \"360\", \"url\": \"https://doh.360.cn/dns-query\"},"
-            + "{\"name\": \"114\", \"ips\": [\"114.114.114.114\", \"114.114.115.115\"]},"
+    //        + "{\"name\": \"114\", \"ips\": [\"114.114.114.114\", \"114.114.115.115\"]},"
             + "{\"name\": \"DNSWatch\", \"url\": \"https://resolver2.dns.watch/dns-query\"},"
             + "{\"name\": \"Google\", \"url\": \"https://dns.google/dns-query\"},"
             + "{\"name\": \"AdGuard\", \"url\": \"https://dns.adguard.com/dns-query\"},"
@@ -176,11 +176,12 @@ public class OkGoHelper {
                 JsonObject dnsConfig = jsonArray.get(i).getAsJsonObject();
                 String name = dnsConfig.has("name") ? dnsConfig.get("name").getAsString() : "未知";
                 dnsHttpsList.add(name);
-                if (dnsConfig.has("url")) {
+                if (dohSelector == i + 1) ips = dnsConfig.has("ips") ? dnsConfig.getAsJsonArray("ips") : null;
+            /*    if (dnsConfig.has("url")) {
                     if (dohSelector == i + 1) ips = dnsConfig.has("ips") ? dnsConfig.getAsJsonArray("ips") : null;
                 }  else {
                     if (dohSelector == i) ips = dnsConfig.has("ips") ? dnsConfig.getAsJsonArray("ips") : null;
-                }
+                } */
             }
             if (dohSelector + 1 > dnsHttpsList.size()) Hawk.put(HawkConfig.DOH_URL, 0);
         } catch (Exception e) {
