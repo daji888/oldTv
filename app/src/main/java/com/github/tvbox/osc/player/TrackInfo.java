@@ -40,16 +40,8 @@ public class TrackInfo {
 
     public int getSelected(List<TrackInfoBean> list, boolean track) {
         int i = 0;
-        for (TrackInfoBean audio : list) {
-            if (audio.selected) return track ? audio.trackId : i;
-            i++;
-        }
-        for (TrackInfoBean video : list) {
-            if (video.selected) return track ? video.trackId : i;
-            i++;
-        }
-        for (TrackInfoBean subtitle : list) {
-            if (subtitle.selected) return track ? subtitle.trackId : i;
+        for (TrackInfoBean trackInfoBean : list) {
+            if (trackInfoBean.selected) return track ? trackInfoBean.trackId : i;
             i++;
         }
         return 99999;

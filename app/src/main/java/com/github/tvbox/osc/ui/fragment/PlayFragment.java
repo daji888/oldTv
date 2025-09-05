@@ -887,7 +887,7 @@ public class PlayFragment extends BaseLazyFragment {
         TrackInfo trackInfo = null;
         if (mediaPlayer instanceof IjkmPlayer) {
             //默认选中第一个音轨 一般第一个音轨是国语
-        //    trackInfo = ((IjkmPlayer) mediaPlayer).getTrackInfo();
+            trackInfo = ((IjkmPlayer) mediaPlayer).getTrackInfo();
             if (trackInfo != null && trackInfo.getAudio().size() > 1) {
                 int firsIndex = trackInfo.getAudio().get(0).trackId;
                 ((IjkmPlayer) mediaPlayer).setTrack(firsIndex);
