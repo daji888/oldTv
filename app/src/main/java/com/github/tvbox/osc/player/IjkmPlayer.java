@@ -259,7 +259,12 @@ public class IjkmPlayer extends IjkPlayer {
     }
 
     public void setTrack(int trackIndex) {
-        mMediaPlayer.selectTrack(trackIndex);
+        int audioSelected = mMediaPlayer.getSelectedTrack(ITrackInfo.MEDIA_TRACK_TYPE_AUDIO);
+        int videoSelected = mMediaPlayer.getSelectedTrack(ITrackInfo.MEDIA_TRACK_TYPE_VIDEO);
+        int subtitleSelected = mMediaPlayer.getSelectedTrack(ITrackInfo.MEDIA_TRACK_TYPE_TIMEDTEXT);
+        if (trackIndex != audioSelected && trackIndex != videoSelected && trackIndex != subtitleSelected) {
+            mMediaPlayer.selectTrack(trackIndex);
+        }
     }
 
     public void setOnTimedTextListener(IMediaPlayer.OnTimedTextListener listener) {
