@@ -133,13 +133,8 @@ public class App extends MultiDexApplication {
         return AppManager.getInstance().currentActivity();
     }
 
-    public void setDashData(String type, String data) {
-        dashDataType = type;
+    public void setDashData(String data) {
         dashData = data;
-    }
-
-    public String getDashDataType() {
-        return dashDataType;
     }
     
     public String getDashData() {
