@@ -861,7 +861,7 @@ public class PlayFragment extends BaseLazyFragment {
                             PlayerHelper.updateCfg(mVideoView, mVodPlayerCfg, 2);
                             App.getInstance().setDashData("application/vnd.apple.mpegurl", url.split("base64,")[1]);
                             url = ControlManager.get().getAddress(true) + "dash/proxy.m3u8";    
-                        } else if (url.contains(".mpd") || url.contains("type=mpd")) {
+                        } else if (url.contains("mpd")) {
                             PlayerHelper.updateCfg(mVideoView, mVodPlayerCfg, 2);
                         } else if (url.contains(String.valueOf(P2PClass.port))) {
                             PlayerHelper.updateCfg(mVideoView, mVodPlayerCfg, 1);    
