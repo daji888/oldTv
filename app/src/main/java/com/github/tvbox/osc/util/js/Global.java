@@ -30,7 +30,6 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 public class Global {
-    private QuickJSContext ctx;
     private QuickJSContext runtime;
     public ExecutorService executor;
     private final Timer timer;
@@ -87,7 +86,7 @@ public class Global {
     @Function
     public JSArray batchFetch(JSObject options) {
         String json = OkHttp.stringPost("http://" + Util.getIp() + ":" + Proxy.getPort() + "/bf", ((JSArray) options).toJsonArray().toString());
-        return (JSArray) ctx.parse(json);
+        return (JSArray) runtime.parse(json);
     }
     
     @Keep
