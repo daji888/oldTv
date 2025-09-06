@@ -109,10 +109,8 @@ public final class ExoMediaSourceHelper {
         if ("rtmp".equals(contentUri.getScheme())) {
             return new ProgressiveMediaSource.Factory(new RtmpDataSource.Factory())
                     .createMediaSource(MediaItem.fromUri(contentUri));
-        } else if ("rtsp".equals(contentUri.getScheme())) {
-            return new RtspMediaSource.Factory().createMediaSource(MediaItem.fromUri(contentUri));
         }
-        int contentType = inferContentType(uri);
+        int contentType = Util.inferContentType(uri);
         DataSource.Factory factory;
         if (isCache) {
             factory = getCacheDataSourceFactory();
@@ -128,6 +126,8 @@ public final class ExoMediaSourceHelper {
             return new DefaultMediaSourceFactory(getDataSourceFactory(), getExtractorsFactory()).createMediaSource(getMediaItem(uri, errorCode));
         }
         switch (contentType) {
+            case C.CONTENT_TYPE_RTSP:
+                return new RtspMediaSource.Factory().createMediaSource(MediaItem.fromUri(contentUri));    
             case C.CONTENT_TYPE_DASH:
                 return new DashMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));
             case C.CONTENT_TYPE_HLS:
@@ -141,20 +141,6 @@ public final class ExoMediaSourceHelper {
             default:
             case C.CONTENT_TYPE_OTHER:
                 return new ProgressiveMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));
-        }
-    }
-
-    @SuppressLint("UnsafeOptInUsageError")
-    private int inferContentType(String fileName) {
-        fileName = fileName.toLowerCase();
-        if (fileName.contains(".mpd") || fileName.contains("type=mpd")) {
-            return C.CONTENT_TYPE_DASH;
-        } else if (fileName.contains("m3u8")) {
-            return C.CONTENT_TYPE_HLS;
-        } else if (fileName.contains("ism") || fileName.contains("isml") || fileName.contains("ism/Manifest")) {
-            return C.CONTENT_TYPE_SS;    
-        } else {
-            return C.CONTENT_TYPE_OTHER;
         }
     }
 
