@@ -307,16 +307,6 @@ public class RemoteServer extends NanoHTTPD {
             } else if (session.getMethod() == Method.POST) {
                 Map<String, String> files = new HashMap<String, String>();
                 try {
-                    parse(session, files);
-                    String postData = files.get("postData");
-                    if (fileName.startsWith("/bf") && postData != null) {
-                        LOG.e(postData);
-                        return proxyMultiRequest(JsonParser.parseString(postData).getAsJsonArray());
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }    
-                try {
                     if (session.getHeaders().containsKey("content-type")) {
                         String hd = session.getHeaders().get("content-type");
                         if (hd != null) {
@@ -330,11 +320,20 @@ public class RemoteServer extends NanoHTTPD {
                             }
                         }
                     }
-                    session.parseBody(files);
-                } catch (IOException IOExc) {
+               //     session.parseBody(files);
+                    parse(session, files);
+                    String postData = files.get("postData");
+                    if (fileName.startsWith("/bf") && postData != null) {
+                        LOG.e(postData);
+                        return proxyMultiRequest(JsonParser.parseString(postData).getAsJsonArray());
+                    }
+            /*    } catch (IOException IOExc) {
                     return createPlainTextResponse(NanoHTTPD.Response.Status.INTERNAL_ERROR, "SERVER INTERNAL ERROR: IOException: " + IOExc.getMessage());
                 } catch (NanoHTTPD.ResponseException rex) {
                     return createPlainTextResponse(rex.getStatus(), rex.getMessage());
+                }*/
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
                 for (RequestProcess process : postRequestList) {
                     if (process.isRequest(session, fileName)) {
