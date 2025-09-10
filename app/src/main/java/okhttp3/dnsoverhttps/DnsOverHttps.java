@@ -33,7 +33,6 @@ import okhttp3.Dns;
 import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
-import okhttp3.internal.Util;
 import okhttp3.Protocol;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -256,11 +255,17 @@ public class DnsOverHttps implements Dns {
         UnknownHostException unknownHostException = new UnknownHostException(hostname);
         unknownHostException.initCause(failure);
 
-        Util.withSuppressed(unknownHostException, failures);
+        withSuppressed(unknownHostException, failures);
 
         throw unknownHostException;
     }
 
+    private static Throwable withSuppressed(Exception exception, List<Exception> suppressed) {
+        for (Exception e : suppressed) {
+            exception.addSuppressed(e);
+        }
+        return exception;
+    }
 
     private @Nullable
     Response getCacheOnlyResponse(Request request) {
