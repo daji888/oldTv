@@ -19,20 +19,20 @@ import com.lzy.okgo.model.HttpHeaders;
 import com.orhanobut.hawk.Hawk;
 
 import java.io.File;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.HashSet;
 import java.util.HashMap;
-import java.util.concurrent.TimeUnit;
+import java.util.List;
 import java.util.logging.Level;
-import java.util.Objects;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -42,10 +42,10 @@ import javax.net.ssl.SSLSocketFactory;
 import okhttp3.Cache;
 import okhttp3.ConnectionSpec;
 import okhttp3.Dns;
+import okhttp3.dnsoverhttps.DnsOverHttps;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
-import okhttp3.dnsoverhttps.DnsOverHttps;
-import okhttp3.internal.Util;
+
 import xyz.doikki.videoplayer.exo.ExoMediaSourceHelper;
 
 public class OkGoHelper {
@@ -117,7 +117,12 @@ public class OkGoHelper {
     public static ArrayList<String> dnsHttpsList = new ArrayList<>();
 
     public static List<ConnectionSpec> getConnectionSpec() {
-        return Util.immutableListOf(RESTRICTED_TLS, MODERN_TLS, COMPATIBLE_TLS, CLEARTEXT);
+        return immutableListOf(RESTRICTED_TLS, MODERN_TLS, COMPATIBLE_TLS, CLEARTEXT);
+    }
+
+    @SafeVarargs
+    public static <T> List<T> immutableListOf(T... elements) {
+        return Collections.unmodifiableList(Arrays.asList(elements));
     }
 
     public static boolean is_doh = false;
@@ -331,7 +336,7 @@ public class OkGoHelper {
             th.printStackTrace();
         }
 
-        HttpHeaders.setUserAgent(Util.userAgent);
+        HttpHeaders.setUserAgent(USER_AGENT);
         OkHttpClient okHttpClient = builder.build();
         OkGo.getInstance().setOkHttpClient(okHttpClient);
 
@@ -342,6 +347,8 @@ public class OkGoHelper {
 
         initExoOkHttpClient();        
     }
+
+    private static final String USER_AGENT = "okhttp/" + "5.1.0";
 
     private static synchronized OkHttpClient.Builder setOkHttpSsl(OkHttpClient.Builder builder) {
         try {
