@@ -85,7 +85,7 @@ public class ApiConfig {
     private JarLoader jarLoader = new JarLoader();
     private JsLoader jsLoader = new JsLoader();
 
-    private String userAgent = "okhttp/3.15";
+    private String userAgent = "okhttp/5.1.0";
 
     private String requestAccept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9";
 
@@ -384,7 +384,7 @@ public class ApiConfig {
             SourceBean sb = new SourceBean();
             String siteKey = obj.get("key").getAsString().trim();
             sb.setKey(siteKey);
-            sb.setName(obj.has("name")?obj.get("name").getAsString().trim():siteKey);
+            sb.setName(obj.has("name") ? obj.get("name").getAsString().trim() : siteKey);
             sb.setType(obj.get("type").getAsInt());
             sb.setApi(obj.get("api").getAsString().trim());
             sb.setSearchable(DefaultConfig.safeJsonInt(obj, "searchable", 1));
@@ -659,7 +659,7 @@ public class ApiConfig {
     }
 
     private void putLiveHistory(String url) {
-        List<LiveSourceBean> lives = ApiConfig.get().getSwitchLiveSourceBeanList();
+        List<LiveSourceBean> lives = getSwitchLiveSourceBeanList();
         ArrayList<String> history = Hawk.get(HawkConfig.LIVE_HISTORY, new ArrayList<String>());
         for (LiveSourceBean live : lives) {
             if (!live.getLiveUrl().isEmpty()) {
@@ -676,7 +676,7 @@ public class ApiConfig {
         if (!epg.isEmpty()) {
             ArrayList<String> history = Hawk.get(HawkConfig.EPG_HISTORY, new ArrayList<String>());
             if (!history.contains(epg))
-                history.add(0, epg);
+                history.add(epg);
             if (history.size() > 30)
                 history.remove(30);
             Hawk.put(HawkConfig.EPG_HISTORY, history);
