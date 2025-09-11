@@ -51,6 +51,8 @@ import xyz.doikki.videoplayer.exo.ExoMediaSourceHelper;
 public class OkGoHelper {
     public static final long DEFAULT_MILLISECONDS = 10000;      //默认的超时时间
 
+    private static final String userAgent = "okhttp/5.1.0";
+
     //https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/200
     public static HashMap<Integer, String > httpPhaseMap  = new HashMap<Integer, String>(){{
         put(200,"OK");
@@ -336,7 +338,7 @@ public class OkGoHelper {
             th.printStackTrace();
         }
 
-        HttpHeaders.setUserAgent(USER_AGENT);
+        HttpHeaders.setUserAgent(userAgent);
         OkHttpClient okHttpClient = builder.build();
         OkGo.getInstance().setOkHttpClient(okHttpClient);
 
@@ -347,8 +349,6 @@ public class OkGoHelper {
 
         initExoOkHttpClient();        
     }
-
-    private static final String USER_AGENT = "okhttp/" + "5.1.0";
 
     private static synchronized OkHttpClient.Builder setOkHttpSsl(OkHttpClient.Builder builder) {
         try {
