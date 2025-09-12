@@ -64,11 +64,11 @@ public class BackupDialog extends BaseDialog {
         findViewById(R.id.storagePermission).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (XXPermissions.isGranted(getContext(), Permission.Group.STORAGE)) {
+                if (XXPermissions.isGrantedPermissions(getContext(), STORAGE)) {
                     Toast.makeText(getContext(), "已获得存储权限", Toast.LENGTH_SHORT).show();
                 } else {
                     XXPermissions.with(getContext())
-                            .permission(Permission.Group.STORAGE)
+                            .permission(STORAGE)
                             .request(new OnPermissionCallback() {
                                 @Override
                                 public void onGranted(List<String> permissions, boolean all) {
@@ -92,6 +92,12 @@ public class BackupDialog extends BaseDialog {
             }
         });
     }
+
+    /** 存储权限 */
+    private static final String[] STORAGE = new String[] {
+        Permission.READ_EXTERNAL_STORAGE,
+        Permission.WRITE_EXTERNAL_STORAGE
+    };
 
     List<String> allBackup() {
         ArrayList<String> result = new ArrayList<>();
