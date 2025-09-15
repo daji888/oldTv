@@ -19,8 +19,8 @@ public class Req {
     private Integer redirect;
     @SerializedName("timeout")
     private Integer timeout;
-//    @SerializedName("postType")
-//    private String postType;
+    @SerializedName("postType")
+    private String postType;
     @SerializedName("method")
     private String method;
     @SerializedName("body")
@@ -46,9 +46,9 @@ public class Req {
         return timeout == null ? 10000 : timeout;
     }
 
- //   public String getPostType() {
- //       return TextUtils.isEmpty(postType) ? "json" : postType;
- //   }
+    public String getPostType() {
+        return TextUtils.isEmpty(postType) ? "json" : postType;
+    }
 
     public String getMethod() {
         return TextUtils.isEmpty(method) ? "get" : method;
@@ -72,13 +72,6 @@ public class Req {
 
     public Map<String, String> getHeader() {
         return Json.toMap(getHeaders());
-    }
-
-    public String getContentType() {
-        Map<String, String> header = getHeader();
-        List<String> keys = Arrays.asList("Content-Type", "content-type");
-        for (String key : keys) if (header.containsKey(key)) return Objects.requireNonNull(header.get(key));
-        return "application/json";
     }
     
     public String getCharset() {
