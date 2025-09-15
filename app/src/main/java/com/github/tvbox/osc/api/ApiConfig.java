@@ -672,11 +672,11 @@ public class ApiConfig {
         }
     }
 
-    public static void putEpgHistory(String epg) {
-        if (!epg.isEmpty()) {
+    public static void putEpgHistory(String url) {
+        if (!url.isEmpty()) {
             ArrayList<String> history = Hawk.get(HawkConfig.EPG_HISTORY, new ArrayList<String>());
-            if (!history.contains(epg))
-                history.add(epg);
+            if (!history.contains(url))
+                history.add(url);
             if (history.size() > 30)
                 history.remove(30);
             Hawk.put(HawkConfig.EPG_HISTORY, history);
