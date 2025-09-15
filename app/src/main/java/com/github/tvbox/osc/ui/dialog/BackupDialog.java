@@ -18,7 +18,8 @@ import com.github.tvbox.osc.data.AppDataManager;
 import com.github.tvbox.osc.ui.adapter.BackupAdapter;
 import com.github.tvbox.osc.util.FileUtils;
 import com.hjq.permissions.OnPermissionCallback;
-import com.hjq.permissions.Permission;
+import com.hjq.permissions.permission.base.IPermission;
+import com.hjq.permissions.permission.PermissionLists;
 import com.hjq.permissions.XXPermissions;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
 
@@ -64,40 +65,24 @@ public class BackupDialog extends BaseDialog {
         findViewById(R.id.storagePermission).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (XXPermissions.isGrantedPermissions(getContext(), STORAGE)) {
-                    Toast.makeText(getContext(), "已获得存储权限", Toast.LENGTH_SHORT).show();
-                } else {
-                    XXPermissions.with(getContext())
-                            .permission(STORAGE)
-                            .request(new OnPermissionCallback() {
-                                @Override
-                                public void onGranted(List<String> permissions, boolean all) {
-                                    if (all) {
-                                        adapter.setNewData(allBackup());
-                                        Toast.makeText(getContext(), "已获得存储权限", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-
-                                @Override
-                                public void onDenied(List<String> permissions, boolean never) {
-                                    if (never) {
-                                        Toast.makeText(getContext(), "获取存储权限失败,请在系统设置中开启", Toast.LENGTH_SHORT).show();
-                                        XXPermissions.startPermissionActivity((Activity) getContext(), permissions);
-                                    } else {
-                                        Toast.makeText(getContext(), "获取存储权限失败", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
-                }
+                XXPermissions.with(getContext())
+                    .permission(PermissionLists.getManageExternalStoragePermission())
+                    .request(new OnPermissionCallback() {
+                        @Override
+                        public void onResult(@NonNull List<IPermission> grantedList, @NonNull List<IPermission> deniedList) {
+                            boolean allGranted = deniedList.isEmpty();
+                            if (!allGranted) {
+                                // 在这里处理权限请求失败的逻辑
+                                Toast.makeText(getContext(), "获取存储权限失败", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            // 在这里处理权限请求成功的逻辑
+                            Toast.makeText(getContext(), "获取存储权限成功", Toast.LENGTH_SHORT).show();
+                        }
+                    });
             }
         });
     }
-
-    /** 存储权限 */
-    private static final String[] STORAGE = new String[] {
-        Permission.READ_EXTERNAL_STORAGE,
-        Permission.WRITE_EXTERNAL_STORAGE
-    };
 
     List<String> allBackup() {
         ArrayList<String> result = new ArrayList<>();

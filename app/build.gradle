@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId = 'com.github.tvbox.osc.dj'
-        minSdkVersion = 21
+        minSdkVersion = 23
         targetSdkVersion = 28
         versionCode = 1
         versionName = '1.0.0'
@@ -86,8 +86,8 @@ dependencies {
     implementation files('libs/xwalk_shared_library-23.53.589.4.aar')
     implementation project(":quickjs")
     
-    annotationProcessor 'androidx.room:room-compiler:2.7.2'
-    implementation 'androidx.room:room-runtime:2.7.2'
+    annotationProcessor 'androidx.room:room-compiler:2.8.0'
+    implementation 'androidx.room:room-runtime:2.8.0'
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'com.squareup.okhttp3:okhttp:5.1.0'  //ApiConfig & OkGoHelper
     implementation 'com.squareup.okio:okio:3.16.0'
@@ -121,7 +121,7 @@ dependencies {
     implementation 'com.lzy.net:okgo:3.0.4'
     implementation 'com.owen:tv-recyclerview:3.0.0'
     implementation 'com.blankj:utilcodex:1.31.0'
-    implementation 'com.github.getActivity:XXPermissions:23.0'  //别升级
+    implementation 'com.github.getActivity:XXPermissions:26.5'
     implementation 'org.jsoup:jsoup:1.21.2'
     implementation 'com.github.hedzr:android-file-chooser:v1.2.0-final'
     implementation 'commons-io:commons-io:2.20.0'

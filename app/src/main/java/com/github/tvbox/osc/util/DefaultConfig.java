@@ -17,7 +17,6 @@ import com.github.tvbox.osc.server.ControlManager;
 import com.github.tvbox.osc.ui.activity.HomeActivity;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.hjq.permissions.Permission;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -270,10 +269,4 @@ public class DefaultConfig {
          }
          return false;
      }
-
-    public static String[] StoragePermissionGroup() {
-        return new String[] {
-                Permission.MANAGE_EXTERNAL_STORAGE                
-        };
-    }
 }
