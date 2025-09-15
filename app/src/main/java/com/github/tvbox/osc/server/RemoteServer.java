@@ -320,20 +320,16 @@ public class RemoteServer extends NanoHTTPD {
                             }
                         }
                     }
-               //     session.parseBody(files);
-                    parse(session, files);
+                    session.parseBody(files);
                     String postData = files.get("postData");
                     if (fileName.startsWith("/bf") && postData != null) {
                         LOG.e(postData);
                         return proxyMultiRequest(JsonParser.parseString(postData).getAsJsonArray());
                     }
-            /*    } catch (IOException IOExc) {
+                } catch (IOException IOExc) {
                     return createPlainTextResponse(NanoHTTPD.Response.Status.INTERNAL_ERROR, "SERVER INTERNAL ERROR: IOException: " + IOExc.getMessage());
                 } catch (NanoHTTPD.ResponseException rex) {
                     return createPlainTextResponse(rex.getStatus(), rex.getMessage());
-                }*/
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
                 for (RequestProcess process : postRequestList) {
                     if (process.isRequest(session, fileName)) {
@@ -401,13 +397,6 @@ public class RemoteServer extends NanoHTTPD {
         }
         //default page: index.html
         return getRequestList.get(0).doResponse(session, "", null, null);
-    }
-
-   private void parse(IHTTPSession session, Map<String, String> files) {
-        try {
-            session.parseBody(files);
-        } catch (Exception ignored) {
-        }
     }
 
     public void setDataReceiver(DataReceiver receiver) {
