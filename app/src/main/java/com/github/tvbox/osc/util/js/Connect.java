@@ -72,8 +72,7 @@ public class Connect {
     }
 
     private static RequestBody getPostBody(Req req, String contentType) {
-        if (req.getData() != null && req.getContentType().equals("application/json")) return getJsonBody(req);
-    //    if (req.getData() != null && req.getPostType().equals("json")) return getJsonBody(req);
+        if (req.getData() != null && req.getPostType().equals("json")) return getJsonBody(req);
     //    if (req.getData() != null && req.getPostType().equals("form")) return getFormBody(req);
     //    if (req.getData() != null && req.getPostType().equals("form-data")) return getFormDataBody(req);
         if (req.getBody() != null && contentType != null) return RequestBody.create(req.getBody(), MediaType.get(contentType));
