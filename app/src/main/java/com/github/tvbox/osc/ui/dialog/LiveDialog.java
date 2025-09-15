@@ -45,7 +45,7 @@ public class LiveDialog extends BaseDialog {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refresh(RefreshEvent event) {
-        if (event.type == RefreshEvent.TYPE_API_URL_CHANGE) {
+        if (event.type == RefreshEvent.TYPE_LIVE_URL_CHANGE) {
             inputApi.setText((String) event.obj);
         }
     }
