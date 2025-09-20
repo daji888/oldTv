@@ -23,7 +23,6 @@ import androidx.media3.exoplayer.LoadControl;
 import androidx.media3.exoplayer.source.MediaSource;
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
 import androidx.media3.exoplayer.trackselection.MappingTrackSelector;
-import androidx.media3.exoplayer.trackselection.TrackSelectionArray;
 import androidx.media3.exoplayer.util.EventLogger;
 
 import com.github.tvbox.osc.base.App;
@@ -35,7 +34,6 @@ import com.orhanobut.hawk.Hawk;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import okhttp3.Dns;
@@ -52,13 +50,12 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     protected MediaSource mMediaSource;
     protected ExoMediaSourceHelper mMediaSourceHelper;
     protected ExoTrackNameProvider trackNameProvider;
-    protected TrackSelectionArray mTrackSelections;
     private PlaybackParameters mSpeedPlaybackParameters;
     private boolean mIsPreparing;
 
     private LoadControl mLoadControl;
-    public DefaultRenderersFactory mRenderersFactory;
-    private DefaultTrackSelector mTrackSelector;
+    protected DefaultRenderersFactory mRenderersFactory;
+    protected DefaultTrackSelector mTrackSelector;
 
     private int errorCode = -100;
     private String path;
@@ -82,13 +79,12 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
         if (mLoadControl == null) {
             mLoadControl = new DefaultLoadControl();
         }
-        mTrackSelector.setParameters(mTrackSelector.getParameters().buildUpon().setPreferredTextLanguage(Locale.getDefault().getISO3Language()).setTunnelingEnabled(true));
         mMediaPlayer = new ExoPlayer.Builder(mAppContext)
             .setLoadControl(mLoadControl)
             .setRenderersFactory(mRenderersFactory)
             .setTrackSelector(mTrackSelector)
             .build();
-        //播放器日志
+        // 播放器日志（当开启日志且 mTrackSelector 为 MappingTrackSelector 时）
         if (VideoViewManager.getConfig().mIsEnableLog && mTrackSelector instanceof MappingTrackSelector) {
             mMediaPlayer.addAnalyticsListener(new EventLogger((MappingTrackSelector) mTrackSelector, "ExoPlayer"));
         }
