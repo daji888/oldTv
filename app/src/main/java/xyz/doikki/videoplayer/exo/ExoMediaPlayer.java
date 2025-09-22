@@ -22,8 +22,6 @@ import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.exoplayer.LoadControl;
 import androidx.media3.exoplayer.source.MediaSource;
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
-import androidx.media3.exoplayer.trackselection.MappingTrackSelector;
-import androidx.media3.exoplayer.util.EventLogger;
 
 import com.github.tvbox.osc.base.App;
 import com.github.tvbox.osc.util.HawkConfig;
@@ -40,7 +38,6 @@ import okhttp3.Dns;
 import okhttp3.OkHttpClient;
 
 import xyz.doikki.videoplayer.player.AbstractPlayer;
-import xyz.doikki.videoplayer.player.VideoViewManager;
 import xyz.doikki.videoplayer.util.PlayerUtils;
 
 public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
@@ -84,14 +81,10 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
             .setRenderersFactory(mRenderersFactory)
             .setTrackSelector(mTrackSelector)
             .build();
-        // 播放器日志（当开启日志且 mTrackSelector 为 MappingTrackSelector 时）
-        if (VideoViewManager.getConfig().mIsEnableLog && mTrackSelector instanceof MappingTrackSelector) {
-            mMediaPlayer.addAnalyticsListener(new EventLogger((MappingTrackSelector) mTrackSelector, "ExoPlayer"));
-        }
-        mMediaPlayer.addListener(this);
    //     setOptions();
         //准备好就开始播放
         mMediaPlayer.setPlayWhenReady(true);
+        mMediaPlayer.addListener(this);
     }
 
     public DefaultTrackSelector getTrackSelector() {
@@ -100,12 +93,9 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
 
     @Override
     public void setDataSource(String path, Map<String, String> headers) {
-        if (mMediaPlayer != null) {
-            mMediaPlayer.clearMediaItems();
-        }
         this.path = path;
         this.headers = headers;
-        mMediaSource = mMediaSourceHelper.getMediaSource(path, headers, false, errorCode);
+        mMediaSource = mMediaSourceHelper.getMediaSource(path, headers);
         errorCode = -1;
     }
 
@@ -116,13 +106,9 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
 
     @Override
     public void start() {
-        try {
-            if (mMediaPlayer == null)
-                return;
-            mMediaPlayer.setPlayWhenReady(true);
-        } catch (Exception e) {
-            Toast.makeText(mAppContext, "播放失败:" + e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
+        if (mMediaPlayer == null)
+            return;
+        mMediaPlayer.setPlayWhenReady(true);
     }
 
     @Override
@@ -137,25 +123,20 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
         if (mMediaPlayer == null)
             return;
         mMediaPlayer.stop();
-        mMediaPlayer.clearMediaItems();
     }
 
     @SuppressLint("UnsafeOptInUsageError")
     @Override
     public void prepareAsync() {
-        try {
-            if (mMediaPlayer == null)
-                return;
-            if (mMediaSource == null) return;
-            if (mSpeedPlaybackParameters != null) {
-                mMediaPlayer.setPlaybackParameters(mSpeedPlaybackParameters);
-            }
-            mIsPreparing = true;
-            mMediaPlayer.setMediaSource(mMediaSource);
-            mMediaPlayer.prepare();
-        } catch (Exception e) {
-            Toast.makeText(mAppContext, "播放失败:" + e.getMessage(), Toast.LENGTH_SHORT).show();
+        if (mMediaPlayer == null)
+            return;
+        if (mMediaSource == null) return;
+        if (mSpeedPlaybackParameters != null) {
+            mMediaPlayer.setPlaybackParameters(mSpeedPlaybackParameters);
         }
+        mIsPreparing = true;
+        mMediaPlayer.setMediaSource(mMediaSource);
+        mMediaPlayer.prepare();
     }
 
     @Override
@@ -164,10 +145,8 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
             mMediaPlayer.stop();
             mMediaPlayer.clearMediaItems();
             mMediaPlayer.setVideoSurface(null);
-            mMediaPlayer.clearVideoSurface();
             mIsPreparing = false;
         }
-        setOptions();
     }
 
     @Override
