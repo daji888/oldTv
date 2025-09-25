@@ -33,7 +33,7 @@ public class ExoTrackNameProvider {
         if (trackType == C.TRACK_TYPE_VIDEO) {
             trackName =
                     joinWithSeparator(
-                            buildMimeString(trackType, format),
+                            buildMimeString(format),
                             buildRoleString(format), 
                             buildResolutionString(format), 
                             buildBitrateString(format), 
@@ -43,13 +43,13 @@ public class ExoTrackNameProvider {
                     joinWithSeparator(
                             buildLanguageOrLabelString(format),
                             buildAudioChannelString(format),
-                            buildMimeString(trackType, format), 
+                            buildMimeString(format), 
                             buildBitrateString(format));
         } else {
             trackName =
                     joinWithSeparator(
                             buildLanguageOrLabelString(format),
-                            buildMimeString(trackType, format));
+                            buildMimeString(format));
         }
         if (!trackName.isEmpty()) {
             return trackName;
@@ -189,8 +189,7 @@ public class ExoTrackNameProvider {
         return C.TRACK_TYPE_UNKNOWN;
     }
 
-    private String buildMimeString(int trackType, Format format) {
-        if (trackType == C.TRACK_TYPE_TEXT && format.codecs != null) return buildMimeString(format.codecs);
+    private String buildMimeString(Format format) {
         if (format.sampleMimeType != null) return buildMimeString(format.sampleMimeType);
         return "";
     }
