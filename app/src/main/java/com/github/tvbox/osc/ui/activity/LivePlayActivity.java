@@ -1561,7 +1561,7 @@ public class LivePlayActivity extends BaseActivity {
             AbstractPlayer mediaPlayer = mVideoView.getMediaPlayer();
             TrackInfo trackInfo = null;
             if (mediaPlayer instanceof IjkmPlayer) {
-                trackInfo = ((IjkmPlayer)mediaPlayer).getTrackInfo();
+                trackInfo = ((IjkmPlayer) mediaPlayer).getTrackInfo();
             }
             if (mediaPlayer instanceof EXOmPlayer) {
                 trackInfo = ((EXOmPlayer) mediaPlayer).getTrackInfo();
@@ -1587,7 +1587,7 @@ public class LivePlayActivity extends BaseActivity {
                         mediaPlayer.pause();
                         long progress = mediaPlayer.getCurrentPosition();//保存当前进度，ijk 切换轨道 会有快进几秒
                         if (mediaPlayer instanceof IjkmPlayer) {
-                            ((IjkmPlayer)mediaPlayer).setTrack(value.trackId);
+                            ((IjkmPlayer) mediaPlayer).setTrack(value.trackId);
                         }
                         if (mediaPlayer instanceof EXOmPlayer) {
                             ((EXOmPlayer) mediaPlayer).selectExoTrack(value);
@@ -1610,7 +1610,8 @@ public class LivePlayActivity extends BaseActivity {
                     String name = val.name.replace("AUDIO，", "");
                     name = name.replace("N/A，", "");
                     name = name.replace("，N/A", "");
-                    return name + (com.github.tvbox.osc.util.StringUtils.isEmpty(val.language) ? "" : "，" + val.language);
+                    name = name.replace("，null", "");
+                    return name + (StringUtils.isEmpty(val.language) ? "" : "，" + val.language);
                     }
             }, new DiffUtil.ItemCallback<TrackInfoBean>() {
                 @Override
@@ -1628,7 +1629,7 @@ public class LivePlayActivity extends BaseActivity {
             AbstractPlayer mediaPlayer = mVideoView.getMediaPlayer();
             TrackInfo trackInfo = null;
             if (mediaPlayer instanceof IjkmPlayer) {
-                trackInfo = ((IjkmPlayer)mediaPlayer).getTrackInfo();
+                trackInfo = ((IjkmPlayer) mediaPlayer).getTrackInfo();
             }
             if (mediaPlayer instanceof EXOmPlayer) {
                 trackInfo = ((EXOmPlayer) mediaPlayer).getTrackInfo();
@@ -1677,6 +1678,7 @@ public class LivePlayActivity extends BaseActivity {
                     String name = val.name.replace("VIDEO，", "");
                     name = name.replace("N/A，", "");
                     name = name.replace("，N/A", "");
+                    name = name.replace("，null", "");
                     return name + (StringUtils.isEmpty(val.language) ? "" : "，" + val.language);
                 }
             }, new DiffUtil.ItemCallback<TrackInfoBean>() {
