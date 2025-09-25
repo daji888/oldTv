@@ -21,6 +21,7 @@ import com.github.tvbox.osc.bean.EXOCode;
 import xyz.doikki.videoplayer.exo.ExoMediaPlayer;
 
 import java.util.LinkedHashMap;
+import java.util.Locale;
 
 public class EXOmPlayer extends ExoMediaPlayer {
     private String audioId = "";
@@ -126,25 +127,28 @@ public class EXOmPlayer extends ExoMediaPlayer {
     }
 
     @SuppressLint("UnsafeOptInUsageError")
-    public void selectExoTrack(@Nullable TrackInfoBean videoTrackBean) {
+    public void selectExoTrack(@Nullable TrackInfoBean mTrackBean) {
         MappingTrackSelector.MappedTrackInfo trackInfo = getTrackSelector().getCurrentMappedTrackInfo();
         if (trackInfo != null) {
-            if (videoTrackBean == null) {
+            if (mTrackBean == null) {
                 for (int renderIndex = 0; renderIndex < trackInfo.getRendererCount(); renderIndex++) {
                     if (trackInfo.getRendererType(renderIndex) == C.TRACK_TYPE_TEXT) {
                         DefaultTrackSelector.Parameters.Builder parametersBuilder = getTrackSelector().getParameters().buildUpon();
+                        parametersBuilder.setPreferredTextLanguage(Locale.getDefault().getISO3Language());
                         parametersBuilder.setRendererDisabled(renderIndex, true);
-                        getTrackSelector().setParameters(parametersBuilder);
+                        getTrackSelector().setParameters(parametersBuilder.build());
                         break;
                     }
                 }
             } else {
-                TrackGroupArray trackGroupArray = trackInfo.getTrackGroups(videoTrackBean.renderId);
-                @SuppressLint("UnsafeOptInUsageError") DefaultTrackSelector.SelectionOverride override = new DefaultTrackSelector.SelectionOverride(videoTrackBean.trackGroupId, videoTrackBean.trackId);
+                TrackGroupArray trackGroupArray = trackInfo.getTrackGroups(mTrackBean.renderId);
+                @SuppressLint("UnsafeOptInUsageError") DefaultTrackSelector.SelectionOverride override = new DefaultTrackSelector.SelectionOverride(mTrackBean.trackGroupId, mTrackBean.trackId);
                 DefaultTrackSelector.Parameters.Builder parametersBuilder = getTrackSelector().buildUponParameters();
-                parametersBuilder.setRendererDisabled(videoTrackBean.renderId, false);
-                parametersBuilder.setSelectionOverride(videoTrackBean.renderId, trackGroupArray, override);
-                getTrackSelector().setParameters(parametersBuilder);
+                parametersBuilder.setPreferredTextLanguage(Locale.getDefault().getISO3Language());
+                parametersBuilder.setForceHighestSupportedBitrate(true);
+                parametersBuilder.setRendererDisabled(mTrackBean.renderId, false);
+                parametersBuilder.setSelectionOverride(mTrackBean.renderId, trackGroupArray, override);
+                getTrackSelector().setParameters(parametersBuilder.build());
             }
         }
 
