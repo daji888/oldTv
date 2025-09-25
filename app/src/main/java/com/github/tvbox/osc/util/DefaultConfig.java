@@ -143,6 +143,7 @@ public class DefaultConfig {
         }
         return "";
     }
+    
     public static String getAppVersionName(Context mContext) {
         //包管理操作管理类
         PackageManager pm = mContext.getPackageManager();
@@ -184,22 +185,22 @@ public class DefaultConfig {
     }
 
     private static final Pattern snifferMatch = Pattern.compile(
-            "http((?!http).){12,}?\\.(m3u8|mp4|flv|avi|mkv|mp3|rm|wmv|mpg|m4a|aac|mpd)\\?.*|" +
-                    "http((?!http).){12,}\\.(m3u8|mp4|flv|avi|mkv|mp3|rm|wmv|mpg|m4a|aac|mpd)|" +
-                    "http((?!http).)*?video/tos*|" +
-                    "http((?!http).)*?obj/tos*|" +
-                    "http((?!http).){20,}?/m3u8\\?pt=m3u8.*|" +
-                    "http((?!http).)*?default\\.ixigua\\.com/.*|" +
-                    "http((?!http).)*?dycdn-tos\\.pstatp[^\\?]*|" +
-                    "http.*?/player/m3u8play\\.php\\?url=.*|" +
-                    "http.*?/player/.*?[pP]lay\\.php\\?url=.*|" +
-                    "http.*?/playlist/m3u8/\\?vid=.*|" +
-                    "http.*?\\.php\\?type=m3u8&.*|" +
-                    "http.*?/download.aspx\\?.*|" +
-                    "http.*?/api/up_api.php\\?.*|" +
-                    "https.*?\\.66yk\\.cn.*|" +
-                    "http((?!http).)*?netease\\.com/file/.*"
+            "http((?!http).){12,}?\\.(m3u8|mp4|flv|avi|mkv|rm|wmv|mpg|m4a)\\?.*|" +
+            "http((?!http).){12,}\\.(m3u8|mp4|flv|avi|mkv|rm|wmv|mpg|m4a)|" +
+            "http((?!http).)*?video/tos*|" +
+            "http((?!http).){20,}?/m3u8\\?pt=m3u8.*|" +
+            "http((?!http).)*?default\\.ixigua\\.com/.*|" +
+            "http((?!http).)*?dycdn-tos\\.pstatp[^\\?]*|" +
+            "http.*?/player/m3u8play\\.php\\?url=.*|" +
+            "http.*?/player/.*?[pP]lay\\.php\\?url=.*|" +
+            "http.*?/playlist/m3u8/\\?vid=.*|" +
+            "http.*?\\.php\\?type=m3u8&.*|" +
+            "http.*?/download.aspx\\?.*|" +
+            "http.*?/api/up_api.php\\?.*|" +
+            "https.*?\\.66yk\\.cn.*|" +
+            "http((?!http).)*?netease\\.com/file/.*"
     );
+    
     public static boolean isVideoFormat(String url) {
         Uri uri = Uri.parse(url);
         String path = uri.getPath();
@@ -210,11 +211,10 @@ public class DefaultConfig {
         return false;
     }
 
-
     public static String safeJsonString(JsonObject obj, String key, String defaultVal) {
         try {
             if (obj.has(key))
-                return obj.getAsJsonPrimitive(key).getAsString().trim();
+                return obj.get(key).isJsonObject() || obj.get(key).isJsonArray() ? obj.get(key).toString().trim() : obj.getAsJsonPrimitive(key).getAsString().trim();
             else
                 return defaultVal;
         } catch (Throwable th) {
@@ -257,7 +257,7 @@ public class DefaultConfig {
     }
 
     private static final List<String> NO_AD_KEYWORDS = Arrays.asList(
-             "tx", "youku", "qq","qiyi", "letv", "leshi","sohu", "mgtv", "bilibili", "imgo","优酷", "芒果", "腾讯", "奇艺"
+             "tx", "youku", "qq", "qiyi", "letv", "leshi","sohu", "mgtv", "bilibili", "imgo","优酷", "芒果", "腾讯", "奇艺"
      );
  
      public static boolean noAd(String flag) {
