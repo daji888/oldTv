@@ -1,7 +1,5 @@
 package com.github.tvbox.osc.player.controller;
 
-import static xyz.doikki.videoplayer.util.PlayerUtils.stringForTime;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -161,7 +159,7 @@ public class VodController extends BaseController {
     private boolean isLock = false;
     Handler myHandle;
     Runnable myRunnable;
-    int myHandleSeconds = 8000;//闲置多少毫秒关闭底栏  默认6秒
+    int myHandleSeconds = 8000;//闲置多少毫秒关闭底栏  默认8秒
 
     int videoPlayState = 0;
 
@@ -311,7 +309,7 @@ public class VodController extends BaseController {
                 long duration = mControlWrapper.getDuration();
                 long newPosition = (duration * progress) / seekBar.getMax();
                 if (mCurrentTime != null)
-                    mCurrentTime.setText(stringForTime((int) newPosition));
+                    mCurrentTime.setText(PlayerUtils.stringForTime((int) newPosition));
             }
 
             @Override
@@ -1001,7 +999,7 @@ public class VodController extends BaseController {
             simStartPosition = (int) mControlWrapper.getCurrentPosition();
             simSeekPosition = simStartPosition;
         }
-        // 每次10秒
+        // 每次30秒
         simSeekPosition += (30000.0f * dir);
         if (simSeekPosition > duration) simSeekPosition = duration;
         if (simSeekPosition < 0) simSeekPosition = 0;
