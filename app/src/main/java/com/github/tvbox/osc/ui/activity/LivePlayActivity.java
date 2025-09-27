@@ -110,7 +110,7 @@ import org.jetbrains.annotations.NotNull;
 
 import xyz.doikki.videoplayer.player.AbstractPlayer;
 import xyz.doikki.videoplayer.player.VideoView;
-import static xyz.doikki.videoplayer.util.PlayerUtils.stringForTime;
+import xyz.doikki.videoplayer.util.PlayerUtils;
 
 /**
  * @author pj567
@@ -2359,7 +2359,7 @@ public class LivePlayActivity extends BaseActivity {
                     long newPosition = (duration * progress) / sBar.getMax();
                     mVideoView.seekTo((int) newPosition);
                     if (tv_currentpos != null)
-                        tv_currentpos.setText(stringForTime((int) newPosition));
+                        tv_currentpos.setText(PlayerUtils.stringForTime((int) newPosition));
                     if (countDownTimer != null) {
                         countDownTimer.cancel();
                         countDownTimer.start();
@@ -2429,9 +2429,9 @@ public class LivePlayActivity extends BaseActivity {
                         sBar.setMax((int) duration);
                         sBar.setKeyProgressIncrement((int) duration / 100);
                         sBar.setProgress((int) currentPosition);
-                        tv_currentpos.setText(stringForTime((int) currentPosition));
-                        tv_duration.setText(stringForTime((int) duration));
-                        ((TextView) findViewById(R.id.tv_pause_progress_text)).setText((stringForTime((int) currentPosition)) + " / " + (stringForTime((int) duration)));
+                        tv_currentpos.setText(PlayerUtils.stringForTime((int) currentPosition));
+                        tv_duration.setText(PlayerUtils.stringForTime((int) duration));
+                        ((TextView) findViewById(R.id.tv_pause_progress_text)).setText((PlayerUtils.stringForTime((int) currentPosition)) + " / " + (PlayerUtils.stringForTime((int) duration)));
                     }
                 }
 
