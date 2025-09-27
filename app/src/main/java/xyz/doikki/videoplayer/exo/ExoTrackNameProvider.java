@@ -83,7 +83,7 @@ public class ExoTrackNameProvider {
     private String buildAudioChannelString(Format format) {
       int channelCount = format.channelCount;
       if (channelCount == Format.NO_VALUE || channelCount < 1) {
-        return "无声道";
+        return "";
       }
       switch (channelCount) {
         case 1:
