@@ -2,6 +2,7 @@ package com.github.tvbox.osc.player.controller;
 
 import android.content.Context;
 import android.view.MotionEvent;
+import android.widget.FrameLayout;
 
 import com.github.tvbox.osc.R;
 
@@ -14,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 public class LiveController extends BaseController {
     private int minFlingDistance = 100;             //最小识别距离
     private int minFlingVelocity = 10;              //最小识别速度
+    public FrameLayout mPauseContainer;
 
     public LiveController(@NotNull Context context) {
         super(context);
@@ -27,6 +29,7 @@ public class LiveController extends BaseController {
     @Override
     protected void initView() {
         super.initView();
+        mPauseContainer = findViewById(R.id.tv_pause_container);
     }
 
     public interface LiveControlListener {

@@ -210,6 +210,7 @@ public class LivePlayActivity extends BaseActivity {
     private View iv_play;
     private  boolean show = false;
     boolean mIsDragging;
+    private LiveController controller;
 
     @Override
     protected int getLayoutResID() {
@@ -295,6 +296,11 @@ public class LivePlayActivity extends BaseActivity {
         initLiveSettingGroupList();
         Hawk.put(HawkConfig.PLAYER_IS_LIVE,true);
     }
+
+    public LiveController getLiveController() {
+        return controller;
+    }
+    
     //获取EPG并存储 // 百川epg  DIYP epg   51zmt epg ------- 自建EPG格式输出格式请参考 51zmt
     private List<Epginfo> epgdata = new ArrayList<>();
 
@@ -650,7 +656,8 @@ public class LivePlayActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (mVideoView != null) {
+        if (mVideoView != null && isBack) {
+            getLiveController().mPauseContainer.setAlpha(1);
             mVideoView.resume();
         }
     }
@@ -658,7 +665,8 @@ public class LivePlayActivity extends BaseActivity {
    @Override
     protected void onPause() {
         super.onPause();
-        if (mVideoView != null) {
+        if (mVideoView != null && isBack) {
+            getLiveController().mPauseContainer.setAlpha(0);
             mVideoView.pause();
         }
     }
