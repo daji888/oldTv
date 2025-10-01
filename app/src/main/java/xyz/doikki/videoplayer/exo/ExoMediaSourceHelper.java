@@ -109,7 +109,7 @@ public final class ExoMediaSourceHelper {
             return new ProgressiveMediaSource.Factory(new RtmpDataSource.Factory())
                     .createMediaSource(MediaItem.fromUri(contentUri));
         }
-        int contentType = Util.inferContentType(uri);
+        int contentType = Util.inferContentType(contentUri);
         DataSource.Factory factory;
         if (isCache) {
             factory = getCacheDataSourceFactory();
