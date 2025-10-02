@@ -69,8 +69,8 @@ public final class ExoMediaSourceHelper {
         return sInstance;
     }
 
-    private static MediaItem getMediaItem(String uri, int errorCode) {
-        MediaItem.Builder builder = new MediaItem.Builder().setUri(Uri.parse(uri.trim().replace("\\", "")));
+    private static MediaItem getMediaItem(Uri uri, int errorCode) {
+        MediaItem.Builder builder = new MediaItem.Builder().setUri(uri);
         if (errorCode == PlaybackException.ERROR_CODE_PARSING_CONTAINER_UNSUPPORTED || errorCode == PlaybackException.ERROR_CODE_PARSING_CONTAINER_MALFORMED || errorCode == PlaybackException.ERROR_CODE_IO_UNSPECIFIED)
             builder.setMimeType(MimeTypes.APPLICATION_M3U8);
         return builder.build();
@@ -85,31 +85,30 @@ public final class ExoMediaSourceHelper {
         mOkClient = client;
     }
 
-    public MediaSource getMediaSource(String uri) {
+    public MediaSource getMediaSource(Uri uri) {
         return getMediaSource(uri, null, false);
     }
 
-    public MediaSource getMediaSource(String uri, Map<String, String> headers) {
+    public MediaSource getMediaSource(Uri uri, Map<String, String> headers) {
         return getMediaSource(uri, headers, false);
     }
 
-    public MediaSource getMediaSource(String uri, boolean isCache) {
+    public MediaSource getMediaSource(Uri uri, boolean isCache) {
         return getMediaSource(uri, null, isCache);
     }
 
-    public MediaSource getMediaSource(String uri, Map<String, String> headers, boolean isCache) {
+    public MediaSource getMediaSource(Uri uri, Map<String, String> headers, boolean isCache) {
         return getMediaSource(uri, headers, isCache, -1);
     }
 
     @SuppressLint("UnsafeOptInUsageError")
-    public MediaSource getMediaSource(String uri, Map<String, String> headers, boolean isCache, int errorCode) {
-        Log.i("ExoGetMediaSource:", uri);
-        Uri contentUri = Uri.parse(uri);
-        if (Ascii.equalsIgnoreCase("rtmp", contentUri.getScheme())) {
+    public MediaSource getMediaSource(Uri uri, Map<String, String> headers, boolean isCache, int errorCode) {
+        Log.i("ExoGetMediaSource:", uri.toString());
+        if (Ascii.equalsIgnoreCase("rtmp", uri.getScheme())) {
             return new ProgressiveMediaSource.Factory(new RtmpDataSource.Factory())
-                    .createMediaSource(MediaItem.fromUri(contentUri));
+                    .createMediaSource(MediaItem.fromUri(uri));
         }
-        int contentType = Util.inferContentType(contentUri);
+        int contentType = Util.inferContentType(uri);
         DataSource.Factory factory;
         if (isCache) {
             factory = getCacheDataSourceFactory();
@@ -126,16 +125,16 @@ public final class ExoMediaSourceHelper {
         }
         switch (contentType) {
             case C.CONTENT_TYPE_RTSP:
-                return new RtspMediaSource.Factory().createMediaSource(MediaItem.fromUri(contentUri));    
+                return new RtspMediaSource.Factory().createMediaSource(MediaItem.fromUri(uri));    
             case C.CONTENT_TYPE_DASH:
-                return new DashMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));
+                return new DashMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(uri));
             case C.CONTENT_TYPE_HLS:
-                return new HlsMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));
+                return new HlsMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(uri));
             case C.CONTENT_TYPE_SS:
-                return new SsMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));    
+                return new SsMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(uri));    
             default:
             case C.CONTENT_TYPE_OTHER:
-                return new ProgressiveMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));
+                return new ProgressiveMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(uri));
         }
     }
 
