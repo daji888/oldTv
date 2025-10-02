@@ -76,8 +76,7 @@ public final class ExoMediaSourceHelper {
         return builder.build();
     }
 
-    @SuppressLint("UnsafeOptInUsageError")
-    private static synchronized ExtractorsFactory getExtractorsFactory() {
+    private ExtractorsFactory getExtractorsFactory() {
         return new DefaultExtractorsFactory().setTsExtractorFlags(DefaultTsPayloadReaderFactory.FLAG_ENABLE_HDMV_DTS_AUDIO_STREAMS).setTsExtractorTimestampSearchBytes(TsExtractor.DEFAULT_TIMESTAMP_SEARCH_BYTES * 3);
 
     }
