@@ -148,6 +148,10 @@ public class PlayActivity extends BaseActivity {
         Hawk.put(HawkConfig.PLAYER_IS_LIVE,false);
     }
 
+    public VodController getVodController() {
+        return mController;
+    }
+
     public long getSavedProgress(String url) {
         int st = 0;
         try {
@@ -1095,6 +1099,7 @@ public class PlayActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         if (mVideoView != null) {
+            getVodController().mProgressTop.setAlpha(1);
             mVideoView.resume();
         }
     }
@@ -1104,6 +1109,7 @@ public class PlayActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         if (mVideoView != null) {
+            getVodController().mProgressTop.setAlpha(0);
             mVideoView.pause();
         }
     }
