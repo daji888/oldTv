@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.net.TrafficStats;
+import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 import android.view.Surface;
@@ -95,7 +96,7 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     public void setDataSource(String path, Map<String, String> headers) {
         this.path = path;
         this.headers = headers;
-        mMediaSource = mMediaSourceHelper.getMediaSource(path, headers, false, errorCode);
+        mMediaSource = mMediaSourceHelper.getMediaSource(Uri.parse(path), headers, false, errorCode);
         errorCode = -1;
     }
 
