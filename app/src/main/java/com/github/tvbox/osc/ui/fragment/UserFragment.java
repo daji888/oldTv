@@ -150,13 +150,6 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
         tvPush.setOnFocusChangeListener(focusChangeListener);
         tvCollect.setOnFocusChangeListener(focusChangeListener);
         tvExit.setOnFocusChangeListener(focusChangeListener);
-        tvLive1.setOnFocusChangeListener(focusChangeListener);
-        tvSearch1.setOnFocusChangeListener(focusChangeListener);
-        tvSetting1.setOnFocusChangeListener(focusChangeListener);
-        tvHistory1.setOnFocusChangeListener(focusChangeListener);
-        tvPush1.setOnFocusChangeListener(focusChangeListener);
-        tvCollect1.setOnFocusChangeListener(focusChangeListener);
-        tvExit1.setOnFocusChangeListener(focusChangeListener);
         tvHotList = findViewById(R.id.tvHotList);
         homeHotVodAdapter = new HomeHotVodAdapter();
         homeHotVodAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
