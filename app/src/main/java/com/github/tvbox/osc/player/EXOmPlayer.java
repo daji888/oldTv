@@ -11,9 +11,11 @@ import androidx.media3.common.Player;
 import androidx.media3.common.TrackGroup;
 import androidx.media3.common.Tracks;
 import androidx.media3.exoplayer.DefaultRenderersFactory;
+import androidx.media3.exoplayer.mediacodec.MediaCodecSelector;
 import androidx.media3.exoplayer.source.TrackGroupArray;
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
 import androidx.media3.exoplayer.trackselection.MappingTrackSelector;
+
 import com.github.tvbox.osc.util.StringUtils;
 import com.github.tvbox.osc.api.ApiConfig;
 import com.github.tvbox.osc.bean.EXOCode;
@@ -21,7 +23,6 @@ import com.github.tvbox.osc.bean.EXOCode;
 import xyz.doikki.videoplayer.exo.ExoMediaPlayer;
 
 import java.util.LinkedHashMap;
-import java.util.Locale;
 
 public class EXOmPlayer extends ExoMediaPlayer {
     private String audioId = "";
@@ -43,10 +44,13 @@ public class EXOmPlayer extends ExoMediaPlayer {
                 String extensionRendererMode = key.trim();
                 if (extensionRendererMode.equals("EXTENSION_RENDERER_MODE_OFF")) {
                     mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF);
+                    mRenderersFactory.setMediaCodecSelector(MediaCodecSelector.DEFAULT);
                 } else if (extensionRendererMode.equals("EXTENSION_RENDERER_MODE_ON")) {
                     mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON);
+                    mRenderersFactory.setMediaCodecSelector(MediaCodecSelector.DEFAULT);
                 } else if (extensionRendererMode.equals("EXTENSION_RENDERER_MODE_PREFER")) {
                     mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER);
+                    mRenderersFactory.setMediaCodecSelector(MediaCodecSelector.PREFER_SOFTWARE);
                 }    
             }
         }
@@ -134,7 +138,6 @@ public class EXOmPlayer extends ExoMediaPlayer {
                 for (int renderIndex = 0; renderIndex < trackInfo.getRendererCount(); renderIndex++) {
                     if (trackInfo.getRendererType(renderIndex) == C.TRACK_TYPE_TEXT) {
                         DefaultTrackSelector.Parameters.Builder parametersBuilder = getTrackSelector().getParameters().buildUpon();
-                        parametersBuilder.setPreferredTextLanguage(Locale.getDefault().getISO3Language());
                         parametersBuilder.setRendererDisabled(renderIndex, true);
                         getTrackSelector().setParameters(parametersBuilder.build());
                         break;
@@ -144,7 +147,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
                 TrackGroupArray trackGroupArray = trackInfo.getTrackGroups(mTrackBean.renderId);
                 @SuppressLint("UnsafeOptInUsageError") DefaultTrackSelector.SelectionOverride override = new DefaultTrackSelector.SelectionOverride(mTrackBean.trackGroupId, mTrackBean.trackId);
                 DefaultTrackSelector.Parameters.Builder parametersBuilder = getTrackSelector().buildUponParameters();
-                parametersBuilder.setPreferredTextLanguage(Locale.getDefault().getISO3Language());
+                parametersBuilder.setPreferredTextLanguage("zh");
                 parametersBuilder.setForceHighestSupportedBitrate(true);
                 parametersBuilder.setRendererDisabled(mTrackBean.renderId, false);
                 parametersBuilder.setSelectionOverride(mTrackBean.renderId, trackGroupArray, override);
