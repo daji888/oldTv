@@ -143,7 +143,7 @@ public abstract class AbstractPlayer {
     /**
      * 获取播放速度
      */
-    public abstract float getSpeed();
+    public abstract float getSpeed(float speed);
 
     /**
      * 获取当前缓冲的网速
