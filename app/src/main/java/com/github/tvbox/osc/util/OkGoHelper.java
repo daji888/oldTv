@@ -119,12 +119,7 @@ public class OkGoHelper {
     public static ArrayList<String> dnsHttpsList = new ArrayList<>();
 
     public static List<ConnectionSpec> getConnectionSpec() {
-        return immutableListOf(RESTRICTED_TLS, MODERN_TLS, COMPATIBLE_TLS, CLEARTEXT);
-    }
-
-    @SafeVarargs
-    public static <T> List<T> immutableListOf(T... elements) {
-        return Collections.unmodifiableList(Arrays.asList(elements));
+        return Arrays.asList(RESTRICTED_TLS, MODERN_TLS, COMPATIBLE_TLS, CLEARTEXT);
     }
 
     public static boolean is_doh = false;
@@ -137,7 +132,7 @@ public class OkGoHelper {
         JsonArray jsonArray = JsonParser.parseString(json).getAsJsonArray();
         if (type >= 1 && type < dnsHttpsList.size()) {
             JsonObject dnsConfig = jsonArray.get(type - 1).getAsJsonObject();
-            return dnsConfig.has("url") ? dnsConfig.get("url").getAsString() : "";  // 获取对应的 URL        
+            return dnsConfig.get("url").getAsString();  // 获取对应的 URL        
         }
         return "";
     }
