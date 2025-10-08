@@ -205,7 +205,7 @@ public class IjkPlayer extends AbstractPlayer implements IMediaPlayer.OnErrorLis
 
     @Override
     public float getSpeed() {
-        return mMediaPlayer.getSpeed();
+        return mMediaPlayer.getSpeed(0);
     }
 
     @Override
