@@ -29,10 +29,6 @@
                 android:gravity="center"
                 android:padding="@dimen/vs_10"
                 android:text="选择内置字幕"
-                android:shadowColor="@color/color_000000_80"
-                android:shadowDx="5"
-                android:shadowDy="5"
-                android:shadowRadius="5"
                 android:textColor="@color/color_FFFFFF"
                 android:textSize="@dimen/ts_20" />
 
@@ -47,10 +43,6 @@
                 android:gravity="center"
                 android:padding="@dimen/vs_10"
                 android:text="选择本地字幕"
-                android:shadowColor="@color/color_000000_80"
-                android:shadowDx="5"
-                android:shadowDy="5"
-                android:shadowRadius="5"
                 android:textColor="@color/color_FFFFFF"
                 android:textSize="@dimen/ts_20" />
 
@@ -65,10 +57,6 @@
                 android:gravity="center"
                 android:padding="@dimen/vs_10"
                 android:text="在线搜索字幕"
-                android:shadowColor="@color/color_000000_80"
-                android:shadowDx="5"
-                android:shadowDy="5"
-                android:shadowRadius="5"
                 android:textColor="@color/color_FFFFFF"
                 android:textSize="@dimen/ts_20" />
 
@@ -89,10 +77,6 @@
                     android:gravity="center"
                     android:padding="@dimen/vs_10"
                     android:text="字号减小"
-                    android:shadowColor="@color/color_000000_80"
-                    android:shadowDx="5"
-                    android:shadowDy="5"
-                    android:shadowRadius="5"
                     android:textColor="@color/color_FFFFFF"
                     android:textSize="@dimen/ts_20" />
 
@@ -105,10 +89,6 @@
                     android:layout_marginLeft="@dimen/vs_40"
                     android:layout_marginRight="@dimen/vs_40"
                     android:text="20"
-                    android:shadowColor="@color/color_000000_80"
-                    android:shadowDx="5"
-                    android:shadowDy="5"
-                    android:shadowRadius="5"
                     android:textStyle="bold"
                     android:textColor="@color/color_CC000000"
                     android:textSize="@dimen/ts_30" />
@@ -123,10 +103,6 @@
                     android:gravity="center"
                     android:padding="@dimen/vs_10"
                     android:text="字号增大"
-                    android:shadowColor="@color/color_000000_80"
-                    android:shadowDx="5"
-                    android:shadowDy="5"
-                    android:shadowRadius="5"
                     android:textColor="@color/color_FFFFFF"
                     android:textSize="@dimen/ts_20" />
 
@@ -150,10 +126,6 @@
                     android:padding="@dimen/vs_10"
                     android:text="字幕样式一"
                     android:textColor="@color/color_BBFFFFFF"
-                    android:shadowColor="@color/color_CC000000"
-                    android:shadowRadius="2"
-                    android:shadowDx="1"
-                    android:shadowDy="1"
                     android:textSize="@dimen/ts_20" />
 
                 <TextView
@@ -164,10 +136,6 @@
                     android:layout_marginLeft="@dimen/vs_40"
                     android:layout_marginRight="@dimen/vs_40"
                     android:text="字幕样式"
-                    android:shadowColor="@color/color_000000_80"
-                    android:shadowDx="5"
-                    android:shadowDy="5"
-                    android:shadowRadius="5"
                     android:textStyle="bold"
                     android:textColor="@color/color_CC000000"
                     android:textSize="@dimen/ts_20" />
@@ -184,10 +152,6 @@
                     android:text="字幕样式二"
                     android:textStyle="bold"
                     android:textColor="@color/color_FF9900"
-                    android:shadowColor="@color/color_CC000000"
-                    android:shadowRadius="2"
-                    android:shadowDx="1"
-                    android:shadowDy="1"
                     android:textSize="@dimen/ts_20" />
 
             </LinearLayout>
@@ -206,10 +170,6 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:text="字幕延时仅对外挂字幕有效"
-                    android:shadowColor="@color/color_000000_80"
-                    android:shadowDx="5"
-                    android:shadowDy="5"
-                    android:shadowRadius="5"
                     android:textStyle="bold"
                     android:textColor="@color/color_CC000000"
                     android:textSize="@dimen/ts_20" />
@@ -233,10 +193,6 @@
                     android:gravity="center"
                     android:padding="@dimen/vs_10"
                     android:text="字幕提前"
-                    android:shadowColor="@color/color_000000_80"
-                    android:shadowDx="5"
-                    android:shadowDy="5"
-                    android:shadowRadius="5"
                     android:textColor="@color/color_FFFFFF"
                     android:textSize="@dimen/ts_20" />
 
@@ -249,10 +205,6 @@
                     android:layout_marginLeft="@dimen/vs_40"
                     android:layout_marginRight="@dimen/vs_40"
                     android:text="0"
-                    android:shadowColor="@color/color_000000_80"
-                    android:shadowDx="5"
-                    android:shadowDy="5"
-                    android:shadowRadius="5"
                     android:textStyle="bold"
                     android:textColor="@color/color_CC000000"
                     android:textSize="@dimen/ts_30" />
@@ -267,10 +219,6 @@
                     android:gravity="center"
                     android:padding="@dimen/vs_10"
                     android:text="字幕推迟"
-                    android:shadowColor="@color/color_000000_80"
-                    android:shadowDx="5"
-                    android:shadowDy="5"
-                    android:shadowRadius="5"
                     android:textColor="@color/color_FFFFFF"
                     android:textSize="@dimen/ts_20" />
 
