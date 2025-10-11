@@ -44,7 +44,6 @@
                     android:src="@drawable/icon_history" />
 
                 <TextView
-                    android:id="@+id/tvHistory1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -87,7 +86,6 @@
                     android:src="@drawable/icon_live" />
 
                 <TextView
-                    android:id="@+id/tvLive1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -130,7 +128,6 @@
                     android:src="@drawable/icon_search" />
 
                 <TextView
-                    android:id="@+id/tvSearch1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -172,7 +169,6 @@
                     android:src="@drawable/icon_collect" />
 
                 <TextView
-                    android:id="@+id/tvFavorite1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -216,7 +212,6 @@
                     android:src="@drawable/icon_push" />
 
                 <TextView
-                    android:id="@+id/tvPush1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -260,7 +255,6 @@
                     android:src="@drawable/icon_setting" />
 
                 <TextView
-                    android:id="@+id/tvSetting1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -304,7 +298,6 @@
                     android:src="@drawable/icon_exit" />
 
                 <TextView
-                    android:id="@+id/tvExit1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"

@@ -1,7 +1,6 @@
 package com.github.tvbox.osc.ui.fragment;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -64,13 +63,6 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
     private LinearLayout tvCollect;
     private LinearLayout tvPush;
     private LinearLayout tvExit;
-    private TextView tvLive1;
-    private TextView tvSearch1;
-    private TextView tvSetting1;
-    private TextView tvHistory1;
-    private TextView tvCollect1;
-    private TextView tvPush1;
-    private TextView tvExit1;
     public static HomeHotVodAdapter homeHotVodAdapter;
     private List<Movie.Video> homeSourceRec;
     public static TvRecyclerView tvHotList;
@@ -131,13 +123,6 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
         tvHistory = findViewById(R.id.tvHistory);
         tvPush = findViewById(R.id.tvPush);
         tvExit = findViewById(R.id.tvExit);
-        tvLive1 = findViewById(R.id.tvLive1);
-        tvSearch1 = findViewById(R.id.tvSearch1);
-        tvSetting1 = findViewById(R.id.tvSetting1);
-        tvCollect1 = findViewById(R.id.tvFavorite1);
-        tvHistory1 = findViewById(R.id.tvHistory1);
-        tvPush1 = findViewById(R.id.tvPush1);
-        tvExit1 = findViewById(R.id.tvExit1);
         tvLive.setOnClickListener(this);
         tvSearch.setOnClickListener(this);
         tvSetting.setOnClickListener(this);
@@ -314,41 +299,6 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
                 v.animate().scaleX(1.1f).scaleY(1.1f).setDuration(300).setInterpolator(new BounceInterpolator()).start();
             else
                 v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(300).setInterpolator(new BounceInterpolator()).start();
-            if (tvLive.hasFocus()) {
-                tvLive1.setTextColor(Color.RED);
-            } else {
-                tvLive1.setTextColor(Color.GREEN);
-            }
-            if (tvSearch.hasFocus()) {
-                tvSearch1.setTextColor(Color.RED);
-            } else {
-                tvSearch1.setTextColor(Color.GREEN);
-            }
-            if (tvSetting.hasFocus()) {
-                tvSetting1.setTextColor(Color.RED);
-            } else {
-                tvSetting1.setTextColor(Color.GREEN); 
-            }
-            if (tvCollect.hasFocus()) {
-                tvCollect1.setTextColor(Color.RED);
-            } else {
-                tvCollect1.setTextColor(Color.GREEN);
-            }
-            if (tvHistory.hasFocus()) {
-                tvHistory1.setTextColor(Color.RED);
-            } else {
-                tvHistory1.setTextColor(Color.GREEN); 
-            }
-            if (tvPush.hasFocus()) {
-                tvPush1.setTextColor(Color.RED);
-            } else {
-                tvPush1.setTextColor(Color.GREEN);
-            }
-            if (tvExit.hasFocus()) {
-                tvExit1.setTextColor(Color.RED);
-            } else {
-                tvExit1.setTextColor(Color.GREEN); 
-            }
         }
     };
 
