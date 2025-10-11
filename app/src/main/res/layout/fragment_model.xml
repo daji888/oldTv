@@ -40,10 +40,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="调试模式"
-                        android:shadowColor="@color/color_000000_80"
-                        android:shadowDx="5"
-                        android:shadowDy="5"
-                        android:shadowRadius="5"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/ts_24" />
 
@@ -57,10 +53,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="已关闭"
-                        android:shadowColor="@color/color_000000_80"
-                        android:shadowDx="5"
-                        android:shadowDy="5"
-                        android:shadowRadius="5"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/ts_24" />
 
@@ -90,10 +82,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="配置地址"
-                        android:shadowColor="@color/color_000000_80"
-                        android:shadowDx="5"
-                        android:shadowDy="5"
-                        android:shadowRadius="5"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/ts_24" />
 
@@ -108,10 +96,6 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="middle"
                         android:singleLine="true"
-                        android:shadowColor="@color/color_000000_80"
-                        android:shadowDx="5"
-                        android:shadowDy="5"
-                        android:shadowRadius="5"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/ts_24" />
 
@@ -141,10 +125,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="首页数据源"
-                        android:shadowColor="@color/color_000000_80"
-                        android:shadowDx="5"
-                        android:shadowDy="5"
-                        android:shadowRadius="5"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/ts_24" />
 
@@ -159,10 +139,6 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="middle"
                         android:singleLine="true"
-                        android:shadowColor="@color/color_000000_80"
-                        android:shadowDx="5"
-                        android:shadowDy="5"
-                        android:shadowRadius="5"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/ts_24" />
 
@@ -192,10 +168,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="直播地址"
-                        android:shadowColor="@color/color_000000_80"
-                        android:shadowDx="5"
-                        android:shadowDy="5"
-                        android:shadowRadius="5"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/ts_24" />
 
@@ -210,10 +182,6 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="middle"
                         android:singleLine="true"
-                        android:shadowColor="@color/color_000000_80"
-                        android:shadowDx="5"
-                        android:shadowDy="5"
-                        android:shadowRadius="5"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/ts_24" />
 
@@ -243,10 +211,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="EPG地址"
-                        android:shadowColor="@color/color_000000_80"
-                        android:shadowDx="5"
-                        android:shadowDy="5"
-                        android:shadowRadius="5"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/ts_24" />
 
@@ -261,10 +225,6 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="middle"
                         android:singleLine="true"
-                        android:shadowColor="@color/color_000000_80"
-                        android:shadowDx="5"
-                        android:shadowDy="5"
-                        android:shadowRadius="5"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/ts_24" />
 
@@ -303,10 +263,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="APP启动时进直播"
-                            android:shadowColor="@color/color_000000_80"
-                            android:shadowDx="5"
-                            android:shadowDy="5"
-                            android:shadowRadius="5"
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
@@ -319,10 +275,6 @@
                             android:id="@+id/tvHomeDefaultShow"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:shadowColor="@color/color_000000_80"
-                            android:shadowDx="5"
-                            android:shadowDy="5"
-                            android:shadowRadius="5"
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
@@ -354,10 +306,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="DNS"
-                            android:shadowColor="@color/color_000000_80"
-                            android:shadowDx="5"
-                            android:shadowDy="5"
-                            android:shadowRadius="5"
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
@@ -370,10 +318,6 @@
                             android:id="@+id/tvDns"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:shadowColor="@color/color_000000_80"
-                            android:shadowDx="5"
-                            android:shadowDy="5"
-                            android:shadowRadius="5"
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
@@ -422,10 +366,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="播放器"
-                            android:shadowColor="@color/color_000000_80"
-                            android:shadowDx="5"
-                            android:shadowDy="5"
-                            android:shadowRadius="5"    
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
@@ -438,10 +378,6 @@
                             android:id="@+id/tvPlay"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:shadowColor="@color/color_000000_80"
-                            android:shadowDx="5"
-                            android:shadowDy="5"
-                            android:shadowRadius="5"    
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
@@ -473,10 +409,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="解码方式"
-                            android:shadowColor="@color/color_000000_80"
-                            android:shadowDx="5"
-                            android:shadowDy="5"
-                            android:shadowRadius="5"    
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
@@ -489,10 +421,6 @@
                             android:id="@+id/tvMediaCodec"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:shadowColor="@color/color_000000_80"
-                            android:shadowDx="5"
-                            android:shadowDy="5"
-                            android:shadowRadius="5"
                             android:visibility="gone"
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
@@ -501,10 +429,6 @@
                             android:id="@+id/tvMediaExoCodec"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:shadowColor="@color/color_000000_80"
-                            android:shadowDx="5"
-                            android:shadowDy="5"
-                            android:shadowRadius="5"
                             android:visibility="gone"
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
@@ -513,10 +437,6 @@
                             android:id="@+id/tvMediaQtCodec"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:shadowColor="@color/color_000000_80"
-                            android:shadowDx="5"
-                            android:shadowDy="5"
-                            android:shadowRadius="5"
                             android:visibility="gone"
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />    
@@ -559,10 +479,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="渲染"
-                            android:shadowColor="@color/color_000000_80"
-                            android:shadowDx="5"
-                            android:shadowDy="5"
-                            android:shadowRadius="5"    
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
@@ -575,10 +491,6 @@
                             android:id="@+id/tvRenderType"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:shadowColor="@color/color_000000_80"
-                            android:shadowDx="5"
-                            android:shadowDy="5"
-                            android:shadowRadius="5"    
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
@@ -610,10 +522,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="嗅探"
-                            android:shadowColor="@color/color_000000_80"
-                            android:shadowDx="5"
-                            android:shadowDy="5"
-                            android:shadowRadius="5"    
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
@@ -627,10 +535,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="系统自带"    
-                            android:shadowColor="@color/color_000000_80"
-                            android:shadowDx="5"
-                            android:shadowDy="5"
-                            android:shadowRadius="5"    
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
@@ -681,10 +585,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="首页推荐"
-                            android:shadowColor="@color/color_000000_80"
-                            android:shadowDx="5"
-                            android:shadowDy="5"
-                            android:shadowRadius="5"    
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
@@ -697,10 +597,6 @@
                             android:id="@+id/tvHomeRec"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:shadowColor="@color/color_000000_80"
-                            android:shadowDx="5"
-                            android:shadowDy="5"
-                            android:shadowRadius="5"    
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
@@ -732,10 +628,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="首页多行"
-                            android:shadowColor="@color/color_000000_80"
-                            android:shadowDx="5"
-                            android:shadowDy="5"
-                            android:shadowRadius="5"    
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
@@ -748,10 +640,6 @@
                             android:id="@+id/showRecStyleText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:shadowColor="@color/color_000000_80"
-                            android:shadowDx="5"
-                            android:shadowDy="5"
-                            android:shadowRadius="5"    
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
@@ -793,10 +681,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="画面缩放"
-                            android:shadowColor="@color/color_000000_80"
-                            android:shadowDx="5"
-                            android:shadowDy="5"
-                            android:shadowRadius="5"    
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
@@ -809,10 +693,6 @@
                             android:id="@+id/tvScaleType"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:shadowColor="@color/color_000000_80"
-                            android:shadowDx="5"
-                            android:shadowDy="5"
-                            android:shadowRadius="5"    
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
@@ -844,10 +724,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="小屏预览"
-                            android:shadowColor="@color/color_000000_80"
-                            android:shadowDx="5"
-                            android:shadowDy="5"
-                            android:shadowRadius="5"    
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
@@ -860,10 +736,6 @@
                             android:id="@+id/showPreviewText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:shadowColor="@color/color_000000_80"
-                            android:shadowDx="5"
-                            android:shadowDy="5"
-                            android:shadowRadius="5"    
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
@@ -914,10 +786,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="历史记录"
-                            android:shadowColor="@color/color_000000_80"
-                            android:shadowDx="5"
-                            android:shadowDy="5"
-                            android:shadowRadius="5"    
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
@@ -930,10 +798,6 @@
                             android:id="@+id/tvHistoryNum"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:shadowColor="@color/color_000000_80"
-                            android:shadowDx="5"
-                            android:shadowDy="5"
-                            android:shadowRadius="5"    
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
@@ -965,10 +829,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="广告过滤"
-                            android:shadowColor="@color/color_000000_80"
-                            android:shadowDx="5"
-                            android:shadowDy="5"
-                            android:shadowRadius="5"
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
@@ -981,10 +841,6 @@
                             android:id="@+id/tvVideoPurifyText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:shadowColor="@color/color_000000_80"
-                            android:shadowDx="5"
-                            android:shadowDy="5"
-                            android:shadowRadius="5"
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
@@ -1027,10 +883,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="搜索展示"
-                            android:shadowColor="@color/color_000000_80"
-                            android:shadowDx="5"
-                            android:shadowDy="5"
-                            android:shadowRadius="5"    
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
@@ -1043,10 +895,6 @@
                             android:id="@+id/tvSearchView"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:shadowColor="@color/color_000000_80"
-                            android:shadowDx="5"
-                            android:shadowDy="5"
-                            android:shadowRadius="5"    
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
@@ -1078,10 +926,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="聚搜模式"
-                            android:shadowColor="@color/color_000000_80"
-                            android:shadowDx="5"
-                            android:shadowDy="5"
-                            android:shadowRadius="5"    
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
@@ -1094,10 +938,6 @@
                             android:id="@+id/showFastSearchText"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:shadowColor="@color/color_000000_80"
-                            android:shadowDx="5"
-                            android:shadowDy="5"
-                            android:shadowRadius="5"    
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
@@ -1148,10 +988,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="IJK缓存"
-                            android:shadowColor="@color/color_000000_80"
-                            android:shadowDx="5"
-                            android:shadowDy="5"
-                            android:shadowRadius="5"    
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
@@ -1166,10 +1002,6 @@
                             android:layout_height="wrap_content"
                             android:textColor="@android:color/white"
                             android:text="已关闭"
-                            android:shadowColor="@color/color_000000_80"
-                            android:shadowDx="5"
-                            android:shadowDy="5"
-                            android:shadowRadius="5"    
                             android:textSize="@dimen/ts_24" />
 
                         <TextView
@@ -1201,10 +1033,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="清空缓存"
-                            android:shadowColor="@color/color_000000_80"
-                            android:shadowDx="5"
-                            android:shadowDy="5"
-                            android:shadowRadius="5"    
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
@@ -1251,10 +1079,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="搜索TVBox"
-                            android:shadowColor="@color/color_000000_80"
-                            android:shadowDx="5"
-                            android:shadowDy="5"
-                            android:shadowRadius="5"    
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
@@ -1267,10 +1091,6 @@
                             android:id="@+id/remoteTv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:shadowColor="@color/color_000000_80"
-                            android:shadowDx="5"
-                            android:shadowDy="5"
-                            android:shadowRadius="5"    
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
@@ -1301,10 +1121,6 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="重置APP"
-                                android:shadowColor="@color/color_000000_80"
-                                android:shadowDx="5"
-                                android:shadowDy="5"
-                                android:shadowRadius="5"
                                 android:textColor="@android:color/white"
                                 android:textSize="@dimen/ts_24" />
 
@@ -1360,10 +1176,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="换张壁纸"
-                            android:shadowColor="@color/color_000000_80"
-                            android:shadowDx="5"
-                            android:shadowDy="5"
-                            android:shadowRadius="5"    
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
@@ -1400,10 +1212,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="默认壁纸"
-                            android:shadowColor="@color/color_000000_80"
-                            android:shadowDx="5"
-                            android:shadowDy="5"
-                            android:shadowRadius="5"    
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
@@ -1451,10 +1259,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="数据备份还原"
-                            android:shadowColor="@color/color_000000_80"
-                            android:shadowDx="5"
-                            android:shadowDy="5"
-                            android:shadowRadius="5"    
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
@@ -1491,10 +1295,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="关于"
-                            android:shadowColor="@color/color_000000_80"
-                            android:shadowDx="5"
-                            android:shadowDy="5"
-                            android:shadowRadius="5"    
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
