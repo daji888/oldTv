@@ -28,10 +28,6 @@
                 android:paddingTop="@dimen/vs_20"
                 android:paddingLeft="@dimen/vs_20"
                 android:text="CCTV"
-                android:shadowColor="@color/color_000000_80"
-                android:shadowDx="5"
-                android:shadowDy="5"
-                android:shadowRadius="5"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/ts_20" />
 
@@ -45,10 +41,6 @@
                 android:paddingLeft="@dimen/vs_20"
                 android:tag="vod_video_size"
                 android:text="1024 x 768"
-                android:shadowColor="@color/color_000000_80"
-                android:shadowDx="5"
-                android:shadowDy="5"
-                android:shadowRadius="5"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/ts_20" />
 
@@ -77,10 +69,6 @@
             android:paddingRight="@dimen/vs_20"
             android:tag="vod_control_pause_time"
             android:text="00:00:00"
-            android:shadowColor="@color/color_000000_80"
-            android:shadowDx="5"
-            android:shadowDy="5"
-            android:shadowRadius="5"
             android:textColor="@android:color/white"
             android:textSize="@dimen/ts_20" />
 
@@ -94,10 +82,6 @@
             android:paddingRight="@dimen/vs_20"
             android:tag="vod_control_pause_time"
             android:text="0Kb/s"
-            android:shadowColor="@color/color_000000_80"
-            android:shadowDx="5"
-            android:shadowDy="5"
-            android:shadowRadius="5"
             android:textColor="@android:color/white"
             android:textSize="@dimen/ts_20" />
     </LinearLayout>
@@ -113,10 +97,6 @@
         android:paddingRight="@dimen/vs_20"
         android:paddingBottom="@dimen/vs_15"
         android:text=""
-        android:shadowColor="@color/color_000000_80"
-        android:shadowDx="5"
-        android:shadowDy="5"
-        android:shadowRadius="5"
         android:textColor="@android:color/white"
         android:textSize="@dimen/ts_16"
         android:textStyle="bold"/>
@@ -150,10 +130,6 @@
                 android:layout_marginRight="@dimen/vs_5"
                 android:paddingRight="@dimen/vs_10"
                 android:text="播放"
-                android:shadowColor="@color/color_000000_80"
-                android:shadowDx="5"
-                android:shadowDy="5"
-                android:shadowRadius="5"
                 android:textColor="@color/color_FFFFFF"
                 android:textSize="@dimen/ts_20" />
 
@@ -168,10 +144,6 @@
                 android:focusable="true"
                 android:padding="@dimen/vs_10"
                 android:text="下一集"
-                android:shadowColor="@color/color_000000_80"
-                android:shadowDx="5"
-                android:shadowDy="5"
-                android:shadowRadius="5"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/ts_20" />
 
@@ -186,10 +158,6 @@
                 android:focusable="true"
                 android:padding="@dimen/vs_10"
                 android:text="上一集"
-                android:shadowColor="@color/color_000000_80"
-                android:shadowDx="5"
-                android:shadowDy="5"
-                android:shadowRadius="5"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/ts_20" />
 
@@ -204,10 +172,6 @@
                 android:focusable="true"
                 android:padding="@dimen/vs_10"
                 android:text="刷新"
-                android:shadowColor="@color/color_000000_80"
-                android:shadowDx="5"
-                android:shadowDy="5"
-                android:shadowRadius="5"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/ts_20" />
             
@@ -222,10 +186,6 @@
                 android:focusable="true"
                 android:padding="@dimen/vs_10"
                 android:text="重播"
-                android:shadowColor="@color/color_000000_80"
-                android:shadowDx="5"
-                android:shadowDy="5"
-                android:shadowRadius="5"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/ts_20" />
 
@@ -240,10 +200,6 @@
                 android:focusable="true"
                 android:padding="@dimen/vs_10"
                 android:text="x1.0"
-                android:shadowColor="@color/color_000000_80"
-                android:shadowDx="5"
-                android:shadowDy="5"
-                android:shadowRadius="5"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/ts_20" />
 
@@ -258,10 +214,6 @@
                 android:focusable="true"
                 android:padding="@dimen/vs_10"
                 android:text="16:9"
-                android:shadowColor="@color/color_000000_80"
-                android:shadowDx="5"
-                android:shadowDy="5"
-                android:shadowRadius="5"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/ts_20" />
 
@@ -276,10 +228,6 @@
                 android:focusable="true"
                 android:padding="@dimen/vs_10"
                 android:text="系统播放器"
-                android:shadowColor="@color/color_000000_80"
-                android:shadowDx="5"
-                android:shadowDy="5"
-                android:shadowRadius="5"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/ts_20" />
 
@@ -294,10 +242,6 @@
                 android:focusable="true"
                 android:padding="@dimen/vs_10"
                 android:text="硬解"
-                android:shadowColor="@color/color_000000_80"
-                android:shadowDx="5"
-                android:shadowDy="5"
-                android:shadowRadius="5"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/ts_20" />
 
@@ -312,10 +256,6 @@
                 android:focusable="true"
                 android:padding="@dimen/vs_10"
                 android:text="字幕"
-                android:shadowColor="@color/color_000000_80"
-                android:shadowDx="5"
-                android:shadowDy="5"
-                android:shadowRadius="5"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/ts_20" />
 
@@ -329,10 +269,6 @@
                 android:focusable="true"
                 android:padding="@dimen/vs_10"
                 android:text="音轨"
-                android:shadowColor="@color/color_000000_80"
-                android:shadowDx="5"
-                android:shadowDy="5"
-                android:shadowRadius="5"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/ts_20"/>
 
@@ -346,10 +282,6 @@
                 android:focusable="true"
                 android:padding="@dimen/vs_10"
                 android:text="视轨"
-                android:shadowColor="@color/color_000000_80"
-                android:shadowDx="5"
-                android:shadowDy="5"
-                android:shadowRadius="5"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/ts_20"/>
 
@@ -362,10 +294,6 @@
                 android:layout_marginRight="@dimen/vs_5"
                 android:padding="@dimen/vs_10"
                 android:text="片头"
-                android:shadowColor="@color/color_000000_80"
-                android:shadowDx="5"
-                android:shadowDy="5"
-                android:shadowRadius="5"
                 android:textColor="@color/color_FFFFFF"
                 android:textSize="@dimen/ts_20" />
 
@@ -380,10 +308,6 @@
                 android:focusable="true"
                 android:padding="@dimen/vs_10"
                 android:text="01:00"
-                android:shadowColor="@color/color_000000_80"
-                android:shadowDx="5"
-                android:shadowDy="5"
-                android:shadowRadius="5"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/ts_20" />
 
@@ -396,10 +320,6 @@
                 android:layout_marginRight="@dimen/vs_5"
                 android:padding="@dimen/vs_10"
                 android:text="片尾"
-                android:shadowColor="@color/color_000000_80"
-                android:shadowDx="5"
-                android:shadowDy="5"
-                android:shadowRadius="5"
                 android:textColor="@color/color_FFFFFF"
                 android:textSize="@dimen/ts_20" />
 
@@ -414,10 +334,6 @@
                 android:focusable="true"
                 android:padding="@dimen/vs_10"
                 android:text="01:00"
-                android:shadowColor="@color/color_000000_80"
-                android:shadowDx="5"
-                android:shadowDy="5"
-                android:shadowRadius="5"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/ts_20" />
 
@@ -433,10 +349,6 @@
                 android:focusable="true"
                 android:padding="@dimen/vs_10"
                 android:text="重置"
-                android:shadowColor="@color/color_000000_80"
-                android:shadowDx="5"
-                android:shadowDy="5"
-                android:shadowRadius="5"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/ts_20" />
 
@@ -451,10 +363,6 @@
                 android:padding="@dimen/vs_10"
                 android:visibility="gone"
                 android:text="横竖屏"
-                android:shadowColor="@color/color_000000_80"
-                android:shadowDx="5"
-                android:shadowDy="5"
-                android:shadowRadius="5"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/ts_20"/>
 
@@ -478,10 +386,6 @@
                 android:layout_marginRight="@dimen/vs_5"
                 android:paddingRight="@dimen/vs_10"
                 android:text="解析"
-                android:shadowColor="@color/color_000000_80"
-                android:shadowDx="5"
-                android:shadowDy="5"
-                android:shadowRadius="5"
                 android:textColor="@color/color_FFFFFF"
                 android:textSize="@dimen/ts_20" />
 
@@ -510,10 +414,6 @@
                 android:paddingEnd="@dimen/vs_10"
                 android:paddingRight="@dimen/vs_10"
                 android:text="00:00"
-                android:shadowColor="@color/color_000000_80"
-                android:shadowDx="5"
-                android:shadowDy="5"
-                android:shadowRadius="5"
                 android:textColor="@color/color_FFFFFF"
                 android:textSize="@dimen/ts_20" />
 
@@ -543,10 +443,6 @@
                 android:paddingStart="@dimen/vs_10"
                 android:paddingLeft="@dimen/vs_10"
                 android:text="00:00"
-                android:shadowColor="@color/color_000000_80"
-                android:shadowDx="5"
-                android:shadowDy="5"
-                android:shadowRadius="5"
                 android:textColor="@color/color_FFFFFF"
                 android:textSize="@dimen/ts_20" />
         </LinearLayout>
@@ -581,10 +477,6 @@
                 android:paddingTop="@dimen/vs_20"
                 android:paddingLeft="@dimen/vs_20"
                 android:text="http://"
-                android:shadowColor="@color/color_000000_80"
-                android:shadowDx="5"
-                android:shadowDy="5"
-                android:shadowRadius="5"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/ts_20" />
         </LinearLayout>
@@ -617,10 +509,6 @@
                 android:focusable="false"
                 android:focusableInTouchMode="false"
                 android:tag="vod_control_pause_t"
-                android:shadowColor="@color/color_000000_80"
-                android:shadowDx="5"
-                android:shadowDy="5"
-                android:shadowRadius="5"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/ts_30"
                 tools:text="100" />
@@ -638,10 +526,6 @@
         android:focusableInTouchMode="false"
         android:gravity="center"
         android:tag="vod_control_slide_info"
-        android:shadowColor="@color/color_000000_80"
-        android:shadowDx="5"
-        android:shadowDy="5"
-        android:shadowRadius="5"
         android:textAlignment="gravity"
         android:textColor="@android:color/white"
         android:textSize="@dimen/ts_30"
@@ -677,10 +561,6 @@
             android:layout_marginTop="@dimen/vs_20"
             android:focusable="false"
             android:focusableInTouchMode="false"
-            android:shadowColor="@color/color_000000_80"
-            android:shadowDx="5"
-            android:shadowDy="5"
-            android:shadowRadius="5"
             android:textColor="@android:color/white"
             android:textSize="@dimen/ts_30"
             tools:text="100" />
@@ -726,10 +606,6 @@
         android:focusableInTouchMode="false"
         android:tag="play_load_net_speed"
         android:text="0"
-        android:shadowColor="@color/color_000000_80"
-        android:shadowDx="5"
-        android:shadowDy="5"
-        android:shadowRadius="5"
         android:textColor="@color/color_FFFFFF"
         android:textSize="@dimen/ts_20" />
 
