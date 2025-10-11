@@ -19,10 +19,6 @@
             android:focusableInTouchMode="false"
             android:gravity="center"
             android:text="搜索其它数据源中的相关资源, 没有找到可以尝试选词重搜"
-            android:shadowColor="@color/color_000000_80"
-            android:shadowDx="5"
-            android:shadowDy="5"
-            android:shadowRadius="5"
             android:textColor="@color/color_CC000000"
             android:textSize="@dimen/ts_22" />
 
