@@ -48,10 +48,6 @@
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:shadowColor="@color/color_000000_80"
-                    android:shadowDx="5"
-                    android:shadowDy="5"
-                    android:shadowRadius="5"
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/ts_28" />
 
@@ -70,10 +66,6 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:singleLine="true"
-                        android:shadowColor="@color/color_000000_80"
-                        android:shadowDx="5"
-                        android:shadowDy="5"
-                        android:shadowRadius="5"
                         android:textColor="@color/color_CCFFFFFF"
                         android:textSize="@dimen/ts_20" />
 
@@ -86,10 +78,6 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:singleLine="true"
-                        android:shadowColor="@color/color_000000_80"
-                        android:shadowDx="5"
-                        android:shadowDy="5"
-                        android:shadowRadius="5"
                         android:textColor="@color/color_CCFFFFFF"
                         android:textSize="@dimen/ts_20" />
 
@@ -102,10 +90,6 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:singleLine="true"
-                        android:shadowColor="@color/color_000000_80"
-                        android:shadowDx="5"
-                        android:shadowDy="5"
-                        android:shadowRadius="5"
                         android:textColor="@color/color_CCFFFFFF"
                         android:textSize="@dimen/ts_20" />
 
@@ -118,10 +102,6 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:singleLine="true"
-                        android:shadowColor="@color/color_000000_80"
-                        android:shadowDx="5"
-                        android:shadowDy="5"
-                        android:shadowRadius="5"
                         android:textColor="@color/color_CCFFFFFF"
                         android:textSize="@dimen/ts_20" />
 
@@ -134,10 +114,6 @@
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:singleLine="true"
-                        android:shadowColor="@color/color_000000_80"
-                        android:shadowDx="5"
-                        android:shadowDy="5"
-                        android:shadowRadius="5"
                         android:textColor="@color/color_CCFFFFFF"
                         android:textSize="@dimen/ts_20" />
                 </LinearLayout>
@@ -149,10 +125,6 @@
                     android:layout_marginBottom="@dimen/vs_5"
                     android:ellipsize="end"
                     android:singleLine="true"
-                    android:shadowColor="@color/color_000000_80"
-                    android:shadowDx="5"
-                    android:shadowDy="5"
-                    android:shadowRadius="5"
                     android:textColor="@color/color_CCFFFFFF"
                     android:textSize="@dimen/ts_20" />
 
@@ -163,10 +135,6 @@
                     android:layout_marginBottom="@dimen/vs_5"
                     android:ellipsize="end"
                     android:singleLine="true"
-                    android:shadowColor="@color/color_000000_80"
-                    android:shadowDx="5"
-                    android:shadowDy="5"
-                    android:shadowRadius="5"
                     android:textColor="@color/color_CCFFFFFF"
                     android:textSize="@dimen/ts_20" />
 
@@ -176,10 +144,6 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:singleLine="true"
-                    android:shadowColor="@color/color_000000_80"
-                    android:shadowDx="5"
-                    android:shadowDy="5"
-                    android:shadowRadius="5"
                     android:textColor="@color/color_CCFFFFFF"
                     android:textSize="@dimen/ts_20" />
 
@@ -192,10 +156,6 @@
                     android:lineSpacingMultiplier="1.2"
                     android:maxLines="3"
                     android:focusable="false"
-                    android:shadowColor="@color/color_000000_80"
-                    android:shadowDx="5"
-                    android:shadowDy="5"
-                    android:shadowRadius="5"
                     android:textColor="@color/color_CCFFFFFF"
                     android:textSize="@dimen/ts_20" />
 
@@ -221,10 +181,6 @@
                         android:focusable="true"
                         android:gravity="center"
                         android:text="立即播放"
-                        android:shadowColor="@color/color_000000_80"
-                        android:shadowDx="5"
-                        android:shadowDy="5"
-                        android:shadowRadius="5"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/vs_20" />
 
@@ -240,10 +196,6 @@
                         android:focusable="true"
                         android:gravity="center"
                         android:text="快速搜索"
-                        android:shadowColor="@color/color_000000_80"
-                        android:shadowDx="5"
-                        android:shadowDy="5"
-                        android:shadowRadius="5"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/vs_20" />
 
@@ -259,10 +211,6 @@
                         android:focusable="true"
                         android:gravity="center"
                         android:text="全部简介"
-                        android:shadowColor="@color/color_000000_80"
-                        android:shadowDx="5"
-                        android:shadowDy="5"
-                        android:shadowRadius="5"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/vs_20" />
 
@@ -278,10 +226,6 @@
                         android:focusable="true"
                         android:gravity="center"
                         android:text="剧集倒序"
-                        android:shadowColor="@color/color_000000_80"
-                        android:shadowDx="5"
-                        android:shadowDy="5"
-                        android:shadowRadius="5"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/vs_20" />
 
@@ -297,10 +241,6 @@
                         android:focusable="true"
                         android:gravity="center"
                         android:text="加入收藏"
-                        android:shadowColor="@color/color_000000_80"
-                        android:shadowDx="5"
-                        android:shadowDy="5"
-                        android:shadowRadius="5"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/vs_20" />
                 </LinearLayout>
@@ -331,10 +271,6 @@
                 android:layout_marginLeft="@dimen/vs_10"
                 android:gravity="center"
                 android:text="暂无播放数据"
-                android:shadowColor="@color/color_000000_80"
-                android:shadowDx="5"
-                android:shadowDy="5"
-                android:shadowRadius="5"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/ts_24" />
         </LinearLayout>
