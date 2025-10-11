@@ -2,9 +2,9 @@ package com.github.tvbox.osc.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.animation.BounceInterpolator;
 import android.view.View;
 import android.widget.TextView;
-import android.view.animation.BounceInterpolator;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -66,7 +66,6 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
     public static HomeHotVodAdapter homeHotVodAdapter;
     private List<Movie.Video> homeSourceRec;
     public static TvRecyclerView tvHotList;
-    private int lastFocusedPosition = TvRecyclerView.NO_POSITION;
 
     public static UserFragment newInstance() {
         return new UserFragment();
@@ -105,7 +104,6 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
             }
             homeHotVodAdapter.setNewData(vodList);
         }
-        restoreFocus();
     }
 
     @Override
@@ -200,7 +198,6 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
                 itemView.animate().scaleX(1.1f).scaleY(1.1f).setDuration(300).setInterpolator(new BounceInterpolator()).start();
-                saveCurrentFocus();
             }
 
             @Override
@@ -327,28 +324,6 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
             ControlManager.get().stopServer();
             android.os.Process.killProcess(android.os.Process.myPid());
             System.exit(0);
-        }
-    }
-
-    public void saveCurrentFocus() {
-        View focusedChild = tvHotList.getFocusedChild();
-        if (focusedChild != null) {
-            lastFocusedPosition = tvHotList.getChildAdapterPosition(focusedChild);
-        }
-    }
-
-    public void restoreFocus() {
-        if (lastFocusedPosition != TvRecyclerView.NO_POSITION) {
-            tvHotList.post(new Runnable() {
-                @Override
-                public void run() {
-                    TvRecyclerView.ViewHolder viewHolder = tvHotList.findViewHolderForAdapterPosition(lastFocusedPosition);
-                    if (viewHolder != null) {
-                        tvHotList.getLayoutManager().smoothScrollToPosition(tvHotList, null, lastFocusedPosition);
-                        viewHolder.itemView.requestFocus();
-                    }
-                }
-            });
         }
     }
 
