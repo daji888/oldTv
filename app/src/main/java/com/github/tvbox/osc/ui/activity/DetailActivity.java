@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Html;
@@ -507,31 +506,6 @@ public class DetailActivity extends BaseActivity {
                 v.animate().scaleX(1.1f).scaleY(1.1f).setDuration(300).setInterpolator(new BounceInterpolator()).start();
             else
                 v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(300).setInterpolator(new BounceInterpolator()).start();
-            if (tvPlay.hasFocus()) {
-                tvPlay.setTextColor(Color.YELLOW);
-            } else {
-                tvPlay.setTextColor(0xD9FFFFFF);
-            }
-            if (tvQuickSearch.hasFocus()) {
-                tvQuickSearch.setTextColor(Color.YELLOW);
-            } else {
-                tvQuickSearch.setTextColor(0xD9FFFFFF);
-            }
-            if (tvSort.hasFocus()) {
-                tvSort.setTextColor(Color.YELLOW);
-            } else {
-                tvSort.setTextColor(0xD9FFFFFF); 
-            }
-            if (tvCollect.hasFocus()) {
-                tvCollect.setTextColor(Color.YELLOW);
-            } else {
-                tvCollect.setTextColor(0xD9FFFFFF);
-            }
-            if (tvSynopsis.hasFocus()) {
-                tvSynopsis.setTextColor(Color.YELLOW);
-            } else {
-                tvSynopsis.setTextColor(0xD9FFFFFF); 
-            }
         }
     };
 
