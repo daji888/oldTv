@@ -189,10 +189,12 @@ public class LivePlayActivity extends BaseActivity {
     public static SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
     public static SimpleDateFormat formatDate1 = new SimpleDateFormat("MM-dd");
     public static String day = formatDate.format(new Date());
+    public static Date nowday = new Date();
 
     private boolean isSHIYI = false;
     public static boolean isBack = false;
     private static String shiyi_time;//时移时间
+    private static int shiyi_time_c;//时移时间差值
     public static String playUrl;
     //kenson
     private ImageView imgLiveIcon;
@@ -269,6 +271,7 @@ public class LivePlayActivity extends BaseActivity {
         mRightEpgList = (TvRecyclerView) findViewById(R.id.lv_epg);
         Hawk.put(HawkConfig.NOW_DATE, formatDate.format(new Date()));
         day = formatDate.format(new Date());
+        nowday = new Date();
         
         //EPG频道名称
         imgLiveIcon = findViewById(R.id.img_live_icon);
@@ -1088,6 +1091,7 @@ public class LivePlayActivity extends BaseActivity {
                             mRightEpgList.smoothScrollToPosition(position);
                         }
                     });
+                    shiyi_time_c = (int) getTime(formatDate.format(nowday) + " " + selectedData.start + ":" + "30", formatDate.format(nowday) + " " + selectedData.end + ":" + "30");
                     ViewGroup.LayoutParams lp = iv_play.getLayoutParams();
                     lp.width = videoHeight / 7;
                     lp.height = videoHeight / 7;
@@ -1201,7 +1205,8 @@ public class LivePlayActivity extends BaseActivity {
                             mRightEpgList.smoothScrollToPosition(position);
                         }
                     });
-                    ViewGroup.LayoutParams lp =  iv_play.getLayoutParams();
+                    shiyi_time_c = (int) getTime(formatDate.format(nowday) + " " + selectedData.start + ":" + "30", formatDate.format(nowday) + " " + selectedData.end + ":" + "30");
+                    ViewGroup.LayoutParams lp = iv_play.getLayoutParams();
                     lp.width = videoHeight / 7;
                     lp.height = videoHeight / 7;
                     showProgressBars(true);
@@ -2308,6 +2313,25 @@ public class LivePlayActivity extends BaseActivity {
         return -1;
     }
 
+    //计算两个时间相差的秒数
+    public static long getTime(String startTime, String endTime)  {
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        long eTime = 0;
+        try {
+            eTime = df.parse(endTime).getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        long sTime = 0;
+        try {
+            sTime = df.parse(startTime).getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        long diff = (eTime - sTime) / 1000;
+        return diff;
+    }
+
     private boolean isCurrentLiveChannelValid() {
         if (currentLiveChannelItem == null) {
             Toast.makeText(App.getInstance(), "请先选择频道", Toast.LENGTH_SHORT).show();
@@ -2431,11 +2455,12 @@ public class LivePlayActivity extends BaseActivity {
                 @Override
                 public void onTick(long arg0) {
                     if (mVideoView != null) {
-                        long duration = mVideoView.getDuration();
+                        long sBarduration = mVideoView.getDuration();
+                        long duration = shiyi_time_c * 1000;
                         long currentPosition = mVideoView.getCurrentPosition();
                 //        sBar.setMin(0);
-                        sBar.setMax((int) duration);
-                        sBar.setKeyProgressIncrement((int) duration / 100);
+                        sBar.setMax((int) sBarduration);
+                        sBar.setKeyProgressIncrement((int) sBarduration / 100);
                         sBar.setProgress((int) currentPosition);
                         tv_currentpos.setText(PlayerUtils.stringForTime((int) currentPosition));
                         tv_duration.setText(PlayerUtils.stringForTime((int) duration));
