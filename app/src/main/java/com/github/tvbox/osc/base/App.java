@@ -78,7 +78,7 @@ public class App extends MultiDexApplication {
         putDefault(HawkConfig.HISTORY_NUM, 2);               //历史条数: 0=30条, 1=50条, 2=100条
         // 播放器选项
         putDefault(HawkConfig.SHOW_PREVIEW, false);          //小屏预览: true=开启, false=关闭
-        putDefault(HawkConfig.PLAY_RENDER, 0);               //渲染方式: 0=Textureview, 1=Surfaceview
+        putDefault(HawkConfig.PLAY_RENDER, 1);               //渲染方式: 0=Textureview, 1=Surfaceview
         putDefault(HawkConfig.PLAY_SCALE, 0);                //画面缩放: 0=原比, 1=16:9, 2=4:3, 3=填充, 4=原始, 5=裁剪
         putDefault(HawkConfig.PLAY_TYPE, 1);                 //播放器: 0=系统, 1=IJK, 2=EXO, 10=MX, 11=Reex, 12=Kodi, 14=VLC
         putDefault(HawkConfig.IJK_CODEC, "硬解");            //IJK解码: 硬解, 软解
