@@ -1026,7 +1026,8 @@ public class LivePlayActivity extends BaseActivity {
                 String shiyiUrl = currentLiveChannelItem.getUrl();
                 if (now.compareTo(selectedData.startdateTime) < 0) {
 
-                } else if (hasCatchup || shiyiUrl.contains("/PLTV/") || shiyiUrl.contains("/TVOD/")) {
+           //     } else if (hasCatchup || shiyiUrl.contains("/PLTV/") || shiyiUrl.contains("/TVOD/")) {
+                } else {    
                     shiyiUrl = shiyiUrl.replaceAll("/PLTV/", "/TVOD/");
                     mHandler.removeCallbacks(mHideChannelListRun);
                     mHandler.postDelayed(mHideChannelListRun, 100);
@@ -1140,7 +1141,8 @@ public class LivePlayActivity extends BaseActivity {
                 String shiyiUrl = currentLiveChannelItem.getUrl();
                 if (now.compareTo(selectedData.startdateTime) < 0) {
 
-                } else if (hasCatchup || shiyiUrl.contains("/PLTV/") || shiyiUrl.contains("/TVOD/")) {
+            //    } else if (hasCatchup || shiyiUrl.contains("/PLTV/") || shiyiUrl.contains("/TVOD/")) {
+                } else {    
                     shiyiUrl = shiyiUrl.replaceAll("/PLTV/", "/TVOD/");
                     mHandler.removeCallbacks(mHideChannelListRun);
                     mHandler.postDelayed(mHideChannelListRun, 100);
