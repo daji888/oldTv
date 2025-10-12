@@ -2457,16 +2457,24 @@ public class LivePlayActivity extends BaseActivity {
                 @Override
                 public void onTick(long arg0) {
                     if (mVideoView != null) {
-                        long sBarduration = mVideoView.getDuration();
-                        long duration = shiyi_time_c * 1000;
                         long currentPosition = mVideoView.getCurrentPosition();
-                //        sBar.setMin(0);
-                        sBar.setMax((int) sBarduration);
-                        sBar.setKeyProgressIncrement((int) sBarduration / 100);
                         sBar.setProgress((int) currentPosition);
                         tv_currentpos.setText(PlayerUtils.stringForTime((int) currentPosition));
-                        tv_duration.setText(PlayerUtils.stringForTime((int) duration));
-                        ((TextView) findViewById(R.id.tv_pause_progress_text)).setText((PlayerUtils.stringForTime((int) currentPosition)) + " / " + (PlayerUtils.stringForTime((int) duration)));
+                        String shiyiUrl = currentLiveChannelItem.getUrl();
+                        if (hasCatchup || shiyiUrl.contains("/PLTV/") || shiyiUrl.contains("/TVOD/")) {
+                            long duration = shiyi_time_c * 1000;
+                            long sBarduration = mVideoView.getDuration();
+                            sBar.setMax((int) sBarduration);
+                            sBar.setKeyProgressIncrement((int) sBarduration / 100);
+                            tv_duration.setText(PlayerUtils.stringForTime((int) duration));
+                            ((TextView) findViewById(R.id.tv_pause_progress_text)).setText((PlayerUtils.stringForTime((int) currentPosition)) + " / " + (PlayerUtils.stringForTime((int) duration)));
+                        } else {    
+                            long duration = mVideoView.getDuration();
+                            sBar.setMax((int) duration);
+                            sBar.setKeyProgressIncrement((int) duration / 100);
+                            tv_duration.setText(PlayerUtils.stringForTime((int) duration));
+                            ((TextView) findViewById(R.id.tv_pause_progress_text)).setText((PlayerUtils.stringForTime((int) currentPosition)) + " / " + (PlayerUtils.stringForTime((int) duration)));
+                        }
                     }
                 }
 
