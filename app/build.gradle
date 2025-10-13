@@ -124,7 +124,7 @@ dependencies {
     implementation 'org.jsoup:jsoup:1.21.2'
     implementation 'com.github.hedzr:android-file-chooser:v1.2.0-final'  //2022年
     implementation 'commons-io:commons-io:2.20.0'
-    implementation 'com.googlecode.juniversalchardet:juniversalchardet:2.5.0'
+    implementation 'com.github.albfernandez:juniversalchardet:2.5.0'
     configurations {
         configureEach {
             exclude group: 'xpp3', module: 'xpp3'
