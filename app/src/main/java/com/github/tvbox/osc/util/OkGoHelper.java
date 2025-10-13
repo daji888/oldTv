@@ -51,7 +51,7 @@ import xyz.doikki.videoplayer.exo.ExoMediaSourceHelper;
 public class OkGoHelper {
     public static final long DEFAULT_MILLISECONDS = 10000;      //默认的超时时间
 
-    private static final String userAgent = "okhttp/5.1.0";
+    private static final String userAgent = "okhttp/5.2.1";
 
     //https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/200
     public static HashMap<Integer, String > httpPhaseMap  = new HashMap<Integer, String>(){{
