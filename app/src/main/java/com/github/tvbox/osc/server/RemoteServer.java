@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.wifi.WifiManager;
 import android.os.Environment;
-import android.text.TextUtils;
 import android.util.Base64;
 
 import static com.github.tvbox.osc.util.RegexUtils.getPattern;
@@ -14,15 +13,11 @@ import com.github.tvbox.osc.event.RefreshEvent;
 import com.github.tvbox.osc.event.ServerEvent;
 import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.util.FileUtils;
-import com.github.tvbox.osc.util.js.Connect;
-import com.github.tvbox.osc.util.js.Req;
-import com.github.tvbox.osc.util.LOG;
 import com.github.tvbox.osc.util.OkGoHelper;
 import com.github.tvbox.osc.util.Proxy;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -45,16 +40,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Comparator;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -140,88 +128,6 @@ public class RemoteServer extends NanoHTTPD {
              return NanoHTTPD.newFixedLengthResponse(Response.Status.INTERNAL_ERROR, NanoHTTPD.MIME_PLAINTEXT, "500");
          }
      }
-
-     
-
-     private Response proxyMultiRequest(JsonArray data) {
-        try {
-            Map<Integer, String> indexMap = new ConcurrentHashMap<>();
-            CountDownLatch countDownLatch = new CountDownLatch(data.size());
-            int maxThread = Math.min(data.size(), 16);
-            ExecutorService threadPool = new ThreadPoolExecutor(maxThread, maxThread,
-                    1L, TimeUnit.SECONDS, new LinkedBlockingDeque<>(4096));
-
-            for (int i = 0; i < data.size(); i++) {
-                JsonObject obj = (JsonObject) data.get(i);
-                String url = obj.get("url").getAsString();
-                JsonObject options = obj.get("options").getAsJsonObject();
-                LOG.e(url);
-                if (TextUtils.isEmpty(url)) {
-                    countDownLatch.countDown();
-                    continue;
-                }
-                int finalI = i;
-                threadPool.execute(() -> {
-                    long start = System.currentTimeMillis();
-                    try {
-                        Req req = Req.objectFrom(new Gson().toJson(options));
-                        okhttp3.Response res = Connect.to(url, req).execute();
-                        JsonObject headers = new JsonObject();
-                        for (Map.Entry<String, List<String>> entry : res.headers().toMultimap().entrySet()) {
-                            if (entry.getValue().size() == 1) headers.addProperty(entry.getKey(), entry.getValue().get(0));
-                            if (entry.getValue().size() >= 2) headers.addProperty(entry.getKey(), String.join(";", entry.getValue()));
-                        }
-
-                        JsonObject jsonObject = new JsonObject();
-                        jsonObject.addProperty("index", finalI +"");
-                        jsonObject.addProperty("url", url);
-                        jsonObject.addProperty("code", res.code());
-                        jsonObject.add("headers", headers);
-
-                        if (req.getBuffer() == 0) {
-                            jsonObject.addProperty("content", new String(res.body().bytes(), req.getCharset()));
-                        } else if (req.getBuffer() == 1) {
-                            JsonArray array = new JsonArray();
-                            for (byte aByte : res.body().bytes()) {
-                                array.add((int) aByte);
-                            }
-                            jsonObject.add("content", array);
-                        } else if (req.getBuffer() == 2) {
-                            jsonObject.addProperty("content", Base64.encodeToString(res.body().bytes(), Base64.DEFAULT | Base64.NO_WRAP));
-                        }
-                        indexMap.put(finalI, jsonObject.get("content").getAsString());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } finally {
-                        countDownLatch.countDown();
-                        LOG.e("js task end, used " + (System.currentTimeMillis() - start) + "毫秒");
-                    }
-                });
-            }
-
-            try {
-                countDownLatch.await(data.size() / 16 * 10 + 10, TimeUnit.SECONDS);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            try {
-                if (!threadPool.isShutdown() && !threadPool.isTerminated()) {
-                    threadPool.shutdown();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            String[] sdata = new String[data.size()];
-            for (Map.Entry<Integer, String> entry : indexMap.entrySet()) {
-                sdata[entry.getKey()] = entry.getValue();
-            }
-            LOG.e(new Gson().toJson(sdata));
-            return newFixedLengthResponse(Response.Status.OK, NanoHTTPD.MIME_PLAINTEXT, new Gson().toJson(sdata));
-        } catch (Throwable th) {
-            return newFixedLengthResponse(Response.Status.OK, NanoHTTPD.MIME_PLAINTEXT, th.getMessage());
-        }
-    }
 
     @Override
     public Response serve(IHTTPSession session) {
@@ -321,11 +227,6 @@ public class RemoteServer extends NanoHTTPD {
                         }
                     }
                     session.parseBody(files);
-                    String postData = files.get("postData");
-                    if (fileName.startsWith("/bf") && postData != null) {
-                        LOG.e(postData);
-                        return proxyMultiRequest(JsonParser.parseString(postData).getAsJsonArray());
-                    }
                 } catch (IOException IOExc) {
                     return createPlainTextResponse(NanoHTTPD.Response.Status.INTERNAL_ERROR, "SERVER INTERNAL ERROR: IOException: " + IOExc.getMessage());
                 } catch (NanoHTTPD.ResponseException rex) {
