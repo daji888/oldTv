@@ -3,7 +3,6 @@ package com.github.tvbox.osc.util.js;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
-import com.github.catvod.net.OkHttp;
 import com.github.catvod.utils.Util;
 import com.github.tvbox.osc.server.ControlManager;
 import com.github.tvbox.osc.util.js.rsa.RSAEncrypt;
@@ -80,13 +79,6 @@ public class Global {
     @Function
     public JSArray pdfla(String html, String p1, String list_text, String list_url, String add_url) {
         return new JSUtils<String>().toArray(runtime, HtmlParser.parseDomForList(html, p1, list_text, list_url, add_url));
-    }
-
-    @Keep
-    @Function
-    public JSArray batchFetch(JSObject options) {
-        String json = OkHttp.stringPost("http://" + Util.getIp() + ":" + Proxy.getPort() + "/bf", ((JSArray) options).toJsonArray().toString());
-        return (JSArray) runtime.parse(json);
     }
     
     @Keep
