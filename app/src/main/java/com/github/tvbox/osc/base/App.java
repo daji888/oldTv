@@ -86,7 +86,7 @@ public class App extends MultiDexApplication {
         // 系统选项
         putDefault(HawkConfig.SEARCH_VIEW, 0);               //搜索展示: 0=文字列表, 1=缩略图
         putDefault(HawkConfig.PARSE_WEBVIEW, true);          //嗅探Webview: true=系统自带, false=XWalkView
-        putDefault(HawkConfig.DOH_URL, 0);                   //DNS: 0=运营商, 1=腾讯, 2=阿里, 3=360, 4=114, 5=DNSWatch, 6=Google, 7=AdGuard, 8=Quad9, 9=Cloudflare
+        putDefault(HawkConfig.DOH_URL, 0);                   //DNS: 0=运营商, 1=腾讯, 2=阿里, 3=360, 4=DNSWatch, 5=Google, 6=AdGuard, 7=Quad9, 8=Cloudflare
         putDefault(HawkConfig.API_URL, "https://www.饭太硬.com/tv/");
         putDefault(HawkConfig.LIVE_URL, "https://ghproxy.net/raw.githubusercontent.com/daji888/ys/master/tv.txt");
         putDefault(HawkConfig.EPG_URL, "https://epg.51zmt.top:8001/api/diyp/?ch={name}&date={date}");
