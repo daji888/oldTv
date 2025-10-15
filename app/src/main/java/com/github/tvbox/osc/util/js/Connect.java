@@ -2,8 +2,8 @@ package com.github.tvbox.osc.util.js;
 
 import android.util.Base64;
 
-import com.github.catvod.net.OkHttp;
 import com.github.tvbox.osc.util.LOG;
+import com.github.tvbox.osc.util.OkGoHelper;
 import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.OkGo;
 import com.whl.quickjs.wrapper.JSArray;
@@ -30,7 +30,7 @@ public class Connect {
     static OkHttpClient client;
     
     public static Call to(String url, Req req) {
-        OkHttpClient client = OkHttp.client(req.isRedirect(), req.getTimeout());
+        client = OkGoHelper.getDefaultClient();
         return client.newCall(getRequest(url, req, Headers.of(req.getHeader())));
     }    
 
