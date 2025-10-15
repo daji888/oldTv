@@ -68,7 +68,6 @@ public class OkGoHelper {
             + "{\"name\": \"腾讯\", \"url\": \"https://doh.pub/dns-query\"},"
             + "{\"name\": \"阿里\", \"url\": \"https://dns.alidns.com/dns-query\"},"
             + "{\"name\": \"360\", \"url\": \"https://doh.360.cn/dns-query\"},"
-            + "{\"name\": \"114\", \"url\": \"https://114.114.114.114/dns-query\" , \"ips\": [\"114.114.114.114\", \"114.114.115.115\"]},"
             + "{\"name\": \"DNSWatch\", \"url\": \"https://resolver2.dns.watch/dns-query\"},"
             + "{\"name\": \"Google\", \"url\": \"https://dns.google/dns-query\"},"
             + "{\"name\": \"AdGuard\", \"url\": \"https://dns.adguard.com/dns-query\"},"
