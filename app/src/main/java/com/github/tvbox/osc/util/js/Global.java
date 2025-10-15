@@ -3,7 +3,6 @@ package com.github.tvbox.osc.util.js;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
-import com.github.catvod.utils.Util;
 import com.github.tvbox.osc.server.ControlManager;
 import com.github.tvbox.osc.util.js.rsa.RSAEncrypt;
 import com.github.tvbox.osc.util.Proxy;
