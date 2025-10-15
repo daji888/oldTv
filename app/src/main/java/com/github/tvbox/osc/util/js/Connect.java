@@ -4,7 +4,7 @@ import android.util.Base64;
 
 import com.github.tvbox.osc.util.LOG;
 import com.github.tvbox.osc.util.OkGoHelper;
-import com.lzy.okgo.model.HttpHeaders;
+import com.google.common.net.HttpHeaders;
 import com.lzy.okgo.OkGo;
 import com.whl.quickjs.wrapper.JSArray;
 import com.whl.quickjs.wrapper.JSObject;
@@ -63,7 +63,7 @@ public class Connect {
 
     private static Request getRequest(String url, Req req, Headers headers) {
         if (req.getMethod().equalsIgnoreCase("post")) {
-            return new Request.Builder().url(url).tag("js_okhttp_tag").headers(headers).post(getPostBody(req, headers.get(HttpHeaders.HEAD_KEY_CONTENT_TYPE))).build();
+            return new Request.Builder().url(url).tag("js_okhttp_tag").headers(headers).post(getPostBody(req, headers.get(HttpHeaders.CONTENT_TYPE))).build();
         } else if (req.getMethod().equalsIgnoreCase("header")) {
             return new Request.Builder().url(url).tag("js_okhttp_tag").headers(headers).head().build();
         } else {
@@ -73,8 +73,8 @@ public class Connect {
 
     private static RequestBody getPostBody(Req req, String contentType) {
         if (req.getData() != null && req.getPostType().equals("json")) return getJsonBody(req);
-    //    if (req.getData() != null && req.getPostType().equals("form")) return getFormBody(req);
-    //    if (req.getData() != null && req.getPostType().equals("form-data")) return getFormDataBody(req);
+        if (req.getData() != null && req.getPostType().equals("form")) return getFormBody(req);
+        if (req.getData() != null && req.getPostType().equals("form-data")) return getFormDataBody(req);
         if (req.getBody() != null && contentType != null) return RequestBody.create(req.getBody(), MediaType.get(contentType));
         return RequestBody.create(null, "");
     }
@@ -83,7 +83,7 @@ public class Connect {
         return RequestBody.create(req.getData().toString(), MediaType.get("application/json; charset=utf-8"));
     }
 
-  /*  private static RequestBody getFormBody(Req req) {
+    private static RequestBody getFormBody(Req req) {
         FormBody.Builder formBody = new FormBody.Builder();
         Map<String, String> params = Json.toMap(req.getData());
         for (String key : params.keySet()) formBody.add(key, params.get(key));
@@ -96,7 +96,7 @@ public class Connect {
         Map<String, String> params = Json.toMap(req.getData());
         for (String key : params.keySet()) builder.addFormDataPart(key, params.get(key));
         return builder.build();
-    }  */
+    }
 
     private static void setHeader(QuickJSContext ctx, Response res, JSObject object) {
         for (Map.Entry<String, List<String>> entry : res.headers().toMultimap().entrySet()) {
