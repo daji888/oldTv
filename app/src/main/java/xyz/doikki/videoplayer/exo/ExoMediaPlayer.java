@@ -33,6 +33,7 @@ import com.orhanobut.hawk.Hawk;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import okhttp3.Dns;
@@ -69,6 +70,12 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     @SuppressLint("UnsafeOptInUsageError")
     @Override
     public void initPlayer() {
+        if (mMediaPlayer != null) {
+            mMediaPlayer.removeListener(this);
+            mMediaPlayer.clearMediaItems();
+            mMediaPlayer.release();
+            mMediaPlayer = null;
+        }
         mRenderersFactory = new DefaultRenderersFactory(mAppContext);
         mRenderersFactory.setEnableDecoderFallback(true);
         setOptions();
@@ -78,6 +85,10 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
         if (mLoadControl == null) {
             mLoadControl = new DefaultLoadControl();
         }
+        mTrackSelector.setParameters(mTrackSelector.buildUponParameters()
+                .setPreferredAudioLanguages("zh")                     
+                .setPreferredTextLanguage(Locale.getDefault().getISO3Language())                     
+        );
         mMediaPlayer = new ExoPlayer.Builder(mAppContext)
             .setLoadControl(mLoadControl)
             .setRenderersFactory(mRenderersFactory)
