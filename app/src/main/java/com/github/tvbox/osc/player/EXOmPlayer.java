@@ -147,8 +147,6 @@ public class EXOmPlayer extends ExoMediaPlayer {
                 TrackGroupArray trackGroupArray = trackInfo.getTrackGroups(mTrackBean.renderId);
                 @SuppressLint("UnsafeOptInUsageError") DefaultTrackSelector.SelectionOverride override = new DefaultTrackSelector.SelectionOverride(mTrackBean.trackGroupId, mTrackBean.trackId);
                 DefaultTrackSelector.Parameters.Builder parametersBuilder = getTrackSelector().buildUponParameters();
-                parametersBuilder.setPreferredTextLanguage("zh");
-                parametersBuilder.setForceHighestSupportedBitrate(true);
                 parametersBuilder.setRendererDisabled(mTrackBean.renderId, false);
                 parametersBuilder.setSelectionOverride(mTrackBean.renderId, trackGroupArray, override);
                 getTrackSelector().setParameters(parametersBuilder.build());
