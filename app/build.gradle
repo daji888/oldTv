@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace = 'com.github.tvbox.osc'
-    compileSdkVersion = 35
+    compileSdkVersion = 36
 
     defaultConfig {
         applicationId = 'com.github.tvbox.osc.dj'
@@ -104,16 +104,17 @@ dependencies {
     implementation 'net.sourceforge.streamsupport:android-retrofuture:1.7.4'  //2021年
     implementation 'androidx.annotation:annotation:1.9.1'
     
-    implementation "androidx.media3:media3-common:1.8.0"
-    implementation "androidx.media3:media3-datasource-rtmp:1.8.0"
-    implementation "androidx.media3:media3-datasource-okhttp:1.8.0"
-    implementation "androidx.media3:media3-exoplayer:1.8.0"
-    implementation "androidx.media3:media3-exoplayer-dash:1.8.0"
-    implementation "androidx.media3:media3-exoplayer-hls:1.8.0"
-    implementation "androidx.media3:media3-exoplayer-rtsp:1.8.0"
-    implementation "androidx.media3:media3-exoplayer-smoothstreaming:1.8.0"
-//    implementation "androidx.media3:media3-exoplayer-midi:1.8.0"
-//    implementation "androidx.media3:media3-ui:1.8.0"
+    def media3_version = "1.8.0"
+    implementation "androidx.media3:media3-common:$media3_version"
+    implementation "androidx.media3:media3-datasource-rtmp:$media3_version"
+    implementation "androidx.media3:media3-datasource-okhttp:$media3_version"
+    implementation "androidx.media3:media3-exoplayer:$media3_version"
+    implementation "androidx.media3:media3-exoplayer-dash:$media3_version"
+    implementation "androidx.media3:media3-exoplayer-hls:$media3_version"
+    implementation "androidx.media3:media3-exoplayer-rtsp:$media3_version"
+    implementation "androidx.media3:media3-exoplayer-smoothstreaming:$media3_version"
+//    implementation "androidx.media3:media3-exoplayer-midi:$media3_version"
+//    implementation "androidx.media3:media3-ui:$media3_version"
     
 //    implementation 'xyz.doikki.android.dkplayer:dkplayer-ui:3.3.7'
     
