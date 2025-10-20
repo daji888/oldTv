@@ -99,8 +99,8 @@ public class OkGoHelper {
         } catch (Throwable th) {
             th.printStackTrace();
         }
-     //   builder.dns(dnsOverHttps);
-        builder.dns(new CustomDns(dnsOverHttps));
+        builder.dns(dnsOverHttps);
+     //   builder.dns(new CustomDns(dnsOverHttps));
         ItvClient = builder.build();
 
         ExoMediaSourceHelper.getInstance(App.getInstance()).setOkClient(ItvClient);
