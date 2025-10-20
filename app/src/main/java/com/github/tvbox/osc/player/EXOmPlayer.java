@@ -11,7 +11,6 @@ import androidx.media3.common.Player;
 import androidx.media3.common.TrackGroup;
 import androidx.media3.common.Tracks;
 import androidx.media3.exoplayer.DefaultRenderersFactory;
-import androidx.media3.exoplayer.mediacodec.MediaCodecSelector;
 import androidx.media3.exoplayer.source.TrackGroupArray;
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
 import androidx.media3.exoplayer.trackselection.MappingTrackSelector;
@@ -44,13 +43,10 @@ public class EXOmPlayer extends ExoMediaPlayer {
                 String extensionRendererMode = key.trim();
                 if (extensionRendererMode.equals("EXTENSION_RENDERER_MODE_OFF")) {
                     mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF);
-                    mRenderersFactory.setMediaCodecSelector(MediaCodecSelector.DEFAULT);
                 } else if (extensionRendererMode.equals("EXTENSION_RENDERER_MODE_ON")) {
                     mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON);
-                    mRenderersFactory.setMediaCodecSelector(MediaCodecSelector.DEFAULT);
                 } else if (extensionRendererMode.equals("EXTENSION_RENDERER_MODE_PREFER")) {
                     mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER);
-                    mRenderersFactory.setMediaCodecSelector(MediaCodecSelector.PREFER_SOFTWARE);
                 }    
             }
         }
