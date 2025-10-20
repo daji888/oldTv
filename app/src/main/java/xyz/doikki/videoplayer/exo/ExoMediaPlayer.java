@@ -69,14 +69,7 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     @SuppressLint("UnsafeOptInUsageError")
     @Override
     public void initPlayer() {
-        if (mMediaPlayer != null) {
-            mMediaPlayer.removeListener(this);
-            mMediaPlayer.clearMediaItems();
-            mMediaPlayer.release();
-            mMediaPlayer = null;
-        }
         mRenderersFactory = new DefaultRenderersFactory(mAppContext);
-        mRenderersFactory.setEnableDecoderFallback(true);
         setOptions();
         if (mTrackSelector == null) {
             mTrackSelector = new DefaultTrackSelector(mAppContext);
