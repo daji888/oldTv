@@ -15,16 +15,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class Proxy {
-    
-    private static int port = -1;
-
-    public static void set(int port) {
-        Proxy.port = port;
-    }
-
-    public static int getPort() {
-        return port;
-    }
 
     public static Object[] proxy(Map<String, String> params) {
         try {

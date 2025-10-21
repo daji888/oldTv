@@ -5,7 +5,6 @@ import androidx.annotation.NonNull;
 
 import com.github.tvbox.osc.server.ControlManager;
 import com.github.tvbox.osc.util.js.rsa.RSAEncrypt;
-import com.github.tvbox.osc.util.Proxy;
 import com.whl.quickjs.wrapper.ContextSetter;
 import com.whl.quickjs.wrapper.Function;
 import com.whl.quickjs.wrapper.JSArray;
