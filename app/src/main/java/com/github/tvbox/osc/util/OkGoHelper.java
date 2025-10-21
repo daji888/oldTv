@@ -2,9 +2,13 @@ package com.github.tvbox.osc.util;
 
 import androidx.annotation.NonNull;
 
+import static okhttp3.ConnectionSpec.CLEARTEXT;
+import static okhttp3.ConnectionSpec.COMPATIBLE_TLS;
+import static okhttp3.ConnectionSpec.MODERN_TLS;
+import static okhttp3.ConnectionSpec.RESTRICTED_TLS;
+import com.github.catvod.net.SSLCompat;
 import com.github.tvbox.osc.base.App;
 import com.github.tvbox.osc.api.ApiConfig;
-import com.github.tvbox.osc.util.SSL.SSLSocketFactoryCompat;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -15,10 +19,8 @@ import com.lzy.okgo.model.HttpHeaders;
 import com.orhanobut.hawk.Hawk;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -32,9 +34,9 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.X509TrustManager;
 
 import okhttp3.Cache;
+import okhttp3.ConnectionSpec;
 import okhttp3.Dns;
 import okhttp3.dnsoverhttps.DnsOverHttps;
 import okhttp3.HttpUrl;
@@ -89,6 +91,7 @@ public class OkGoHelper {
             loggingInterceptor.setColorLevel(Level.OFF);
         }
         builder.addInterceptor(loggingInterceptor);
+        builder.connectionSpecs(getConnectionSpec());
         builder.retryOnConnectionFailure(true);
         builder.followRedirects(true);
         builder.followSslRedirects(true);
@@ -99,8 +102,8 @@ public class OkGoHelper {
         } catch (Throwable th) {
             th.printStackTrace();
         }
-        builder.dns(dnsOverHttps);
-     //   builder.dns(new CustomDns(dnsOverHttps));
+     //   builder.dns(dnsOverHttps);
+        builder.dns(new CustomDns(dnsOverHttps));
         ItvClient = builder.build();
 
         ExoMediaSourceHelper.getInstance(App.getInstance()).setOkClient(ItvClient);
@@ -109,6 +112,10 @@ public class OkGoHelper {
     public static DnsOverHttps dnsOverHttps = null;
 
     public static ArrayList<String> dnsHttpsList = new ArrayList<>();
+
+    public static List<ConnectionSpec> getConnectionSpec() {
+        return Arrays.asList(RESTRICTED_TLS, MODERN_TLS, COMPATIBLE_TLS, CLEARTEXT);
+    }
 
     public static boolean is_doh = false;
     
@@ -188,6 +195,7 @@ public class OkGoHelper {
         } catch (Throwable th) {
             th.printStackTrace();
         }
+        builder.connectionSpecs(getConnectionSpec());
         builder.cache(new Cache(new File(App.getInstance().getCacheDir().getAbsolutePath(), "dohcache"), 10 * 1024 * 1024));
         OkHttpClient dohClient = builder.build();
         String dohUrl = getDohUrl(Hawk.get(HawkConfig.DOH_URL, 0));
@@ -304,6 +312,7 @@ public class OkGoHelper {
 
         //builder.retryOnConnectionFailure(false);
         builder.addInterceptor(loggingInterceptor);
+        builder.connectionSpecs(getConnectionSpec());
         builder.readTimeout(DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
         builder.writeTimeout(DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
         builder.connectTimeout(DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
@@ -326,27 +335,12 @@ public class OkGoHelper {
         initExoOkHttpClient();        
     }
 
-    private static synchronized void setOkHttpSsl(OkHttpClient.Builder builder) {
+    private static synchronized OkHttpClient.Builder setOkHttpSsl(OkHttpClient.Builder builder) {
         try {
-            // 自定义一个信任所有证书的TrustManager，添加SSLSocketFactory的时候要用到
-            final X509TrustManager trustAllCert =
-                    new X509TrustManager() {
-                        @Override
-                        public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
-                        }
-
-                        @Override
-                        public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
-                        }
-
-                        @Override
-                        public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                            return new java.security.cert.X509Certificate[]{};
-                        }
-                    };
-            final SSLSocketFactory sslSocketFactory = new SSLSocketFactoryCompat(trustAllCert);
-            builder.sslSocketFactory(sslSocketFactory, trustAllCert);
-            builder.hostnameVerifier(HttpsUtils.UnSafeHostnameVerifier);
+            final SSLSocketFactory sslSocketFactory = new SSLCompat();
+            return builder
+                   .sslSocketFactory(sslSocketFactory, SSLCompat.TM)
+                   .hostnameVerifier(HttpsUtils.UnSafeHostnameVerifier);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
