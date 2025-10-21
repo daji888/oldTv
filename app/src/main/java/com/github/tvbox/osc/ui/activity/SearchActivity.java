@@ -97,7 +97,7 @@ public class SearchActivity extends BaseActivity {
         initView();
         initViewModel();
         initData();
-        hasKeyBoard = false;
+        hasKeyBoard = true;
         isSearchBack = false;
     }
 
@@ -126,7 +126,7 @@ public class SearchActivity extends BaseActivity {
 
     public void hideSystemKeyBoard() {
         InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
-        if(imm.isActive()){
+        if (imm.isActive()) {
             imm.hideSoftInputFromWindow(etSearch.getApplicationWindowToken(), InputMethodManager.RESULT_UNCHANGED_SHOWN);
         }
     }
@@ -256,29 +256,6 @@ public class SearchActivity extends BaseActivity {
 //                SearchActivity.this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 //            }
 //        });
-
-        //软键盘
-        etSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent keyEvent) {
-                if (actionId == EditorInfo.IME_ACTION_DONE || actionId == EditorInfo.IME_ACTION_SEARCH || (keyEvent != null && keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-                    String wd = etSearch.getText().toString().trim();
-                    if (!TextUtils.isEmpty(wd)) {
-                        if (Hawk.get(HawkConfig.FAST_SEARCH_MODE, false)) {
-                            Bundle bundle = new Bundle();
-                            bundle.putString("title", wd);
-                            jumpActivity(FastSearchActivity.class, bundle);
-                        } else {
-                            search(wd);
-                        }
-                    } else {
-                        Toast.makeText(mContext, "输入内容不能为空", Toast.LENGTH_SHORT).show();
-                    }
-                    return true;
-                }
-                return false;
-            }
-        });
         
         etSearch.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -304,21 +281,6 @@ public class SearchActivity extends BaseActivity {
                         }
                     }
                 }
-            /*    if (keyEvent.getAction() == KeyEvent.ACTION_DOWN && (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    String wd = etSearch.getText().toString().trim();
-                    if (!TextUtils.isEmpty(wd)) {
-                        if (Hawk.get(HawkConfig.FAST_SEARCH_MODE, false)) {
-                            Bundle bundle = new Bundle();
-                            bundle.putString("title", wd);
-                            jumpActivity(FastSearchActivity.class, bundle);
-                        } else {
-                            search(wd);
-                        }
-                    } else {
-                        Toast.makeText(mContext, "输入内容不能为空", Toast.LENGTH_SHORT).show();
-                    }
-                    return true;
-                }  */
                 return false;
             }
         });
@@ -356,7 +318,7 @@ public class SearchActivity extends BaseActivity {
                 if (mSearchCheckboxDialog == null) {
                     List<SourceBean> allSourceBean = ApiConfig.get().getSourceBeanList();
                     List<SourceBean> searchAbleSource = new ArrayList<>();
-                    for(SourceBean sourceBean : allSourceBean) {
+                    for (SourceBean sourceBean : allSourceBean) {
                         if (sourceBean.isSearchable()) {
                             searchAbleSource.add(sourceBean);
                         }
@@ -493,7 +455,7 @@ public class SearchActivity extends BaseActivity {
                 Bundle bundle = new Bundle();
                 bundle.putString("title", title);
                 jumpActivity(FastSearchActivity.class, bundle);
-            } else{
+            } else {
                 search(title);
             }
         }
