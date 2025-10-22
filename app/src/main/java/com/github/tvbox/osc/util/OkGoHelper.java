@@ -46,11 +46,10 @@ import xyz.doikki.videoplayer.exo.ExoMediaSourceHelper;
 
 public class OkGoHelper {
     public static final long DEFAULT_MILLISECONDS = 10000;      //默认的超时时间
-
     private static final String userAgent = "okhttp/5.2.1";
 
     //https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/200
-    public static HashMap<Integer, String > httpPhaseMap  = new HashMap<Integer, String>(){{
+    public static HashMap<Integer, String> httpPhaseMap = new HashMap<Integer, String>() {{
         put(200,"OK");
         put(301,"Moved Permanently");
         put(302,"Found");
@@ -110,7 +109,6 @@ public class OkGoHelper {
     }
 
     public static DnsOverHttps dnsOverHttps = null;
-
     public static ArrayList<String> dnsHttpsList = new ArrayList<>();
 
     public static List<ConnectionSpec> getConnectionSpec() {
@@ -118,7 +116,6 @@ public class OkGoHelper {
     }
 
     public static boolean is_doh = false;
-    
     public static Map<String, String> myHosts = null;
 
     public static String getDohUrl(int type) {
@@ -137,7 +134,7 @@ public class OkGoHelper {
         String json = Hawk.get(HawkConfig.DOH_JSON, "");
         if (json.isEmpty()) json = dnsConfigJson;
         JsonArray jsonArray = JsonParser.parseString(json).getAsJsonArray();
-        dnsHttpsList.add(0, "运营商");
+        dnsHttpsList.add("运营商");
         for (int i = 0; i < jsonArray.size(); i++) {
             JsonObject dnsConfig = jsonArray.get(i).getAsJsonObject();
             String name = dnsConfig.has("name") ? dnsConfig.get("name").getAsString() : "未知";
@@ -165,11 +162,11 @@ public class OkGoHelper {
         Integer dohSelector = Hawk.get(HawkConfig.DOH_URL, 0);
         JsonArray ips = null;
         try {
-            dnsHttpsList.add(0, "运营商");
+            dnsHttpsList.add("运营商");
             String json = Hawk.get(HawkConfig.DOH_JSON, "");
             if (json.isEmpty()) json = dnsConfigJson;
             JsonArray jsonArray = JsonParser.parseString(json).getAsJsonArray();
-            if (dohSelector + 1 > jsonArray.size()) Hawk.put(HawkConfig.DOH_URL, 0);
+            if (dohSelector > jsonArray.size()) Hawk.put(HawkConfig.DOH_URL, 0);
             for (int i = 0; i < jsonArray.size(); i++) {
                 JsonObject dnsConfig = jsonArray.get(i).getAsJsonObject();
                 String name = dnsConfig.has("name") ? dnsConfig.get("name").getAsString() : "未知";
@@ -298,7 +295,6 @@ public class OkGoHelper {
 
     public static void init() {
         initDnsOverHttps();
-
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor("OkGo");
 
