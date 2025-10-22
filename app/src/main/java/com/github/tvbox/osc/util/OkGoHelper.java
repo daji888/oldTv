@@ -119,7 +119,7 @@ public class OkGoHelper {
 
     public static boolean is_doh = false;
     
-    public static Map<String,String> myHosts = null;
+    public static Map<String, String> myHosts = null;
 
     public static String getDohUrl(int type) {
         String json = Hawk.get(HawkConfig.DOH_JSON, "");
@@ -165,17 +165,17 @@ public class OkGoHelper {
         Integer dohSelector = Hawk.get(HawkConfig.DOH_URL, 0);
         JsonArray ips = null;
         try {
+            dnsHttpsList.add(0, "运营商");
             String json = Hawk.get(HawkConfig.DOH_JSON, "");
             if (json.isEmpty()) json = dnsConfigJson;
             JsonArray jsonArray = JsonParser.parseString(json).getAsJsonArray();
-            dnsHttpsList.add(0, "运营商");
+            if (dohSelector + 1 > jsonArray.size()) Hawk.put(HawkConfig.DOH_URL, 0);
             for (int i = 0; i < jsonArray.size(); i++) {
                 JsonObject dnsConfig = jsonArray.get(i).getAsJsonObject();
                 String name = dnsConfig.has("name") ? dnsConfig.get("name").getAsString() : "未知";
                 dnsHttpsList.add(name);
                 if (dohSelector == i + 1) ips = dnsConfig.has("ips") ? dnsConfig.getAsJsonArray("ips") : null;
             }
-            if (dohSelector + 1 > dnsHttpsList.size()) Hawk.put(HawkConfig.DOH_URL, 0);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -202,7 +202,7 @@ public class OkGoHelper {
         dnsOverHttps = new DnsOverHttps.Builder().client(dohClient).url(dohUrl.isEmpty() ? null : HttpUrl.get(dohUrl)).bootstrapDnsHosts(ips != null ? DohIps(ips) : null).build();
     }
 
-    // 自定义 DNS
+    // 自定义 DNS 解析器
     static class CustomDns implements Dns {
         private  ConcurrentHashMap<String, List<InetAddress>> map;
         private final String excludeIps = "2409:8087:6c02:14:100::14,2409:8087:6c02:14:100::18,39.134.108.253,39.134.108.245";
