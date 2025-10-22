@@ -560,7 +560,7 @@ public class ApiConfig {
             }
         }
 
-     /*   if (infoJson.has("doh")) {
+        if (infoJson.has("doh")) {
             String doh_json = infoJson.getAsJsonArray("doh").toString();
             if (!Hawk.get(HawkConfig.DOH_JSON, "").equals(doh_json)) {
                  Hawk.put(HawkConfig.DOH_URL, 0);
@@ -568,7 +568,7 @@ public class ApiConfig {
              }
         } else {
             Hawk.put(HawkConfig.DOH_JSON, "");
-        }  */
+        }
         OkGoHelper.setDnsList();
         LOG.i("echo-api-config-----------load");
 
