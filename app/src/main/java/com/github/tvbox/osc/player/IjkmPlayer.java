@@ -58,31 +58,67 @@ public class IjkmPlayer extends IjkPlayer {
             }
         }
         
+        // 是否开启跳过 loop filter，0 为开启，画面质量高，但解码开销大，48 为关闭，画面质量稍差，但解码开销小
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_CODEC, "skip_loop_filter", 0);
+        // 是否清空DNS 1 为清空
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "dns_cache_clear", 1);
+        // DNS 缓存超时时间为永久缓存
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "dns_cache_timeout", -1);
+        // 启用快速 seek 功能，可以显著提升视频拖放操作的响应速度
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "fflags", "fastseek");
-        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "http-detect-rangeupport", 0);
+        // 参数值为 0 时表示关闭HTTP范围检测支持，这个设置通常用于解决某些网络环境下出现的播放异常问题，特别是当遇到HTTP和HTTPS混合内容时可能导致的播放错误
+        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "http-detect-range-support", 0);
+        // 允许使用的流媒体传输协议列表
+        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "protocol_whitelist", "ijkio,ffio,async,cache,crypto,file,dash,http,https,ijkhttphook,ijkinject,ijklivehook,ijklongurl,ijksegment,ijktcphook,pipe,rtp,tcp,tls,udp,ijkurlhook,data,concat,subfile,ffconcat");
+        // 是否允许一些不安全的路径，默认值是 1 ，会拒绝一些不安全的文件路径, 设置为 0 ，就可以将其安全监测关掉
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "safe", 0);
+        // 是否开启精准 seek，0：默认关闭
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 0);
         // 当 CPU 处理不过来的时候丢帧帧数，默认为 0，参数范围是 [-1, 120]
-     //   mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 1);
-        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max-buffer-size", 15 * 1024 * 1024);
+        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 0);
+        //视频最大帧率
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max-fps", 60);
+        // 音频播放是否使用 openSL，1：使用 openSL，0：使用 AudioTrack
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "opensles", 0);
-        // 设置视频流格式
+        // 设置视频显示格式
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "overlay-format", IjkMediaPlayer.SDL_FCC_RV32);
-        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 1);
+        // 网络波动时自动重连
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "reconnect", 1);
+        // 1‌：启用变速不变调模式
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "soundtouch", 1);
+        //视频缓存好之后是否自动播放 1：允许 0：不允许
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1);
         //开启内置字幕
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "subtitle", 1);
         
         if (Hawk.get(HawkConfig.PLAYER_IS_LIVE)) {
             LOG.i("echo-type-直播");
+            //设置最大缓存数量
+            mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max-buffer-size", 512 * 1024);
+            // 0 不缓冲，可能会卡顿（不会回调info)
+            mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0);
+            // 设置输入缓冲模式, 当值为 1 时，表示开启无限制输入缓冲
+            mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "infbuf", 1);
+            // 缩短播放的rtmp视频延迟在1s内
+            mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "fflags", "nobuffer");
+            // 设置在处理每个数据包之后是否刷新 I/O 上下文, 当设置为 1 时，每个数据包处理完毕后立即刷新 I/O 上下文
+            mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "flush_packets", 1);
+            // 设置最大缓存时长
+            mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max_cached_duration", 300);
+            // 设置媒体文件探测大小
+            mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 32 * 1024);
+            // 设置媒体文件分析时长
+            mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzeduration", 1);
+            // 设置媒体流分析的最大时间长度
+            mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 100);
+            // 设置视频播放的最小帧数
+            mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "min-frames", 3);
         } else {
             LOG.i("echo-type-点播");
+            //设置最大缓存数量
+            mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max-buffer-size", 5 * 1024 * 1024);
+            // 设置最大缓存时长
+            mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max_cached_duration", 3000);
         }
         super.setOptions();
     }
@@ -94,21 +130,12 @@ public class IjkmPlayer extends IjkPlayer {
         try {
             switch (getStreamType(path)) {
                 case RTSP_UDP_RTP:
+                    // 设置输入缓冲模式, 当值为 1 时，表示启用输入缓冲，值为 0 则关闭缓冲
                     mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "infbuf", 1);
+                    // 指定RTSP协议的传输方式，默认使用UDP，可切换为TCP以降低延迟并提升稳定性
                     mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "rtsp_transport", "tcp");
+                    // 强制RTSP流使用TCP传输协议而非默认的UDP
                     mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "rtsp_flags", "prefer_tcp");
-                    mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "fflags", "nobuffer");
-                    mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "flush_packets", 1);
-                    mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max_cached_duration", 300);
-                    mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0);
-                    mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max-buffer-size", 10 * 1024);
-                    mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 4 * 1024);
-                    mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzeduration", 1);
-                    mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 100);
-                 //   mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 1);
-                    mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "min-frames", 3);
-                    break;
-                    
                 case CACHE_VIDEO:
                     if (Hawk.get(HawkConfig.IJK_CACHE_PLAY, false)) {
                         String cachePath = FileUtils.getCachePath() + "/ijkcaches/";
@@ -129,10 +156,10 @@ public class IjkmPlayer extends IjkPlayer {
 
                 case M3U8:
                     // 直播且是ijk的时候自动走代理解决DNS
-                    if (Hawk.get(HawkConfig.PLAYER_IS_LIVE, false) ) {
+                    if (Hawk.get(HawkConfig.PLAYER_IS_LIVE, false)) {
                         URI uri = new URI(path);
                         String host = uri.getHost();
-                        if(ITV_TARGET_DOMAIN.equalsIgnoreCase(host))path = ControlManager.get().getAddress(true) + "proxy?go=live&type=m3u8&url="+ URLEncoder.encode(path,"UTF-8");
+                        if (ITV_TARGET_DOMAIN.equalsIgnoreCase(host)) path = ControlManager.get().getAddress(true) + "proxy?go=live&type=m3u8&url=" + URLEncoder.encode(path, "UTF-8");
                     }
                     break;
 
@@ -143,8 +170,7 @@ public class IjkmPlayer extends IjkPlayer {
             mPlayerEventListener.onError(-1, PlayerHelper.getRootCauseMessage(e));
         }
         setDataSourceHeader(headers);
-        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "protocol_whitelist", "ijkio,ffio,async,cache,crypto,file,dash,http,https,ijkhttphook,ijkinject,ijklivehook,ijklongurl,ijksegment,ijktcphook,pipe,rtp,tcp,tls,udp,ijkurlhook,data,concat,subfile,ffconcat");
-        //mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0);
+        
 //        try {
 //            path = encodeSpaceChinese(path);//会导致本地文件无法播放，故注释掉
 //        } catch (Exception ignored) {
