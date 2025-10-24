@@ -104,7 +104,7 @@ public class IjkmPlayer extends IjkPlayer {
             // 设置最大缓存时长
             mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max_cached_duration", 300);
             // 设置媒体文件探测大小
-            mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 32 * 1024);
+            mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 128 * 1024);
             // 设置媒体文件分析时长
             mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzeduration", 1);
             // 设置媒体流分析的最大时间长度
