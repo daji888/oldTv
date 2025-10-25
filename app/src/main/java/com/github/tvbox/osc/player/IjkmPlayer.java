@@ -70,7 +70,7 @@ public class IjkmPlayer extends IjkPlayer {
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "http-detect-range-support", 0);
         // 允许使用的流媒体传输协议列表
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "protocol_whitelist", "ijkio,ffio,async,cache,crypto,file,dash,http,https,ijkhttphook,ijkinject,ijklivehook,ijklongurl,ijksegment,ijktcphook,pipe,rtp,tcp,tls,udp,ijkurlhook,data,concat,subfile,ffconcat");
-        // 是否允许一些不安全的路径，默认值是 1 ，会拒绝一些不安全的文件路径, 设置为 0 ，就可以将其安全监测关掉
+        // 是否允许一些不安全的路径，默认值是 1 ，会拒绝一些不安全的文件路径, 设置为 0 ，关闭安全监测
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "safe", 0);
         // 是否开启精准 seek，0：默认关闭
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 0);
@@ -93,20 +93,36 @@ public class IjkmPlayer extends IjkPlayer {
         
         if (Hawk.get(HawkConfig.PLAYER_IS_LIVE)) {
             LOG.i("echo-type-直播");
+            //设置最大缓冲区大小
+            mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max-buffer-size", 256 * 1024);
+            // 0 关闭预缓冲，可能会卡顿（不会回调info)
+            mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0);
+            // 设置输入缓冲模式, 当值为 1 时，表示启用输入缓冲，值为 0 则关闭输入缓冲
+            mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "infbuf", 1);
+            // 设置最大缓存时长
+            mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max_cached_duration", 300);
+            // 设置在处理每个数据包之后是否刷新 I/O 上下文, 当设置为 1 时，每个数据包处理完毕后 立即 刷新 I/O 上下文
+            mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "flush_packets", 1);
             // 设置媒体文件探测大小
-            mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 128 * 1024);
+            mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 200 * 1024);
             // 设置媒体文件分析时长
-            mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzeduration", 1);
+            mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzeduration", 500 * 1000);
             // 设置媒体流分析的最大时间长度
-            mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 100);
+            mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 5 * 1000 * 1000);
             // 设置视频播放的最小帧数
-            mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "min-frames", 3);
+            mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "min-frames", 1);
         } else {
             LOG.i("echo-type-点播");
-            //设置最大缓存数量
+            //设置最大缓冲数量
             mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max-buffer-size", 5 * 1024 * 1024);
+            // 1 启用预缓冲，减少卡顿（会回调info)
+            mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 1);
+            // 设置输入缓冲模式, 当值为 1 时，表示启用输入缓冲，值为 0 则关闭输入缓冲
+            mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "infbuf", 0);
             // 设置最大缓存时长
             mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max_cached_duration", 3000);
+            // 设置在处理每个数据包之后是否刷新 I/O 上下文, 当设置为 0 时，每个数据包处理完毕后 不 刷新 I/O 上下文
+            mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "flush_packets", 0);
         }
         super.setOptions();
     }
@@ -118,22 +134,12 @@ public class IjkmPlayer extends IjkPlayer {
         try {
             switch (getStreamType(path)) {
                 case RTSP_UDP_RTP:
-                    // 设置输入缓冲模式, 当值为 1 时，表示启用输入缓冲，值为 0 则关闭缓冲
-                    mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "infbuf", 1);
-                    // 指定RTSP协议的传输方式，默认使用UDP，可切换为TCP以降低延迟并提升稳定性
+                    // 设置输入缓冲模式, 当值为 1 时，表示启用输入缓冲，值为 0 则关闭输入缓冲
+                //    mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "infbuf", 1);
+                    // 指定RTSP协议的传输方式，默认使用UDP，使用TCP可以降低延迟并提升稳定性
                     mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "rtsp_transport", "tcp");
-                    // 强制RTSP流使用TCP传输协议而非默认的UDP
+                    // 强制RTSP流使用TCP传输协议, 而非默认的UDP
                     mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "rtsp_flags", "prefer_tcp");
-                    //设置最大缓存数量
-                    mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max-buffer-size", 256 * 1024);
-                    // 0 不缓冲，可能会卡顿（不会回调info)
-                    mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0);
-                    // 设置输入缓冲模式, 当值为 1 时，表示开启无限制输入缓冲
-                    mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "infbuf", 1);
-                    // 设置在处理每个数据包之后是否刷新 I/O 上下文, 当设置为 1 时，每个数据包处理完毕后立即刷新 I/O 上下文
-                    mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "flush_packets", 1);
-                    // 设置最大缓存时长
-                    mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max_cached_duration", 300);
                 case CACHE_VIDEO:
                     if (Hawk.get(HawkConfig.IJK_CACHE_PLAY, false)) {
                         String cachePath = FileUtils.getCachePath() + "/ijkcaches/";
