@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId = 'com.github.tvbox.osc.dj'
-        minSdkVersion = 21
+        minSdkVersion = 23
         targetSdkVersion = 30
         versionCode = 1
         versionName = '1.0.0'
@@ -85,8 +85,8 @@ dependencies {
  //   implementation files('libs/xwalk_shared_library-23.53.589.4.aar')
     implementation project(":quickjs")
     
-    implementation 'androidx.room:room-runtime:2.7.2'  //别升级 minSdkVersion = 23
-    annotationProcessor 'androidx.room:room-compiler:2.7.2'  //别升级 minSdkVersion = 23
+    implementation 'androidx.room:room-runtime:2.8.3'
+    annotationProcessor 'androidx.room:room-compiler:2.8.3'
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'com.squareup.okhttp3:okhttp:5.2.1'  //ApiConfig & OkGoHelper
     implementation 'com.squareup.okio:okio:3.16.1'
