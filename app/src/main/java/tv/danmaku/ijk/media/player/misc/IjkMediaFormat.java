@@ -223,7 +223,7 @@ public class IjkMediaFormat implements IMediaFormat {
                 if (fpsNum <= 0 || fpsDen <= 0) {
                     return null;
                 } else {
-                    return String.valueOf(((int) (fpsNum)) / fpsDen) + "FPS";
+                    return String.valueOf(((int) (fpsNum)) / fpsDen) + "fps";
                 }
             }
         });
