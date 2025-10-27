@@ -107,8 +107,10 @@ public final class ExoMediaSourceHelper {
         if (Ascii.equalsIgnoreCase("rtmp", uri.getScheme())) {
             return new ProgressiveMediaSource.Factory(new RtmpDataSource.Factory())
                     .createMediaSource(MediaItem.fromUri(uri));
+        } else if (Ascii.equalsIgnoreCase("rtsp", uri.getScheme()) || Ascii.equalsIgnoreCase("rtspt", uri.getScheme())) {
+            return new RtspMediaSource.Factory().createMediaSource(MediaItem.fromUri(uri));
         }
-        int contentType = Util.inferContentType(uri);
+        int contentType = inferContentType(uri.toString());
         DataSource.Factory factory;
         if (isCache) {
             factory = getCacheDataSourceFactory();
@@ -124,8 +126,6 @@ public final class ExoMediaSourceHelper {
             return new DefaultMediaSourceFactory(getDataSourceFactory(), getExtractorsFactory()).createMediaSource(getMediaItem(uri, errorCode));
         }
         switch (contentType) {
-            case C.CONTENT_TYPE_RTSP:
-                return new RtspMediaSource.Factory().createMediaSource(MediaItem.fromUri(uri));    
             case C.CONTENT_TYPE_DASH:
                 return new DashMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(uri));
             case C.CONTENT_TYPE_HLS:
@@ -135,6 +135,20 @@ public final class ExoMediaSourceHelper {
             default:
             case C.CONTENT_TYPE_OTHER:
                 return new ProgressiveMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(uri));
+        }
+    }
+
+    @SuppressLint("UnsafeOptInUsageError")
+    private int inferContentType(String fileName) {
+        fileName = Ascii.toLowerCase(fileName);
+        if (fileName.contains("mpd")) {
+            return C.CONTENT_TYPE_DASH;
+        } else if (fileName.contains("m3u8")) {
+            return C.CONTENT_TYPE_HLS;
+        } else if (fileName.contains("ism") || fileName.contains("isml")) {
+            return C.CONTENT_TYPE_SS;    
+        } else {
+            return C.CONTENT_TYPE_OTHER;
         }
     }
 
