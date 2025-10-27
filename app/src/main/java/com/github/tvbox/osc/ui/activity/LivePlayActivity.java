@@ -1624,6 +1624,7 @@ public class LivePlayActivity extends BaseActivity {
                     name = name.replace("N/A，", "");
                     name = name.replace("，N/A", "");
                     name = name.replace("，null", "");
+                    name = name.replace("，und", "");
                     return name + (StringUtils.isEmpty(val.language) ? "" : "，" + val.language);
                     }
             }, new DiffUtil.ItemCallback<TrackInfoBean>() {
@@ -1692,6 +1693,7 @@ public class LivePlayActivity extends BaseActivity {
                     name = name.replace("N/A，", "");
                     name = name.replace("，N/A", "");
                     name = name.replace("，null", "");
+                    name = name.replace("，und", "");
                     return name + (StringUtils.isEmpty(val.language) ? "" : "，" + val.language);
                 }
             }, new DiffUtil.ItemCallback<TrackInfoBean>() {

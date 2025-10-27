@@ -455,6 +455,7 @@ public class PlayActivity extends BaseActivity {
                 name = name.replace("N/A，", "");
                 name = name.replace("，N/A", "");
                 name = name.replace("，null", "");
+                name = name.replace("，und", "");
                 return name + (StringUtils.isEmpty(val.language) ? "" : "，" + val.language);
             }
         }, new DiffUtil.ItemCallback<TrackInfoBean>() {
@@ -525,6 +526,7 @@ public class PlayActivity extends BaseActivity {
                 name = name.replace("N/A，", "");
                 name = name.replace("，N/A", "");
                 name = name.replace("，null", "");
+                name = name.replace("，und", "");
                 return name + (StringUtils.isEmpty(val.language) ? "" : "，" + val.language);
             }
         }, new DiffUtil.ItemCallback<TrackInfoBean>() {
@@ -610,6 +612,7 @@ public class PlayActivity extends BaseActivity {
             public String getDisplay(TrackInfoBean val) {
                 String name = val.name.replace("SUBTITLE，", "");
                 name = name.replace("，null", "");
+                name = name.replace("，und", "");
                 return name + (StringUtils.isEmpty(val.language) ? "" : "，" + val.language);
             }
         }, new DiffUtil.ItemCallback<TrackInfoBean>() {
