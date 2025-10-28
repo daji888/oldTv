@@ -69,48 +69,49 @@ public final class ExoMediaSourceHelper {
         return sInstance;
     }
 
-    private static MediaItem getMediaItem(Uri uri, int errorCode) {
-        MediaItem.Builder builder = new MediaItem.Builder().setUri(uri);
+    private static MediaItem getMediaItem(String uri, int errorCode) {
+        MediaItem.Builder builder = new MediaItem.Builder().setUri(Uri.parse(uri.trim().replace("\\", "")));
         if (errorCode == PlaybackException.ERROR_CODE_PARSING_CONTAINER_UNSUPPORTED || errorCode == PlaybackException.ERROR_CODE_PARSING_CONTAINER_MALFORMED || errorCode == PlaybackException.ERROR_CODE_IO_UNSPECIFIED)
             builder.setMimeType(MimeTypes.APPLICATION_M3U8);
         return builder.build();
     }
 
+    @SuppressLint("UnsafeOptInUsageError")
     private static synchronized ExtractorsFactory getExtractorsFactory() {
         return new DefaultExtractorsFactory().setTsExtractorFlags(DefaultTsPayloadReaderFactory.FLAG_ENABLE_HDMV_DTS_AUDIO_STREAMS).setTsExtractorTimestampSearchBytes(TsExtractor.DEFAULT_TIMESTAMP_SEARCH_BYTES * 3);
-
     }
 
     public void setOkClient(OkHttpClient client) {
         mOkClient = client;
     }
 
-    public MediaSource getMediaSource(Uri uri) {
+    public MediaSource getMediaSource(String uri) {
         return getMediaSource(uri, null, false);
     }
 
-    public MediaSource getMediaSource(Uri uri, Map<String, String> headers) {
+    public MediaSource getMediaSource(String uri, Map<String, String> headers) {
         return getMediaSource(uri, headers, false);
     }
 
-    public MediaSource getMediaSource(Uri uri, boolean isCache) {
+    public MediaSource getMediaSource(String uri, boolean isCache) {
         return getMediaSource(uri, null, isCache);
     }
 
-    public MediaSource getMediaSource(Uri uri, Map<String, String> headers, boolean isCache) {
+    public MediaSource getMediaSource(String uri, Map<String, String> headers, boolean isCache) {
         return getMediaSource(uri, headers, isCache, -1);
     }
 
     @SuppressLint("UnsafeOptInUsageError")
-    public MediaSource getMediaSource(Uri uri, Map<String, String> headers, boolean isCache, int errorCode) {
-        Log.i("ExoGetMediaSource:", uri.toString());
-        if (Ascii.equalsIgnoreCase("rtmp", uri.getScheme())) {
+    public MediaSource getMediaSource(String uri, Map<String, String> headers, boolean isCache, int errorCode) {
+        Log.i("ExoGetMediaSource:", uri);
+        Uri contentUri = Uri.parse(uri);
+        if (Ascii.equalsIgnoreCase("rtmp", contentUri.getScheme())) {
             return new ProgressiveMediaSource.Factory(new RtmpDataSource.Factory())
-                    .createMediaSource(MediaItem.fromUri(uri));
-        } else if (Ascii.equalsIgnoreCase("rtsp", uri.getScheme()) || Ascii.equalsIgnoreCase("rtspt", uri.getScheme())) {
-            return new RtspMediaSource.Factory().createMediaSource(MediaItem.fromUri(uri));
+                    .createMediaSource(MediaItem.fromUri(contentUri));
+        } else if (Ascii.equalsIgnoreCase("rtsp", contentUri.getScheme()) || Ascii.equalsIgnoreCase("rtspt", contentUri.getScheme())) {
+            return new RtspMediaSource.Factory().createMediaSource(MediaItem.fromUri(contentUri));
         }
-        int contentType = inferContentType(uri.toString());
+        int contentType = inferContentType(uri);
         DataSource.Factory factory;
         if (isCache) {
             factory = getCacheDataSourceFactory();
@@ -127,14 +128,14 @@ public final class ExoMediaSourceHelper {
         }
         switch (contentType) {
             case C.CONTENT_TYPE_DASH:
-                return new DashMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(uri));
+                return new DashMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));
             case C.CONTENT_TYPE_HLS:
-                return new HlsMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(uri));
+                return new HlsMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));
             case C.CONTENT_TYPE_SS:
-                return new SsMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(uri));    
+                return new SsMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));    
             default:
             case C.CONTENT_TYPE_OTHER:
-                return new ProgressiveMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(uri));
+                return new ProgressiveMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));
         }
     }
 
