@@ -801,17 +801,17 @@ public class ApiConfig {
                   }
                         
                   //直播播放器类型
-                  if (livesOBJ.has("playerType")) {
+            /*      if (livesOBJ.has("playerType")) {
                       String livePlayType = livesOBJ.get("playerType").getAsString();
                       Hawk.put(HawkConfig.LIVE_PLAY_TYPE, livePlayType);
                   } else {
                       Hawk.put(HawkConfig.LIVE_PLAY_TYPE, Hawk.get(HawkConfig.PLAY_TYPE, 0));
-                  }  
+                  }  */
          
                   //设置UA
                   if (livesOBJ.has("ua")) {
                       String ua = livesOBJ.get("ua").getAsString();
-                      HashMap<String,String> liveHeader = new HashMap<>();
+                      HashMap<String, String> liveHeader = new HashMap<>();
                       liveHeader.put("User-Agent", ua);
                       Hawk.put(HawkConfig.LIVE_WEB_HEADER, liveHeader);
                   } else {
