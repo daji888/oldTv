@@ -31,11 +31,12 @@ import xyz.doikki.videoplayer.render.TextureRenderViewFactory;
 
 public class PlayerHelper {
     public static void updateCfg(VideoView videoView, JSONObject playerCfg) {
-        updateCfg(videoView,playerCfg,-1);
+        updateCfg(videoView,playerCfg, -1);
     }
     public static void updateCfg(VideoView videoView, JSONObject playerCfg, int forcePlayerType) {
         int playerType = Hawk.get(HawkConfig.PLAY_TYPE, 0);
-        int renderType = Hawk.get(HawkConfig.PLAY_RENDER, 0);
+    //    int renderType = Hawk.get(HawkConfig.PLAY_RENDER, 0);
+        int renderType = Hawk.get(HawkConfig.PLAY_RENDER, 1);
         String ijkCode = Hawk.get(HawkConfig.IJK_CODEC, "硬解");
         String exoCode = Hawk.get(HawkConfig.EXO_CODEC, "硬软");
         int scale = Hawk.get(HawkConfig.PLAY_SCALE, 0);
@@ -72,10 +73,11 @@ public class PlayerHelper {
         RenderViewFactory renderViewFactory = null;
         switch (renderType) {
             case 0:
-            default:
+        //    default:
                 renderViewFactory = TextureRenderViewFactory.create();
                 break;
             case 1:
+             default:   
                 renderViewFactory = SurfaceRenderViewFactory.create();
                 break;
         }
@@ -110,10 +112,11 @@ public class PlayerHelper {
         RenderViewFactory renderViewFactory = null;
         switch (renderType) {
             case 0:
-            default:
+        //    default:
                 renderViewFactory = TextureRenderViewFactory.create();
                 break;
             case 1:
+            default:    
                 renderViewFactory = SurfaceRenderViewFactory.create();
                 break;
         }
@@ -271,19 +274,19 @@ public class PlayerHelper {
     }
 
     public static String getRootCauseMessage(Throwable th) {
-        for (int i=0; i<10; i++) {
+        for (int i = 0; i < 10; i++) {
             if (th.getCause() == null) return th.getLocalizedMessage();
             else th = th.getCause();
         }
         return th.getLocalizedMessage();
     }
 
-    public static String getDisplaySpeed(long speed,boolean show) {
-        if(speed > 1048576)
+    public static String getDisplaySpeed(long speed, boolean show) {
+        if (speed > 1048576)
             return new DecimalFormat("#.00").format(speed / 1048576d) + "Mb/s";
-        else if(speed > 1024)
+        else if (speed > 1024)
             return (speed / 1024) + "Kb/s";
         else
-            return speed > 0?speed + "B/s":(show?"0B/s":"");
+            return speed > 0 ? speed + "B/s" : (show ? "0B/s" : "");
     }
 }
