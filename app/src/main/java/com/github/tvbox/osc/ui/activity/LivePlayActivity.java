@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -43,6 +44,10 @@ import com.github.tvbox.osc.bean.LivePlayerManager;
 import com.github.tvbox.osc.bean.LiveSettingGroup;
 import com.github.tvbox.osc.bean.LiveSettingItem;
 import com.github.tvbox.osc.player.controller.LiveController;
+import com.github.tvbox.osc.player.EXOmPlayer;
+import com.github.tvbox.osc.player.IjkmPlayer;
+import com.github.tvbox.osc.player.TrackInfo;
+import com.github.tvbox.osc.player.TrackInfoBean;
 import com.github.tvbox.osc.ui.adapter.ApiHistoryDialogAdapter;
 import com.github.tvbox.osc.ui.adapter.LiveChannelGroupAdapter;
 import com.github.tvbox.osc.ui.adapter.LiveChannelItemAdapter;
@@ -50,8 +55,10 @@ import com.github.tvbox.osc.ui.adapter.LiveEpgAdapter;
 import com.github.tvbox.osc.ui.adapter.LiveEpgDateAdapter;
 import com.github.tvbox.osc.ui.adapter.LiveSettingGroupAdapter;
 import com.github.tvbox.osc.ui.adapter.LiveSettingItemAdapter;
+import com.github.tvbox.osc.ui.adapter.SelectDialogAdapter;
 import com.github.tvbox.osc.ui.dialog.ApiHistoryDialog;
 import com.github.tvbox.osc.ui.dialog.LivePasswordDialog;
+import com.github.tvbox.osc.ui.dialog.SelectDialog;
 import com.github.tvbox.osc.ui.tv.widget.ChannelListView;
 import com.github.tvbox.osc.ui.tv.widget.ViewObj;
 import com.github.tvbox.osc.util.EpgNameFuzzyMatch;
@@ -74,10 +81,6 @@ import com.orhanobut.hawk.Hawk;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
 import com.owen.tvrecyclerview.widget.V7LinearLayoutManager;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.net.URLEncoder;
@@ -98,15 +101,10 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.github.tvbox.osc.player.TrackInfo;
-import com.github.tvbox.osc.player.TrackInfoBean;
-import com.github.tvbox.osc.player.EXOmPlayer;
-import com.github.tvbox.osc.player.IjkmPlayer;
-import com.github.tvbox.osc.ui.dialog.SelectDialog;
-import com.github.tvbox.osc.ui.adapter.SelectDialogAdapter;
-import androidx.recyclerview.widget.DiffUtil;
-import androidx.annotation.NonNull;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import xyz.doikki.videoplayer.player.AbstractPlayer;
 import xyz.doikki.videoplayer.player.VideoView;

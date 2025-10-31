@@ -216,10 +216,6 @@ public class BaseVideoView<P extends AbstractPlayer> extends FrameLayout
         if (mEnableAudioFocus) {
             mAudioFocusHelper = new AudioFocusHelper(this);
         }
-        //读取播放进度
-        if (mProgressManager != null) {
-            mCurrentPosition = mProgressManager.getSavedProgress(mProgressKey == null ? mUrl : mProgressKey);
-        }    
         if (!mPlayFromZeroPosition) {
             //读取播放进度
             if (mProgressManager != null) {
