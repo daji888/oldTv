@@ -80,14 +80,14 @@ public class App extends MultiDexApplication {
         putDefault(HawkConfig.SHOW_PREVIEW, false);          //小屏预览: true=开启, false=关闭
         putDefault(HawkConfig.PLAY_RENDER, 1);               //渲染方式: 0=Textureview, 1=Surfaceview
         putDefault(HawkConfig.PLAY_SCALE, 0);                //画面缩放: 0=原比, 1=16:9, 2=4:3, 3=填充, 4=原始, 5=裁剪
-        putDefault(HawkConfig.PLAY_TYPE, 1);                 //播放器: 0=系统, 1=IJK, 2=EXO, 10=MX, 11=Reex, 12=Kodi, 14=VLC
+        putDefault(HawkConfig.PLAY_TYPE, 2);                 //播放器: 0=系统, 1=IJK, 2=EXO, 10=MX, 11=Reex, 12=Kodi, 14=VLC
         putDefault(HawkConfig.IJK_CODEC, "硬解");            //IJK解码: 硬解, 软解
         putDefault(HawkConfig.EXO_CODEC, "硬软");            //EXO解码: 硬解, 硬软, 软硬
         // 系统选项
         putDefault(HawkConfig.SEARCH_VIEW, 0);               //搜索展示: 0=文字列表, 1=缩略图
         putDefault(HawkConfig.PARSE_WEBVIEW, true);          //嗅探Webview: true=系统自带, false=XWalkView
-        putDefault(HawkConfig.DOH_URL, 0);                   //DNS: 0=运营商, 1=腾讯, 2=阿里, 3=360, 4=DNSWatch, 5=Google, 6=AdGuard, 7=Quad9, 8=Cloudflare
-        putDefault(HawkConfig.API_URL, "https://www.饭太硬.com/tv/");
+        putDefault(HawkConfig.DOH_URL, 0);                   //DNS: 0=运营商, 1=腾讯, 2=阿里, 3=360, 4=Google, 5=Cloudflare ,6=AdGuard, 7=DNSWatch, 8=Quad9
+        putDefault(HawkConfig.API_URL, "http://tvbox.xn--4kq62z5rby2qupq9ub.top/");
         putDefault(HawkConfig.LIVE_URL, "https://ghproxy.net/raw.githubusercontent.com/daji888/ys/master/tv.txt");
         putDefault(HawkConfig.EPG_URL, "https://epg.51zmt.top:8001/api/diyp/?ch={name}&date={date}");
     }
