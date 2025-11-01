@@ -400,7 +400,7 @@ public class ApiConfig {
             sb.setPlayerType(DefaultConfig.safeJsonInt(obj, "playerType", -1));
             sb.setCategories(DefaultConfig.safeJsonStringList(obj, "categories"));
             sb.setClickSelector(DefaultConfig.safeJsonString(obj, "click", ""));
-            if (firstSite == null && sb.getFilterable() == 1)
+            if (firstSite == null)
                 firstSite = sb;
             sourceBeanList.put(siteKey, sb);
         }
@@ -905,9 +905,7 @@ public class ApiConfig {
     public List<SourceBean> getSwitchSourceBeanList() {
          List<SourceBean> filteredList = new ArrayList<>();
          for (SourceBean bean : sourceBeanList.values()) {
-             if (bean.getFilterable() == 1) {
-                 filteredList.add(bean);
-             }
+             filteredList.add(bean);
          }
          return filteredList;
     }
@@ -915,7 +913,7 @@ public class ApiConfig {
     public List<LiveSourceBean> getSwitchLiveSourceBeanList() {
          List<LiveSourceBean> filteredList = new ArrayList<>();
          for (LiveSourceBean bean : livesourceBeanList.values()) {
-                 filteredList.add(bean);
+             filteredList.add(bean);
          }
          return filteredList;
     }
