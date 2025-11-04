@@ -92,7 +92,7 @@ public class IjkmPlayer extends IjkPlayer {
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "subtitle", 1);
 
         // 设置媒体文件探测大小
-        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 200 * 1024);
+        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 256 * 1024);
         // 设置媒体文件分析时长
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzeduration", 500 * 1000);
         // 设置媒体流分析的最大时间长度
@@ -106,7 +106,7 @@ public class IjkmPlayer extends IjkPlayer {
             mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max-buffer-size", 256 * 1024);
             // 0 关闭预缓冲，可能会卡顿（不会回调info)
             mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0);
-            // 设置输入缓冲模式, 当值为 1 时，表示启用输入缓冲，值为 0 则关闭输入缓冲
+            // 设置输入缓冲模式, 值为 1 时启用输入缓冲，值为 0 则关闭输入缓冲
             mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "infbuf", 1);
             // 设置最大缓存时长
             mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max_cached_duration", 300);
@@ -118,7 +118,7 @@ public class IjkmPlayer extends IjkPlayer {
             mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max-buffer-size", 5 * 1024 * 1024);
             // 1 启用预缓冲，减少卡顿（会回调info)
             mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 1);
-            // 设置输入缓冲模式, 当值为 1 时，表示启用输入缓冲，值为 0 则关闭输入缓冲
+            // 设置输入缓冲模式, 值为 1 时启用输入缓冲，值为 0 则关闭输入缓冲
             mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "infbuf", 0);
             // 设置最大缓存时长
             mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max_cached_duration", 3000);
