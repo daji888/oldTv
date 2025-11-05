@@ -4,34 +4,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TrackInfo {
-    private final List<TrackInfoBean> audio;
     private final List<TrackInfoBean> video;
+    private final List<TrackInfoBean> audio;
     private final List<TrackInfoBean> subtitle;
 
     public TrackInfo() {
-        audio = new ArrayList<>();
         video = new ArrayList<>();
+        audio = new ArrayList<>();
         subtitle = new ArrayList<>();
-    }
-
-    public List<TrackInfoBean> getAudio() {
-        return audio;
     }
 
     public List<TrackInfoBean> getVideo() {
         return video;
     }
 
+    public List<TrackInfoBean> getAudio() {
+        return audio;
+    }
+
     public List<TrackInfoBean> getSubtitle() {
         return subtitle;
     }
 
-    public int getAudioSelected(boolean track) {
-        return getSelected(audio, track);
-    }
-
     public int getVideoSelected(boolean track) {
         return getSelected(video, track);
+    }
+
+    public int getAudioSelected(boolean track) {
+        return getSelected(audio, track);
     }
 
     public int getSubtitleSelected(boolean track) {
@@ -47,12 +47,12 @@ public class TrackInfo {
         return 99999;
     }
 
-    public void addAudio(TrackInfoBean audio) {
-        this.audio.add(audio);
-    }
-
     public void addVideo(TrackInfoBean video) {
         this.video.add(video);
+    }
+
+    public void addAudio(TrackInfoBean audio) {
+        this.audio.add(audio);
     }
 
     public void addSubtitle(TrackInfoBean subtitle) {
