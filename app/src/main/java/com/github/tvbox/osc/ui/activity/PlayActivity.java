@@ -145,7 +145,7 @@ public class PlayActivity extends BaseActivity {
         initView();
         initViewModel();
         initData();
-        Hawk.put(HawkConfig.PLAYER_IS_LIVE,false);
+        Hawk.put(HawkConfig.PLAYER_IS_LIVE, false);
     }
 
     public VodController getVodController() {
@@ -282,6 +282,16 @@ public class PlayActivity extends BaseActivity {
             }
 
             @Override
+            public void selectVideoTrack() {
+                selectMyVideoTrack();
+            }
+
+            @Override
+            public void selectAudioTrack() {
+                selectMyAudioTrack();
+            }
+
+            @Override
             public void selectSubtitle() {
                 try {
                     selectMySubtitle();
@@ -291,19 +301,9 @@ public class PlayActivity extends BaseActivity {
             }
 
             @Override
-            public void selectAudioTrack() {
-                selectMyAudioTrack();
-            }
-
-            @Override
-            public void selectVideoTrack() {
-                selectMyVideoTrack();
-            }
-
-            @Override
             public void prepared() {
-                initAudioView();
                 initVideoView();
+                initAudioView();
                 initSubtitleView();
             }
 
@@ -401,77 +401,6 @@ public class PlayActivity extends BaseActivity {
         }
     }
 
-    void selectMyAudioTrack() {
-        AbstractPlayer mediaPlayer = mVideoView.getMediaPlayer();
-        TrackInfo trackInfo = null;
-        if (mediaPlayer instanceof IjkmPlayer) {
-            trackInfo = ((IjkmPlayer) mediaPlayer).getTrackInfo();
-        }
-        if (mediaPlayer instanceof EXOmPlayer) {
-            trackInfo = ((EXOmPlayer) mediaPlayer).getTrackInfo();
-        } 
-        if (trackInfo == null) {
-            Toast.makeText(mContext, "没有音轨", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        List<TrackInfoBean> bean = trackInfo.getAudio();
-        if (bean.size() < 1) {
-            Toast.makeText(mContext, "没有音轨", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        SelectDialog<TrackInfoBean> dialog = new SelectDialog<>(PlayActivity.this);
-        dialog.setTip("切换音轨");
-        dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<TrackInfoBean>() {
-            @Override
-            public void click(TrackInfoBean value, int pos) {
-                try {
-                    for (TrackInfoBean audio : bean) {
-                        audio.selected = audio.trackId == value.trackId;
-                    }
-                    mediaPlayer.pause();
-                    long progress = mediaPlayer.getCurrentPosition();//保存当前进度，ijk 切换轨道 会有快进几秒
-                    if (mediaPlayer instanceof IjkmPlayer) {
-                        ((IjkmPlayer)mediaPlayer).setTrack(value.trackId);
-                    }
-                    if (mediaPlayer instanceof EXOmPlayer) {
-                        ((EXOmPlayer) mediaPlayer).selectExoTrack(value);
-                    }
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            mediaPlayer.seekTo(progress);
-                            mediaPlayer.start();
-                        }
-                    }, 800);
-                    dialog.dismiss();
-                } catch (Exception e) {
-                    LOG.e("切换音轨出错");
-                }
-            }
-
-            @Override
-            public String getDisplay(TrackInfoBean val) {
-                String name = val.name.replace("AUDIO，", "");
-                name = name.replace("N/A，", "");
-                name = name.replace("，N/A", "");
-                name = name.replace("，null", "");
-                name = name.replace("，und", "");
-                return name + (StringUtils.isEmpty(val.language) ? "" : "，" + val.language);
-            }
-        }, new DiffUtil.ItemCallback<TrackInfoBean>() {
-            @Override
-            public boolean areItemsTheSame(@NonNull @NotNull TrackInfoBean oldItem, @NonNull @NotNull TrackInfoBean newItem) {
-                return oldItem.trackId == newItem.trackId;
-            }
-
-            @Override
-            public boolean areContentsTheSame(@NonNull @NotNull TrackInfoBean oldItem, @NonNull @NotNull TrackInfoBean newItem) {
-                return oldItem.trackId == newItem.trackId;
-            }
-        }, bean, trackInfo.getAudioSelected(false));
-        dialog.show();
-    }
-
     void selectMyVideoTrack() {
         AbstractPlayer mediaPlayer = mVideoView.getMediaPlayer();
         TrackInfo trackInfo = null;
@@ -540,6 +469,77 @@ public class PlayActivity extends BaseActivity {
                 return oldItem.trackId == newItem.trackId;
             }
         }, bean, trackInfo.getVideoSelected(false));
+        dialog.show();
+    }
+
+    void selectMyAudioTrack() {
+        AbstractPlayer mediaPlayer = mVideoView.getMediaPlayer();
+        TrackInfo trackInfo = null;
+        if (mediaPlayer instanceof IjkmPlayer) {
+            trackInfo = ((IjkmPlayer) mediaPlayer).getTrackInfo();
+        }
+        if (mediaPlayer instanceof EXOmPlayer) {
+            trackInfo = ((EXOmPlayer) mediaPlayer).getTrackInfo();
+        } 
+        if (trackInfo == null) {
+            Toast.makeText(mContext, "没有音轨", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        List<TrackInfoBean> bean = trackInfo.getAudio();
+        if (bean.size() < 1) {
+            Toast.makeText(mContext, "没有音轨", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        SelectDialog<TrackInfoBean> dialog = new SelectDialog<>(PlayActivity.this);
+        dialog.setTip("切换音轨");
+        dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<TrackInfoBean>() {
+            @Override
+            public void click(TrackInfoBean value, int pos) {
+                try {
+                    for (TrackInfoBean audio : bean) {
+                        audio.selected = audio.trackId == value.trackId;
+                    }
+                    mediaPlayer.pause();
+                    long progress = mediaPlayer.getCurrentPosition();//保存当前进度，ijk 切换轨道 会有快进几秒
+                    if (mediaPlayer instanceof IjkmPlayer) {
+                        ((IjkmPlayer)mediaPlayer).setTrack(value.trackId);
+                    }
+                    if (mediaPlayer instanceof EXOmPlayer) {
+                        ((EXOmPlayer) mediaPlayer).selectExoTrack(value);
+                    }
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mediaPlayer.seekTo(progress);
+                            mediaPlayer.start();
+                        }
+                    }, 800);
+                    dialog.dismiss();
+                } catch (Exception e) {
+                    LOG.e("切换音轨出错");
+                }
+            }
+
+            @Override
+            public String getDisplay(TrackInfoBean val) {
+                String name = val.name.replace("AUDIO，", "");
+                name = name.replace("N/A，", "");
+                name = name.replace("，N/A", "");
+                name = name.replace("，null", "");
+                name = name.replace("，und", "");
+                return name + (StringUtils.isEmpty(val.language) ? "" : "，" + val.language);
+            }
+        }, new DiffUtil.ItemCallback<TrackInfoBean>() {
+            @Override
+            public boolean areItemsTheSame(@NonNull @NotNull TrackInfoBean oldItem, @NonNull @NotNull TrackInfoBean newItem) {
+                return oldItem.trackId == newItem.trackId;
+            }
+
+            @Override
+            public boolean areContentsTheSame(@NonNull @NotNull TrackInfoBean oldItem, @NonNull @NotNull TrackInfoBean newItem) {
+                return oldItem.trackId == newItem.trackId;
+            }
+        }, bean, trackInfo.getAudioSelected(false));
         dialog.show();
     }
 
@@ -834,19 +834,6 @@ public class PlayActivity extends BaseActivity {
         });
     }
 
-    private void initAudioView() {
-        AbstractPlayer mediaPlayer = mVideoView.getMediaPlayer();
-        TrackInfo trackInfo = null;
-        if (mediaPlayer instanceof IjkmPlayer) {
-            //默认选中第一个音轨 一般第一个音轨是国语
-            trackInfo = ((IjkmPlayer) mediaPlayer).getTrackInfo();
-            if (trackInfo != null && trackInfo.getAudio().size() > 1) {
-                int firsIndex = trackInfo.getAudio().get(0).trackId;
-                ((IjkmPlayer) mediaPlayer).setTrack(firsIndex);
-            }
-         }
-     }   
-
     private void initVideoView() {
         AbstractPlayer mediaPlayer = mVideoView.getMediaPlayer();
         TrackInfo trackInfo = null;
@@ -859,6 +846,19 @@ public class PlayActivity extends BaseActivity {
             }
          }
      }
+
+    private void initAudioView() {
+        AbstractPlayer mediaPlayer = mVideoView.getMediaPlayer();
+        TrackInfo trackInfo = null;
+        if (mediaPlayer instanceof IjkmPlayer) {
+            //默认选中第一个音轨 一般第一个音轨是国语
+            trackInfo = ((IjkmPlayer) mediaPlayer).getTrackInfo();
+            if (trackInfo != null && trackInfo.getAudio().size() > 1) {
+                int firsIndex = trackInfo.getAudio().get(0).trackId;
+                ((IjkmPlayer) mediaPlayer).setTrack(firsIndex);
+            }
+         }
+     }   
     
     private void initSubtitleView() {
         AbstractPlayer mediaPlayer = mVideoView.getMediaPlayer();
