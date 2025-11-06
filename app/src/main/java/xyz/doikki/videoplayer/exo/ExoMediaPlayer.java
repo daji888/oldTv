@@ -77,7 +77,12 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
         if (mLoadControl == null) {
             mLoadControl = new DefaultLoadControl();
         }
-        mTrackSelector.setParameters(mTrackSelector.buildUponParameters()
+        mTrackSelector.setParameters(
+            mTrackSelector.getParameters()
+                .buildUpon()
+                .setTunnelingEnabled(true)
+                .setForceHighestSupportedBitrate(true)
+                .setPreferredVideoLanguages("zh", "zho", "chi")
                 .setPreferredAudioLanguages("zh", "zho", "chi")                     
                 .setPreferredTextLanguages("zho", "chi", "zh")                     
         );
