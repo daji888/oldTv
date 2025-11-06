@@ -14,9 +14,5 @@ public interface DataReceiver {
 
     void onApiReceived(String url);
 
-    void onLiveReceived(String url);
-
-    void onEpgReceived(String url);
-
     void onPushReceived(String url);
 }
