@@ -119,7 +119,7 @@ public class FileUtils {
                 }
                 response = OkGo.<String>get(str).headers(h).execute();
             } else {
-                response =OkGo.<String>get(str).headers("User-Agent", str.startsWith("https://gitcode.net/") ? UA.random() : "okhttp/3.15").execute();
+                response = OkGo.<String>get(str).headers("User-Agent", str.startsWith("https://gitcode.net/") ? UA.random() : "okhttp/5.2.1").execute();
             }
             if (response.isSuccessful() && response.body() != null){
                 return new String(response.body().bytes(), "UTF-8");
