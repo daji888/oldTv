@@ -1,13 +1,20 @@
 package com.github.tvbox.osc.ui.activity;
-import android.content.Context;
+
 import android.app.AlertDialog;
 import android.annotation.SuppressLint;
+import android.content.ClipboardManager;
+import android.content.ClipData;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.TextPaint;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.Window;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -22,14 +29,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ScrollView;
 import android.widget.Toast;
-import android.content.ClipboardManager;
-import android.content.ClipData;
-import android.util.DisplayMetrics;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -83,12 +89,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import android.graphics.Paint;
-import android.text.TextPaint;
-import androidx.annotation.NonNull;
-import android.graphics.Typeface;
-import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * @author pj567
@@ -988,10 +988,22 @@ public class DetailActivity extends BaseActivity {
         }
     }
 
+    private boolean matchSearchResult(String name, String searchTitle) {
+        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(searchTitle)) return false;
+        searchTitle = searchTitle.trim();
+        String[] arr = searchTitle.split("\\s+");
+        int matchNum = 0;
+        for(String one : arr) {
+            if (name.contains(one)) matchNum++;
+        }
+        return matchNum == arr.length ? true : false;
+    }
+
     private void searchData(AbsXml absXml) {
         if (absXml != null && absXml.movie != null && absXml.movie.videoList != null && absXml.movie.videoList.size() > 0) {
             List<Movie.Video> data = new ArrayList<>();
             for (Movie.Video video : absXml.movie.videoList) {
+                if (!matchSearchResult(video.name, searchTitle)) continue;
                 // 去除当前相同的影片
                 if (video.sourceKey.equals(sourceKey) && video.id.equals(vodId))
                     continue;
