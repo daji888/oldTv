@@ -97,10 +97,6 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
         mMediaPlayer.addListener(this);
     }
 
-    public DefaultTrackSelector getTrackSelector() {
-        return mTrackSelector;
-    }
-
     @Override
     public void setDataSource(String path, Map<String, String> headers) {
         this.path = path;
