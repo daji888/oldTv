@@ -35,8 +35,7 @@ public class PlayerHelper {
     }
     public static void updateCfg(VideoView videoView, JSONObject playerCfg, int forcePlayerType) {
         int playerType = Hawk.get(HawkConfig.PLAY_TYPE, 0);
-    //    int renderType = Hawk.get(HawkConfig.PLAY_RENDER, 0);
-        int renderType = Hawk.get(HawkConfig.PLAY_RENDER, 1);
+        int renderType = Hawk.get(HawkConfig.PLAY_RENDER, 0);
         String ijkCode = Hawk.get(HawkConfig.IJK_CODEC, "硬解");
         String exoCode = Hawk.get(HawkConfig.EXO_CODEC, "硬软");
         int scale = Hawk.get(HawkConfig.PLAY_SCALE, 0);
@@ -73,11 +72,10 @@ public class PlayerHelper {
         RenderViewFactory renderViewFactory = null;
         switch (renderType) {
             case 0:
-        //    default:
+            default:
                 renderViewFactory = TextureRenderViewFactory.create();
                 break;
             case 1:
-             default:   
                 renderViewFactory = SurfaceRenderViewFactory.create();
                 break;
         }
@@ -112,11 +110,10 @@ public class PlayerHelper {
         RenderViewFactory renderViewFactory = null;
         switch (renderType) {
             case 0:
-        //    default:
+            default:
                 renderViewFactory = TextureRenderViewFactory.create();
                 break;
             case 1:
-            default:    
                 renderViewFactory = SurfaceRenderViewFactory.create();
                 break;
         }
