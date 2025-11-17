@@ -713,7 +713,7 @@
 		android:orientation="vertical"
 		android:id="@+id/ll_right_top_huikan"
 		android:visibility="gone"
-		android:background="@drawable/shape_user_focus"
+		android:background="@android:color/transparent"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:layout_marginTop="@dimen/vs_10"
@@ -731,8 +731,8 @@
 			android:paddingRight="@dimen/vs_5"
 			android:singleLine="true"
 			android:text="回看中"
-			android:textColor="#CCFFFFFF"
-			android:textSize="@dimen/ts_20" />
+			android:textColor="#80FFFFFF"
+			android:textSize="@dimen/ts_16" />
 	</LinearLayout>
 
         <TextView
