@@ -495,7 +495,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
                 }
 
                 SelectDialog<EXOCode> dialog = new SelectDialog<>(mActivity);
-                dialog.setTip("请选择 EXO 默认解码");
+                dialog.setTip("请选择 EXO音频 默认解码");
                 dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<EXOCode>() {
                     @Override
                     public void click(EXOCode value, int pos) {
