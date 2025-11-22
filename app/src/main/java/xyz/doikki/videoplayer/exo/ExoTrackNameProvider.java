@@ -33,18 +33,18 @@ public class ExoTrackNameProvider {
         if (trackType == C.TRACK_TYPE_VIDEO) {
             trackName =
                     joinWithSeparator(
-                            buildMimeString(format),
                             buildRoleString(format), 
                             buildResolutionString(format), 
                             buildBitrateString(format), 
-                            buildFrameRateString(format));
+                            buildFrameRateString(format),
+                            buildMimeString(format));
         } else if (trackType == C.TRACK_TYPE_AUDIO) {
             trackName =
                     joinWithSeparator(
                             buildLanguageOrLabelString(format),
                             buildAudioChannelString(format),
-                            buildMimeString(format), 
-                            buildBitrateString(format));
+                            buildBitrateString(format), 
+                            buildMimeString(format));
         } else {
             trackName =
                     joinWithSeparator(
