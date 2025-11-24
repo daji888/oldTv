@@ -36,7 +36,6 @@ public class App extends MultiDexApplication {
     private static P2PClass p;
     public static String burl;
 
-    private static String dashDataType;
     private static String dashData;
 
     @Override
