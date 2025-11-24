@@ -12,7 +12,6 @@ android {
         targetSdkVersion = 30
         versionCode = 1
         versionName = '1.0.0'
-        multiDexEnabled = true
         //设置room的Schema的位置
         javaCompileOptions {
             annotationProcessorOptions {
@@ -42,9 +41,6 @@ android {
                 abiFilters 'armeabi-v7a'
             }
         }
-        releaseSimon.initWith(release)
-        releaseSimon {
-        }
     }
 
     applicationVariants.configureEach { variant ->
@@ -65,10 +61,6 @@ android {
         checkReleaseBuilds = false
         abortOnError = false
     }
-    buildFeatures {
-        buildConfig = true
-        dataBinding = true
-    }
 }
 
 dependencies {
@@ -79,10 +71,6 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.7.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
     implementation 'androidx.recyclerview:recyclerview:1.4.0'
- //   implementation files('libs/thunder.jar')
- //   implementation files('libs/dec-0.1.2.jar')
- //   implementation files('libs/commons-lang3-3.18.0.jar')
- //   implementation files('libs/xwalk_shared_library-23.53.589.4.aar')
     implementation project(":quickjs")
     
     implementation 'androidx.room:room-runtime:2.8.4'
@@ -113,11 +101,7 @@ dependencies {
     implementation "androidx.media3:media3-exoplayer-hls:$media3_version"
     implementation "androidx.media3:media3-exoplayer-rtsp:$media3_version"
     implementation "androidx.media3:media3-exoplayer-smoothstreaming:$media3_version"
-//    implementation "androidx.media3:media3-exoplayer-midi:$media3_version"
-//    implementation "androidx.media3:media3-ui:$media3_version"
-    
-//    implementation 'xyz.doikki.android.dkplayer:dkplayer-ui:3.3.7'
-    
+        
     implementation 'com.lzy.net:okgo:3.0.4'  //2017年
     implementation 'com.owen:tv-recyclerview:3.0.0'  //2020年
     implementation 'com.blankj:utilcodex:1.31.1'
