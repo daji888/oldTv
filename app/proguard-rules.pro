@@ -19,13 +19,13 @@
 -renamesourcefileattribute SourceFile
 
 # 重新包装所有重命名的包并放在给定的单一包中
-#-flattenpackagehierarchy androidx.base
+-flattenpackagehierarchy androidx.base
 
 # 将包里的类混淆成n个再重新打包到一个统一的package中  会覆盖flattenpackagehierarchy选项
 -repackageclasses androidx.base
 
 # 把混淆类中的方法名也混淆了
-#-useuniqueclassmembernames
+-useuniqueclassmembernames
 #############################################
 #
 # Android开发中一些需要保留的公共部分
@@ -190,31 +190,12 @@
 # ExoPlayer
 -keep class com.google.androidx.media3.exoplayer.** { *; }
 -dontwarn com.google.androidx.media3.exoplayer.**
--dontwarn org.xmlpull.v1.**
--dontwarn org.kxml2.io.**
--dontwarn android.content.res.**
--dontwarn org.slf4j.impl.StaticLoggerBinder
--keep class org.xmlpull.** { *; }
--keepclassmembers class org.xmlpull.** { *; }
 -keep class androidx.media3.** { *; }
-
-# sardine webdav
--keep class com.thegrizzlylabs.sardineandroid.** { *; }
--dontwarn com.thegrizzlylabs.sardineandroid.**
-
-# filepicker
--keep class com.obsez.android.lib.filechooser.** { *; }
--dontwarn com.obsez.android.lib.filechooser.**
-
-# jcifs (smb)
--keep class jcifs.** { *; }
--dontwarn jcifs.**
+-dontwarn androidx.media3.exoplayer.**
 
 # 实体类
 #-keep class com.github.tvbox.osc.bean.** { *; }
--keep class com.github.tvbox.osc.cache.** { *; }
 -keep class com.github.tvbox.osc.viewmodel.** { *; }
--keep class com.github.tvbox.osc.ui.fragment.homes.**{*;}
 #CardView
 -keep class com.github.tvbox.osc.ui.tv.widget.card.**{*;}
 #ViewObj
@@ -235,10 +216,6 @@
     public static **[] values();
     public static ** valueOf(java.lang.String);
 }
-
-# Cronet支持http3
--keep class com.google.net.cronet.**{*;}
--keep class org.chromium.net.**{*;}
 
 # Nano
 -keep class fi.iki.elonen.** { *; }
