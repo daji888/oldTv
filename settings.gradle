@@ -1,21 +1,18 @@
 pluginManagement {
     repositories {
         gradlePluginPortal()
-        google()
         mavenCentral()
+        google()
     }
 }
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
-        google()
         mavenCentral()
-        flatDir { dirs "$rootDir/app/libs" }
+        google()
         maven { url = "https://jitpack.io" }
-        maven { url = "https://maven.aliyun.com/repository/public" }
-        maven { url = "https://maven.aliyun.com/repository/jcenter" }
         maven { url = "https://maven.aliyun.com/repository/releases" }
-        maven { url = 'https://9xi4o.tk/maven2' }
+        maven { url = "https://maven.aliyun.com/repository/public" }
         maven { url = "https://storage.googleapis.com/r8-releases/raw" }
     }
 }
