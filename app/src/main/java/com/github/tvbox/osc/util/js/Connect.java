@@ -6,7 +6,6 @@ import com.github.tvbox.osc.util.LOG;
 import com.github.tvbox.osc.util.OkGoHelper;
 import com.google.common.net.HttpHeaders;
 import com.lzy.okgo.OkGo;
-import com.whl.quickjs.wrapper.JSUtil;
 import com.whl.quickjs.wrapper.JSObject;
 import com.whl.quickjs.wrapper.JSUtils;
 import com.whl.quickjs.wrapper.QuickJSContext;
@@ -41,7 +40,7 @@ public class Connect {
             setHeader(ctx, res, jsHeader);
             jsObject.setProperty("headers", jsHeader);
             if (req.getBuffer() == 0) jsObject.setProperty("content", new String(res.body().bytes(), req.getCharset()));
-            if (req.getBuffer() == 1) jsObject.setProperty("content", JSUtil.toArray(ctx, res.body().bytes()));
+            if (req.getBuffer() == 1) jsObject.setProperty("content", JSUtils.toArray(ctx, res.body().bytes()));
             if (req.getBuffer() == 2) jsObject.setProperty("content", Base64.encodeToString(res.body().bytes(), Base64.DEFAULT | Base64.NO_WRAP));
             if (req.getBuffer() == 3) jsObject.setProperty("content", res.body().bytes());
             return jsObject;
