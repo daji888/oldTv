@@ -4,7 +4,6 @@ import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
 import com.github.tvbox.osc.server.ControlManager;
-import com.github.tvbox.osc.util.js.rsa.RSAEncrypt;
 import com.whl.quickjs.wrapper.JSArray;
 import com.whl.quickjs.wrapper.JSFunction;
 import com.whl.quickjs.wrapper.JSMethod;
@@ -114,165 +113,9 @@ public class Global {
         return result;
     }
 
-    @Keep
-    @JSMethod
-    public String rsaEncrypt(String data, String key) {
-        return  rsaEncrypt(data, key, null);
-    }
-    /**
-     * RSA 加密
-     *
-     * @param data    要加密的数据
-     * @param key     密钥，type 为 1 则公钥，type 为 2 则私钥
-     * @param options 加密的选项，包含加密配置和类型：{ config: "RSA/ECB/PKCS1Padding", type: 1, long: 1 }
-     *                config 加密的配置，默认 RSA/ECB/PKCS1Padding （可选）
-     *                type 加密类型，1 公钥加密 私钥解密，2 私钥加密 公钥解密（可选，默认 1）
-     *                long 加密方式，1 普通，2 分段（可选，默认 1）
-     *                block 分段长度，false 固定117，true 自动（可选，默认 true ）
-     * @return 返回加密结果
-     */
-
-    @Keep
-    @JSMethod
-    public String rsaEncrypt(String data, String key, JSObject options) {
-        int mLong = 1;
-        int mType = 1;
-        boolean mBlock = true;
-        String mConfig = null;
-        if (options != null) {
-            JSONObject op = options.toJsonObject();
-            if (op.has("config")) {
-                try {
-                    mConfig = (String) op.get("config");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            if (op.has("type")) {
-                try {
-                    mType = ((Double) op.get("type")).intValue();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            if (op.has("long")) {
-                try {
-                    mLong = ((Double) op.get("long")).intValue();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            if (op.has("block")) {
-                try {
-                    mBlock = (Boolean) op.get("block");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        try {
-            switch (mType) {
-                case 1:
-                    if (mConfig != null) {
-                        return RSAEncrypt.encryptByPublicKey(data, key, mConfig, mLong, mBlock);
-                    } else {
-                        return RSAEncrypt.encryptByPublicKey(data, key, mLong, mBlock);
-                    }
-                case 2:
-                    if (mConfig != null) {
-                        return RSAEncrypt.encryptByPrivateKey(data, key, mConfig, mLong, mBlock);
-                    } else {
-                        return RSAEncrypt.encryptByPrivateKey(data, key, mLong, mBlock);
-                    }
-                default:
-                    return "";
-            }
-        } catch (Exception e) {
-            return "";
-        }
-    }
-
-    @Keep
-    @JSMethod
-    public String rsaDecrypt(String encryptBase64Data, String key) {
-        return  rsaDecrypt(encryptBase64Data, key, null);
-    }
-
-    /**
-     * RSA 解密
-     *
-     * @param encryptBase64Data 加密后的 Base64 字符串
-     * @param key               密钥，type 为 1 则私钥，type 为 2 则公钥
-     * @param options           解密的选项，包含解密配置和类型：{ config: "RSA/ECB/PKCS1Padding", type: 1, long: 1 }
-     *                          config 解密的配置，默认 RSA/ECB/PKCS1Padding （可选）
-     *                          type 解密类型，1 公钥加密 私钥解密，2 私钥加密 公钥解密（可选，默认 1）
-     *                          long 解密方式，1 普通，2 分段（可选，默认 1）
-     *                          block 分段长度，false 固定128，true 自动（可选，默认 true ）
-     * @return 返回解密结果
-     */
-    @Keep
-    @JSMethod
-    public String rsaDecrypt(String encryptBase64Data, String key, JSObject options) {
-        int mLong = 1;
-        int mType = 1;
-        boolean mBlock = true;
-        String mConfig = null;
-        if (options != null) {
-            JSONObject op = options.toJsonObject();
-            if (op.has("config")) {
-                try {
-                    mConfig = (String) op.get("config");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            if (op.has("type")) {
-                try {
-                    mType = ((Double) op.get("type")).intValue();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            if (op.has("long")) {
-                try {
-                    mLong = ((Double) op.get("long")).intValue();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            if (op.has("block")) {
-                try {
-                    mBlock = (Boolean) op.get("block");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        try {
-            switch (mType) {
-                case 1:
-                    if (mConfig != null) {
-                        return RSAEncrypt.decryptByPrivateKey(encryptBase64Data, key, mConfig, mLong, mBlock);
-                    } else {
-                        return RSAEncrypt.decryptByPrivateKey(encryptBase64Data, key, mLong, mBlock);
-                    }
-                case 2:
-                    if (mConfig != null) {
-                        return RSAEncrypt.decryptByPublicKey(encryptBase64Data, key, mConfig, mLong, mBlock);
-                    } else {
-                        return RSAEncrypt.decryptByPublicKey(encryptBase64Data, key, mLong, mBlock);
-                    }
-                default:
-                    return "";
-            }
-        } catch (Exception e) {
-            return "";
-        }
-    }
-
     private JSObject req(String url, JSObject options) {
         try {
-            Req req = Req.objectFrom(options.toJsonObject().toString());
+            Req req = Req.objectFrom(options.stringify());
             Response res = Connect.to(url, req).execute();
             return Connect.success(runtime, req, res);
         } catch (Exception e) {
@@ -285,7 +128,7 @@ public class Global {
     public JSObject _http(String url, JSObject options) {
         JSFunction complete = options.getJSFunction("complete");
         if (complete == null) return req(url, options);
-        Req req = Req.objectFrom(options.toJsonObject().toString());
+        Req req = Req.objectFrom(options.stringify());
         Connect.to(url, req).enqueue(getCallback(complete, req));
         return null;
     }
