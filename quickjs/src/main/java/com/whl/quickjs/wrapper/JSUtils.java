@@ -1,5 +1,9 @@
 package com.whl.quickjs.wrapper;
 
+import com.whl.quickjs.wrapper.JSArray;
+import com.whl.quickjs.wrapper.JSObject;
+import com.whl.quickjs.wrapper.QuickJSContext;
+
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.List;
