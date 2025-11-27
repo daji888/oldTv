@@ -286,7 +286,7 @@ public class JsSpider extends Spider {
         ctx.getGlobalObject().bind(new Global(executor));
 
         JSObject local = ctx.createNewJSObject();
-        ctx.getGlobalObject().set("local", local);
+        ctx.getGlobalObject().setProperty("local", local);
         local.bind(new local());
 
         ctx.getGlobalObject().getContext().evaluate(FileUtils.loadModule("net.js"));
@@ -297,7 +297,7 @@ public class JsSpider extends Spider {
             JSObject obj = ctx.createNewJSObject();
             Class<?> clz = dex;
             Class<?>[] classes = clz.getDeclaredClasses();
-            ctx.getGlobalObject().set("jsapi", obj);
+            ctx.getGlobalObject().setProperty("jsapi", obj);
             if (classes.length == 0) invokeSingle(clz, obj);
             if (classes.length >= 1) invokeMultiple(clz, obj);
         } catch (Throwable e) {
@@ -314,7 +314,7 @@ public class JsSpider extends Spider {
             Object javaObj = subClz.getDeclaredConstructor(clz).newInstance(clz.getDeclaredConstructor(QuickJSContext.class).newInstance(ctx));
             JSObject subObj = ctx.createNewJSObject();
             invoke(subClz, subObj, javaObj);
-            jsObj.set(subClz.getSimpleName(), subObj);
+            jsObj.setProperty(subClz.getSimpleName(), subObj);
         }
     }
 
@@ -326,7 +326,7 @@ public class JsSpider extends Spider {
     }
 
     private void invoke(JSObject jsObj, Method method, Object javaObj) {
-        jsObj.set(method.getName(), new JSCallFunction() {
+        jsObj.setProperty(method.getName(), new JSCallFunction() {
             @Override
             public Object call(Object... objects) {
                 try {
@@ -354,7 +354,7 @@ public class JsSpider extends Spider {
 
     private Object[] proxy1(Map<String, String> params) {
         JSObject object = new JSUtils<String>().toObj(ctx, params);
-        JSONArray array = ((JSArray) jsObject.getJSFunction("proxy").call(object)).toJsonArray();
+        JSONArray array = ((JSArray) jsObject.getJSFunction("proxy").call(object)).stringify();
         boolean headerAvailable = array.length() > 3 && array.opt(3) != null;
         int code = array.optInt(0);
         String mime = array.optString(1);
