@@ -77,10 +77,10 @@ public class JsSpider extends Spider {
 
     private JSObject cfg(String ext) {
         JSObject cfg = ctx.createNewJSObject();
-        cfg.set("stype", 3);
-        cfg.set("skey", key);
-        if (Json.invalid(ext)) cfg.set("ext", ext);
-        else cfg.set("ext", (JSObject) ctx.parse(ext));
+        cfg.setProperty("stype", 3);
+        cfg.setProperty("skey", key);
+        if (Json.invalid(ext)) cfg.setProperty("ext", ext);
+        else cfg.setProperty("ext", (JSObject) ctx.parse(ext));
         return cfg;
     }
 
