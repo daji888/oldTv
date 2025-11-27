@@ -39,14 +39,11 @@ public class Connect {
             JSObject jsObject = ctx.createNewJSObject();
             JSObject jsHeader = ctx.createNewJSObject();
             setHeader(ctx, res, jsHeader);
-            jsObject.set("headers", jsHeader);
-            if (req.getBuffer() == 0) jsObject.set("content", new String(res.body().bytes(), req.getCharset()));
-            if (req.getBuffer() == 1) {
-                JSArray array = ctx.createJSArray();
-                for (byte aByte : res.body().bytes()) array.push((int) aByte);
-                jsObject.set("content", array);
-            }
-            if (req.getBuffer() == 2) jsObject.set("content", Base64.encodeToString(res.body().bytes(), Base64.DEFAULT | Base64.NO_WRAP));
+            jsObject.setProperty("headers", jsHeader);
+            if (req.getBuffer() == 0) jsObject.setProperty("content", new String(res.body().bytes(), req.getCharset()));
+            if (req.getBuffer() == 1) jsObject.setProperty("content", JSUtil.toArray(ctx, res.body().bytes()));
+            if (req.getBuffer() == 2) jsObject.setProperty("content", Util.base64(res.body().bytes()));
+            if (req.getBuffer() == 3) jsObject.setProperty("content", res.body().bytes());
             return jsObject;
         } catch (Exception e) {
             return error(ctx);
@@ -56,8 +53,8 @@ public class Connect {
     public static JSObject error(QuickJSContext ctx) {
         JSObject jsObject = ctx.createNewJSObject();
         JSObject jsHeader = ctx.createNewJSObject();
-        jsObject.set("headers", jsHeader);
-        jsObject.set("content", "");
+        jsObject.setProperty("headers", jsHeader);
+        jsObject.setProperty("content", "");
         return jsObject;
     }
 
@@ -100,8 +97,8 @@ public class Connect {
 
     private static void setHeader(QuickJSContext ctx, Response res, JSObject object) {
         for (Map.Entry<String, List<String>> entry : res.headers().toMultimap().entrySet()) {
-            if (entry.getValue().size() == 1) object.set(entry.getKey(), entry.getValue().get(0));
-            if (entry.getValue().size() >= 2) object.set(entry.getKey(), new JSUtils<String>().toArray(ctx, entry.getValue()));
+            if (entry.getValue().size() == 1) object.setProperty(entry.getKey(), entry.getValue().get(0));
+            if (entry.getValue().size() >= 2) object.setProperty(entry.getKey(), new JSUtils<String>().toArray(ctx, entry.getValue()));
         }
     }
     public static void cancelByTag(Object tag) {
