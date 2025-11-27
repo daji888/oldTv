@@ -76,7 +76,7 @@ public class JsSpider extends Spider {
     }
 
     private JSObject cfg(String ext) {
-        JSObject cfg = ctx.createJSObject();
+        JSObject cfg = ctx.createNewJSObject();
         cfg.set("stype", 3);
         cfg.set("skey", key);
         if (Json.invalid(ext)) cfg.set("ext", ext);
@@ -285,7 +285,7 @@ public class JsSpider extends Spider {
 
         ctx.getGlobalObject().bind(new Global(executor));
 
-        JSObject local = ctx.createJSObject();
+        JSObject local = ctx.createNewJSObject();
         ctx.getGlobalObject().set("local", local);
         local.bind(new local());
 
@@ -294,7 +294,7 @@ public class JsSpider extends Spider {
 
     private void createDex() {
         try {
-            JSObject obj = ctx.createJSObject();
+            JSObject obj = ctx.createNewJSObject();
             Class<?> clz = dex;
             Class<?>[] classes = clz.getDeclaredClasses();
             ctx.getGlobalObject().set("jsapi", obj);
@@ -312,7 +312,7 @@ public class JsSpider extends Spider {
     private void invokeMultiple(Class<?> clz, JSObject jsObj) throws Throwable {
         for (Class<?> subClz : clz.getDeclaredClasses()) {
             Object javaObj = subClz.getDeclaredConstructor(clz).newInstance(clz.getDeclaredConstructor(QuickJSContext.class).newInstance(ctx));
-            JSObject subObj = ctx.createJSObject();
+            JSObject subObj = ctx.createNewJSObject();
             invoke(subClz, subObj, javaObj);
             jsObj.set(subClz.getSimpleName(), subObj);
         }
