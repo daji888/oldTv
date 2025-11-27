@@ -30,33 +30,31 @@ public class JSUtils<T> {
     }
 
     public JSArray toArray(QuickJSContext ctx, List<T> items) {
-        JSArray array = ctx.createJSArray();
+        JSArray array = ctx.createNewJSArray();
         if (items == null || items.isEmpty()) return array;
-        for (int i = 0; i < items.size(); i++) array.push(items.get(i));
+        for (int i = 0; i < items.size(); i++) array.set(items.get(i), i);
         return array;
     }
 
     public JSArray toArray(QuickJSContext ctx, byte[] bytes) {
-        JSArray array = ctx.createJSArray();
+        JSArray array = ctx.createNewJSArray();
         if (bytes == null || bytes.length == 0) return array;
-        for (byte aByte : bytes) array.push((int) aByte);
+        for (int i = 0; i < bytes.length; i++) array.set((int) bytes[i], i);
         return array;
     }
 
     public JSArray toArray(QuickJSContext ctx, T[] arrays) {
-        JSArray array = ctx.createJSArray();
+        JSArray array = ctx.createNewJSArray();
         if (arrays == null || arrays.length == 0) return array;
-        for (T t : arrays) {
-            array.push(t);
-        }
+        for (int i = 0; i < arrays.length; i++) array.set((int) arrays[i], i);
         return array;
     }
 
     public JSObject toObj(QuickJSContext ctx, Map<String, T> map) {
-        JSObject obj = ctx.createJSObject();
+        JSObject obj = ctx.createNewJSObject();
         if (map == null || map.isEmpty()) return obj;
         for (String s : map.keySet()) {
-            obj.set(s, map.get(s));
+            obj.setProperty(s, map.get(s));
         }
         return obj;
     }
