@@ -9,8 +9,8 @@ import com.github.tvbox.osc.util.FileUtils;
 import com.github.tvbox.osc.util.LOG;
 import com.github.tvbox.osc.util.MD5;
 
-import com.whl.quickjs.wrapper.Function;
 import com.whl.quickjs.wrapper.JSArray;
+import com.whl.quickjs.wrapper.JSMethod;
 
 import com.whl.quickjs.wrapper.JSCallFunction;
 import com.whl.quickjs.wrapper.JSObject;
@@ -320,7 +320,7 @@ public class JsSpider extends Spider {
 
     private void invoke(Class<?> clz, JSObject jsObj, Object javaObj) {
         for (Method method : clz.getMethods()) {
-            if (!method.isAnnotationPresent(Function.class)) continue;
+            if (!method.isAnnotationPresent(JSMethod.class)) continue;
             invoke(jsObj, method, javaObj);
         }
     }
