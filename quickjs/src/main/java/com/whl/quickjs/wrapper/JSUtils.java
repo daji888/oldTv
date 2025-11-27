@@ -50,7 +50,7 @@ public class JSUtils<T> {
         return array;
     }
 
-    public JSObject toObj(QuickJSContext ctx, Map<String, T> map) {
+    public JSObject toObj(QuickJSContext ctx, Map<String, String> map) {
         JSObject obj = ctx.createNewJSObject();
         if (map == null || map.isEmpty()) return obj;
         for (String s : map.keySet()) {
