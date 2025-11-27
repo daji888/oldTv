@@ -5,10 +5,9 @@ import androidx.annotation.NonNull;
 
 import com.github.tvbox.osc.server.ControlManager;
 import com.github.tvbox.osc.util.js.rsa.RSAEncrypt;
-import com.whl.quickjs.wrapper.ContextSetter;
-import com.whl.quickjs.wrapper.Function;
 import com.whl.quickjs.wrapper.JSArray;
 import com.whl.quickjs.wrapper.JSFunction;
+import com.whl.quickjs.wrapper.JSMethod;
 import com.whl.quickjs.wrapper.JSObject;
 import com.whl.quickjs.wrapper.JSUtils;
 import com.whl.quickjs.wrapper.QuickJSContext;
@@ -37,50 +36,50 @@ public class Global {
     }
 
     @Keep
-    @Function
+    @JSMethod
     public String getProxy(boolean local) {
         return ControlManager.get().getAddress(local) + "proxy?do=js";
     }
 
     @Keep
-    @Function
+    @JSMethod
     public String js2Proxy(Boolean dynamic, Integer siteType, String siteKey, String url, JSObject headers) {
         return getProxy(true) + "&from=catvod" + "&siteType=" + siteType + "&siteKey=" + siteKey + "&header=" + URLEncoder.encode(headers.toJsonString()) + "&url=" + URLEncoder.encode(url);
     }
 
     @Keep
-    @Function
+    @JSMethod
     public String joinUrl(String parent, String child) {
         return HtmlParser.joinUrl(parent, child);
     }
 
     @Keep
-    @Function
+    @JSMethod
     public String pd(String html, String rule, String add_url) {
         return HtmlParser.parseDomForUrl(html, rule, add_url);
     }
 
     @Keep
-    @Function
+    @JSMethod
     public String pdfh(String html, String rule) {
         return HtmlParser.parseDomForUrl(html, rule, "");
     }
 
     @Keep
-    @Function
+    @JSMethod
     public JSArray pdfa(String html, String rule) {
 
         return new JSUtils<String>().toArray(runtime, HtmlParser.parseDomForArray(html, rule));
     }
 
     @Keep
-    @Function
+    @JSMethod
     public JSArray pdfla(String html, String p1, String list_text, String list_url, String add_url) {
         return new JSUtils<String>().toArray(runtime, HtmlParser.parseDomForList(html, p1, list_text, list_url, add_url));
     }
     
     @Keep
-    @Function
+    @JSMethod
     public String s2t(String text) {
         try {
             return Trans.s2t(false, text);
@@ -90,7 +89,7 @@ public class Global {
     }
 
     @Keep
-    @Function
+    @JSMethod
     public String t2s(String text) {
         try {
             return Trans.t2s(false, text);
@@ -100,7 +99,7 @@ public class Global {
     }
 
     @Keep
-    @Function
+    @JSMethod
     public String aesX(String mode, boolean encrypt, String input, boolean inBase64, String key, String iv, boolean outBase64) {
         String result = Crypto.aes(mode, encrypt, input, inBase64, key, iv, outBase64);
         //LOG.e("aesX",String.format("mode:%s\nencrypt:%s\ninBase64:%s\noutBase64:%s\nkey:%s\niv:%s\ninput:\n%s\nresult:\n%s", mode, encrypt, inBase64, outBase64, key, iv, input, result));
@@ -108,7 +107,7 @@ public class Global {
     }
 
     @Keep
-    @Function
+    @JSMethod
     public String rsaX(String mode, boolean pub, boolean encrypt, String input, boolean inBase64, String key, boolean outBase64) {
         String result = Crypto.rsa(pub, encrypt, input, inBase64, key, outBase64);
         //LOG.e("aesX",String.format("mode:%s\npub:%s\nencrypt:%s\ninBase64:%s\noutBase64:%s\nkey:\n%s\ninput:\n%s\nresult:\n%s", mode, pub, encrypt, inBase64, outBase64, key, input, result));
@@ -116,7 +115,7 @@ public class Global {
     }
 
     @Keep
-    @Function
+    @JSMethod
     public String rsaEncrypt(String data, String key) {
         return  rsaEncrypt(data, key, null);
     }
@@ -134,7 +133,7 @@ public class Global {
      */
 
     @Keep
-    @Function
+    @JSMethod
     public String rsaEncrypt(String data, String key, JSObject options) {
         int mLong = 1;
         int mType = 1;
@@ -194,7 +193,7 @@ public class Global {
     }
 
     @Keep
-    @Function
+    @JSMethod
     public String rsaDecrypt(String encryptBase64Data, String key) {
         return  rsaDecrypt(encryptBase64Data, key, null);
     }
@@ -212,7 +211,7 @@ public class Global {
      * @return 返回解密结果
      */
     @Keep
-    @Function
+    @JSMethod
     public String rsaDecrypt(String encryptBase64Data, String key, JSObject options) {
         int mLong = 1;
         int mType = 1;
@@ -282,7 +281,7 @@ public class Global {
     }
 
     @Keep
-    @Function
+    @JSMethod
     public JSObject _http(String url, JSObject options) {
         JSFunction complete = options.getJSFunction("complete");
         if (complete == null) return req(url, options);
@@ -292,7 +291,7 @@ public class Global {
     }
 
     @Keep
-    @Function
+    @JSMethod
     public void setTimeout(JSFunction func, Integer delay) {
         func.hold();
         timer.schedule(new TimerTask() {
@@ -319,12 +318,6 @@ public class Global {
                 });
             }
         };
-    }
-    @Keep
-    // 声明用于依赖注入的 QuickJSContext
-    @ContextSetter
-    public void setJSContext(QuickJSContext runtime) {
-        this.runtime = runtime;
     }
 
 }
