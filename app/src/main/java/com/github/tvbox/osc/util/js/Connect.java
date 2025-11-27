@@ -36,8 +36,8 @@ public class Connect {
 
     public static JSObject success(QuickJSContext ctx, Req req, Response res) {
         try {
-            JSObject jsObject = ctx.createJSObject();
-            JSObject jsHeader = ctx.createJSObject();
+            JSObject jsObject = ctx.createNewJSObject();
+            JSObject jsHeader = ctx.createNewJSObject();
             setHeader(ctx, res, jsHeader);
             jsObject.set("headers", jsHeader);
             if (req.getBuffer() == 0) jsObject.set("content", new String(res.body().bytes(), req.getCharset()));
@@ -54,8 +54,8 @@ public class Connect {
     }
 
     public static JSObject error(QuickJSContext ctx) {
-        JSObject jsObject = ctx.createJSObject();
-        JSObject jsHeader = ctx.createJSObject();
+        JSObject jsObject = ctx.createNewJSObject();
+        JSObject jsHeader = ctx.createNewJSObject();
         jsObject.set("headers", jsHeader);
         jsObject.set("content", "");
         return jsObject;
