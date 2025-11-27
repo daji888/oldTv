@@ -6,7 +6,7 @@ import com.github.tvbox.osc.util.LOG;
 import com.github.tvbox.osc.util.OkGoHelper;
 import com.google.common.net.HttpHeaders;
 import com.lzy.okgo.OkGo;
-import com.whl.quickjs.wrapper.JSArray;
+import com.whl.quickjs.wrapper.JSUtil;
 import com.whl.quickjs.wrapper.JSObject;
 import com.whl.quickjs.wrapper.JSUtils;
 import com.whl.quickjs.wrapper.QuickJSContext;
