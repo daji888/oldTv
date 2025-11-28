@@ -213,10 +213,10 @@ public class JsSpider extends Spider {
             String content = FileUtils.loadModule(api);            
             if (TextUtils.isEmpty(content)) {return null;}
             
-            if(content.startsWith("//bb")){
+            if (content.startsWith("//bb")) {
                 cat = true;
                 byte[] b = Base64.decode(content.replace("//bb",""), 0);
-                ctx.execute(byteFF(b), key + ".js");
+//                ctx.execute(byteFF(b), key + ".js");
                 ctx.evaluateModule(String.format(SPIDER_STRING_CODE, key + ".js") + "globalThis." + key + " = __JS_SPIDER__;", "tv_box_root.js");
                 //ctx.execute(byteFF(b), key + ".js","__jsEvalReturn");
                 //ctx.evaluate("globalThis." + key + " = __JS_SPIDER__;");
@@ -256,9 +256,9 @@ public class JsSpider extends Spider {
                     LOG.i("echo-getModuleBytecode empty :"+ moduleName);
                     return ctx.compileModule("", moduleName);
                 }
-                if(ss.startsWith("//DRPY")){
+                if (ss.startsWith("//DRPY")) {
                     return Base64.decode(ss.replace("//DRPY",""), Base64.URL_SAFE);
-                } else if(ss.startsWith("//bb")){
+                } else if(ss.startsWith("//bb")) {
                     byte[] b = Base64.decode(ss.replace("//bb",""), 0);
                     return byteFF(b);
                 } else {
@@ -295,11 +295,11 @@ public class JsSpider extends Spider {
             }
         });
 
-        ctx.getGlobalObject().bind(new Global(executor));
+//        ctx.getGlobalObject().bind(new Global(executor));
 
         JSObject local = ctx.createNewJSObject();
         ctx.getGlobalObject().setProperty("local", local);
-        local.bind(new local());
+//        local.bind(new local());
 
         ctx.getGlobalObject().getContext().evaluate(FileUtils.loadModule("net.js"));
     }
