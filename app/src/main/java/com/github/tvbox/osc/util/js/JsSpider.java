@@ -364,7 +364,7 @@ public class JsSpider extends Spider {
         }
     }
 
-    private Object[] proxy1(Map<String, String> params) {
+    private Object[] proxy1(Map<String, String> params) throws Exception {
         JSObject object = new JSUtils<String>().toObj(ctx, params);
         JSONArray array = new JSONArray(((JSArray) jsObject.getJSFunction("proxy").call(object)).stringify());
         boolean headerAvailable = array.length() > 3 && array.opt(3) != null;
