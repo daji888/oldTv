@@ -278,8 +278,20 @@ public class JsSpider extends Spider {
         });
         ctx.setConsole(new QuickJSContext.Console() {
             @Override
-            public void log(String s) {
-                LOG.i("QuJs"+s);
+            public void log(String l) {
+                LOG.i("QuJs" + l);
+            }
+            @Override
+            public void info(String i) {
+                LOG.i("QuJs" + i);
+            }
+            @Override
+            public void warn(String w) {
+                LOG.i("QuJs" + w);
+            }
+            @Override
+            public void error(String e) {
+                LOG.i("QuJs" + e);
             }
         });
 
