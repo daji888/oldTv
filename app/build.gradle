@@ -101,7 +101,6 @@ dependencies {
     implementation 'org.greenrobot:eventbus:3.3.1'  //2021年
     implementation 'org.nanohttpd:nanohttpd:2.3.1'  //2016年
     implementation 'org.jsoup:jsoup:1.21.2'
-    api 'wang.harlon.quickjs:wrapper-android:3.2.3'
     
     def media3_version = "1.8.0"
     implementation "androidx.media3:media3-common:$media3_version"
