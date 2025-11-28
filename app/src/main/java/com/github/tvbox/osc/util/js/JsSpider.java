@@ -234,7 +234,7 @@ public class JsSpider extends Spider {
                 //ctx.evaluateModule(content, api, moduleExtName);
                 //ctx.evaluate("globalThis." + key + " = __JS_SPIDER__;");                
             }
-            jsObject = (JSObject) ctx.get(ctx.getGlobalObject(), key);
+            jsObject = (JSObject) ctx.getProperty(ctx.getGlobalObject(), key);
             return null;
         }).get();
     }
@@ -354,7 +354,7 @@ public class JsSpider extends Spider {
 
     private Object[] proxy1(Map<String, String> params) {
         JSObject object = new JSUtils<String>().toObj(ctx, params);
-        JSONArray array = ((JSArray) jsObject.getJSFunction("proxy").call(object)).stringify();
+        JSONArray array = new JSONArray(((JSArray) jsObject.getJSFunction("proxy").call(object)).stringify());
         boolean headerAvailable = array.length() > 3 && array.opt(3) != null;
         int code = array.optInt(0);
         String mime = array.optString(1);
