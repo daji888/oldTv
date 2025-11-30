@@ -134,7 +134,7 @@ public class Global {
 
     @Keep
     @JSMethod
-    public String rsaEncrypt(String data, String key, JSObject options) {
+    public String rsaEncrypt(String data, String key, JSObject options) throws Exception {
         int mLong = 1;
         int mType = 1;
         boolean mBlock = true;
@@ -212,7 +212,7 @@ public class Global {
      */
     @Keep
     @JSMethod
-    public String rsaDecrypt(String encryptBase64Data, String key, JSObject options) {
+    public String rsaDecrypt(String encryptBase64Data, String key, JSObject options) throws Exception {
         int mLong = 1;
         int mType = 1;
         boolean mBlock = true;
