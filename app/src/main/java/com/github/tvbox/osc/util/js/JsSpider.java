@@ -205,6 +205,7 @@ public class JsSpider extends Spider {
             "        globalThis.__JS_SPIDER__ = typeof spider.default === 'function' ? spider.default() : spider.default\n" +
             "    }\n" +
             "}";
+    
     private void initializeJS() throws Exception {
         submit(() -> {
             if (ctx == null) createCtx();
