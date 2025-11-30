@@ -97,7 +97,7 @@ public class Connect {
     private static void setHeader(QuickJSContext ctx, Response res, JSObject object) {
         for (Map.Entry<String, List<String>> entry : res.headers().toMultimap().entrySet()) {
             if (entry.getValue().size() == 1) object.setProperty(entry.getKey(), entry.getValue().get(0));
-            if (entry.getValue().size() >= 2) object.setProperty(entry.getKey(), new JSUtils<String>().toArray(ctx, entry.getValue()));
+            if (entry.getValue().size() >= 2) object.setProperty(entry.getKey(), JSUtils.toArray(ctx, entry.getValue()));
         }
     }
     public static void cancelByTag(Object tag) {
