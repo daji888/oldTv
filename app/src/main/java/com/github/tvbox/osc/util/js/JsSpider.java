@@ -115,7 +115,7 @@ public class JsSpider extends Spider {
     @Override
     public String categoryContent(String tid, String pg, boolean filter, HashMap<String, String> extend)  {
         try {
-            JSObject obj = submit(() -> new JSUtils<String>().toObj(ctx, extend)).get();
+            JSObject obj = submit(() -> JSUtils.toObj(ctx, extend)).get();
             return (String) call("category", tid, pg, filter, obj);
         }catch (Exception e){
             return null;
@@ -151,7 +151,7 @@ public class JsSpider extends Spider {
     @Override
     public String playerContent(String flag, String id, List<String> vipFlags) {
         try {
-            JSArray array = submit(() -> new JSUtils<String>().toArray(ctx, vipFlags)).get();
+            JSArray array = submit(() -> JSUtils.toArray(ctx, vipFlags)).get();
             return (String) call("play", flag, id, array);
         }catch (Exception e){
             return null;
@@ -365,7 +365,7 @@ public class JsSpider extends Spider {
     }
 
     private Object[] proxy1(Map<String, String> params) throws Exception {
-        JSObject object = new JSUtils<String>().toObj(ctx, params);
+        JSObject object = JSUtils.toObj(ctx, params);
         JSONArray array = new JSONArray(((JSArray) jsObject.getJSFunction("proxy").call(object)).stringify());
         boolean headerAvailable = array.length() > 3 && array.opt(3) != null;
         int code = array.optInt(0);
@@ -424,7 +424,7 @@ public class JsSpider extends Spider {
     private Object[] proxy2(Map<String, String> params) throws Exception {
         String url = params.get("url");
         String header = params.get("header");
-        JSArray array = submit(() -> new JSUtils<String>().toArray(ctx, Arrays.asList(url.split("/")))).get();
+        JSArray array = submit(() -> JSUtils.toArray(ctx, Arrays.asList(url.split("/")))).get();
         Object object = submit(() -> ctx.parse(header)).get();
         String json = (String) call("proxy", array, object);
         Res res = Res.objectFrom(json);
