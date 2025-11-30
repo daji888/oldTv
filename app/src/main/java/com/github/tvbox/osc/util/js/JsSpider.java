@@ -297,9 +297,9 @@ public class JsSpider extends Spider {
 
 //        ctx.getGlobalObject().bind(new Global(executor));
 
-        JSObject local = ctx.createNewJSObject();
-        ctx.getGlobalObject().setProperty("local", local);
-//        local.bind(new local());
+        
+        ctx.getGlobalObject().setProperty("local", local.class);
+        
 
         ctx.getGlobalObject().getContext().evaluate(FileUtils.loadModule("net.js"));
     }
