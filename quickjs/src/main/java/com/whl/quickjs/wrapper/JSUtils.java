@@ -29,21 +29,21 @@ public class JSUtils {
         return !isEmpty(obj);
     }
 
-    public JSArray toArray(QuickJSContext ctx, List<String> items) {
+    public static JSArray toArray(QuickJSContext ctx, List<String> items) {
         JSArray array = ctx.createNewJSArray();
         if (items == null || items.isEmpty()) return array;
         for (int i = 0; i < items.size(); i++) array.set(items.get(i), i);
         return array;
     }
 
-    public JSArray toArray(QuickJSContext ctx, byte[] bytes) {
+    public static JSArray toArray(QuickJSContext ctx, byte[] bytes) {
         JSArray array = ctx.createNewJSArray();
         if (bytes == null || bytes.length == 0) return array;
         for (int i = 0; i < bytes.length; i++) array.set((int) bytes[i], i);
         return array;
     }
 
-    public JSArray toArray(QuickJSContext ctx, String[] arrays) {
+    public static JSArray toArray(QuickJSContext ctx, String[] arrays) {
         JSArray array = ctx.createNewJSArray();
         if (arrays == null || arrays.length == 0) return array;
         for (int i = 0; i < arrays.length; i++) array.set(arrays[i], i);
