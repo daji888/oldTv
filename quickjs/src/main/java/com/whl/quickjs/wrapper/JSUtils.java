@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-public class JSUtils<T> {
+public class JSUtils {
 
     public static boolean isEmpty(Object obj) {
         if (obj == null) return true;
@@ -29,7 +29,7 @@ public class JSUtils<T> {
         return !isEmpty(obj);
     }
 
-    public JSArray toArray(QuickJSContext ctx, List<T> items) {
+    public JSArray toArray(QuickJSContext ctx, List<String> items) {
         JSArray array = ctx.createNewJSArray();
         if (items == null || items.isEmpty()) return array;
         for (int i = 0; i < items.size(); i++) array.set(items.get(i), i);
@@ -43,7 +43,7 @@ public class JSUtils<T> {
         return array;
     }
 
-    public JSArray toArray(QuickJSContext ctx, T[] arrays) {
+    public JSArray toArray(QuickJSContext ctx, String[] arrays) {
         JSArray array = ctx.createNewJSArray();
         if (arrays == null || arrays.length == 0) return array;
         for (int i = 0; i < arrays.length; i++) array.set((int) arrays[i], i);
