@@ -46,7 +46,7 @@ public class JSUtils {
     public JSArray toArray(QuickJSContext ctx, String[] arrays) {
         JSArray array = ctx.createNewJSArray();
         if (arrays == null || arrays.length == 0) return array;
-        for (int i = 0; i < arrays.length; i++) array.set((int) arrays[i], i);
+        for (int i = 0; i < arrays.length; i++) array.set(arrays[i], i);
         return array;
     }
 
