@@ -116,7 +116,7 @@ public class Global {
 
     @Keep
     @JSMethod
-    public String rsaEncrypt(String data, String key) {
+    public String rsaEncrypt(String data, String key) throws Exception {
         return  rsaEncrypt(data, key, null);
     }
     /**
@@ -194,7 +194,7 @@ public class Global {
 
     @Keep
     @JSMethod
-    public String rsaDecrypt(String encryptBase64Data, String key) {
+    public String rsaDecrypt(String encryptBase64Data, String key) throws Exception {
         return  rsaDecrypt(encryptBase64Data, key, null);
     }
 
