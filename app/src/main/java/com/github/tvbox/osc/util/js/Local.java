@@ -4,7 +4,7 @@ import androidx.annotation.Keep;
 import com.orhanobut.hawk.Hawk;
 import com.whl.quickjs.wrapper.JSMethod;
 
-public class local {
+public class Local {
     
     @Keep
     @JSMethod
