@@ -140,7 +140,7 @@ public class Global {
         boolean mBlock = true;
         String mConfig = null;
         if (options != null) {
-            JSONObject op = options.stringify();
+            JSONObject op = new JSONObject(options.stringify());
             if (op.has("config")) {
                 try {
                     mConfig = (String) op.get("config");
@@ -218,7 +218,7 @@ public class Global {
         boolean mBlock = true;
         String mConfig = null;
         if (options != null) {
-            JSONObject op = options.stringify();
+            JSONObject op = new JSONObject(options.stringify());
             if (op.has("config")) {
                 try {
                     mConfig = (String) op.get("config");
