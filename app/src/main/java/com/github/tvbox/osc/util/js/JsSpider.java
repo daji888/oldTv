@@ -295,12 +295,7 @@ public class JsSpider extends Spider {
             }
         });
 
-//        ctx.getGlobalObject().bind(new Global(executor));
-
-        
         ctx.getGlobalObject().setProperty("local", Local.class);
-        
-
         ctx.getGlobalObject().getContext().evaluate(FileUtils.loadModule("net.js"));
     }
 
