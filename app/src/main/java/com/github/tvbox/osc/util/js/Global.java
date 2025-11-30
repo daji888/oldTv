@@ -68,13 +68,13 @@ public class Global {
     @JSMethod
     public JSArray pdfa(String html, String rule) {
 
-        return new JSUtils<String>().toArray(runtime, HtmlParser.parseDomForArray(html, rule));
+        return JSUtils.toArray(runtime, HtmlParser.parseDomForArray(html, rule));
     }
 
     @Keep
     @JSMethod
     public JSArray pdfla(String html, String p1, String list_text, String list_url, String add_url) {
-        return new JSUtils<String>().toArray(runtime, HtmlParser.parseDomForList(html, p1, list_text, list_url, add_url));
+        return JSUtils.toArray(runtime, HtmlParser.parseDomForList(html, p1, list_text, list_url, add_url));
     }
     
     @Keep
