@@ -38,7 +38,7 @@ import okhttp3.Response;
 
 public class FileUtils {
 
-    private String userAgent = "okhttp/" + OkHttp.VERSION;
+    private static String userAgent = "okhttp/" + OkHttp.VERSION;
 
     public static File open(String str) {
         return new File(getExternalCachePath() + "/qjscache_" + str + ".js");
