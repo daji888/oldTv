@@ -393,7 +393,7 @@ public class JsSpider extends Spider {
         } else {
             String content = o.toString();
             if (base64 && content.contains("base64,")) content = content.split("base64,")[1];
-            return new ByteArrayInputStream(base64 ? (Base64.decode(getContent(), Base64.DEFAULT | Base64.NO_WRAP) : content.getBytes());
+            return new ByteArrayInputStream(base64 ? Base64.decode(content, Base64.DEFAULT | Base64.NO_WRAP) : content.getBytes());
         }
     }
 }
