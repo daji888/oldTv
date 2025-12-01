@@ -346,20 +346,6 @@ public class JsSpider extends Spider {
         });
     }
 
-    private String getContent() {
-        String global = "globalThis." + key;
-        String content = FileUtils.loadModule(api);
-        if (TextUtils.isEmpty(content)) {return null;}
-        if (content.contains("__jsEvalReturn")) {
-            ctx.evaluate("req = http");
-            return content.concat(global).concat(" = __jsEvalReturn()");
-        } else if (content.contains("__JS_SPIDER__")) {
-            return content.replace("__JS_SPIDER__", global);
-        } else {
-            return content.replaceAll("export default.*?[{]", global + " = {");
-        }
-    }
-
     private Object[] proxy1(Map<String, String> params) throws Exception {
         JSObject object = JSUtils.toObj(ctx, params);
         JSONArray array = new JSONArray(((JSArray) jsObject.getJSFunction("proxy").call(object)).stringify());
