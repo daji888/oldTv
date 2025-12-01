@@ -1,5 +1,7 @@
 package com.github.tvbox.osc.util.js;
 
+import android.text.TextUtils;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -60,7 +62,7 @@ public class Json {
     }
 
     public static Map<String, String> toMap(String json) {
-        return TextUtils.isEmpty(json) ? null : toMap(parse(json));
+        return TextUtils.isEmpty(json) ? null : toMap(JsonParser.parseString(json));
     }
 
     public static Map<String, String> toMap(JsonElement element) {
