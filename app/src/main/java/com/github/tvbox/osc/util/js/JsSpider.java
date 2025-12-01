@@ -424,16 +424,10 @@ public class JsSpider extends Spider {
         Object object = submit(() -> ctx.parse(header)).get();
         String json = (String) call("proxy", array, object);
         Res res = Res.objectFrom(json);
-        String contentType = res.getContentType();
-        if (TextUtils.isEmpty(contentType)) contentType = "application/octet-stream";
         Object[] result = new Object[3];
-        result[0] = 200;
-        result[1] = contentType;
-        if (res.getBuffer() == 2) {
-            result[2] = new ByteArrayInputStream(Base64.decode(res.getContent(), Base64.DEFAULT));
-        } else {
-            result[2] = new ByteArrayInputStream(res.getContent().getBytes());
-        }
+        result[0] = res.getCode();
+        result[1] = res.getContentType();
+        result[2] = res.getStream();
         return result;
     }
 
