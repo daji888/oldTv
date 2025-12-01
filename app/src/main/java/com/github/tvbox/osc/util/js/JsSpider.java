@@ -361,60 +361,16 @@ public class JsSpider extends Spider {
     }
 
     private Object[] proxy1(Map<String, String> params) throws Exception {
-        JSObject object = JSUtils.toObj(ctx, params);
+        JSObject object = JSUtil.toObject(ctx, params);
         JSONArray array = new JSONArray(((JSArray) jsObject.getJSFunction("proxy").call(object)).stringify());
-        boolean headerAvailable = array.length() > 3 && array.opt(3) != null;
-        int code = array.optInt(0);
-        String mime = array.optString(1);
-        ByteArrayInputStream input = getStream(array.opt(2));
-        Map<String, String> headers = null;
-        if (array.length() > 3) {
-            headers = headerAvailable ? getHeader(array.opt(3)) : null;
-        }
-        if (array.length() > 4) {
-            try {
-                int type = array.optInt(4);
-                if (type == 1) {
-                    String content = array.optString(2);
-                    if (content.contains("base64,"))
-                        content = content.substring(content.indexOf("base64,") + 7);
-                    LOG.e(content);
-                    input = new ByteArrayInputStream(Base64.decode(content, Base64.DEFAULT));
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return new Object[]{code, mime, input, headers};
-    }
-
-    private Map<String, String> getHeader(Object headerRaw) {
-        Map<String, String> headers = new HashMap<>();
-        if (headerRaw instanceof JSONObject) {
-            JSONObject json = (JSONObject) headerRaw;
-            Iterator<String> keys = json.keys();
-            while (keys.hasNext()) {
-                String key = keys.next();
-                headers.put(key, json.optString(key));
-            }
-        } else if (headerRaw instanceof String) {
-            try {
-                JSONObject json = new JSONObject((String) headerRaw);
-                Iterator<String> keys = json.keys();
-                while (keys.hasNext()) {
-                    String key = keys.next();
-                    headers.put(key, json.optString(key));
-                }
-            } catch (JSONException e) {
-                LOG.i("getHeader: 无法解析 String 为 JSON"+ e);
-            }
-        } else if (headerRaw instanceof Map) {
-            //noinspection unchecked
-            for (Map.Entry<Object, Object> entry : ((Map<Object, Object>) headerRaw).entrySet()) {
-                headers.put(String.valueOf(entry.getKey()), String.valueOf(entry.getValue()));
-            }
-        }
-        return headers;
+        Map<String, String> headers = array.length() > 3 ? Json.toMap(array.optString(3)) : null;
+        boolean base64 = array.length() > 4 && array.optInt(4) == 1;
+        Object[] result = new Object[4];
+        result[0] = array.optInt(0);
+        result[1] = array.optString(1);
+        result[2] = getStream(array.opt(2), base64);
+        result[3] = headers;
+        return result;
     }
     
     private Object[] proxy2(Map<String, String> params) throws Exception {
@@ -431,14 +387,13 @@ public class JsSpider extends Spider {
         return result;
     }
 
-    private ByteArrayInputStream getStream(Object o) {
-        if (o instanceof JSONArray) {
-            JSONArray a = (JSONArray) o;
-            byte[] bytes = new byte[a.length()];
-            for (int i = 0; i < a.length(); i++) bytes[i] = (byte) a.optInt(i);
-            return new ByteArrayInputStream(bytes);
+    private ByteArrayInputStream getStream(Object o, boolean base64) {
+        if (o instanceof byte[]) {
+            return new ByteArrayInputStream((byte[]) o);
         } else {
-            return new ByteArrayInputStream(o.toString().getBytes());
+            String content = o.toString();
+            if (base64 && content.contains("base64,")) content = content.split("base64,")[1];
+            return new ByteArrayInputStream(base64 ? (Base64.decode(getContent(), Base64.DEFAULT | Base64.NO_WRAP) : content.getBytes());
         }
     }
 }
