@@ -54,6 +54,7 @@ public class Connect {
         JSObject jsHeader = ctx.createNewJSObject();
         jsObject.setProperty("headers", jsHeader);
         jsObject.setProperty("content", "");
+        jsObject.setProperty("code", "");
         return jsObject;
     }
 
@@ -72,7 +73,7 @@ public class Connect {
         if (req.getData() != null && req.getPostType().equals("form")) return getFormBody(req);
         if (req.getData() != null && req.getPostType().equals("form-data")) return getFormDataBody(req);
         if (req.getBody() != null && contentType != null) return RequestBody.create(req.getBody(), MediaType.get(contentType));
-        return RequestBody.create(null, "");
+        return RequestBody.create(new byte[0]);
     }
 
     private static RequestBody getJsonBody(Req req) {
@@ -80,10 +81,10 @@ public class Connect {
     }
 
     private static RequestBody getFormBody(Req req) {
-        FormBody.Builder formBody = new FormBody.Builder();
+        FormBody.Builder builder = new FormBody.Builder();
         Map<String, String> params = Json.toMap(req.getData());
-        for (String key : params.keySet()) formBody.add(key, params.get(key));
-        return formBody.build();
+        for (String key : params.keySet()) builder.add(key, params.get(key));
+        return builder.build();
     }
 
     private static RequestBody getFormDataBody(Req req) {
