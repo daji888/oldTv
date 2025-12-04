@@ -1,4 +1,4 @@
-let req = (url, options) => http(url, Object.assign({
+globalThis.req = (url, options) => http(url, Object.assign({
     async: false
 }, options));
 
@@ -14,4 +14,28 @@ function http(url, options = {}) {
             url
         }
     })
-};
+}
+
+Object.defineProperty(globalThis, 'global', {
+    enumerable: true,
+    get() {
+        return globalThis;
+    },
+    set() {}
+});
+
+Object.defineProperty(globalThis, 'window', {
+    enumerable: true,
+    get() {
+        return globalThis;
+    },
+    set() {}
+});
+
+Object.defineProperty(globalThis, 'self', {
+    enumerable: true,
+    get() {
+        return globalThis;
+    },
+    set() {}
+});
