@@ -303,7 +303,6 @@ public class JsSpider extends Spider {
     private static final String SPIDER_STRING_CODE = "import * as spider from '%s'\n\n" +
             "if (!globalThis.__JS_SPIDER__) {\n" +
             "    if (spider.__jsEvalReturn) {\n" +
-        //    "        globalThis.req = http\n" +
             "        globalThis.__JS_SPIDER__ = spider.__jsEvalReturn()\n" +
             "    } else if (spider.default) {\n" +
             "        globalThis.__JS_SPIDER__ = typeof spider.default === 'function' ? spider.default() : spider.default\n" +
@@ -344,6 +343,8 @@ public class JsSpider extends Spider {
 
     private void createCtx() {
         ctx = QuickJSContext.create();
+        ctx.evaluate(FileUtils.loadModule("net.js"));
+        ctx.getGlobalObject().setProperty("local", Local.class);
         ctx.setModuleLoader(new QuickJSContext.BytecodeModuleLoader() {
             @Override
             public byte[] getModuleBytecode(String moduleName) {
@@ -390,10 +391,6 @@ public class JsSpider extends Spider {
                 LOG.i("QuJs" + e);
             }
         });
-
-        ctx.getGlobalObject().setProperty("local", Local.class);
-    //    ctx.getGlobalObject().getContext().evaluate(FileUtils.loadModule("net.js"));
-        ctx.evaluate(FileUtils.loadModule("net.js"));
     }
 
     private void createDex() {
