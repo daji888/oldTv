@@ -333,8 +333,7 @@ public class JsSpider extends Spider {
     }
 
     private static byte[] byteFF(String content) {
-    //    byte[] bytes = Base64.decode(content.substring(4), Base64.DEFAULT);
-        byte[] bytes = Base64.decode(content.replace("//bb", ""), 0);
+        byte[] bytes = Base64.decode(content.substring(4), Base64.DEFAULT);
         byte[] newBt = new byte[bytes.length - 4];
         newBt[0] = 1;
         System.arraycopy(bytes, 5, newBt, 1, bytes.length - 5);
@@ -355,8 +354,7 @@ public class JsSpider extends Spider {
                     return ctx.compileModule("", moduleName);
                 }
                 if (ss.startsWith("//DRPY")) {
-                //    return Base64.decode(ss.substring(6), Base64.URL_SAFE);
-                    return Base64.decode(ss.replace("//DRPY", ""), Base64.URL_SAFE);
+                    return Base64.decode(ss.substring(6), Base64.URL_SAFE);
                 } else if (ss.startsWith("//bb")) {
                     return byteFF(ss);
                 } else {
