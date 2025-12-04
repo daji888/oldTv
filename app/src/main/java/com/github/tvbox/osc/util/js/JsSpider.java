@@ -467,8 +467,11 @@ public class JsSpider extends Spider {
     }
 
     private ByteArrayInputStream getStream(Object o, boolean base64) {
-        if (o instanceof byte[]) {
-            return new ByteArrayInputStream((byte[]) o);
+        if (o instanceof JSONArray) {
+            JSONArray a = (JSONArray) o;
+            byte[] bytes = new byte[a.length()];
+            for (int i = 0; i < a.length(); i++) bytes[i] = (byte) a.optInt(i);
+            return new ByteArrayInputStream(bytes);
         } else {
             String content = o.toString();
             if (base64 && content.contains("base64,")) content = content.split("base64,")[1];
