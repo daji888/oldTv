@@ -329,7 +329,7 @@ public class JsSpider extends Spider {
                 ctx.evaluateModule(content.replace(spider, global), api);
                 ctx.evaluateModule(String.format(SPIDER_STRING_CODE, api));
             }
-            jsObject = (JSObject) ctx.getProperty(ctx.getGlobalObject(), spider);
+            jsObject = (JSObject) ctx.getProperty(ctx.getGlobalObject(), "__JS_SPIDER__");
             return null;
         }).get();
     }
@@ -354,7 +354,7 @@ public class JsSpider extends Spider {
                     return ctx.compileModule("", moduleName);
                 }
                 if (ss.startsWith("//DRPY")) {
-                    return Base64.decode(content.substring(6), Base64.URL_SAFE);
+                    return Base64.decode(ss.substring(6), Base64.URL_SAFE);
                 } else if (ss.startsWith("//bb")) {
                     return byteFF(ss);
                 } else {
