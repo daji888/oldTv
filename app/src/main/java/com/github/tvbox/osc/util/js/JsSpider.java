@@ -324,7 +324,6 @@ public class JsSpider extends Spider {
                 String spider = "__JS_SPIDER__";
                 String global = "globalThis." + spider;
                 cat = content.contains("__jsEvalReturn");
-                ctx.evaluateModule(content, api);
                 ctx.evaluateModule(content.replace(spider, global), api);
                 ctx.evaluateModule(String.format(SPIDER_STRING_CODE, api));
             }
