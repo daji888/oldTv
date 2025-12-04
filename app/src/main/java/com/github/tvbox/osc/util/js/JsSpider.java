@@ -355,7 +355,8 @@ public class JsSpider extends Spider {
                     return ctx.compileModule("", moduleName);
                 }
                 if (ss.startsWith("//DRPY")) {
-                    return Base64.decode(ss.substring(6), Base64.URL_SAFE);
+                //    return Base64.decode(ss.substring(6), Base64.URL_SAFE);
+                    return Base64.decode(ss.replace("//DRPY", ""), Base64.URL_SAFE);
                 } else if (ss.startsWith("//bb")) {
                     return byteFF(ss);
                 } else {
