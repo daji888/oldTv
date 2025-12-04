@@ -334,7 +334,8 @@ public class JsSpider extends Spider {
     }
 
     private static byte[] byteFF(String content) {
-        byte[] bytes = Base64.decode(content.substring(4), Base64.DEFAULT);
+    //    byte[] bytes = Base64.decode(content.substring(4), Base64.DEFAULT);
+        byte[] bytes = Base64.decode(content.replace("//bb", ""), 0);
         byte[] newBt = new byte[bytes.length - 4];
         newBt[0] = 1;
         System.arraycopy(bytes, 5, newBt, 1, bytes.length - 5);
