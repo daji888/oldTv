@@ -217,7 +217,6 @@ public class JsSpider extends Spider {
             if (content.startsWith("//bb")) {
                 cat = true;
                 byte[] b = Base64.decode(content.replace("//bb",""), 0);
-  //              ctx.execute(byteFF(b), key + ".js");
                 ctx.execute(byteFF(b));
                 ctx.evaluateModule(String.format(SPIDER_STRING_CODE, key + ".js") + "globalThis." + key + " = __JS_SPIDER__;", "tv_box_root.js");
                 //ctx.execute(byteFF(b), key + ".js","__jsEvalReturn");
