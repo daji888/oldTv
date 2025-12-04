@@ -195,7 +195,7 @@ public class JsSpider extends Spider {
         });
     }
 
-    private static final String SPIDER_STRING_CODE = "import * as spider from '%s'\n\n" +
+/*    private static final String SPIDER_STRING_CODE = "import * as spider from '%s'\n\n" +
             "if (!globalThis.__JS_SPIDER__) {\n" +
             "    if (spider.__jsEvalReturn) {\n" +
             "        globalThis.req = http\n" +
@@ -298,6 +298,102 @@ public class JsSpider extends Spider {
 
         ctx.getGlobalObject().setProperty("local", Local.class);
         ctx.getGlobalObject().getContext().evaluate(FileUtils.loadModule("net.js"));
+    }*/
+
+    private static final String SPIDER_STRING_CODE = "import * as spider from '%s'\n\n" +
+            "if (!globalThis.__JS_SPIDER__) {\n" +
+            "    if (spider.__jsEvalReturn) {\n" +
+            "        globalThis.req = http\n" +
+            "        globalThis.__JS_SPIDER__ = spider.__jsEvalReturn()\n" +
+            "    } else if (spider.default) {\n" +
+            "        globalThis.__JS_SPIDER__ = typeof spider.default === 'function' ? spider.default() : spider.default\n" +
+            "    }\n" +
+            "}";
+    
+    private void initializeJS() throws Exception {
+        submit(() -> {
+            if (ctx == null) createCtx();
+            if (dex != null) createDex();
+
+            String content = FileUtils.loadModule(api);            
+            if (TextUtils.isEmpty(content)) {return null;}
+            
+            if (content.startsWith("//bb")) {
+                cat = true;
+                ctx.execute(byteFF(content));
+            } else {
+                String spider = "__JS_SPIDER__";
+                String global = "globalThis." + spider;
+                cat = content.contains("__jsEvalReturn");
+                ctx.evaluateModule(content, api);
+                ctx.evaluateModule(content.replace(spider, global), api);
+                ctx.evaluateModule(String.format(SPIDER_STRING_CODE, api));
+            }
+            jsObject = (JSObject) ctx.getProperty(ctx.getGlobalObject(), spider);
+            return null;
+        }).get();
+    }
+
+    public byte[] byteFF(String content) {
+        byte[] bytes = Base64.decode(content.substring(4), Base64.DEFAULT);
+        byte[] newBt = new byte[bytes.length - 4];
+        newBt[0] = 1;
+        System.arraycopy(bytes, 5, newBt, 1, bytes.length - 5);
+        return newBt;
+    }
+
+    private void createCtx() {
+        ctx = QuickJSContext.create();
+        ctx.setModuleLoader(new QuickJSContext.BytecodeModuleLoader() {
+            @Override
+            public byte[] getModuleBytecode(String moduleName) {
+                String ss = FileUtils.loadModule(moduleName);
+                ss = ss.replace("__JS_SPIDER__", "globalThis.__JS_SPIDER__");
+                if (TextUtils.isEmpty(ss)) {
+                    LOG.i("echo-getModuleBytecode empty :"+ moduleName);
+                    return ctx.compileModule("", moduleName);
+                }
+                if (ss.startsWith("//DRPY")) {
+                    return Base64.decode(content.substring(6), Base64.URL_SAFE);
+                } else if (ss.startsWith("//bb")) {
+                    return byteFF(ss);
+                } else {
+                    if (moduleName.contains("cheerio.min.js")) {
+                        FileUtils.setCacheByte("cheerio.min", ctx.compileModule(ss, "cheerio.min.js"));
+                    } else if (moduleName.contains("crypto-js.js")) {
+                        FileUtils.setCacheByte("crypto-js", ctx.compileModule(ss, "crypto-js.js"));
+                    }
+                    return ctx.compileModule(ss, moduleName);
+                }
+            }
+
+            @Override
+            public String moduleNormalizeName(String moduleBaseName, String moduleName) {
+                return UriUtil.resolve(moduleBaseName, moduleName);
+            }
+        });
+        ctx.setConsole(new QuickJSContext.Console() {
+            @Override
+            public void log(String l) {
+                LOG.i("QuJs" + l);
+            }
+            @Override
+            public void info(String i) {
+                LOG.i("QuJs" + i);
+            }
+            @Override
+            public void warn(String w) {
+                LOG.i("QuJs" + w);
+            }
+            @Override
+            public void error(String e) {
+                LOG.i("QuJs" + e);
+            }
+        });
+
+        ctx.getGlobalObject().setProperty("local", Local.class);
+    //    ctx.getGlobalObject().getContext().evaluate(FileUtils.loadModule("net.js"));
+        ctx.evaluate(FileUtils.loadModule("net.js"));
     }
 
     private void createDex() {
