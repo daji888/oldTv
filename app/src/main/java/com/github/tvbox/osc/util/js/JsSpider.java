@@ -183,7 +183,7 @@ public class JsSpider extends Spider {
             if ("catvod".equals(params.get("from"))) return proxy2(params);
             else return submit(() -> proxy1(params)).get();
 
-        } catch (Exception e) {
+        } catch (Exception E) {
             return new Object[0];
         }
     }
