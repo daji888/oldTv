@@ -57,6 +57,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.OkHttp;
 import okhttp3.OkHttpClient;
 
 /**
@@ -85,7 +86,7 @@ public class ApiConfig {
     private JarLoader jarLoader = new JarLoader();
     private JsLoader jsLoader = new JsLoader();
 
-    private String userAgent = "okhttp/5.3.0";
+    private String userAgent = "okhttp/" + OkHttp.VERSION;
 
     private String requestAccept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9";
 
