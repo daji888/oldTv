@@ -89,7 +89,7 @@ public class JsSpider extends Spider {
         try {
             if (cat) call("init", submit(() -> cfg(extend)).get());
             else call("init", Json.valid(extend) ? ctx.parse(extend) : extend);
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
     }
@@ -98,7 +98,7 @@ public class JsSpider extends Spider {
     public String homeContent(boolean filter) {
         try {
             return (String) call("home", filter);
-        }catch (Exception e){
+        } catch (Exception e) {
            return null;
         }
     }
@@ -107,7 +107,7 @@ public class JsSpider extends Spider {
     public String homeVideoContent() {
         try {
             return (String) call("homeVod");
-        }catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
@@ -117,7 +117,7 @@ public class JsSpider extends Spider {
         try {
             JSObject obj = submit(() -> JSUtils.toObj(ctx, extend)).get();
             return (String) call("category", tid, pg, filter, obj);
-        }catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
@@ -126,7 +126,7 @@ public class JsSpider extends Spider {
     public String detailContent(List<String> ids)  {
         try {
             return (String) call("detail", ids.get(0));
-        }catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
@@ -135,15 +135,16 @@ public class JsSpider extends Spider {
     public String searchContent(String key, boolean quick)  {
         try {
             return (String) call("search", key, quick);
-        }catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
+    
     @Override
     public String searchContent(String key, boolean quick, String pg)  {
         try {
             return (String) call("search", key, quick, pg);
-        }catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
@@ -153,7 +154,7 @@ public class JsSpider extends Spider {
         try {
             JSArray array = submit(() -> JSUtils.toArray(ctx, vipFlags)).get();
             return (String) call("play", flag, id, array);
-        }catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
@@ -162,7 +163,7 @@ public class JsSpider extends Spider {
     public boolean manualVideoCheck()  {
         try {
             return (Boolean) call("sniffer");
-        }catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
     }
@@ -171,7 +172,7 @@ public class JsSpider extends Spider {
     public boolean isVideoFormat(String url) {
         try {
             return (Boolean) call("isVideo", url);
-        }catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
     }
@@ -182,7 +183,7 @@ public class JsSpider extends Spider {
             if ("catvod".equals(params.get("from"))) return proxy2(params);
             else return submit(() -> proxy1(params)).get();
 
-        }catch (Exception E){
+        } catch (Exception e) {
             return new Object[0];
         }
     }
