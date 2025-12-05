@@ -40,13 +40,14 @@ import okhttp3.ConnectionSpec;
 import okhttp3.Dns;
 import okhttp3.dnsoverhttps.DnsOverHttps;
 import okhttp3.HttpUrl;
+import okhttp3.OkHttp;
 import okhttp3.OkHttpClient;
 
 import xyz.doikki.videoplayer.exo.ExoMediaSourceHelper;
 
 public class OkGoHelper {
     public static final long DEFAULT_MILLISECONDS = 10000;      //默认的超时时间
-    private static final String userAgent = "okhttp/5.3.0";
+    private static final String userAgent = "okhttp/" + OkHttp.VERSION;
 
     //https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/200
     public static HashMap<Integer, String> httpPhaseMap = new HashMap<Integer, String>() {{
