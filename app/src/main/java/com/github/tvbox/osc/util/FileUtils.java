@@ -187,7 +187,6 @@ public class FileUtils {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return name;
         }
         return rel;
     }

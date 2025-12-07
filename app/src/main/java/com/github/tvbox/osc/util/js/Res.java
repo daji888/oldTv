@@ -56,7 +56,7 @@ public class Res {
     }
 
     public ByteArrayInputStream getStream() {
-        if (getBuffer() == 2) return new ByteArrayInputStream(Base64.decode(getContent(), Base64.DEFAULT));
+        if (getBuffer() == 2) return new ByteArrayInputStream(Base64.decode(getContent(), Base64.DEFAULT | Base64.NO_WRAP));
         return new ByteArrayInputStream(getContent().getBytes());
     }
 }
