@@ -2,7 +2,7 @@ package com.github.catvod.crawler;
 
 import android.content.Context;
 import com.github.tvbox.osc.util.OkGoHelper;
-import com.github.tvbox.osc.util.js.Connect;
+import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +10,13 @@ import okhttp3.Dns;
 
 public class Spider {
 
-    public void init(Context context) throws Exception {}
+    public static JSONObject empty = new JSONObject();
+
+    protected static Context mContext;
+
+    public void init(Context context) throws Exception {
+        mContext = context;
+    }
 
     public void init(Context context, String extend) throws Exception {
         init(context);
