@@ -11,7 +11,6 @@ import com.github.tvbox.osc.util.MD5;
 
 import com.whl.quickjs.wrapper.Function;
 import com.whl.quickjs.wrapper.JSArray;
-
 import com.whl.quickjs.wrapper.JSCallFunction;
 import com.whl.quickjs.wrapper.JSObject;
 import com.whl.quickjs.wrapper.JSUtils;
@@ -89,7 +88,7 @@ public class JsSpider extends Spider {
         try {
             if (cat) call("init", submit(() -> cfg(extend)).get());
             else call("init", Json.valid(extend) ? ctx.parse(extend) : extend);
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
     }
@@ -98,7 +97,7 @@ public class JsSpider extends Spider {
     public String homeContent(boolean filter) {
         try {
             return (String) call("home", filter);
-        }catch (Exception e){
+        } catch (Exception e) {
            return null;
         }
     }
@@ -107,7 +106,7 @@ public class JsSpider extends Spider {
     public String homeVideoContent() {
         try {
             return (String) call("homeVod");
-        }catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
@@ -117,7 +116,7 @@ public class JsSpider extends Spider {
         try {
             JSObject obj = submit(() -> new JSUtils<String>().toObj(ctx, extend)).get();
             return (String) call("category", tid, pg, filter, obj);
-        }catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
@@ -126,7 +125,7 @@ public class JsSpider extends Spider {
     public String detailContent(List<String> ids)  {
         try {
             return (String) call("detail", ids.get(0));
-        }catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
@@ -135,7 +134,7 @@ public class JsSpider extends Spider {
     public String searchContent(String key, boolean quick)  {
         try {
             return (String) call("search", key, quick);
-        }catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
@@ -143,7 +142,7 @@ public class JsSpider extends Spider {
     public String searchContent(String key, boolean quick, String pg)  {
         try {
             return (String) call("search", key, quick, pg);
-        }catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
@@ -153,7 +152,7 @@ public class JsSpider extends Spider {
         try {
             JSArray array = submit(() -> new JSUtils<String>().toArray(ctx, vipFlags)).get();
             return (String) call("play", flag, id, array);
-        }catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
@@ -162,7 +161,7 @@ public class JsSpider extends Spider {
     public boolean manualVideoCheck()  {
         try {
             return (Boolean) call("sniffer");
-        }catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
     }
@@ -171,7 +170,7 @@ public class JsSpider extends Spider {
     public boolean isVideoFormat(String url) {
         try {
             return (Boolean) call("isVideo", url);
-        }catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
     }
@@ -182,7 +181,7 @@ public class JsSpider extends Spider {
             if ("catvod".equals(params.get("from"))) return proxy2(params);
             else return submit(() -> proxy1(params)).get();
 
-        }catch (Exception E){
+        } catch (Exception E) {
             return new Object[0];
         }
     }
@@ -205,6 +204,7 @@ public class JsSpider extends Spider {
             "        globalThis.__JS_SPIDER__ = typeof spider.default === 'function' ? spider.default() : spider.default\n" +
             "    }\n" +
             "}";
+    
     private void initializeJS() throws Exception {
         submit(() -> {
             if (ctx == null) createCtx();
@@ -213,7 +213,7 @@ public class JsSpider extends Spider {
             String content = FileUtils.loadModule(api);            
             if (TextUtils.isEmpty(content)) {return null;}
             
-            if(content.startsWith("//bb")){
+            if (content.startsWith("//bb")) {
                 cat = true;
                 byte[] b = Base64.decode(content.replace("//bb",""), 0);
                 ctx.execute(byteFF(b), key + ".js");
@@ -256,9 +256,9 @@ public class JsSpider extends Spider {
                     LOG.i("echo-getModuleBytecode empty :"+ moduleName);
                     return ctx.compileModule("", moduleName);
                 }
-                if(ss.startsWith("//DRPY")){
+                if (ss.startsWith("//DRPY")) {
                     return Base64.decode(ss.replace("//DRPY",""), Base64.URL_SAFE);
-                } else if(ss.startsWith("//bb")){
+                } else if (ss.startsWith("//bb")) {
                     byte[] b = Base64.decode(ss.replace("//bb",""), 0);
                     return byteFF(b);
                 } else {
@@ -356,28 +356,23 @@ public class JsSpider extends Spider {
         JSObject object = new JSUtils<String>().toObj(ctx, params);
         JSONArray array = ((JSArray) jsObject.getJSFunction("proxy").call(object)).toJsonArray();
         boolean headerAvailable = array.length() > 3 && array.opt(3) != null;
-        int code = array.optInt(0);
-        String mime = array.optString(1);
-        ByteArrayInputStream input = getStream(array.opt(2));
-        Map<String, String> headers = null;
-        if (array.length() > 3) {
-            headers = headerAvailable ? getHeader(array.opt(3)) : null;
-        }
+        Object[] result = new Object[4];
+        result[0] = array.opt(0);
+        result[1] = array.opt(1);
+        result[2] = getStream(array.opt(2));
+        result[3] = headerAvailable ? getHeader(array.opt(3)) : null;
         if (array.length() > 4) {
             try {
-                int type = array.optInt(4);
-                if (type == 1) {
+                if (array.optInt(4) == 1) {
                     String content = array.optString(2);
-                    if (content.contains("base64,"))
-                        content = content.substring(content.indexOf("base64,") + 7);
-                    LOG.e(content);
-                    input = new ByteArrayInputStream(Base64.decode(content, Base64.DEFAULT));
+                    if (content.contains("base64,")) content = content.substring(content.indexOf("base64,") + 7);
+                    result[2] = new ByteArrayInputStream(Base64.decode(content, Base64.DEFAULT));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        return new Object[]{code, mime, input, headers};
+        return result;
     }
 
     private Map<String, String> getHeader(Object headerRaw) {
