@@ -196,7 +196,7 @@ public class JsSpider extends Spider {
         });
     }
 
-/*    private static final String SPIDER_STRING_CODE = "import * as spider from '%s'\n\n" +
+    private static final String SPIDER_STRING_CODE = "import * as spider from '%s'\n\n" +
             "if (!globalThis.__JS_SPIDER__) {\n" +
             "    if (spider.__jsEvalReturn) {\n" +
             "        globalThis.req = http\n" +
@@ -299,9 +299,9 @@ public class JsSpider extends Spider {
 
         ctx.getGlobalObject().setProperty("local", Local.class);
         ctx.getGlobalObject().getContext().evaluate(FileUtils.loadModule("net.js"));
-    }*/
+    }
 
-    private static final String SPIDER_STRING_CODE = "import * as spider from '%s'\n\n" +
+/*    private static final String SPIDER_STRING_CODE = "import * as spider from '%s'\n\n" +
             "if (!globalThis.__JS_SPIDER__) {\n" +
             "    if (spider.__jsEvalReturn) {\n" +
             "        globalThis.__JS_SPIDER__ = spider.__jsEvalReturn()\n" +
@@ -391,7 +391,7 @@ public class JsSpider extends Spider {
                 LOG.i("QuJs" + e);
             }
         });
-    }
+    }*/
 
     private void createDex() {
         try {
