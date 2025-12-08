@@ -64,7 +64,7 @@ public class IjkmPlayer extends IjkPlayer {
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "dns_cache_clear", 1);
         // DNS 缓存超时时间为永久缓存
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "dns_cache_timeout", -1);
-        // 启用快速 seek 功能，可以显著提升视频拖放操作的响应速度
+        // 参数值为 fastseek 时表示启用快速 seek 功能，可以显著提升视频拖放操作的响应速度
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "fflags", "fastseek");
         // 参数值为 0 时表示关闭HTTP范围检测支持，这个设置通常用于解决某些网络环境下出现的播放异常问题，特别是当遇到HTTP和HTTPS混合内容时可能导致的播放错误
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "http-detect-range-support", 0);
@@ -72,8 +72,8 @@ public class IjkmPlayer extends IjkPlayer {
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "protocol_whitelist", "ijkio,ffio,async,cache,crypto,file,dash,http,https,ijkhttphook,ijkinject,ijklivehook,ijklongurl,ijksegment,ijktcphook,pipe,rtp,tcp,tls,udp,ijkurlhook,data,concat,subfile,ffconcat");
         // 是否允许一些不安全的路径，默认值是 1 ，会拒绝一些不安全的文件路径, 设置为 0 ，关闭安全监测
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "safe", 0);
-        // 是否开启精准 seek，0：默认关闭
-        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 0);
+        // 是否开启精准 seek，0：默认关闭，1：启用
+        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 1);
         // 当 CPU 处理不过来的时候丢帧帧数，默认为 0，参数范围是 [-1, 120]
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 0);
         //视频最大帧率
@@ -106,7 +106,7 @@ public class IjkmPlayer extends IjkPlayer {
             mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max-buffer-size", 256 * 1024);
             // 0 关闭预缓冲，可能会卡顿（不会回调info)
             mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0);
-            // 设置输入缓冲模式, 值为 1 时启用输入缓冲，值为 0 则关闭输入缓冲
+            // 设置持续输入缓冲模式, 值为 1 时启用持续输入缓冲，值为 0 则关闭持续输入缓冲
             mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "infbuf", 1);
             // 设置最大缓存时长
             mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max_cached_duration", 300);
@@ -118,7 +118,7 @@ public class IjkmPlayer extends IjkPlayer {
             mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max-buffer-size", 5 * 1024 * 1024);
             // 1 启用预缓冲，减少卡顿（会回调info)
             mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 1);
-            // 设置输入缓冲模式, 值为 1 时启用输入缓冲，值为 0 则关闭输入缓冲
+            // 设置持续输入缓冲模式, 值为 1 时启用持续输入缓冲，值为 0 则关闭持续输入缓冲
             mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "infbuf", 0);
             // 设置最大缓存时长
             mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max_cached_duration", 3000);

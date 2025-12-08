@@ -52,8 +52,9 @@ public class GridFragment extends BaseLazyFragment {
     private boolean isLoad = false;
     private boolean isTop = true;
     private View focusedView = null;
-    private class GridInfo{
-        public String sortID="";
+    
+    private static class GridInfo {
+        public String sortID = "";
         public TvRecyclerView mGridView;
         public GridAdapter gridAdapter;
         public int page = 1;
@@ -61,6 +62,7 @@ public class GridFragment extends BaseLazyFragment {
         public boolean isLoad = false;
         public View focusedView= null;
     }
+    
     Stack<GridInfo> mGrids = new Stack<GridInfo>(); //ui栈
 
     public static GridFragment newInstance(MovieSort.SortData sortData) {
@@ -95,14 +97,18 @@ public class GridFragment extends BaseLazyFragment {
         initViewModel();
         initData();
     }
+    
     public boolean isFolederMode() { return (getUITag() == '1'); }
+    
     // 获取当前页面UI的显示模式 ‘0’ 正常模式 '1' 文件夹模式 '2' 显示缩略图的文件夹模式
     public char getUITag() {
         System.out.println(sortData);
         return (sortData == null || sortData.flag == null || sortData.flag.length() == 0 ) ?  '0' : sortData.flag.charAt(0);
     }
+    
     // 是否允许聚合搜索 sortData.flag的第二个字符为‘1’时允许聚搜
     public boolean enableFastSearch() {  return sortData.flag == null || sortData.flag.length() < 2 || (sortData.flag.charAt(1) == '1'); }
+    
     // 保存当前页面
     private void saveCurrentView() {
         if (this.mGridView == null) return;
@@ -116,6 +122,7 @@ public class GridFragment extends BaseLazyFragment {
         info.focusedView = this.focusedView;
         this.mGrids.push(info);
     }
+    
     // 丢弃当前页面，将页面还原成上一个保存的页面
     public boolean restoreView() {
         if (mGrids.empty()) return false;
@@ -134,6 +141,7 @@ public class GridFragment extends BaseLazyFragment {
         if (mGridView != null) mGridView.requestFocus();
         return true;
     }
+    
     // 更改当前页面
     private void createView() {
         this.saveCurrentView(); // 保存当前页面
@@ -255,7 +263,6 @@ public class GridFragment extends BaseLazyFragment {
         sourceViewModel.listResult.observe(this, new Observer<AbsXml>() {
             @Override
             public void onChanged(AbsXml absXml) {
-//                if(mGridView != null) mGridView.requestFocus();
                 if (absXml != null && absXml.movie != null && absXml.movie.videoList != null && absXml.movie.videoList.size() > 0) {
                     if (page == 1) {
                         showSuccess();
