@@ -11,7 +11,6 @@ import com.github.tvbox.osc.util.MD5;
 
 import com.whl.quickjs.wrapper.JSArray;
 import com.whl.quickjs.wrapper.JSMethod;
-
 import com.whl.quickjs.wrapper.JSCallFunction;
 import com.whl.quickjs.wrapper.JSObject;
 import com.whl.quickjs.wrapper.JSUtils;
@@ -115,7 +114,7 @@ public class JsSpider extends Spider {
     @Override
     public String categoryContent(String tid, String pg, boolean filter, HashMap<String, String> extend)  {
         try {
-            JSObject obj = submit(() -> JSUtils.toObj(ctx, extend)).get();
+            JSObject obj = submit(() -> new JSUtils<String>().toObj(ctx, extend)).get();
             return (String) call("category", tid, pg, filter, obj);
         } catch (Exception e) {
             return null;
@@ -139,7 +138,6 @@ public class JsSpider extends Spider {
             return null;
         }
     }
-    
     @Override
     public String searchContent(String key, boolean quick, String pg)  {
         try {
@@ -152,7 +150,7 @@ public class JsSpider extends Spider {
     @Override
     public String playerContent(String flag, String id, List<String> vipFlags) {
         try {
-            JSArray array = submit(() -> JSUtils.toArray(ctx, vipFlags)).get();
+            JSArray array = submit(() -> new JSUtils<String>().toArray(ctx, vipFlags)).get();
             return (String) call("play", flag, id, array);
         } catch (Exception e) {
             return null;
@@ -236,7 +234,7 @@ public class JsSpider extends Spider {
                 //ctx.evaluateModule(content, api, moduleExtName);
                 //ctx.evaluate("globalThis." + key + " = __JS_SPIDER__;");                
             }
-            jsObject = (JSObject) ctx.getProperty(ctx.getGlobalObject(), key);
+            jsObject = (JSObject) ctx.get(ctx.getGlobalObject(), key);
             return null;
         }).get();
     }
@@ -301,98 +299,6 @@ public class JsSpider extends Spider {
         ctx.getGlobalObject().getContext().evaluate(FileUtils.loadModule("net.js"));
     }
 
-/*    private static final String SPIDER_STRING_CODE = "import * as spider from '%s'\n\n" +
-            "if (!globalThis.__JS_SPIDER__) {\n" +
-            "    if (spider.__jsEvalReturn) {\n" +
-            "        globalThis.__JS_SPIDER__ = spider.__jsEvalReturn()\n" +
-            "    } else if (spider.default) {\n" +
-            "        globalThis.__JS_SPIDER__ = typeof spider.default === 'function' ? spider.default() : spider.default\n" +
-            "    }\n" +
-            "}";
-    
-    private void initializeJS() throws Exception {
-        submit(() -> {
-            if (ctx == null) createCtx();
-            if (dex != null) createDex();
-
-            String content = FileUtils.loadModule(api);            
-            if (TextUtils.isEmpty(content)) {return null;}
-            
-            if (content.startsWith("//bb")) {
-                cat = true;
-                ctx.execute(byteFF(content));
-            } else {
-                String spider = "__JS_SPIDER__";
-                String global = "globalThis." + spider;
-                cat = content.contains("__jsEvalReturn");
-                ctx.evaluateModule(content.replace(spider, global), api);
-                ctx.evaluateModule(String.format(SPIDER_STRING_CODE, api));
-            }
-            jsObject = (JSObject) ctx.getProperty(ctx.getGlobalObject(), "__JS_SPIDER__");
-            return null;
-        }).get();
-    }
-
-    public static byte[] byteFF(String content) {
-        byte[] bytes = Base64.decode(content.substring(4), Base64.DEFAULT);
-        byte[] newBt = new byte[bytes.length - 4];
-        newBt[0] = 1;
-        System.arraycopy(bytes, 5, newBt, 1, bytes.length - 5);
-        return newBt;
-    }
-
-    private void createCtx() {
-        ctx = QuickJSContext.create();
-        ctx.evaluate(FileUtils.loadModule("net.js"));
-        ctx.getGlobalObject().setProperty("local", Local.class);
-        ctx.setModuleLoader(new QuickJSContext.BytecodeModuleLoader() {
-            @Override
-            public byte[] getModuleBytecode(String moduleName) {
-                String ss = FileUtils.loadModule(moduleName);
-                ss = ss.replace("__JS_SPIDER__", "globalThis.__JS_SPIDER__");
-                if (TextUtils.isEmpty(ss)) {
-                    LOG.i("echo-getModuleBytecode empty :"+ moduleName);
-                    return ctx.compileModule("", moduleName);
-                }
-                if (ss.startsWith("//DRPY")) {
-                    return Base64.decode(ss.substring(6), Base64.URL_SAFE);
-                } else if (ss.startsWith("//bb")) {
-                    return byteFF(ss);
-                } else {
-                    if (moduleName.contains("cheerio.min.js")) {
-                        FileUtils.setCacheByte("cheerio.min", ctx.compileModule(ss, "cheerio.min.js"));
-                    } else if (moduleName.contains("crypto-js.js")) {
-                        FileUtils.setCacheByte("crypto-js", ctx.compileModule(ss, "crypto-js.js"));
-                    }
-                    return ctx.compileModule(ss, moduleName);
-                }
-            }
-
-            @Override
-            public String moduleNormalizeName(String moduleBaseName, String moduleName) {
-                return UriUtil.resolve(moduleBaseName, moduleName);
-            }
-        });
-        ctx.setConsole(new QuickJSContext.Console() {
-            @Override
-            public void log(String l) {
-                LOG.i("QuJs" + l);
-            }
-            @Override
-            public void info(String i) {
-                LOG.i("QuJs" + i);
-            }
-            @Override
-            public void warn(String w) {
-                LOG.i("QuJs" + w);
-            }
-            @Override
-            public void error(String e) {
-                LOG.i("QuJs" + e);
-            }
-        });
-    }*/
-
     private void createDex() {
         try {
             JSObject obj = ctx.createNewJSObject();
@@ -439,9 +345,9 @@ public class JsSpider extends Spider {
         });
     }
 
-    private Object[] proxy1(Map<String, String> params) throws Exception {
-        JSObject object = JSUtils.toObj(ctx, params);
-        JSONArray array = new JSONArray(((JSArray) jsObject.getJSFunction("proxy").call(object)).stringify());
+    private Object[] proxy1(Map<String, String> params) {
+        JSObject object = new JSUtils<String>().toObj(ctx, params);
+        JSONArray array = ((JSArray) jsObject.getJSFunction("proxy").call(object)).toJsonArray();
         Map<String, String> headers = array.length() > 3 ? Json.toMap(array.optString(3)) : null;
         boolean base64 = array.length() > 4 && array.optInt(4) == 1;
         Object[] result = new Object[4];
@@ -455,7 +361,7 @@ public class JsSpider extends Spider {
     private Object[] proxy2(Map<String, String> params) throws Exception {
         String url = params.get("url");
         String header = params.get("header");
-        JSArray array = submit(() -> JSUtils.toArray(ctx, Arrays.asList(url.split("/")))).get();
+        JSArray array = submit(() -> new JSUtils<String>().toArray(ctx, Arrays.asList(url.split("/")))).get();
         Object object = submit(() -> ctx.parse(header)).get();
         String json = (String) call("proxy", array, object);
         Res res = Res.objectFrom(json);
