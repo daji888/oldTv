@@ -114,7 +114,7 @@ public class JsSpider extends Spider {
     @Override
     public String categoryContent(String tid, String pg, boolean filter, HashMap<String, String> extend)  {
         try {
-            JSObject obj = submit(() -> new JSUtils<String>().toObj(ctx, extend)).get();
+            JSObject obj = submit(() -> JSUtils.toObj(ctx, extend)).get();
             return (String) call("category", tid, pg, filter, obj);
         } catch (Exception e) {
             return null;
@@ -138,6 +138,7 @@ public class JsSpider extends Spider {
             return null;
         }
     }
+    
     @Override
     public String searchContent(String key, boolean quick, String pg)  {
         try {
@@ -150,7 +151,7 @@ public class JsSpider extends Spider {
     @Override
     public String playerContent(String flag, String id, List<String> vipFlags) {
         try {
-            JSArray array = submit(() -> new JSUtils<String>().toArray(ctx, vipFlags)).get();
+            JSArray array = submit(() -> JSUtils.toArray(ctx, vipFlags)).get();
             return (String) call("play", flag, id, array);
         } catch (Exception e) {
             return null;
@@ -234,7 +235,7 @@ public class JsSpider extends Spider {
                 //ctx.evaluateModule(content, api, moduleExtName);
                 //ctx.evaluate("globalThis." + key + " = __JS_SPIDER__;");                
             }
-            jsObject = (JSObject) ctx.get(ctx.getGlobalObject(), key);
+            jsObject = (JSObject) ctx.getProperty(ctx.getGlobalObject(), key);
             return null;
         }).get();
     }
@@ -345,9 +346,9 @@ public class JsSpider extends Spider {
         });
     }
 
-    private Object[] proxy1(Map<String, String> params) {
-        JSObject object = new JSUtils<String>().toObj(ctx, params);
-        JSONArray array = ((JSArray) jsObject.getJSFunction("proxy").call(object)).toJsonArray();
+    private Object[] proxy1(Map<String, String> params) throws Exception {
+        JSObject object = JSUtils.toObj(ctx, params);
+        JSONArray array = new JSONArray(((JSArray) jsObject.getJSFunction("proxy").call(object)).stringify());
         Map<String, String> headers = array.length() > 3 ? Json.toMap(array.optString(3)) : null;
         boolean base64 = array.length() > 4 && array.optInt(4) == 1;
         Object[] result = new Object[4];
@@ -361,7 +362,7 @@ public class JsSpider extends Spider {
     private Object[] proxy2(Map<String, String> params) throws Exception {
         String url = params.get("url");
         String header = params.get("header");
-        JSArray array = submit(() -> new JSUtils<String>().toArray(ctx, Arrays.asList(url.split("/")))).get();
+        JSArray array = submit(() -> JSUtils.toArray(ctx, Arrays.asList(url.split("/")))).get();
         Object object = submit(() -> ctx.parse(header)).get();
         String json = (String) call("proxy", array, object);
         Res res = Res.objectFrom(json);
