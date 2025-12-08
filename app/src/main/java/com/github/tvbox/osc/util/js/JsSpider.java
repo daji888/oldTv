@@ -259,7 +259,7 @@ public class JsSpider extends Spider {
                 }
                 if (ss.startsWith("//DRPY")) {
                     return Base64.decode(ss.replace("//DRPY",""), Base64.URL_SAFE);
-                } else if(ss.startsWith("//bb")) {
+                } else if (ss.startsWith("//bb")) {
                     byte[] b = Base64.decode(ss.replace("//bb",""), 0);
                     return byteFF(b);
                 } else {
