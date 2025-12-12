@@ -148,23 +148,10 @@ public class ApiConfig {
         return "".getBytes();
     }
 
-    public void loadConfig(boolean useCache, LoadConfigCallback callback, Activity activity) {
-        String apiUrl = Hawk.get(HawkConfig.API_URL, "");
-        if (apiUrl.isEmpty()) {
-            callback.error("源地址为空");
-            return;
-        }
-        File cache = new File(App.getInstance().getFilesDir().getAbsolutePath() + "/" + MD5.encode(apiUrl));
-        if (useCache && cache.exists()) {
-            try {
-                parseJson(apiUrl, cache);
-                callback.success();
-                return;
-            } catch (Throwable th) {
-                th.printStackTrace();
-            }
-        }
-        String TempKey = null, configUrl = "", pk = ";pk;";
+    private String TempKey = null;
+    private String configUrl(String apiUrl) {
+        String configUrl = "", pk = ";pk;";
+        apiUrl = apiUrl.replace("file://", "clan://localhost/");
         if (apiUrl.contains(pk)) {
             String[] a = apiUrl.split(pk);
             TempKey = a[1];
@@ -182,14 +169,37 @@ public class ApiConfig {
         } else {
             configUrl = apiUrl;
         }
+        return configUrl;
+    }
+
+    public void loadConfig(boolean useCache, LoadConfigCallback callback, Activity activity) {
+        String apiUrl = Hawk.get(HawkConfig.API_URL, "");
+        if (apiUrl.isEmpty()) {
+            callback.error("源地址为空");
+            return;
+        }
+        File cache = new File(App.getInstance().getFilesDir().getAbsolutePath() + "/" + MD5.encode(apiUrl));
+        if (useCache && cache.exists()) {
+            try {
+                parseJson(apiUrl, cache);
+                callback.success();
+                return;
+            } catch (Throwable th) {
+                th.printStackTrace();
+            }
+        }
+        
         String configKey = TempKey;
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.readTimeout(10, TimeUnit.SECONDS); //设置当前请求的读取超时时间
         builder.writeTimeout(10, TimeUnit.SECONDS); //设置当前请求的写入超时时间
         builder.connectTimeout(5, TimeUnit.SECONDS); //设置当前请求的连接超时时间
+     
+        String configUrl = configUrl(apiUrl);
         // 使用内部存储，将当前配置地址写入到应用的私有目录中
         File configUrlFile = new File(App.getInstance().getFilesDir().getAbsolutePath() + "/config_url");
         FileUtils.saveCache(configUrlFile,configUrl);
+     
         OkGo.<String>get(configUrl)
                 .headers("User-Agent", userAgent)
                 .headers("Accept", requestAccept)
@@ -201,19 +211,7 @@ public class ApiConfig {
                             String json = response.body();
                             LOG.i("echo-ConfigJson"+json);
                             parseJson(apiUrl, json);
-                            try {
-                                File cacheDir = cache.getParentFile();
-                                if (!cacheDir.exists())
-                                    cacheDir.mkdirs();
-                                if (cache.exists())
-                                    cache.delete();
-                                FileOutputStream fos = new FileOutputStream(cache);
-                                fos.write(json.getBytes("UTF-8"));
-                                fos.flush();
-                                fos.close();
-                            } catch (Throwable th) {
-                                th.printStackTrace();
-                            }
+                            FileUtils.saveCache(cache, json);
                             callback.success();
                         } catch (Throwable th) {
                             th.printStackTrace();
@@ -838,9 +836,11 @@ public class ApiConfig {
     }
 
     public Spider getCSP(SourceBean sourceBean) {
-        boolean js = sourceBean.getApi().endsWith(".js") || sourceBean.getApi().contains(".js?");
-        if (js) return jsLoader.getSpider(sourceBean.getKey(), sourceBean.getApi(), sourceBean.getExt(), sourceBean.getJar());
-        return jarLoader.getSpider(sourceBean.getKey(), sourceBean.getApi(), sourceBean.getExt(), sourceBean.getJar());
+        if (sourceBean.getApi().endsWith(".js") || sourceBean.getApi().contains(".js?")) {
+            return jsLoader.getSpider(sourceBean.getKey(), sourceBean.getApi(), sourceBean.getExt(), sourceBean.getJar());
+        } else {
+            return jarLoader.getSpider(sourceBean.getKey(), sourceBean.getApi(), sourceBean.getExt(), sourceBean.getJar());
+        }
     }
 
     public Object[] proxyLocal(Map<String,String> param) {
