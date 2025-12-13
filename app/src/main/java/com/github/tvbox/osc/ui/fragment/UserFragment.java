@@ -13,6 +13,7 @@ import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.api.ApiConfig;
 import com.github.tvbox.osc.base.BaseLazyFragment;
 import com.github.tvbox.osc.bean.Movie;
+import com.github.tvbox.osc.bean.SourceBean;
 import com.github.tvbox.osc.bean.VodInfo;
 import com.github.tvbox.osc.cache.RoomDataManger;
 import com.github.tvbox.osc.event.ServerEvent;
@@ -111,6 +112,18 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
         return R.layout.fragment_user;
     }
 
+    private void jumpSearch(Movie.Video vod){
+        Intent newIntent;
+        if (Hawk.get(HawkConfig.FAST_SEARCH_MODE, false)) {
+            newIntent = new Intent(mContext, FastSearchActivity.class);
+        } else {
+            newIntent = new Intent(mContext, SearchActivity.class);
+        }
+        newIntent.putExtra("title", vod.name);
+        newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        mActivity.startActivity(newIntent);
+    }
+
     @Override
     protected void init() {
         EventBus.getDefault().register(this);
@@ -154,18 +167,15 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
                     Bundle bundle = new Bundle();
                     bundle.putString("id", vod.id);
                     bundle.putString("sourceKey", vod.sourceKey);
-                    bundle.putString("picture", vod.pic);
-                    jumpActivity(DetailActivity.class, bundle);
-                } else {
-                    Intent newIntent;
-                    if (Hawk.get(HawkConfig.FAST_SEARCH_MODE, false)) {
-                        newIntent = new Intent(mContext, FastSearchActivity.class);
+                    SourceBean sourceBean = ApiConfig.get().getSource(vod.sourceKey);
+                    if (sourceBean != null) {
+                        bundle.putString("picture", vod.pic);
+                        jumpActivity(DetailActivity.class, bundle);
                     } else {
-                        newIntent = new Intent(mContext, SearchActivity.class);
+                        jumpSearch(vod);
                     }
-                    newIntent.putExtra("title", vod.name);
-                    newIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    mActivity.startActivity(newIntent);
+                } else {
+                    jumpSearch(vod);
                 }
             }
         });

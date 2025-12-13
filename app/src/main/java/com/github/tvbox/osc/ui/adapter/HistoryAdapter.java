@@ -10,6 +10,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.api.ApiConfig;
+import com.github.tvbox.osc.bean.SourceBean;
 import com.github.tvbox.osc.bean.VodInfo;
 import com.github.tvbox.osc.util.DefaultConfig;
 import com.github.tvbox.osc.util.HawkConfig;
@@ -43,7 +44,12 @@ public class HistoryAdapter extends BaseQuickAdapter<VodInfo, BaseViewHolder> {
             tvYear.setText(String.valueOf(item.year));
             tvYear.setVisibility(View.VISIBLE);
         }*/
-        tvYear.setText(ApiConfig.get().getSource(item.sourceKey).getName());
+        SourceBean bean =  ApiConfig.get().getSource(item.sourceKey);
+        if (bean != null) {
+            tvYear.setText(bean.getName());
+        } else {
+            tvYear.setText("搜");
+        }
         /*TextView tvLang = helper.getView(R.id.tvLang);
         if (TextUtils.isEmpty(item.lang)) {
             tvLang.setVisibility(View.GONE);
