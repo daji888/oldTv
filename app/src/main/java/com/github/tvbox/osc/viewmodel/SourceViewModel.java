@@ -1,14 +1,13 @@
+
 package com.github.tvbox.osc.viewmodel;
 
 import android.text.TextUtils;
 import android.util.Base64;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.github.catvod.crawler.JsLoader;
 import com.github.catvod.crawler.Spider;
 import com.github.tvbox.osc.api.ApiConfig;
 import com.github.tvbox.osc.base.App;
@@ -76,33 +75,7 @@ public class SourceViewModel extends ViewModel {
     public MutableLiveData<AbsXml> quickSearchResult;
     public MutableLiveData<AbsXml> detailResult;
     public MutableLiveData<JSONObject> playResult;
-    private ExecutorService searchExecutorService;
-
-    public void initExecutor() {
-        if (searchExecutorService != null) {
-            searchExecutorService.shutdownNow();
-            searchExecutorService = null;
-            JsLoader.stopAll();
-        }
-        searchExecutorService = Executors.newFixedThreadPool(5);
-    }
-
-    public void execute(Runnable runnable) {
-        if (searchExecutorService != null) {
-            searchExecutorService.execute(runnable);
-        }
-    }
-
-    public List<Runnable> shutdownNow() {
-        return searchExecutorService == null ? new ArrayList<>() : searchExecutorService.shutdownNow();
-    }
-
-    public void destroyExecutor() {
-        if (searchExecutorService != null) {
-            searchExecutorService = null;
-        }
-    }
-
+    
     public SourceViewModel() {
         sortResult = new MutableLiveData<>();
         listResult = new MutableLiveData<>();
@@ -164,7 +137,7 @@ public class SourceViewModel extends ViewModel {
                     });
                     String sortJson = null;
                     try {
-                        sortJson = future.get(15, TimeUnit.SECONDS);
+                        sortJson = future.get(20, TimeUnit.SECONDS);
                     } catch (TimeoutException e) {
                         e.printStackTrace();
                         future.cancel(true);
@@ -419,6 +392,8 @@ public class SourceViewModel extends ViewModel {
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
+            } else {
+                ext = Base64.encodeToString("{}".getBytes(), Base64.DEFAULT | Base64.NO_WRAP);    
             }
             GetRequest<String> request = OkGo.<String>get(homeSourceBean.getApi())
                     .tag(homeSourceBean.getApi())
@@ -434,10 +409,15 @@ public class SourceViewModel extends ViewModel {
             request.execute(new AbsCallback<String>() {
                         @Override
                         public String convertResponse(okhttp3.Response response) throws Throwable {
-                            if (response.body() != null) {
-                                return response.body().string();
-                            } else {
-                                throw new IllegalStateException("网络请求错误");
+                            try {
+                                if (response.body() != null) {
+                                    return response.body().string();
+                                } else {
+                                    throw new IllegalStateException("网络请求错误，response body 为 null");
+                                }
+                            } catch (Exception e) {
+                                LOG.i("echo-list: convertResponse error" + e.getMessage());
+                                throw e;  // 重新抛出异常
                             }
                         }
 
@@ -480,7 +460,7 @@ public class SourceViewModel extends ViewModel {
                     });
                     String sortJson = null;
                     try {
-                        sortJson = future.get(15, TimeUnit.SECONDS);
+                        sortJson = future.get(10, TimeUnit.SECONDS);
                     } catch (TimeoutException e) {
                         e.printStackTrace();
                         future.cancel(true);
@@ -571,7 +551,7 @@ public class SourceViewModel extends ViewModel {
         SourceBean sourceBean = ApiConfig.get().getSource(sourceKey);
         if (sourceBean == null) {
             detailResult.postValue(null);
-            Log.e("sourceBean", "get sourceBean got null, this should not be happended, maybe apiconfig get from http failed and use cache, sourceKey is " + sourceKey);
+            LOG.e("sourceBean", "get sourceBean got null, this should not be happended, maybe apiconfig get from http failed and use cache, sourceKey is " + sourceKey);
             return;
         }
         int type = sourceBean.getType();
@@ -579,16 +559,34 @@ public class SourceViewModel extends ViewModel {
             spThreadPool.execute(new Runnable() {
                 @Override
                 public void run() {
+                    ExecutorService executor = Executors.newSingleThreadExecutor();
+                    Future<String> future = executor.submit(new Callable<String>() {
+                        @Override
+                        public String call() {
+                            Spider sp = ApiConfig.get().getCSP(sourceBean);
+                            List<String> ids = new ArrayList<>();
+                            ids.add(id);
+                            try {
+                                return sp.detailContent(ids);
+                            } catch (Exception e) {
+                                LOG.i("echo--getDetail--error: " + e.getMessage());
+                                return "";
+                            }
+                        }
+                    });
+
+                    String json = null;
                     try {
-                        Spider sp = ApiConfig.get().getCSP(sourceBean);
-                        List<String> ids = new ArrayList<>();
-                        ids.add(id);
-                        String json = sp.detailContent(ids);
-                        LOG.i("JSON:" + json);
+                        json = future.get(15, TimeUnit.SECONDS);
+                        LOG.i("echo--getDetail--result:" + json);
+                    } catch (TimeoutException e) {
+                        LOG.i("echo--getDetail--timeout");
+                        future.cancel(true);
+                    } catch (Exception e) {
+                        LOG.i("echo--getDetail--error: " + e.getMessage());
+                    } finally {
                         json(detailResult, json, sourceBean.getKey());
-                    } catch (Throwable th) {
-                        th.printStackTrace();
-                        detailResult.postValue(null);
+                        executor.shutdown();
                     }
                 }
             });
@@ -883,7 +881,10 @@ public class SourceViewModel extends ViewModel {
         JsonArray kv = obj.getAsJsonArray("value");
         LinkedHashMap<String, String> values = new LinkedHashMap<>();
         for (JsonElement ele : kv) {
-            values.put(ele.getAsJsonObject().get("n").getAsString(), ele.getAsJsonObject().get("v").getAsString());
+            JsonObject ele_obj = ele.getAsJsonObject();
+            String values_key = ele_obj.has("n") ? ele_obj.get("n").getAsString() : "";
+            String values_value = ele_obj.has("v") ? ele_obj.get("v").getAsString() : "";
+            values.put(values_key, values_value);
         }
         MovieSort.SortFilter filter = new MovieSort.SortFilter();
         filter.key = key;
