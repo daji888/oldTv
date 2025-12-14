@@ -631,7 +631,12 @@ public class LivePlayActivity extends BaseActivity {
                     case KeyEvent.KEYCODE_ENTER:
                     case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
                         if (isBack) {
-                            showProgressBars(true);
+                            if (mVideoView.isPlaying()) {
+                                showProgressBars(true);
+                            } else {
+                                mVideoView.start();
+                                tv_top_l_container.setVisibility(View.GONE);
+                            }    
                         } else {
                             showChannelList();
                         }
@@ -1340,7 +1345,7 @@ public class LivePlayActivity extends BaseActivity {
                     case VideoView.STATE_ERROR:
                     case VideoView.STATE_PLAYBACK_COMPLETED:
                         mHandler.removeCallbacks(mConnectTimeoutReplayRun);
-                        mHandler.post(mConnectTimeoutChangeSourceRun);
+                        mHandler.postDelayed(mConnectTimeoutChangeSourceRun, 3 * 1000L);
                         break;
                     case VideoView.STATE_PREPARING:
                     case VideoView.STATE_BUFFERING:
