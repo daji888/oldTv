@@ -1,4 +1,3 @@
-
 package com.github.tvbox.osc.viewmodel;
 
 import android.text.TextUtils;
@@ -817,53 +816,127 @@ public class SourceViewModel extends ViewModel {
     }
 
     // playerContent
-    //开销会不会太大了 参考 FongMi 写法优化 获取播放地址代码
-    public ExecutorService threadPoolGetPlay = null;
-
     public void getPlay(String sourceKey, String playFlag, String progressKey, String url, String subtitleKey) {
-        if (threadPoolGetPlay != null) threadPoolGetPlay.shutdownNow();
-        threadPoolGetPlay = Executors.newFixedThreadPool(2);
-        Callable<JSONObject> callable = () -> {
-            if (Thread.currentThread().isInterrupted()) return null;
-            SourceBean sourceBean = ApiConfig.get().getSource(sourceKey);
-            int type = sourceBean.getType();
-            JSONObject result = null;
-            if (type == 3) {
-                Spider sp = ApiConfig.get().getCSP(sourceBean);
-                String json = sp.playerContent(playFlag, url, ApiConfig.get().getVipParseFlags());
-                result = new JSONObject(json);
-            } else if (type == 0 || type == 1) {
-                result = new JSONObject();
-                String playUrl = sourceBean.getPlayerUrl().trim();
-                boolean parse = DefaultConfig.isVideoFormat(url) && playUrl.isEmpty();
-                result.put("parse", BooleanUtils.toInteger(!parse));
-                result.put("url", url);
-                result.put("playUrl", playUrl);
-                //直接就有
-            } else if (type == 4) {
-                okhttp3.Response response = OkGo.<String>get(sourceBean.getApi()).params("play", url).params("flag", playFlag).tag("play").execute();
-                String json = response.body().string();
-                result = new JSONObject(json);
-            }
-            if (result != null) {
+        SourceBean sourceBean = ApiConfig.get().getSource(sourceKey);
+        int type = sourceBean.getType();
+        if (type == 3) {
+            spThreadPool.execute(new Runnable() {
+                @Override
+                public void run() {
+                    ExecutorService executor = Executors.newSingleThreadExecutor();
+                    Future<String> future = executor.submit(new Callable<String>() {
+                        @Override
+                        public String call() throws Exception {
+                            Spider sp = ApiConfig.get().getCSP(sourceBean);
+                            if (TextUtils.isEmpty(url)) return "";
+                            try {
+                                return sp.playerContent(playFlag, url, ApiConfig.get().getVipParseFlags());
+                            } catch (Exception e) {
+                                LOG.i("echo--getPlay--error: " + e.getMessage());
+                                return "";
+                            }
+                        }
+                    });
+
+                    try {
+                        String json = future.get(10, TimeUnit.SECONDS);
+                        LOG.i("echo--getPlay--result:" + json);
+                        // 处理返回的 JSON
+                        if (!TextUtils.isEmpty(json)) {
+                            JSONObject result = new JSONObject(json);
+                            result.put("key", url);
+                            result.put("proKey", progressKey);
+                            result.put("subtKey", subtitleKey);
+                            if (!result.has("flag"))
+                                result.put("flag", playFlag);
+                            playResult.postValue(result);
+                        } else {
+                            playResult.postValue(null);
+                        }
+                    } catch (TimeoutException e) {
+                        // 如果超时了，处理超时逻辑
+                        LOG.i("echo--getPlay--timeout");
+                        future.cancel(true);
+                        playResult.postValue(null);
+                    } catch (Exception e) {
+                        // 捕获其他异常
+                        LOG.i("echo--getPlay--error: " + e.getMessage());
+                        playResult.postValue(null);
+                    } finally {
+                        executor.shutdown();
+                    }
+                }
+            });
+        } else if (type == 0 || type == 1) {
+            JSONObject result = new JSONObject();
+            try {
                 result.put("key", url);
+                String playUrl = sourceBean.getPlayerUrl().trim();
+                if (DefaultConfig.isVideoFormat(url) && playUrl.isEmpty()) {
+                    result.put("parse", 0);
+                    result.put("url", url);
+                } else {
+                    result.put("parse", 1);
+                    result.put("url", url);
+                }
                 result.put("proKey", progressKey);
                 result.put("subtKey", subtitleKey);
-                if (!result.has("flag"))
-                    result.put("flag", playFlag);
-            }
-            return result;
-        };
-        threadPoolGetPlay.execute(() -> {
-            Future<JSONObject> future = threadPoolGetPlay.submit(callable);
-            try {
-                JSONObject jsonObject = future.get(15, TimeUnit.SECONDS);
-                playResult.postValue(jsonObject);
-            } catch (Throwable e) {
-                e.printStackTrace();
+                result.put("playUrl", playUrl);
+                result.put("flag", playFlag);
+                playResult.postValue(result);
+            } catch (Throwable th) {
+                th.printStackTrace();
                 playResult.postValue(null);
             }
-        });
+        } else if (type == 4) {
+            String extend=sourceBean.getExt();
+            extend=getFixUrl(extend);
+
+            GetRequest<String> request = OkGo.<String>get(sourceBean.getApi())
+                    .tag("play")
+                    .params("play", url)
+                    .params("flag" ,playFlag);
+            // 当 extend 不为空且非空字符串时添加参数
+            if (extend != null && !extend.isEmpty()) {
+                request.params("extend", extend);
+            }
+            request.execute(new AbsCallback<String>() {
+                    @Override
+                    public String convertResponse(okhttp3.Response response) throws Throwable {
+                        if (response.body() != null) {
+                            return response.body().string();
+                        } else {
+                            throw new IllegalStateException("网络请求错误");
+                        }
+                    }
+
+                    @Override
+                    public void onSuccess(Response<String> response) {
+                        String json = response.body();
+                        LOG.i(json);
+                        try {
+                            JSONObject result = new JSONObject(json);
+                            result.put("key", url);
+                            result.put("proKey", progressKey);
+                            result.put("subtKey", subtitleKey);
+                            if (!result.has("flag"))
+                                result.put("flag", playFlag);
+                            playResult.postValue(result);
+                        } catch (Throwable th) {
+                            th.printStackTrace();
+                            playResult.postValue(null);
+                        }
+                    }
+
+                    @Override
+                    public void onError(Response<String> response) {
+                        super.onError(response);
+                        playResult.postValue(null);
+                    }
+                });
+        } else {
+            playResult.postValue(null);
+        }
     }
 
     private String getFixUrl(String content) {
@@ -1276,16 +1349,5 @@ public class SourceViewModel extends ViewModel {
     @Override
     protected void onCleared() {
         super.onCleared();
-        closeExecutor(threadPoolGetPlay);
-
-    }
-
-    private void closeExecutor(ExecutorService executorService) {
-        if (executorService != null) {
-            try {
-                executorService.shutdownNow();
-            } catch (Throwable ignored) {
-            }
-        }
     }
 }
