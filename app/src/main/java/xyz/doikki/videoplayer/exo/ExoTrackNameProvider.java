@@ -230,6 +230,11 @@ public class ExoTrackNameProvider {
         else if (mimeType.contains(MimeTypes.VIDEO_DOLBY_VISION)) return "DOLBY";
         else if (mimeType.contains(MimeTypes.TEXT_SSA)) return "SSA";
         else if (mimeType.contains(MimeTypes.TEXT_VTT)) return "VTT";
+        else if (mimeType.contains(MimeTypes.APPLICATION_MP4)) return "MP4";
+        else if (mimeType.contains(MimeTypes.APPLICATION_WEBM)) return "WEBM";
+        else if (mimeType.contains(MimeTypes.APPLICATION_MATROSKA)) return "MATROSKA";    
+        else if (mimeType.contains(MimeTypes.APPLICATION_MPD)) return "DASH";
+        else if (mimeType.contains(MimeTypes.APPLICATION_M3U8)) return "M3U8";    
         else if (mimeType.contains(MimeTypes.APPLICATION_PGS)) return "PGS";
         else if (mimeType.contains(MimeTypes.APPLICATION_SUBRIP)) return "SRT";
         else if (mimeType.contains(MimeTypes.APPLICATION_TTML)) return "TTML";
