@@ -78,6 +78,8 @@ public class EpgDialog extends BaseDialog {
             @Override
             public void onClick(View v) {
                 ArrayList<String> history = Hawk.get(HawkConfig.EPG_HISTORY, new ArrayList<String>());
+                if (!history.contains("https://api.erw.cc/?ch={name}&date={date}"))
+                    history.add("https://api.erw.cc/?ch={name}&date={date}");
                 if (!history.contains("https://epg.51zmt.top:8001/api/diyp/?ch={name}&date={date}"))
                     history.add("https://epg.51zmt.top:8001/api/diyp/?ch={name}&date={date}");
                 if (!history.contains("http://epg.51zmt.top:8000/api/diyp/?ch={name}&date={date}"))
