@@ -102,7 +102,7 @@ dependencies {
     implementation 'org.nanohttpd:nanohttpd:2.3.1'  //2016年
     implementation 'org.jsoup:jsoup:1.21.2'
     
-    def media3_version = "1.8.0"
+    def media3_version = "1.9.0"
     implementation "androidx.media3:media3-common:$media3_version"
     implementation "androidx.media3:media3-datasource-rtmp:$media3_version"
     implementation "androidx.media3:media3-datasource-okhttp:$media3_version"
