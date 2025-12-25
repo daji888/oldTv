@@ -164,10 +164,10 @@ public class SubtitleLoader {
                 filename = filenameInfo.replace("filename=", "");
                 filename = filename.replace("\"", "");
             } else if (filenameInfo.startsWith("filename*=")) {
-                filename = filenameInfo.substring(filenameInfo.lastIndexOf("''")+2);
+                filename = filenameInfo.substring(filenameInfo.lastIndexOf("''") + 2);
             }
             filename = filename.trim();
-            filename = URLDecoder.decode(filename);
+            filename = URLDecoder.decode(filename, "UTF-8");
         }
         String filePath = filename;
         if (filename == null || filename.length() < 1) {
@@ -176,7 +176,7 @@ public class SubtitleLoader {
         }
         if (!filePath.contains(".") && remoteSubtitlePath.contains("#")) {
             filePath = remoteSubtitlePath.split("#")[1];
-            filePath = URLDecoder.decode(filePath);
+            filePath = URLDecoder.decode(filePath, "UTF-8");
         }
         SubtitleLoadSuccessResult subtitleLoadSuccessResult = new SubtitleLoadSuccessResult();
         subtitleLoadSuccessResult.timedTextObject = loadAndParse(is, filePath);
