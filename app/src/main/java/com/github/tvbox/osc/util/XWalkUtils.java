@@ -30,7 +30,7 @@ public class XWalkUtils {
 
     public static String downUrl() {
 //        return String.format("https://download.01.org/crosswalk/releases/crosswalk/android/stable/23.53.589.4/%s/crosswalk-apks-23.53.589.4-%s.zip", getRuntimeAbi(), getRuntimeAbi());
-        return String.format("https://gh-proxy.com/raw.githubusercontent.com/daji888/oldTv/refs/heads/android5/xwalk/crosswalk-apks-23.53.589.4-%s.zip", getRuntimeAbi());
+        return String.format("https://gh-proxy.org/https://raw.githubusercontent.com/daji888/oldTv/refs/heads/android6/xwalk/crosswalk-apks-23.53.589.4-%s.zip", getRuntimeAbi());
     }
 
     public static String saveZipFile() {
@@ -92,12 +92,12 @@ public class XWalkUtils {
 
     private static boolean checkEmbedded(Activity activity) {
         try {
-            Class clazz = Class.forName("org.xwalk.core.XWalkCoreWrapper");
+            Class<?> clazz = Class.forName("org.xwalk.core.XWalkCoreWrapper");
             if (clazz != null) {
-                Constructor constructor = clazz.getDeclaredConstructor(new Class[]{Context.class, int.class});
+                Constructor<?> constructor = clazz.getDeclaredConstructor(Context.class, int.class);
                 constructor.setAccessible(true);
                 Object obj = constructor.newInstance(activity, -1);
-                Method fe = clazz.getDeclaredMethod("findEmbeddedCore", new Class[]{});
+                Method fe = clazz.getDeclaredMethod("findEmbeddedCore");
                 fe.setAccessible(true);
                 if (!(boolean) fe.invoke(obj)) {
                     return false;
@@ -162,7 +162,7 @@ public class XWalkUtils {
     public static String getRuntimeAbi() {
         String result = "arm";
         try {
-            Class cls = Class.forName("org.xwalk.core.XWalkEnvironment");
+            Class<?> cls = Class.forName("org.xwalk.core.XWalkEnvironment");
             Method method = cls.getMethod("getRuntimeAbi");
             String obj = (String) method.invoke(null);
             switch (obj) {
@@ -186,7 +186,7 @@ public class XWalkUtils {
     }
 
     public static boolean extractXWalkLib(Context context) throws Throwable {
-        Class cls = Class.forName("org.xwalk.core.XWalkDecompressor");
+        Class<?> cls = Class.forName("org.xwalk.core.XWalkDecompressor");
         Method method = cls.getMethod("extractResource", String.class, String.class);
         boolean obj = (boolean) method.invoke(null, apkPath(context), libExtractPath(context));
         if (obj) {
