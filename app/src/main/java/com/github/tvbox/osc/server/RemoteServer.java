@@ -186,14 +186,14 @@ public class RemoteServer extends NanoHTTPD {
                     return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.OK, NanoHTTPD.MIME_PLAINTEXT, m3u8Content);
                 } else if (fileName.startsWith("/push/")) {
                     String url = fileName.substring(6);
-                    if (url.startsWith("b64:")) {
-                        try {
+                    try {
+                        if (url.startsWith("b64:")) {
                             url = new String(Base64.decode(url.substring(4), Base64.DEFAULT | Base64.URL_SAFE | Base64.NO_WRAP), "UTF-8");
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
+                        } else {
+                            url = URLDecoder.decode(url, "UTF-8");
                         }
-                    } else {
-                        url = URLDecoder.decode(url);
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
                     }
                     EventBus.getDefault().post(new RefreshEvent(RefreshEvent.TYPE_PUSH_URL, url));
                     return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.OK, NanoHTTPD.MIME_PLAINTEXT, "ok");    
@@ -413,7 +413,7 @@ public class RemoteServer extends NanoHTTPD {
             destDir.mkdirs();
         }
         ZipFile zip = new ZipFile(zipFilePath);
-        Enumeration<ZipEntry> iter = (Enumeration<ZipEntry>) zip.entries();
+        Enumeration<? extends ZipEntry> iter = zip.entries();
         while (iter.hasMoreElements()) {
             ZipEntry entry = iter.nextElement();
             InputStream is = zip.getInputStream(entry);

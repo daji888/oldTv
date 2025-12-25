@@ -37,21 +37,24 @@ import java.util.List;
 
 public class BackupDialog extends BaseDialog {
 
+    private BackupAdapter adapter;
+
     public BackupDialog(@NonNull @NotNull Context context) {
         super(context);
         setContentView(R.layout.dialog_backup);
         TvRecyclerView tvRecyclerView = ((TvRecyclerView) findViewById(R.id.list));
-        BackupAdapter adapter = new BackupAdapter();
+        adapter = new BackupAdapter();
         tvRecyclerView.setAdapter(adapter);
         adapter.setNewData(allBackup());
         adapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                String item = BackupDialog.this.adapter.getItem(position);
                 if (view.getId() == R.id.tvName) {
-                    restore((String) adapter.getItem(position));
+                    restore(item);
                 } else if (view.getId() == R.id.tvDel) {
-                    delete((String) adapter.getItem(position));
-                    adapter.setNewData(allBackup());
+                    delete(item);
+                    BackupDialog.this.adapter.setNewData(allBackup());
                 }
             }
         });

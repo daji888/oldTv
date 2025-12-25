@@ -162,7 +162,7 @@ public class SubtitleViewModel extends ViewModel {
                                 String url = "https://assrt.net" + href;
                                 SubtitleBean one = new SubtitleBean();
                                 String title = href.substring(href.lastIndexOf("/") + 1);
-                                one.setName(URLDecoder.decode(title));
+                                one.setName(URLDecoder.decode(title, "UTF-8"));
                                 one.setUrl(url);
                                 one.setIsZip(false);
                                 data.add(one);

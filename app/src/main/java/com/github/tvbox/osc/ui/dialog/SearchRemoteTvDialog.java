@@ -98,7 +98,7 @@ public class SearchRemoteTvDialog extends BaseDialog{
 
 
 
-    private LoadService mLoadService;
+    private LoadService<Object> mLoadService;
 
     protected void setLoadSir(View view) {
         if (mLoadService == null) {

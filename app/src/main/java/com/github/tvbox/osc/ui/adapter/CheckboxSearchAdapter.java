@@ -63,7 +63,7 @@ public class CheckboxSearchAdapter extends ListAdapter<SourceBean, CheckboxSearc
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        int pos = holder.getAdapterPosition();
+        int pos = holder.getBindingAdapterPosition();
         SourceBean sourceBean = data.get(pos);
         holder.oneSearchSource.setText(sourceBean.getName());
         holder.oneSearchSource.setOnCheckedChangeListener(null);

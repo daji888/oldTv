@@ -342,8 +342,20 @@ public class FastSearchActivity extends BaseActivity {
             }
         } else if (event.type == RefreshEvent.TYPE_QUICK_SEARCH_WORD) {
             if (event.obj != null) {
-                List<String> data = (List<String>) event.obj;
-                searchWordAdapter.setNewData(data);
+                try {
+                    // 修复unchecked cast警告
+                    List<?> rawData = (List<?>) event.obj;
+                    List<String> data = new ArrayList<>();
+                    for (Object item : rawData) {
+                        if (item instanceof String) {
+                            data.add((String) item);
+                        }
+                    }
+                    searchWordAdapter.setNewData(data);
+                } catch (ClassCastException e) {
+                    // 处理类型转换异常
+                    e.printStackTrace();
+                }
             }
         }
         if (mSearchTitle != null) {
