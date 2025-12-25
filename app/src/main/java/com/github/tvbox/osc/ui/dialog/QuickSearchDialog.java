@@ -41,13 +41,37 @@ public class QuickSearchDialog extends BaseDialog {
     public void refresh(RefreshEvent event) {
         if (event.type == RefreshEvent.TYPE_QUICK_SEARCH) {
             if (event.obj != null) {
-                List<Movie.Video> data = (List<Movie.Video>) event.obj;
-                searchAdapter.addData(data);
+                try {
+                    // 修复unchecked cast警告
+                    List<?> rawData = (List<?>) event.obj;
+                    List<Movie.Video> data = new ArrayList<>();
+                    for (Object item : rawData) {
+                        if (item instanceof Movie.Video) {
+                            data.add((Movie.Video) item);
+                        }
+                    }
+                    searchAdapter.addData(data);
+                } catch (ClassCastException e) {
+                    // 处理类型转换异常
+                    e.printStackTrace();
+                }
             }
         } else if (event.type == RefreshEvent.TYPE_QUICK_SEARCH_WORD) {
             if (event.obj != null) {
-                List<String> data = (List<String>) event.obj;
-                searchWordAdapter.setNewData(data);
+                try {
+                    // 修复unchecked cast警告
+                    List<?> rawData = (List<?>) event.obj;
+                    List<String> data = new ArrayList<>();
+                    for (Object item : rawData) {
+                        if (item instanceof String) {
+                            data.add((String) item);
+                        }
+                    }
+                    searchWordAdapter.setNewData(data);
+                } catch (ClassCastException e) {
+                    // 处理类型转换异常
+                    e.printStackTrace();
+                }
             }
         }
     }
