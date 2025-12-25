@@ -21,15 +21,15 @@ import java.util.Hashtable;
 public class EpgNameFuzzyMatch {
 
     private static JsonObject epgNameDoc = null;
-    private static Hashtable hsEpgName = new Hashtable();
+    private static Hashtable<String, Object> hsEpgName = new Hashtable<>();
 
     public static void init() {
-        if(epgNameDoc != null)
+        if (epgNameDoc != null)
             return;
 
         try {
             AssetManager assetManager = App.getInstance().getAssets(); //获得assets资源管理器（assets中的文件无法直接访问，可以使用AssetManager访问）
-            InputStreamReader inputStreamReader = new InputStreamReader(assetManager.open("Roinlong_Epg.json"),"UTF-8"); //使用IO流读取json文件内容
+            InputStreamReader inputStreamReader = new InputStreamReader(assetManager.open("Roinlong_Epg.json"), "UTF-8"); //使用IO流读取json文件内容
             BufferedReader br = new BufferedReader(inputStreamReader);//使用字符高效流
             String line;
             StringBuilder builder = new StringBuilder();
@@ -38,14 +38,13 @@ public class EpgNameFuzzyMatch {
             }
             br.close();
             inputStreamReader.close();
-            if(!builder.toString().isEmpty()){
+            if (!builder.toString().isEmpty()) {
                 JsonObject  jsonObj =  new Gson().fromJson(builder.toString(), (Type)JsonObject.class);// 从builder中读取了json中的数据。
                 //  JSONObject testJson = new JSONObject(builder.toString()); // 从builder中读取了json中的数据。
                 epgNameDoc = jsonObj;
                 hasAddData(epgNameDoc);
                 return;
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -83,30 +82,23 @@ public class EpgNameFuzzyMatch {
         });
     }
 
-
-
-
-    public static void hasAddData(JsonObject epgNameDoc){
+    public static void hasAddData(JsonObject epgNameDoc) {
         for (JsonElement opt : epgNameDoc.get("epgs").getAsJsonArray()) {
             JsonObject obj = (JsonObject) opt;
             String name = obj.get("name").getAsString().trim();
             String[] names  = name.split(",");
             for (String string : names) {
-                hsEpgName.put(string,obj);
+                hsEpgName.put(string, obj);
             }
         }
     }
 
     public static JsonObject getEpgNameInfo(String channelName) {
-
-       if(hsEpgName.containsKey(channelName)){
+       if (hsEpgName.containsKey(channelName)) {
            JsonObject obj = (JsonObject)hsEpgName.get(channelName);
            return  obj;
        }
        return null;
     }
-
-
-
 
 }
