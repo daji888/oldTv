@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -187,13 +188,19 @@ public class JarLoader {
         if (classLoader == null) return new SpiderNull();
         try {
             Log.i("JarLoader", "echo-getSpider 加载spider: " + key);
-            Spider sp = (Spider) classLoader.loadClass("com.github.catvod.spider." + clsKey).newInstance();
-            sp.init(App.getInstance(), ext);
-//            if (!jar.isEmpty()) {
-//                sp.homeContent(false); // 增加此行 应该可以解决部分写的有问题源的历史记录问题 但会增加这个源的首次加载时间 不需要可以已删掉
-//            }
-            spiders.put(key, sp);
-            return sp;
+            try {
+                Class<?> clazz = classLoader.loadClass("com.github.catvod.spider." + clsKey);
+                Constructor<?> constructor = clazz.getDeclaredConstructor();
+                Spider sp = (Spider) constructor.newInstance();
+                sp.init(App.getInstance(), ext);
+    //            if (!jar.isEmpty()) {
+    //                sp.homeContent(false); // 增加此行 应该可以解决部分写的有问题源的历史记录问题 但会增加这个源的首次加载时间 不需要可以已删掉
+    //            }
+                spiders.put(key, sp);
+                return sp;
+            } catch (ClassNotFoundException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
         } catch (Throwable th) {
             th.printStackTrace();
         }
