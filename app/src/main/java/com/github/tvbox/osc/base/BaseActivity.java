@@ -40,7 +40,7 @@ import xyz.doikki.videoplayer.util.CutoutUtil;
  */
 public abstract class BaseActivity extends AppCompatActivity implements CustomAdapt {
     protected Context mContext;
-    private LoadService mLoadService;
+    private LoadService<Object> mLoadService;
 
     private static float screenRatio = -100.0f;
 
