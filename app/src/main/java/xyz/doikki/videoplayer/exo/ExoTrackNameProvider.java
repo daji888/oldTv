@@ -1,5 +1,7 @@
 package xyz.doikki.videoplayer.exo;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import android.content.res.Resources;
 import android.text.TextUtils;
 
@@ -7,7 +9,6 @@ import androidx.annotation.Nullable;
 import androidx.media3.common.C;
 import androidx.media3.common.Format;
 import androidx.media3.common.MimeTypes;
-import androidx.media3.common.util.Assertions;
 import androidx.media3.common.util.UnstableApi;
 import androidx.media3.common.util.Util;
 
@@ -24,7 +25,7 @@ public class ExoTrackNameProvider {
      * @param resources Resources from which to obtain strings.
      */
     public ExoTrackNameProvider(Resources resources) {
-        this.resources = Assertions.checkNotNull(resources);
+        this.resources = checkNotNull(resources);
     }
     
     public String getTrackName(Format format) {
