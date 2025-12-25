@@ -53,7 +53,7 @@ public abstract class BaseLazyFragment extends Fragment implements CustomAdapt {
     protected boolean mIsFirstVisible = true;
     protected Context mContext;
     protected Activity mActivity;
-    private LoadService mLoadService;
+    private LoadService<Object> mLoadService;
 
     @Override
     public void onAttach(@NonNull Context context) {
