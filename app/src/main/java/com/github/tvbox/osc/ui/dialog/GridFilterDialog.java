@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.github.tvbox.osc.R;
@@ -74,17 +75,17 @@ public class GridFilterDialog extends BaseDialog {
                         if (pre != null) {
                             TextView val = pre.findViewById(R.id.filterValue);
                             val.getPaint().setFakeBoldText(false);
-                            val.setTextColor(getContext().getResources().getColor(R.color.color_FFFFFF_85));
+                            val.setTextColor(ContextCompat.getColor(getContext(), R.color.color_FFFFFF_85));
                         }
                         TextView val = view.findViewById(R.id.filterValue);
                         val.getPaint().setFakeBoldText(true);
-                        val.setTextColor(getContext().getResources().getColor(R.color.color_FF9900));
+                        val.setTextColor(ContextCompat.getColor(getContext(), R.color.color_FF9900));
                         pre = view;
                     } else {
                         sortData.filterSelect.remove(key);
                         TextView val = pre.findViewById(R.id.filterValue);
                         val.getPaint().setFakeBoldText(false);
-                        val.setTextColor(getContext().getResources().getColor(R.color.color_FFFFFF_85));
+                        val.setTextColor(ContextCompat.getColor(getContext(), R.color.color_FFFFFF_85));
                         pre = null;
                     }
                 }
