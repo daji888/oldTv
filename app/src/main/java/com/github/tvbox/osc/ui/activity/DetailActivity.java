@@ -462,7 +462,7 @@ public class DetailActivity extends BaseActivity {
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
                 TextView txtView = itemView.findViewById(R.id.tvSeriesGroup);
-                txtView.setTextColor(mContext.getResources().getColor(R.color.color_FF9900));
+                txtView.setTextColor(ContextCompat.getColor(mContext, R.color.color_FF9900));
                 if (vodInfo != null && vodInfo.seriesMap.get(vodInfo.playFlag).size() > 0) {
                     int targetPos = position * GroupCount+1;
                     mGridView.smoothScrollToPosition(targetPos);
@@ -479,7 +479,7 @@ public class DetailActivity extends BaseActivity {
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 FastClickCheckUtil.check(view);
                 TextView newTxtView = view.findViewById(R.id.tvSeriesGroup);
-                newTxtView.setTextColor(mContext.getResources().getColor(R.color.color_FF9900));
+                newTxtView.setTextColor(ContextCompat.getColor(mContext, R.color.color_FF9900));
                 if (vodInfo != null && vodInfo.seriesMap.get(vodInfo.playFlag).size() > 0) {
                     int targetPos =  position * GroupCount+1;
 //                    mGridView.scrollToPosition(targetPos);
