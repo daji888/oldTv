@@ -16,9 +16,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
-import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.bumptech.glide.load.MultiTransformation;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
@@ -85,7 +83,7 @@ public class ImgUtil {
                 .format(DecodeFormat.PREFER_RGB_565)
                 .diskCacheStrategy(getDiskCacheStrategy(0))
                 .dontAnimate()
-                .transform(new MultiTransformation<>(new CenterCrop(), new RoundedCorners(roundingRadius)));
+                .transform(new RoundedCorners(roundingRadius));
             Glide.with(App.getInstance())
                 .asBitmap()
                 .load(getUrl(url))
@@ -106,7 +104,7 @@ public class ImgUtil {
     public static void loadVideoScreenshot(String uri, ImageView imageView, long frameTimeMicros) {
         RequestOptions requestOptions = RequestOptions.frameOf(frameTimeMicros * 1000)
             .set(FRAME_OPTION, MediaMetadataRetriever.OPTION_CLOSEST)
-            .transform(new MultiTransformation<>(new CenterCrop(), new RoundedCorners(10)));
+            .transform(new RoundedCorners(10));
         Glide.with(App.getInstance())
             .load(uri)
             .skipMemoryCache(true)
