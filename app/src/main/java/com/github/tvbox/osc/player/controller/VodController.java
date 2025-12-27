@@ -968,11 +968,7 @@ public class VodController extends BaseController {
             mSeekBar.setEnabled(false);
         }
         int percent = mControlWrapper.getBufferedPercentage();
-        if (percent >= 95) {
-            mSeekBar.setSecondaryProgress(mSeekBar.getMax());
-        } else {
-            mSeekBar.setSecondaryProgress(percent * 10);
-        }
+        mSeekBar.setSecondaryProgress(percent);
     }
 
     private boolean simSlideStart = false;
@@ -1337,3 +1333,4 @@ public class VodController extends BaseController {
     }
     
 }
+

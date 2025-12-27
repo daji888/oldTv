@@ -29,7 +29,7 @@ public class QuickJSContext {
         } catch (UnsatisfiedLinkError e) {
             throw new QuickJSException("The so library must be initialized before createContext! QuickJSLoader.init should be called on the Android platform. In the JVM, you need to manually call System.loadLibrary");
         }
-        currentThreadId = Thread.currentThread().threadId();
+        currentThreadId = Thread.currentThread().getId();
     }
 
     public static QuickJSContext create() {
@@ -131,7 +131,7 @@ public class QuickJSContext {
     }
 
     private void checkSameThread() {
-        boolean isSameThread = currentThreadId == Thread.currentThread().threadId();
+        boolean isSameThread = currentThreadId == Thread.currentThread().getId();
         if (!isSameThread) {
             throw new QuickJSException("Must be call same thread in QuickJSContext.create!");
         }
