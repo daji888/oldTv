@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.viewpager.widget.ViewPager;
+import androidx.core.content.ContextCompat;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.github.tvbox.osc.R;
@@ -86,7 +87,7 @@ public class SettingActivity extends BaseActivity {
             public void onItemPreSelected(TvRecyclerView parent, View itemView, int position) {
                 if (itemView != null) {
                     TextView tvName = itemView.findViewById(R.id.tvName);
-                    tvName.setTextColor(getResources().getColor(R.color.color_CCFFFFFF));
+                    tvName.setTextColor(ContextCompat.getColor(SettingActivity.this, R.color.color_CCFFFFFF));
                 }
             }
 
