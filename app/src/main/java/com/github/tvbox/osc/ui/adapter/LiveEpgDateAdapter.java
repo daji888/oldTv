@@ -2,6 +2,8 @@ package com.github.tvbox.osc.ui.adapter;
 
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.github.tvbox.osc.R;
@@ -24,9 +26,9 @@ public class LiveEpgDateAdapter extends BaseQuickAdapter<LiveEpgDate, BaseViewHo
         TextView tvLiveEpgDate = holder.getView(R.id.tvLiveEpgDate);
         tvLiveEpgDate.setText(item.getDatePresented());
         if (item.getIndex() == selectedIndex) {
-            tvLiveEpgDate.setTextColor(mContext.getResources().getColor(R.color.color_FF5F00));
+            tvLiveEpgDate.setTextColor(ContextCompat.getColor(mContext, R.color.color_FF5F00));
         } else {
-            tvLiveEpgDate.setTextColor(mContext.getResources().getColor(R.color.color_CCFFFFFF));
+            tvLiveEpgDate.setTextColor(ContextCompat.getColor(mContext, R.color.color_CCFFFFFF));
         }
     }
 

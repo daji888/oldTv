@@ -35,6 +35,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DiffUtil;
@@ -395,9 +396,9 @@ public class PlayActivity extends BaseActivity {
 
     void setSubtitleViewTextStyle(int style) {
         if (style == 0) {
-            mController.mSubtitleView.setTextColor(getBaseContext().getResources().getColorStateList(R.color.color_BBFFFFFF));
+            mController.mSubtitleView.setTextColor(ContextCompat.getColorStateList(getBaseContext(), R.color.color_BBFFFFFF));
         } else if (style == 1) {
-            mController.mSubtitleView.setTextColor(getBaseContext().getResources().getColorStateList(R.color.color_BC8802));
+            mController.mSubtitleView.setTextColor(ContextCompat.getColorStateList(getBaseContext(), R.color.color_BC8802));
         }
     }
 

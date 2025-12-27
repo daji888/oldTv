@@ -5,6 +5,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
+
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.github.tvbox.osc.R;
@@ -45,8 +47,8 @@ public class LiveEpgAdapter extends BaseQuickAdapter<Epginfo, BaseViewHolder> {
         AudioWaveView wqddg_AudioWaveView = holder.getView(R.id.wqddg_AudioWaveView);
         wqddg_AudioWaveView.setVisibility(View.GONE);
         if (value.index == selectedEpgIndex && (value.currentEpgDate.equals(shiyiDate) || value.currentEpgDate.equals(timeFormat.format(new Date())))) {
-            textview.setTextColor(mContext.getResources().getColor(R.color.color_FF5F00));
-            timeview.setTextColor(mContext.getResources().getColor(R.color.color_FF5F00));
+            textview.setTextColor(ContextCompat.getColor(mContext, R.color.color_FF5F00));
+            timeview.setTextColor(ContextCompat.getColor(mContext, R.color.color_FF5F00));
         } else {
             textview.setTextColor(Color.WHITE);
             timeview.setTextColor(Color.WHITE);

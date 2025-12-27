@@ -229,29 +229,79 @@ public class SourceViewModel extends ViewModel {
         } else if (type == 4) {
             String extend = sourceBean.getExt();
             extend = getFixUrl(extend);
-            if (URLEncoder.encode(extend).length() < 1000) {
-                GetRequest<String> request = OkGo.<String>get(sourceBean.getApi())
-                    .tag(sourceBean.getKey() + "_sort")
-                    .params("filter", "true");
-                // 当 extend 不为空且非空字符串时添加参数
-                if (extend != null && !extend.isEmpty()) {
-                    request.params("extend", extend);
-                }
-                request.execute(new AbsCallback<String>() {
-                        @Override
-                        public String convertResponse(okhttp3.Response response) throws Throwable {
-                            if (response.body() != null) {
-                                return response.body().string();
-                            } else {
-                                throw new IllegalStateException("网络请求错误");
+            try {
+                if (URLEncoder.encode(extend, "UTF-8").length() < 1000) {
+                    GetRequest<String> request = OkGo.<String>get(sourceBean.getApi())
+                        .tag(sourceBean.getKey() + "_sort")
+                        .params("filter", "true");
+                    // 当 extend 不为空且非空字符串时添加参数
+                    if (extend != null && !extend.isEmpty()) {
+                        request.params("extend", extend);
+                    }
+                    request.execute(new AbsCallback<String>() {
+                            @Override
+                            public String convertResponse(okhttp3.Response response) throws Throwable {
+                                if (response.body() != null) {
+                                    return response.body().string();
+                                } else {
+                                    throw new IllegalStateException("网络请求错误");
+                                }
                             }
+    
+                            @Override
+                            public void onSuccess(Response<String> response) {
+                                String sortJson = response.body();
+                                LOG.i(sortJson);
+                                if (sortJson != null) {
+                                    final AbsSortXml sortXml = sortJson(sortResult, sortJson);
+                                    if (sortXml != null && Hawk.get(HawkConfig.HOME_REC, 0) == 1) {
+                                        AbsXml absXml = json(null, sortJson, sourceBean.getKey());
+                                        if (absXml != null && absXml.movie != null && absXml.movie.videoList != null && absXml.movie.videoList.size() > 0) {
+                                            sortXml.videoList = absXml.movie.videoList;
+                                            sortResult.postValue(sortXml);
+                                            sortCache.put(sourceKey, sortXml);
+                                        } else {
+                                            getHomeRecList(sourceBean, null, new HomeRecCallback() {
+                                                @Override
+                                                public void done(List<Movie.Video> videos) {
+                                                    sortXml.videoList = videos;
+                                                    sortResult.postValue(sortXml);
+                                                    sortCache.put(sourceKey, sortXml);
+                                                }
+                                            });
+                                        }
+                                    } else {
+                                        sortResult.postValue(sortXml);
+                                        sortCache.put(sourceKey, sortXml);
+                                    }
+                                } else {
+                                    sortResult.postValue(null);
+                                }
+                            }
+    
+                            @Override
+                            public void onError(Response<String> response) {
+                                super.onError(response);
+                                sortResult.postValue(null);
+                            }
+                        });
+                 } else {
+                    try {
+                        Map<String, String> params = new HashMap<>();
+                        params.put("filter","true");
+                        if (extend != null && !extend.isEmpty()) {
+                            params.put("extend",extend);
                         }
-
-                        @Override
-                        public void onSuccess(Response<String> response) {
-                            String sortJson = response.body();
-                            LOG.i(sortJson);
-                            if (sortJson != null) {
+                        RemoteTVBox.post(sourceBean.getApi(), params, new okhttp3.Callback() {
+                            @Override
+                            public void onFailure(@NonNull Call call, IOException e) {
+                                sortResult.postValue(null);
+                            }
+    
+                            @Override
+                            public void onResponse(@NonNull Call call, @NonNull okhttp3.Response response) throws IOException {
+                                assert response.body() != null;
+                                String sortJson = response.body().string();
                                 final AbsSortXml sortXml = sortJson(sortResult, sortJson);
                                 if (sortXml != null && Hawk.get(HawkConfig.HOME_REC, 0) == 1) {
                                     AbsXml absXml = json(null, sortJson, sourceBean.getKey());
@@ -259,66 +309,20 @@ public class SourceViewModel extends ViewModel {
                                         sortXml.videoList = absXml.movie.videoList;
                                         sortResult.postValue(sortXml);
                                         sortCache.put(sourceKey, sortXml);
-                                    } else {
-                                        getHomeRecList(sourceBean, null, new HomeRecCallback() {
-                                            @Override
-                                            public void done(List<Movie.Video> videos) {
-                                                sortXml.videoList = videos;
-                                                sortResult.postValue(sortXml);
-                                                sortCache.put(sourceKey, sortXml);
-                                            }
-                                        });
                                     }
                                 } else {
                                     sortResult.postValue(sortXml);
                                     sortCache.put(sourceKey, sortXml);
                                 }
-                            } else {
-                                sortResult.postValue(null);
                             }
-                        }
-
-                        @Override
-                        public void onError(Response<String> response) {
-                            super.onError(response);
-                            sortResult.postValue(null);
-                        }
-                    });
-             } else {
-                try {
-                    Map<String, String> params = new HashMap<>();
-                    params.put("filter","true");
-                    if (extend != null && !extend.isEmpty()) {
-                        params.put("extend",extend);
+                        });
+                    } catch (Exception ignored) {
+                        sortResult.postValue(null);
                     }
-                    RemoteTVBox.post(sourceBean.getApi(), params, new okhttp3.Callback() {
-                        @Override
-                        public void onFailure(@NonNull Call call, IOException e) {
-                            sortResult.postValue(null);
-                        }
-
-                        @Override
-                        public void onResponse(@NonNull Call call, @NonNull okhttp3.Response response) throws IOException {
-                            assert response.body() != null;
-                            String sortJson = response.body().string();
-                            final AbsSortXml sortXml = sortJson(sortResult, sortJson);
-                            if (sortXml != null && Hawk.get(HawkConfig.HOME_REC, 0) == 1) {
-                                AbsXml absXml = json(null, sortJson, sourceBean.getKey());
-                                if (absXml != null && absXml.movie != null && absXml.movie.videoList != null && absXml.movie.videoList.size() > 0) {
-                                    sortXml.videoList = absXml.movie.videoList;
-                                    sortResult.postValue(sortXml);
-                                    sortCache.put(sourceKey, sortXml);
-                                }
-                            } else {
-                                sortResult.postValue(sortXml);
-                                sortCache.put(sourceKey, sortXml);
-                            }
-                        }
-                    });
-                } catch (Exception ignored) {
-                    sortResult.postValue(null);
-                }
-            }   
+                }   
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
         } else {
             sortResult.postValue(null);
         }
@@ -531,20 +535,19 @@ public class SourceViewModel extends ViewModel {
 
     // detailContent
     public void getDetail(String sourceKey, String urlid) {
-
         if (urlid.startsWith("push://") && ApiConfig.get().getSource("push_agent") != null) {
             String pushUrl = urlid.substring(7);
-            if (pushUrl.startsWith("b64:")) {
-                try {
+            try {
+                if (pushUrl.startsWith("b64:")) {
                     pushUrl = new String(Base64.decode(pushUrl.substring(4), Base64.DEFAULT | Base64.URL_SAFE | Base64.NO_WRAP), "UTF-8");
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
+                } else {
+                    pushUrl = URLDecoder.decode(pushUrl, "UTF-8");
                 }
-            } else {
-                pushUrl = URLDecoder.decode(pushUrl);
+                sourceKey = "push_agent";
+                urlid = pushUrl;
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
             }
-            sourceKey = "push_agent";
-            urlid = pushUrl;
         }
         String id = urlid;
         SourceBean sourceBean = ApiConfig.get().getSource(sourceKey);
@@ -1072,14 +1075,14 @@ public class SourceViewModel extends ViewModel {
                         for (Movie.Video.UrlBean.UrlInfo.InfoBean infoBean : urlinfo.beanList) {
                             if (infoBean.url.startsWith("push://")) {
                                 String pushUrl = infoBean.url.substring(7);
-                                if (pushUrl.startsWith("b64:")) {
-                                    try {
+                                try {
+                                    if (pushUrl.startsWith("b64:")) {
                                         pushUrl = new String(Base64.decode(pushUrl.substring(4), Base64.DEFAULT | Base64.URL_SAFE | Base64.NO_WRAP), "UTF-8");
-                                    } catch (UnsupportedEncodingException e) {
-                                        e.printStackTrace();
+                                    } else {
+                                        pushUrl = URLDecoder.decode(pushUrl, "UTF-8");
                                     }
-                                } else {
-                                    pushUrl = URLDecoder.decode(pushUrl);
+                                } catch (UnsupportedEncodingException e) {
+                                    e.printStackTrace();
                                 }
 
                                 final AbsXml[] resData = {null};
