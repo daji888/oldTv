@@ -26,7 +26,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.jetbrains.annotations.NotNull;
 
 
-public class SearchRemoteTvDialog extends BaseDialog{
+public class SearchRemoteTvDialog extends BaseDialog {
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -98,11 +98,11 @@ public class SearchRemoteTvDialog extends BaseDialog{
 
 
 
-    private LoadService<Object> mLoadService;
+    private LoadService<?> mLoadService;
 
     protected void setLoadSir(View view) {
         if (mLoadService == null) {
-            mLoadService = LoadSir.getDefault().register(view, new Callback.OnReloadListener() {
+            mLoadService = (LoadService<?>) LoadSir.getDefault().register(view, new Callback.OnReloadListener() {
                 @Override
                 public void onReload(View v) {
                 }

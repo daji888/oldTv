@@ -53,7 +53,7 @@ public abstract class BaseLazyFragment extends Fragment implements CustomAdapt {
     protected boolean mIsFirstVisible = true;
     protected Context mContext;
     protected Activity mActivity;
-    private LoadService<Object> mLoadService;
+    private LoadService<?> mLoadService;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -247,7 +247,7 @@ public abstract class BaseLazyFragment extends Fragment implements CustomAdapt {
 
     protected void setLoadSir(View view) {
         if (mLoadService == null) {
-            mLoadService = LoadSir.getDefault().register(view, new Callback.OnReloadListener() {
+            mLoadService = (LoadService<?>) LoadSir.getDefault().register(view, new Callback.OnReloadListener() {
                 @Override
                 public void onReload(View v) {
                 }
@@ -256,7 +256,7 @@ public abstract class BaseLazyFragment extends Fragment implements CustomAdapt {
     }
 
     protected void setLoadSir2(View view) {
-        mLoadService = LoadSir.getDefault().register(view, new Callback.OnReloadListener() {
+        mLoadService = (LoadService<?>) LoadSir.getDefault().register(view, new Callback.OnReloadListener() {
             @Override
             public void onReload(View v) {
             }
