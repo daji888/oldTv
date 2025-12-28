@@ -2466,10 +2466,11 @@ public class LivePlayActivity extends BaseActivity {
                 public void onTick(long arg0) {
                     if (mVideoView != null) {
                         long duration = mVideoView.getDuration();
-                        long shiyiduration = shiyi_time_c * 1000;
                         long currentPosition = mVideoView.getCurrentPosition();
-                        sBar.setProgress((int) currentPosition);
+                        long shiyiduration = shiyi_time_c * 1000;
                         sBar.setMax((int) duration);
+                        sBar.setProgress((int) currentPosition);
+                        sBar.setSecondaryProgress((int) mVideoView.getBufferedPercentage());
                         sBar.setKeyProgressIncrement((int) duration / 100);
                         tv_currentpos.setText(PlayerUtils.stringForTime((int) currentPosition));
                         String shiyiUrl = currentLiveChannelItem.getUrl();
