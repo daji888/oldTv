@@ -247,7 +247,7 @@ public abstract class BaseLazyFragment extends Fragment implements CustomAdapt {
 
     protected void setLoadSir(View view) {
         if (mLoadService == null) {
-            mLoadService = (LoadService<?>) LoadSir.getDefault().register(view, new Callback.OnReloadListener() {
+            mLoadService = LoadSir.getDefault().register(view, new Callback.OnReloadListener() {
                 @Override
                 public void onReload(View v) {
                 }
@@ -256,7 +256,7 @@ public abstract class BaseLazyFragment extends Fragment implements CustomAdapt {
     }
 
     protected void setLoadSir2(View view) {
-        mLoadService = (LoadService<?>) LoadSir.getDefault().register(view, new Callback.OnReloadListener() {
+        mLoadService = LoadSir.getDefault().register(view, new Callback.OnReloadListener() {
             @Override
             public void onReload(View v) {
             }
