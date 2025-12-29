@@ -102,7 +102,7 @@ public class SearchRemoteTvDialog extends BaseDialog {
 
     protected void setLoadSir(View view) {
         if (mLoadService == null) {
-            mLoadService = (LoadService<?>) LoadSir.getDefault().register(view, new Callback.OnReloadListener() {
+            mLoadService = LoadSir.getDefault().register(view, new Callback.OnReloadListener() {
                 @Override
                 public void onReload(View v) {
                 }
