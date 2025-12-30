@@ -52,7 +52,7 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     private boolean mIsPreparing;
 
     private LoadControl mLoadControl;
-    protected DefaultRenderersFactory mRenderersFactory;
+    private DefaultRenderersFactory mRenderersFactory;
     protected DefaultTrackSelector mTrackSelector;
 
     private int errorCode = -100;
@@ -70,7 +70,10 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     @Override
     public void initPlayer() {
         mRenderersFactory = new DefaultRenderersFactory(mAppContext);
-        setOptions();
+        if (mRenderersFactory == null) {
+            mRenderersFactory = new DefaultRenderersFactory(mAppContext);
+            mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON);
+        }
         if (mTrackSelector == null) {
             mTrackSelector = new DefaultTrackSelector(mAppContext);
         }
@@ -90,9 +93,7 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
             .setRenderersFactory(mRenderersFactory)
             .setTrackSelector(mTrackSelector)
             .build();
-   //     setOptions();
-        //准备好就开始播放
-        mMediaPlayer.setPlayWhenReady(true);
+        setOptions();
         mMediaPlayer.addListener(this);
     }
 
@@ -239,7 +240,7 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     @Override
     public void setOptions() {
         //准备好就开始播放
-    //    mMediaPlayer.setPlayWhenReady(true);
+        mMediaPlayer.setPlayWhenReady(true);
     }
 
     @Override
