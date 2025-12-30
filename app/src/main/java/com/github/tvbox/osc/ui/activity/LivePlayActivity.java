@@ -2056,7 +2056,7 @@ public class LivePlayActivity extends BaseActivity {
         ArrayList<ArrayList<String>> itemsArrayList = new ArrayList<>();
         ArrayList<String> sourceItems = new ArrayList<>();
         ArrayList<String> scaleItems = new ArrayList<>(Arrays.asList("原比", "16:9", "4:3", "填充", "原始", "裁剪"));
-        ArrayList<String> playerDecoderItems = new ArrayList<>(Arrays.asList("系统硬解", "IJK硬解", "IJK软解", "EXO硬解", "EXO硬软", "EXO软硬"));
+        ArrayList<String> playerDecoderItems = new ArrayList<>(Arrays.asList("系统硬解", "IJK硬解", "IJK软解", "EXO硬解"));
         ArrayList<String> timeoutItems = new ArrayList<>(Arrays.asList("关", "5s", "10s", "15s", "20s", "25s", "30s"));
         ArrayList<String> personalSettingItems = new ArrayList<>(Arrays.asList("显示时间", "显示网速", "换台反转", "跨选分类", "关闭密码"));
         ArrayList<String> AudioItems = new ArrayList<>(Arrays.asList("音轨列表"));
