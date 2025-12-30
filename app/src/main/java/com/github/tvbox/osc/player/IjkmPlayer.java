@@ -73,7 +73,7 @@ public class IjkmPlayer extends IjkPlayer {
         // 是否允许一些不安全的路径，默认值是 1 ，会拒绝一些不安全的文件路径, 设置为 0 ，关闭安全监测
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "safe", 0);
         // 是否开启精准 seek，0：默认关闭，1：启用
-        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 1);
+        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 0);
         // 当 CPU 处理不过来的时候丢帧帧数，默认为 0，参数范围是 [-1, 120]
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 0);
         //视频最大帧率
@@ -84,21 +84,12 @@ public class IjkmPlayer extends IjkPlayer {
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "overlay-format", IjkMediaPlayer.SDL_FCC_RV32);
         // 网络波动时自动重连
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "reconnect", 1);
-        // 1‌：启用变速不变调模式
+        // 启用变速不变调模式
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "soundtouch", 1);
         //视频缓存好之后是否自动播放 1：允许 0：不允许
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1);
         //开启内置字幕
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "subtitle", 1);
-
-        // 设置媒体文件探测大小
-  //      mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 512 * 1024);
-        // 设置媒体文件分析时长
-  //      mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzeduration", 500 * 1000);
-        // 设置媒体流分析的最大时间长度
-  //      mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzemaxduration", 5 * 1000 * 1000);
-        // 设置视频播放的最小帧数
-  //      mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "min-frames", 1);
         
         if (Hawk.get(HawkConfig.PLAYER_IS_LIVE)) {
             LOG.i("echo-type-直播");
