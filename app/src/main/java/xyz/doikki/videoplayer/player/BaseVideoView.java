@@ -22,11 +22,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.blankj.utilcode.util.ToastUtils;
 import com.github.tvbox.osc.R;
 
 import java.io.IOException;
@@ -272,10 +272,10 @@ public class BaseVideoView<P extends AbstractPlayer> extends FrameLayout
                 }
             }
             if (!(mPlayerFactory instanceof AndroidMediaPlayerFactory)) {
-                ToastUtils.showShort("播放创建失败!使用系统播放器进行播放!");
+                Toast.makeText(getContext(), "播放创建失败! 使用系统播放器进行播放!", Toast.LENGTH_SHORT).show();    
                 setPlayerFactory(AndroidMediaPlayerFactory.create());
             } else {
-                ToastUtils.showShort("播放创建失败!");//一般是不太可能默认播放器也失败的
+                Toast.makeText(getContext(), "播放创建失败!", Toast.LENGTH_SHORT).show();  //一般情况下不太可能默认播放器也创建失败
                 getActivity().finish();
                 return;
             }
