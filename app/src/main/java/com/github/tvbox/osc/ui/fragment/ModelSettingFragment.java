@@ -15,7 +15,6 @@ import com.github.tvbox.osc.api.ApiConfig;
 import com.github.tvbox.osc.base.BaseActivity;
 import com.github.tvbox.osc.base.BaseLazyFragment;
 import com.github.tvbox.osc.bean.IJKCode;
-import com.github.tvbox.osc.bean.EXOCode;
 import com.github.tvbox.osc.bean.SourceBean;
 import com.github.tvbox.osc.event.RefreshEvent;
 import com.github.tvbox.osc.player.thirdparty.RemoteTVBox;
@@ -63,8 +62,6 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 public class ModelSettingFragment extends BaseLazyFragment {
     private TextView tvDebugOpen;
     private TextView tvMediaCodec;
-    private TextView tvMediaExoCodec;
-    private TextView tvMediaQtCodec;
     private TextView tvParseWebView;
     private TextView tvPlay;
     private TextView tvRender;
@@ -109,10 +106,6 @@ public class ModelSettingFragment extends BaseLazyFragment {
         tvParseWebView = findViewById(R.id.tvParseWebView);
         tvMediaCodec = findViewById(R.id.tvMediaCodec);
         tvMediaCodec.setText(Hawk.get(HawkConfig.IJK_CODEC, ""));
-        tvMediaExoCodec = findViewById(R.id.tvMediaExoCodec);
-        tvMediaExoCodec.setText(Hawk.get(HawkConfig.EXO_CODEC, ""));
-        tvMediaQtCodec = findViewById(R.id.tvMediaQtCodec);
-        tvMediaQtCodec.setText("硬解");    
         tvPlay = findViewById(R.id.tvPlay);
         tvRender = findViewById(R.id.tvRenderType);
         tvScale = findViewById(R.id.tvScaleType);
@@ -397,19 +390,6 @@ public class ModelSettingFragment extends BaseLazyFragment {
                         tvPlay.setText(PlayerHelper.getPlayerName(thisPlayerType));
                         PlayerHelper.init();
                         dialog.dismiss();
-                        if (thisPlayerType == 1) {
-                            tvMediaExoCodec.setVisibility(View.GONE);
-                            tvMediaQtCodec.setVisibility(View.GONE);
-                            tvMediaCodec.setVisibility(View.VISIBLE);
-                       } else if (thisPlayerType == 2) {
-                            tvMediaCodec.setVisibility(View.GONE);
-                            tvMediaQtCodec.setVisibility(View.GONE);
-                            tvMediaExoCodec.setVisibility(View.VISIBLE);
-                       } else {
-                            tvMediaCodec.setVisibility(View.GONE);
-                            tvMediaExoCodec.setVisibility(View.GONE);
-                            tvMediaQtCodec.setVisibility(View.VISIBLE);
-                       }
                     }
 
                     @Override
@@ -433,10 +413,8 @@ public class ModelSettingFragment extends BaseLazyFragment {
         });
 
         findViewById(R.id.llMediaCodec).setOnClickListener(new View.OnClickListener() {
-            @Override    
+            @Override
             public void onClick(View v) {
-              int playerType = Hawk.get(HawkConfig.PLAY_TYPE, 0);  
-              if (playerType == 1) {
                 List<IJKCode> ijkCodes = ApiConfig.get().getIjkCodes();
                 if (ijkCodes == null || ijkCodes.size() == 0)
                     return;
@@ -447,13 +425,12 @@ public class ModelSettingFragment extends BaseLazyFragment {
                 for (int j = 0; j < ijkCodes.size(); j++) {
                     if (ijkSel.equals(ijkCodes.get(j).getName())) {
                         defaultPos = j;
-                        tvMediaCodec.setText(ijkCodes.get(j).getName());
                         break;
                     }
                 }
 
                 SelectDialog<IJKCode> dialog = new SelectDialog<>(mActivity);
-                dialog.setTip("请选择 IJK 默认解码");
+                dialog.setTip("请选择IJK解码");
                 dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<IJKCode>() {
                     @Override
                     public void click(IJKCode value, int pos) {
@@ -477,52 +454,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
                         return oldItem.getName().equals(newItem.getName());
                     }
                 }, ijkCodes, defaultPos);
-                dialog.show();  
-                } else if (playerType == 2) {
-                  List<EXOCode> exoCodes = ApiConfig.get().getExoCodes();
-                  if (exoCodes == null || exoCodes.size() == 0)
-                      return;
-                  FastClickCheckUtil.check(v);
-
-                int exodefaultPos = 0;
-                String exoSel = Hawk.get(HawkConfig.EXO_CODEC, "");
-                for (int a = 0; a < exoCodes.size(); a++) {
-                    if (exoSel.equals(exoCodes.get(a).getName())) {
-                        exodefaultPos = a;
-                        tvMediaExoCodec.setText(exoCodes.get(a).getName());
-                        break;
-                    }
-                }
-
-                SelectDialog<EXOCode> dialog = new SelectDialog<>(mActivity);
-                dialog.setTip("请选择 EXO音频 默认解码");
-                dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<EXOCode>() {
-                    @Override
-                    public void click(EXOCode value, int pos) {
-                        value.selected(true);
-                        tvMediaExoCodec.setText(value.getName());
-                        dialog.dismiss();
-                    }
-
-                    @Override
-                    public String getDisplay(EXOCode val) {
-                        return val.getName();
-                    }
-                }, new DiffUtil.ItemCallback<EXOCode>() {
-                    @Override
-                    public boolean areItemsTheSame(@NonNull @NotNull EXOCode oldItem, @NonNull @NotNull EXOCode newItem) {
-                        return oldItem == newItem;
-                    }
-
-                    @Override
-                    public boolean areContentsTheSame(@NonNull @NotNull EXOCode oldItem, @NonNull @NotNull EXOCode newItem) {
-                        return oldItem.getName().equals(newItem.getName());
-                    }
-                }, exoCodes, exodefaultPos);
-                dialog.show();  
-                } else {
-                    tvMediaQtCodec.setText("硬解"); 
-                }  
+                dialog.show();
             }
         });
         findViewById(R.id.llScale).setOnClickListener(new View.OnClickListener() {
@@ -856,20 +788,6 @@ public class ModelSettingFragment extends BaseLazyFragment {
 
     private void initView() {
         findViewById(R.id.llApi).requestFocus();
-        int playerType = Hawk.get(HawkConfig.PLAY_TYPE, 0);
-        if (playerType == 1) {
-            tvMediaExoCodec.setVisibility(View.GONE);
-            tvMediaQtCodec.setVisibility(View.GONE);
-            tvMediaCodec.setVisibility(View.VISIBLE);
-        } else if (playerType == 2) {
-            tvMediaCodec.setVisibility(View.GONE);
-            tvMediaQtCodec.setVisibility(View.GONE);
-            tvMediaExoCodec.setVisibility(View.VISIBLE);
-        } else {
-            tvMediaCodec.setVisibility(View.GONE);
-            tvMediaExoCodec.setVisibility(View.GONE);
-            tvMediaQtCodec.setVisibility(View.VISIBLE);
-        }
     }
 
     public static SearchRemoteTvDialog loadingSearchRemoteTvDialog;
