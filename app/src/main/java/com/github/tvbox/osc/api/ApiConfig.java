@@ -11,7 +11,6 @@ import com.github.catvod.crawler.JsLoader;
 import com.github.catvod.crawler.Spider;
 import com.github.tvbox.osc.base.App;
 import com.github.tvbox.osc.bean.IJKCode;
-import com.github.tvbox.osc.bean.EXOCode;
 import com.github.tvbox.osc.bean.LiveChannelGroup;
 import com.github.tvbox.osc.bean.LiveChannelItem;
 import com.github.tvbox.osc.bean.LiveSourceBean;
@@ -76,7 +75,6 @@ public class ApiConfig {
     private List<String> vipParseFlags;
     private Map<String,String> myHosts;
     private List<IJKCode> ijkCodes;
-    private List<EXOCode> exoCodes;
     private String spider = null;
     public String wallpaper = "";
 
@@ -548,9 +546,7 @@ public class ApiConfig {
         }
 
         String defaultIJKADS = "{\"ijk\":[{\"options\":[{\"name\":\"mediacodec\",\"category\":4,\"value\":\"1\"},{\"name\":\"mediacodec-all-videos\",\"category\":4,\"value\":\"1\"},{\"name\":\"mediacodec-auto-rotate\",\"category\":4,\"value\":\"1\"},{\"name\":\"mediacodec-handle-resolution-change\",\"category\":4,\"value\":\"1\"},{\"name\":\"mediacodec-avc\",\"category\":4,\"value\":\"1\"},{\"name\":\"mediacodec-hevc\",\"category\":4,\"value\":\"1\"}],\"group\":\"硬解\"},{\"options\":[{\"name\":\"mediacodec\",\"category\":4,\"value\":\"0\"},{\"name\":\"mediacodec-all-videos\",\"category\":4,\"value\":\"0\"},{\"name\":\"mediacodec-auto-rotate\",\"category\":4,\"value\":\"0\"},{\"name\":\"mediacodec-handle-resolution-change\",\"category\":4,\"value\":\"0\"},{\"name\":\"mediacodec-avc\",\"category\":4,\"value\":\"0\"},{\"name\":\"mediacodec-hevc\",\"category\":4,\"value\":\"0\"}],\"group\":\"软解\"}],\"ads\":[\"mimg.0c1q0l.cn\",\"www.googletagmanager.com\",\"www.google-analytics.com\",\"mc.usihnbcq.cn\",\"mg.g1mm3d.cn\",\"mscs.svaeuzh.cn\",\"cnzz.hhttm.top\",\"tp.vinuxhome.com\",\"cnzz.mmstat.com\",\"www.baihuillq.com\",\"s23.cnzz.com\",\"z3.cnzz.com\",\"c.cnzz.com\",\"stj.v1vo.top\",\"z12.cnzz.com\",\"img.mosflower.cn\",\"tips.gamevvip.com\",\"ehwe.yhdtns.com\",\"xdn.cqqc3.com\",\"www.jixunkyy.cn\",\"sp.chemacid.cn\",\"hm.baidu.com\",\"s9.cnzz.com\",\"z6.cnzz.com\",\"um.cavuc.com\",\"mav.mavuz.com\",\"wofwk.aoidf3.com\",\"z5.cnzz.com\",\"xc.hubeijieshikj.cn\",\"tj.tianwenhu.com\",\"xg.gars57.cn\",\"k.jinxiuzhilv.com\",\"cdn.bootcss.com\",\"ppl.xunzhuo123.com\",\"xomk.jiangjunmh.top\",\"img.xunzhuo123.com\",\"z1.cnzz.com\",\"s13.cnzz.com\",\"xg.huataisangao.cn\",\"z7.cnzz.com\",\"xg.huataisangao.cn\",\"z2.cnzz.com\",\"s96.cnzz.com\",\"q11.cnzz.com\",\"thy.dacedsfa.cn\",\"xg.whsbpw.cn\",\"s19.cnzz.com\",\"z8.cnzz.com\",\"s4.cnzz.com\",\"f5w.as12df.top\",\"ae01.alicdn.com\",\"www.92424.cn\",\"k.wudejia.com\",\"vivovip.mmszxc.top\",\"qiu.xixiqiu.com\",\"cdnjs.hnfenxun.com\",\"cms.qdwght.com\"]}";
-        String defaultEXO = "{\"exo\":[{\"options\":[{\"extensionRendererMode\":\"EXTENSION_RENDERER_MODE_OFF\"}],\"group\":\"硬解\"},{\"options\":[{\"extensionRendererMode\":\"EXTENSION_RENDERER_MODE_ON\"}],\"group\":\"硬软\"},{\"options\":[{\"extensionRendererMode\":\"EXTENSION_RENDERER_MODE_PREFER\"}],\"group\":\"软硬\"}]}";
         JsonObject defaultJson = new Gson().fromJson(defaultIJKADS, JsonObject.class);
-        JsonObject EXOdefaultJson = new Gson().fromJson(defaultEXO, JsonObject.class);
         // 广告地址
         if (AdBlocker.isEmpty()) {
             //默认广告拦截
@@ -599,39 +595,7 @@ public class ApiConfig {
                 ijkCodes.get(0).selected(true);
             }
         }
-        // EXO解码配置
-        if (exoCodes == null) {
-            exoCodes = new ArrayList<>();
-            boolean foundOldSelect = false;
-            String exoCodec = Hawk.get(HawkConfig.EXO_CODEC, "");
-         //   JsonArray exoJsonArray = infoJson.has("exo")?infoJson.get("exo").getAsJsonArray():EXOdefaultJson.get("exo").getAsJsonArray();
-            JsonArray exoJsonArray = EXOdefaultJson.get("exo").getAsJsonArray();
-            for (JsonElement opt : exoJsonArray) {
-                JsonObject obj = (JsonObject) opt;
-                String name = obj.get("group").getAsString();
-                LinkedHashMap<String, String> baseOpt = new LinkedHashMap<>();
-                for (JsonElement cfg : obj.get("options").getAsJsonArray()) {
-                    JsonObject cObj = (JsonObject) cfg;
-                    String key = cObj.get("extensionRendererMode").getAsString();
-                    baseOpt.put(key, null);
-                }
-                EXOCode exocodec = new EXOCode();
-                exocodec.setName(name);
-                exocodec.setOption(baseOpt);
-                if (name.equals(exoCodec) || TextUtils.isEmpty(exoCodec)) {
-                    exocodec.selected(true);
-                    exoCodec = name;
-                    foundOldSelect = true;
-                } else {
-                    exocodec.selected(false);
-                }
-                exoCodes.add(exocodec);
-            }
-            if (!foundOldSelect && exoCodes.size() > 0) {
-                exoCodes.get(0).selected(true);
-            }
-        }  
-    }
+    } 
 
     private void putLiveHistory(String url) {
         List<LiveSourceBean> lives = getSwitchLiveSourceBeanList();
@@ -950,23 +914,6 @@ public class ApiConfig {
                 return code;
         }
         return ijkCodes.get(0);
-    }
-
-    public List<EXOCode> getExoCodes() {
-        return exoCodes;
-    }
-
-    public EXOCode getCurrentEXOCode() {
-        String exocodeName = Hawk.get(HawkConfig.EXO_CODEC, "");
-        return getEXOCodec(exocodeName);
-    }
-
-    public EXOCode getEXOCodec(String name) {
-        for (EXOCode exocode : exoCodes) {
-            if (exocode.getName().equals(name))
-                return exocode;
-        }
-        return exoCodes.get(0);
     }
 
     String clanToAddress(String lanLink) {
