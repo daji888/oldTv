@@ -10,47 +10,21 @@ import androidx.media3.common.MimeTypes;
 import androidx.media3.common.Player;
 import androidx.media3.common.TrackGroup;
 import androidx.media3.common.Tracks;
-import androidx.media3.exoplayer.DefaultRenderersFactory;
 import androidx.media3.exoplayer.source.TrackGroupArray;
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
 import androidx.media3.exoplayer.trackselection.MappingTrackSelector;
 
 import com.github.tvbox.osc.util.StringUtils;
-import com.github.tvbox.osc.api.ApiConfig;
-import com.github.tvbox.osc.bean.EXOCode;
 
 import xyz.doikki.videoplayer.exo.ExoMediaPlayer;
-
-import java.util.LinkedHashMap;
 
 public class EXOmPlayer extends ExoMediaPlayer {
     private String videoId = "";
     private String audioId = "";
     private String subtitleId = "";
-    private EXOCode exocodec = null;
 
-    public EXOmPlayer(Context context, EXOCode exocodec) {
+    public EXOmPlayer(Context context) {
         super(context);
-        this.exocodec = exocodec;
-    }
-
-    @Override
-    public void setOptions() {
-        EXOCode exocodecTmp = this.exocodec == null ? ApiConfig.get().getCurrentEXOCode() : this.exocodec;
-        LinkedHashMap<String, String> options = exocodecTmp.getOption();
-        if (options != null) {
-            for (String key : options.keySet()) {
-                String extensionRendererMode = key.trim();
-                if (extensionRendererMode.equals("EXTENSION_RENDERER_MODE_OFF")) {
-                    mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF);
-                } else if (extensionRendererMode.equals("EXTENSION_RENDERER_MODE_ON")) {
-                    mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON);
-                } else if (extensionRendererMode.equals("EXTENSION_RENDERER_MODE_PREFER")) {
-                    mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER);
-                }    
-            }
-        }
-        super.setOptions();
     }
 
     @SuppressLint("UnsafeOptInUsageError")
