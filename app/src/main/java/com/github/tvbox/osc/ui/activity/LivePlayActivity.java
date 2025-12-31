@@ -46,6 +46,7 @@ import com.github.tvbox.osc.bean.LiveSettingItem;
 import com.github.tvbox.osc.player.controller.LiveController;
 import com.github.tvbox.osc.player.EXOmPlayer;
 import com.github.tvbox.osc.player.IjkmPlayer;
+import com.github.tvbox.osc.player.MyVideoView;
 import com.github.tvbox.osc.player.TrackInfo;
 import com.github.tvbox.osc.player.TrackInfoBean;
 import com.github.tvbox.osc.ui.adapter.ApiHistoryDialogAdapter;
@@ -118,7 +119,7 @@ import xyz.doikki.videoplayer.util.PlayerUtils;
  */
 public class LivePlayActivity extends BaseActivity {
     public static Context context;
-    private VideoView mVideoView;
+    private MyVideoView mVideoView;
     private TextView tvChannelInfo;
     private TextView tvTime;
     private TextView tvNetSpeed;
