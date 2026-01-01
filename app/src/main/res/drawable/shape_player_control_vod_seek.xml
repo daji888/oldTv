@@ -9,7 +9,7 @@
     <item android:id="@android:id/secondaryProgress">
         <clip>
             <shape>
-                <solid android:color="@color/color_CC0000" />
+                <solid android:color="@color/color_BFA100" />
                 <corners android:radius="@dimen/vs_10" />
             </shape>
         </clip>
@@ -18,7 +18,7 @@
         <clip>
             <shape>
 <!--                进度条颜色-->
-                <solid android:color="@color/color_0000FF" />
+                <solid android:color="@color/color_CC0000" />
                 <corners android:radius="@dimen/vs_10" />
             </shape>
         </clip>
