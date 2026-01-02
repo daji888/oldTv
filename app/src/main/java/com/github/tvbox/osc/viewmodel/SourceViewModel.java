@@ -842,7 +842,7 @@ public class SourceViewModel extends ViewModel {
                     });
 
                     try {
-                        String json = future.get(10, TimeUnit.SECONDS);
+                        String json = future.get(15, TimeUnit.SECONDS);
                         LOG.i("echo--getPlay--result:" + json);
                         // 处理返回的 JSON
                         if (!TextUtils.isEmpty(json)) {
@@ -892,9 +892,8 @@ public class SourceViewModel extends ViewModel {
                 playResult.postValue(null);
             }
         } else if (type == 4) {
-            String extend=sourceBean.getExt();
-            extend=getFixUrl(extend);
-
+            String extend = sourceBean.getExt();
+            extend = getFixUrl(extend);
             GetRequest<String> request = OkGo.<String>get(sourceBean.getApi())
                     .tag("play")
                     .params("play", url)
