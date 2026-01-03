@@ -17,7 +17,7 @@ public class QuickJSContext {
             freeDupValue(context, pointer);
         }
     };
-    private final long currentThreadId;
+    private final Thread creatorThread;
     private final HashMap<Integer, JSCallFunction> callFunctionMap = new HashMap<>();
     private boolean destroyed = false;
     private ModuleLoader moduleLoader;
@@ -26,10 +26,10 @@ public class QuickJSContext {
         try {
             runtime = createRuntime();
             context = createContext(runtime);
+            creatorThread = Thread.currentThread(); // 保存原始线程对象
         } catch (UnsatisfiedLinkError e) {
             throw new QuickJSException("The so library must be initialized before createContext! QuickJSLoader.init should be called on the Android platform. In the JVM, you need to manually call System.loadLibrary");
         }
-        currentThreadId = Thread.currentThread().getId();
     }
 
     public static QuickJSContext create() {
@@ -131,14 +131,9 @@ public class QuickJSContext {
     }
 
     private void checkSameThread() {
-        boolean isSameThread = currentThreadId == Thread.currentThread().getId();
-        if (!isSameThread) {
+        if (creatorThread != Thread.currentThread()) {
             throw new QuickJSException("Must be call same thread in QuickJSContext.create!");
         }
-    }
-
-    public long getCurrentThreadId() {
-        return currentThreadId;
     }
 
     public ModuleLoader getModuleLoader() {
