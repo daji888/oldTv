@@ -82,6 +82,7 @@ dependencies {
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.50'  //别升级
     implementation 'com.github.getActivity:XXPermissions:26.5'
     implementation 'com.github.hedzr:android-file-chooser:v1.2.0-final'  //2022年
+    implementation 'com.github.JessYanCoding:AndroidAutoSize:v1.2.1'  //2020年
     implementation 'com.google.code.gson:gson:2.10.1'  //别升级
     implementation 'com.google.j2objc:j2objc-annotations:3.1'
     implementation 'com.google.zxing:core:3.5.4'
@@ -95,7 +96,6 @@ dependencies {
         exclude group: 'xmlpull', module: 'xmlpull'
     }
     implementation 'commons-io:commons-io:2.21.0'
-    implementation 'me.jessyan:autosize:1.2.1'  //2020年
     implementation 'net.sourceforge.streamsupport:android-retrofuture:1.7.4'  //2021年
     implementation 'org.conscrypt:conscrypt-android:2.5.2'
     implementation 'org.greenrobot:eventbus:3.3.1'  //2021年
