@@ -18,7 +18,6 @@ import androidx.media3.common.Player;
 import androidx.media3.common.Tracks;
 import androidx.media3.common.VideoSize;
 import androidx.media3.exoplayer.DefaultLoadControl;
-import androidx.media3.exoplayer.DefaultRenderersFactory;
 import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.exoplayer.LoadControl;
 import androidx.media3.exoplayer.source.MediaSource;
@@ -29,6 +28,8 @@ import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.LOG;
 import com.github.tvbox.osc.util.PlayerHelper;
 import com.orhanobut.hawk.Hawk;
+
+import io.github.anilbeesetti.nextlib.media3ext.ffdecoder.NextRenderersFactory;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -52,7 +53,7 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     private boolean mIsPreparing;
 
     private LoadControl mLoadControl;
-    private DefaultRenderersFactory mRenderersFactory;
+    private NextRenderersFactory mRenderersFactory;
     protected DefaultTrackSelector mTrackSelector;
 
     private int errorCode = -100;
@@ -69,10 +70,9 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     @SuppressLint("UnsafeOptInUsageError")
     @Override
     public void initPlayer() {
-        mRenderersFactory = new DefaultRenderersFactory(mAppContext);
         if (mRenderersFactory == null) {
-            mRenderersFactory = new DefaultRenderersFactory(mAppContext);
-            mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON);
+            mRenderersFactory = new NextRenderersFactory(mAppContext);
+            mRenderersFactory.setExtensionRendererMode(NextRenderersFactory.EXTENSION_RENDERER_MODE_ON);
         }
         if (mTrackSelector == null) {
             mTrackSelector = new DefaultTrackSelector(mAppContext);
