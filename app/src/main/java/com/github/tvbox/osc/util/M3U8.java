@@ -3,7 +3,6 @@ package com.github.tvbox.osc.util;
 import androidx.media3.common.util.UriUtil;
 
 import static com.github.tvbox.osc.util.RegexUtils.getPattern;
-import com.github.tvbox.osc.base.App;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
