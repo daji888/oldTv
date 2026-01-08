@@ -109,7 +109,6 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -134,7 +133,6 @@ public class PlayActivity extends BaseActivity {
     private int videoHeight = 1080;
     private String videoURL;
     private long videoDuration = -1;
-    private List<String> videoSegmentationURL = new ArrayList<>();
 
     @Override
     protected int getLayoutResID() {
@@ -211,15 +209,6 @@ public class PlayActivity extends BaseActivity {
         mController.setListener(new VodController.VodControlListener() {
             @Override
             public void playNext(boolean rmProgress) {
-                if (videoSegmentationURL.size() > 0) {
-                    for (int i = 0; i < videoSegmentationURL.size() - 1; i++) {
-                        if (videoSegmentationURL.get(i).equals(videoURL)) {
-                            mVideoView.setPlayFromZeroPositionOnce(true);
-                            startPlayUrl(videoSegmentationURL.get(i + 1), new HashMap<>());//todo header
-                            return;
-                        }
-                    }
-                }
                 if (mVodInfo.reverseSort) {
                     PlayActivity.this.playPrevious();
                 } else {
@@ -232,15 +221,6 @@ public class PlayActivity extends BaseActivity {
 
             @Override
             public void playPre() {
-                if (videoSegmentationURL.size() > 0) {
-                    for (int i = 1; i < videoSegmentationURL.size(); i++) {
-                        if (videoSegmentationURL.get(i).equals(videoURL)) {
-                            mVideoView.setPlayFromZeroPositionOnce(true);
-                            startPlayUrl(videoSegmentationURL.get(i - 1), new HashMap<>());//todo header
-                            return;
-                        }
-                    }
-                }
                 if (mVodInfo.reverseSort) {
                     PlayActivity.this.playNext(false);
                 } else {
