@@ -81,7 +81,7 @@ public class ImgUtil {
             if (roundingRadius == 0) roundingRadius = 1;
             RequestOptions requestOptions = new RequestOptions()
                 .format(DecodeFormat.PREFER_RGB_565)
-                .diskCacheStrategy(getDiskCacheStrategy(0))
+                .diskCacheStrategy(getDiskCacheStrategy(1))
                 .dontAnimate()
                 .transform(new RoundedCorners(roundingRadius));
             Glide.with(App.getInstance())

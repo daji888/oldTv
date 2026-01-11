@@ -72,6 +72,7 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     public void initPlayer() {
         if (mRenderersFactory == null) {
             mRenderersFactory = new NextRenderersFactory(mAppContext);
+            mRenderersFactory.setEnableDecoderFallback(true);
             mRenderersFactory.setExtensionRendererMode(NextRenderersFactory.EXTENSION_RENDERER_MODE_ON);
         }
         if (mTrackSelector == null) {
