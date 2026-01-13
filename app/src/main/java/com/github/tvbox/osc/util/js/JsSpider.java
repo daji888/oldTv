@@ -341,12 +341,13 @@ public class JsSpider extends Spider {
     private Object[] proxy1(Map<String, String> params) {
         JSObject object = new JSUtils<String>().toObj(ctx, params);
         JSONArray array = ((JSArray) jsObject.getJSFunction("proxy").call(object)).toJsonArray();
+        Map<String, String> headers = array.length() > 3 ? Json.toMap(array.optString(3)) : null;
         boolean headerAvailable = array.length() > 3 && array.opt(3) != null;
         Object[] result = new Object[4];
-        result[0] = array.opt(0);
-        result[1] = array.opt(1);
+        result[0] = array.optInt(0);
+        result[1] = array.optString(1);
         result[2] = getStream(array.opt(2));
-        result[3] = headerAvailable ? getHeader(array.opt(3)) : null;
+        result[3] = headers;
         if (array.length() > 4) {
             try {
                 if ( array.optInt(4) == 1) {
@@ -360,41 +361,6 @@ public class JsSpider extends Spider {
         }
         return result;
     }
-
-    private Map<String, String> getHeader(Object headerRaw) {
-        Map<String, String> headers = new HashMap<>();
-        if (headerRaw instanceof JSONObject) {
-            JSONObject json = (JSONObject) headerRaw;
-            Iterator<String> keys = json.keys();
-            while (keys.hasNext()) {
-                String key = keys.next();
-                headers.put(key, json.optString(key, ""));
-            }
-        } else if (headerRaw instanceof String) {
-            try {
-                JSONObject json = new JSONObject((String) headerRaw);
-                Iterator<String> keys = json.keys();
-                while (keys.hasNext()) {
-                    String key = keys.next();
-                    headers.put(key, json.optString(key, ""));
-                }
-            } catch (JSONException e) {
-                LOG.e("getHeader: JSON解析失败", e);
-            }
-        } else if (headerRaw instanceof Map) {
-            // 安全类型转换方案
-            Map<?, ?> rawMap = (Map<?, ?>) headerRaw;
-            for (Map.Entry<?, ?> entry : rawMap.entrySet()) {
-                headers.put(
-                    String.valueOf(entry.getKey()),
-                    String.valueOf(entry.getValue())
-                );
-            }
-        } else if (headerRaw != null) {
-            LOG.e("getHeader: 不支持的类型: " + headerRaw.getClass().getSimpleName());
-        }
-        return headers;
-    }
     
     private Object[] proxy2(Map<String, String> params) throws Exception {
         String url = params.get("url");
@@ -403,16 +369,10 @@ public class JsSpider extends Spider {
         Object object = submit(() -> ctx.parse(header)).get();
         String json = (String) call("proxy", array, object);
         Res res = Res.objectFrom(json);
-        String contentType = res.getContentType();
-        if (TextUtils.isEmpty(contentType)) contentType = "application/octet-stream";
         Object[] result = new Object[3];
-        result[0] = 200;
-        result[1] = contentType;
-        if (res.getBuffer() == 2) {
-            result[2] = new ByteArrayInputStream(Base64.decode(res.getContent(), Base64.DEFAULT | Base64.NO_WRAP));
-        } else {
-            result[2] = new ByteArrayInputStream(res.getContent().getBytes());
-        }
+        result[0] = res.getCode();
+        result[1] = res.getContentType();
+        result[2] = res.getStream();
         return result;
     }
 
