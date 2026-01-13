@@ -1351,7 +1351,7 @@ public class LivePlayActivity extends BaseActivity {
                     case VideoView.STATE_ERROR:
                     case VideoView.STATE_PLAYBACK_COMPLETED:
                         mHandler.removeCallbacks(mConnectTimeoutReplayRun);
-                        mHandler.postDelayed(mConnectTimeoutChangeSourceRun, 3 * 1000L);
+                        mHandler.postDelayed(mConnectTimeoutChangeSourceRun, 2 * 1000);
                         break;
                     case VideoView.STATE_PREPARING:
                     case VideoView.STATE_BUFFERING:
@@ -1362,9 +1362,9 @@ public class LivePlayActivity extends BaseActivity {
                         }
                         if (Hawk.get(HawkConfig.LIVE_CONNECT_TIMEOUT, 0) == 0 ) {
                             //缓冲30s重新播放
-                            mHandler.postDelayed(mConnectTimeoutReplayRun, 30 * 1000L);
+                            mHandler.postDelayed(mConnectTimeoutReplayRun, 30 * 1000);
                         } else {
-                            mHandler.postDelayed(mConnectTimeoutChangeSourceRun, (Hawk.get(HawkConfig.LIVE_CONNECT_TIMEOUT, 0)) * 5000L);
+                            mHandler.postDelayed(mConnectTimeoutChangeSourceRun, (Hawk.get(HawkConfig.LIVE_CONNECT_TIMEOUT, 0)) * 5000);
                         }
                         break;
                 }
