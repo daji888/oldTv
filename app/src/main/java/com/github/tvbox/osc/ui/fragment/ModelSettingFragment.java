@@ -770,12 +770,15 @@ public class ModelSettingFragment extends BaseLazyFragment {
         FastClickCheckUtil.check(v);
         String cachePath = FileUtils.getCachePath();
         File cacheDir = new File(cachePath);
+        String externalCachePath = FileUtils.getExternalCachePath();
+        File externalCacheDir = new File(externalCachePath);
         String cspCachePath = FileUtils.getFilePath() + "/csp/";
         File cspCacheDir = new File(cspCachePath);
-        if (!cacheDir.exists() && !cspCacheDir.exists()) return;
+        if (!cacheDir.exists() && !externalCacheDir.exists() && !cspCacheDir.exists()) return;
         new Thread(() -> {
             try {
                 if (cacheDir.exists()) FileUtils.cleanDirectory(cacheDir);
+                if (externalCacheDir.exists()) FileUtils.cleanDirectory(externalCacheDir);
                 if (cspCacheDir.exists()) {
                      FileUtils.cleanDirectory(cspCacheDir);
                  }
