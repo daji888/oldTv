@@ -126,7 +126,7 @@ public class IjkmPlayer extends IjkPlayer {
                     mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzeduration", 2 * 1000 * 1000);
                 case CACHE_VIDEO:
                     if (Hawk.get(HawkConfig.IJK_CACHE_PLAY, false)) {
-                        String cachePath = FileUtils.getCachePath() + "/ijkcaches/";
+                        String cachePath = FileUtils.getExternalCachePath() + "/ijkcaches/";
                         File cacheFile = new File(cachePath);
                         if (!cacheFile.exists()) cacheFile.mkdirs();
                         String tmpMd5 = MD5.string2MD5(path);
