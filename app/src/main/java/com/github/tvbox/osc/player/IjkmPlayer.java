@@ -70,53 +70,39 @@ public class IjkmPlayer extends IjkPlayer {
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "http-detect-range-support", 0);
         // 允许使用的流媒体传输协议列表
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "protocol_whitelist", "ijkio,ffio,async,cache,crypto,file,dash,http,https,ijkhttphook,ijkinject,ijklivehook,ijklongurl,ijksegment,ijktcphook,pipe,rtp,tcp,tls,udp,ijkurlhook,data,concat,subfile,ffconcat");
-        // 是否允许一些不安全的路径，默认值是 1 ，会拒绝一些不安全的文件路径, 设置为 0 ，关闭安全监测
+        // 是否允许一些不安全的路径，默认值为 1 ，会拒绝一些不安全的文件路径, 设置为 0 ，关闭安全监测
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "safe", 0);
-        // 是否开启精准 seek，0：默认关闭，1：启用
+        // 是否开启精准 seek，默认值为 0：关闭，1：启用
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 1);
-        // 当 CPU 处理不过来的时候丢帧帧数，默认为 0，参数范围是 [-1, 120]
+        // 当 CPU 处理不过来的时候丢帧帧数，默认值为 0，参数范围是 [-1, 120]
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 0);
-        // 设置最大缓冲区大小
+        // 视频最大帧率，默认值为：31，参数范围是 [-1, 121]
+        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max-fps", 121);
+        // 设置预先读取最大缓冲区大小，默认值为：MAX_QUEUE_SIZE (15 * 1024 * 1024)
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max-buffer-size", 15 * 1024 * 1024);
-        // 音频播放是否使用 openSL，0：使用 AudioTrack，1：使用 openSL
+        // 音频播放是否使用 openSL，默认值为 0：使用 AudioTrack，1：使用 openSL
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "opensles", 0);
-        // 设置视频显示格式
+        // 设置视频显示格式，默认值为：SDL_FCC_RV32
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "overlay-format", IjkMediaPlayer.SDL_FCC_RV32);
-        // 1 启用预缓冲，减少卡顿（会回调info)
+        // 是否启用暂停输出，直到在停滞之后读取足够的数据包，默认值为 1：启用，0：关闭
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 1);    
         // 网络波动时自动重连
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "reconnect", 1);
-        // 启用变速不变调模式
+        // 启用变速不变调模式，默认值为 0：关闭，1：开启
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "soundtouch", 1);
-        //视频缓存好之后是否自动播放 1：允许 0：不允许
+        // 视频缓存好之后是否自动播放 0：不允许，默认值为 1：允许
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1);
-        //开启内置字幕
+        // 是否开启内置字幕，默认值为 0：关闭，1：开启
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "subtitle", 1);
         
         if (Hawk.get(HawkConfig.PLAYER_IS_LIVE)) {
             LOG.i("echo-type-直播");
             // 设置在处理每个数据包之后是否刷新 I/O 上下文, 当设置为 1 时，每个数据包处理完毕后 立即 刷新 I/O 上下文
         //    mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "flush_packets", 1);
-            // 设置持续输入缓冲模式, 值为 1 时启用持续输入缓冲，值为 0 则关闭持续输入缓冲
-        //    mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "infbuf", 1);
-            // 设置最大缓冲区大小
-        //    mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max-buffer-size", 256 * 1024);
-            // 设置最大缓存时长
-        //    mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max_cached_duration", 300);
-            // 0 关闭预缓冲，可能会卡顿（不会回调info)
-        //    mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0);
         } else {
             LOG.i("echo-type-点播");
             // 设置在处理每个数据包之后是否刷新 I/O 上下文, 当设置为 0 时，每个数据包处理完毕后 不 刷新 I/O 上下文
         //    mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "flush_packets", 0);
-            // 设置持续输入缓冲模式, 值为 1 时启用持续输入缓冲，值为 0 则关闭持续输入缓冲
-        //    mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "infbuf", 0);
-            // 设置最大缓冲区大小
-        //    mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max-buffer-size", 10 * 1024 * 1024);
-            // 设置最大缓存时长
-        //    mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max_cached_duration", 3000);
-            // 1 启用预缓冲，减少卡顿（会回调info)
-        //    mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 1);
         }
         super.setOptions();
     }
