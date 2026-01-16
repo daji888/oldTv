@@ -137,6 +137,19 @@ public class FileUtils {
         return getCacheDir()
             .getAbsolutePath();
     }
+
+    public static File getExternalCacheDir() {
+        return App.getInstance().getExternalCacheDir();
+    }
+    
+    public static String getExternalCachePath() {
+        //部分机器getExternalCacheDir()会返回空
+        File externalCacheDir = getExternalCacheDir();
+        if (externalCacheDir == null) {
+            return getCachePath();
+        }
+        return externalCacheDir.getAbsolutePath();
+    }
     
     public static String getFilePath() {
         return App.getInstance().getFilesDir().getAbsolutePath();
@@ -416,11 +429,4 @@ public class FileUtils {
         return new File(getExternalCachePath() + "/qjscache_" + str + ".js");
     }
     
-    public static String getExternalCachePath() {
-        File externalCacheDir = App.getInstance().getExternalCacheDir();
-        if (externalCacheDir == null) {
-            return getCachePath();
-        }
-        return externalCacheDir.getAbsolutePath();
-    }
 }
