@@ -75,34 +75,30 @@ public class IjkmPlayer extends IjkPlayer {
         // 是否开启精准 seek，默认值为 0：关闭，1：启用
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 1);
         // 当 CPU 处理不过来的时候丢帧帧数，默认值为 0，参数范围是 [-1, 120]
-        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 0);
+   //     mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 0);
         // 视频最大帧率，默认值为：31，参数范围是 [-1, 121]
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max-fps", 121);
         // 设置预先读取最大缓冲区大小，默认值为：MAX_QUEUE_SIZE (15 * 1024 * 1024)
-        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max-buffer-size", 15 * 1024 * 1024);
+   //     mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "max-buffer-size", 15 * 1024 * 1024);
         // 音频播放是否使用 openSL，默认值为 0：使用 AudioTrack，1：使用 openSL
-        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "opensles", 0);
+   //     mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "opensles", 0);
         // 设置视频显示格式，默认值为：SDL_FCC_RV32
-        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "overlay-format", IjkMediaPlayer.SDL_FCC_RV32);
+   //     mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "overlay-format", IjkMediaPlayer.SDL_FCC_RV32);
         // 是否启用暂停输出，直到在停滞之后读取足够的数据包，默认值为 1：启用，0：关闭
-        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 1);    
+   //     mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 1);    
         // 网络波动时自动重连
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "reconnect", 1);
         // 启用变速不变调模式，默认值为 0：关闭，1：开启
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "soundtouch", 1);
         // 视频缓存好之后是否自动播放 0：不允许，默认值为 1：允许
-        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1);
+   //     mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1);
         // 是否开启内置字幕，默认值为 0：关闭，1：开启
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "subtitle", 1);
         
         if (Hawk.get(HawkConfig.PLAYER_IS_LIVE)) {
             LOG.i("echo-type-直播");
-            // 设置在处理每个数据包之后是否刷新 I/O 上下文, 当设置为 1 时，每个数据包处理完毕后 立即 刷新 I/O 上下文
-        //    mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "flush_packets", 1);
         } else {
             LOG.i("echo-type-点播");
-            // 设置在处理每个数据包之后是否刷新 I/O 上下文, 当设置为 0 时，每个数据包处理完毕后 不 刷新 I/O 上下文
-        //    mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "flush_packets", 0);
         }
         super.setOptions();
     }
@@ -120,10 +116,6 @@ public class IjkmPlayer extends IjkPlayer {
                     mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "rtsp_transport", "tcp");
                     // 强制RTSP流使用TCP传输协议, 而非默认的UDP
                     mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "rtsp_flags", "prefer_tcp");
-                    // 设置媒体文件探测大小
-                    mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "probesize", 512 * 1000);
-                    // 设置媒体文件分析时长
-                    mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "analyzeduration", 2 * 1000 * 1000);
                 case CACHE_VIDEO:
                     if (Hawk.get(HawkConfig.IJK_CACHE_PLAY, false)) {
                         String cachePath = FileUtils.getExternalCachePath() + "/ijkcaches/";
@@ -158,12 +150,6 @@ public class IjkmPlayer extends IjkPlayer {
             mPlayerEventListener.onError(-1, PlayerHelper.getRootCauseMessage(e));
         }
         setDataSourceHeader(headers);
-        
-//        try {
-//            path = encodeSpaceChinese(path);//会导致本地文件无法播放，故注释掉
-//        } catch (Exception ignored) {
-//
-//        }
         super.setDataSource(path, headers);
     }
 
@@ -192,15 +178,6 @@ public class IjkmPlayer extends IjkPlayer {
             return CACHE_VIDEO;
         }
         return OTHER;
-    }
-
-    private String encodeSpaceChinese(String str) throws UnsupportedEncodingException {
-        Pattern p = Pattern.compile("[\u4e00-\u9fa5 ]+");
-        Matcher m = p.matcher(str);
-        StringBuffer b = new StringBuffer();
-        while (m.find()) m.appendReplacement(b, URLEncoder.encode(m.group(0), "UTF-8"));
-        m.appendTail(b);
-        return b.toString();
     }
 
     @Override
