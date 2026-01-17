@@ -1,7 +1,7 @@
 package com.github.tvbox.osc.base;
 
 import android.app.Activity;
-import androidx.multidex.MultiDexApplication;
+import android.app.Application;
 
 import com.github.tvbox.osc.bean.VodInfo;
 import com.github.tvbox.osc.callback.EmptyCallback;
@@ -30,7 +30,7 @@ import me.jessyan.autosize.unit.Subunits;
  * @date :2020/12/17
  * @description:
  */
-public class App extends MultiDexApplication {
+public class App extends Application {
     private static App instance;
 
     private static P2PClass p;
