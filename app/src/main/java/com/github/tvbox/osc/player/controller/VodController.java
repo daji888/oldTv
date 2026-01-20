@@ -944,7 +944,7 @@ public class VodController extends BaseController {
             mSeekBar.setEnabled(false);
         }
         int percent = mControlWrapper.getBufferedPercentage();
-        mSeekBar.setSecondaryProgress(percent * 10);  // android:max="1000"
+        mSeekBar.setSecondaryProgress(percent);  // android:max="100"
     }
 
     private boolean simSlideStart = false;
@@ -1309,4 +1309,5 @@ public class VodController extends BaseController {
     }
     
 }
+
 

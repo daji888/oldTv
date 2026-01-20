@@ -86,7 +86,7 @@ public class IjkmPlayer extends IjkPlayer {
    //     mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "overlay-format", IjkMediaPlayer.SDL_FCC_RV32);
         // 是否启用暂停输出，直到在停滞之后读取足够的数据包，默认值为 1：启用，0：关闭
    //     mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 1);    
-        // 网络波动时自动重连
+        // 设置值为 1，网络波动时自动重连
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "reconnect", 1);
         // 启用变速不变调模式，默认值为 0：关闭，1：开启
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "soundtouch", 1);
@@ -110,7 +110,9 @@ public class IjkmPlayer extends IjkPlayer {
         try {
             switch (getStreamType(path)) {
                 case RTSP_UDP_RTP:
-                    // 设置持续输入缓冲模式, 当值为 0 时，表示关闭持续输入缓冲，值为 1 时，表示启用持续输入缓冲
+                    // 是否启用暂停输出，直到在停滞之后读取足够的数据包，默认值为 1：启用，0：关闭
+                    mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0);
+                    // 设置持续输入缓冲模式, 默认值为 0 时，表示关闭持续输入缓冲，值为 1 时，表示启用持续输入缓冲
                     mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "infbuf", 1);
                     // 指定RTSP协议的传输方式，默认使用UDP，使用TCP可以降低延迟并提升稳定性
                     mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "rtsp_transport", "tcp");
@@ -133,7 +135,6 @@ public class IjkmPlayer extends IjkPlayer {
                         path = "ijkio:cache:ffio:" + path;
                     }
                     break;
-
                 case M3U8:
                     // 直播且是ijk的时候自动走代理解决DNS
                     if (Hawk.get(HawkConfig.PLAYER_IS_LIVE, false)) {
