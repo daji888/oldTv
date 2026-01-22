@@ -135,7 +135,7 @@ public class DetailActivity extends BaseActivity {
     boolean seriesSelect = false;
     private View seriesFlagFocus = null;
     private boolean isReverse;
-    private String preFlag="";
+    private String preFlag = "";
     private boolean firstReverse;
     private V7GridLayoutManager mGridViewLayoutMgr = null;
     private HashMap<String, String> mCheckSources = null;
@@ -187,7 +187,6 @@ public class DetailActivity extends BaseActivity {
         tvSynopsis.setOnFocusChangeListener(focusChangeListener);
         mEmptyPlayList = findViewById(R.id.mEmptyPlaylist);
         mGridView = findViewById(R.id.mGridView);
-        mGridView.setHasFixedSize(true);
         mGridView.setHasFixedSize(false);
         this.mGridViewLayoutMgr = new V7GridLayoutManager(this.mContext, 6);
         mGridView.setLayoutManager(this.mGridViewLayoutMgr);
@@ -232,7 +231,7 @@ public class DetailActivity extends BaseActivity {
                 FastClickCheckUtil.check(v);
                 if (showPreview) {
                     toggleFullPreview();
-                    if(firstReverse){
+                    if (firstReverse) {
                         jumpToPlay();
                         firstReverse=false;
                     }
@@ -310,7 +309,7 @@ public class DetailActivity extends BaseActivity {
                     vodInfo.reverseSort = !vodInfo.reverseSort;
                     isReverse = !isReverse;
                     vodInfo.reverse();
-                    vodInfo.playIndex=(vodInfo.seriesMap.get(vodInfo.playFlag).size()-1)-vodInfo.playIndex;
+                    vodInfo.playIndex = (vodInfo.seriesMap.get(vodInfo.playFlag).size() - 1) - vodInfo.playIndex;
 //                    insertVod(sourceKey, vodInfo);
                     firstReverse = true;
                     setSeriesGroupOptions();
@@ -406,13 +405,13 @@ public class DetailActivity extends BaseActivity {
             @Override
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
                 refresh(itemView, position);
-//                if(isReverse)vodInfo.reverse();
+//                if (isReverse) vodInfo.reverse();
             }
 
             @Override
             public void onItemClick(TvRecyclerView parent, View itemView, int position) {
                 refresh(itemView, position);
-//                if(isReverse)vodInfo.reverse();
+//                if (isReverse) vodInfo.reverse();
             }
         });
         seriesAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
@@ -481,11 +480,11 @@ public class DetailActivity extends BaseActivity {
                 TextView newTxtView = view.findViewById(R.id.tvSeriesGroup);
                 newTxtView.setTextColor(ContextCompat.getColor(mContext, R.color.color_FF9900));
                 if (vodInfo != null && vodInfo.seriesMap.get(vodInfo.playFlag).size() > 0) {
-                    int targetPos =  position * GroupCount+1;
+                    int targetPos =  position * GroupCount + 1;
 //                    mGridView.scrollToPosition(targetPos);
                     mGridView.smoothScrollToPosition(targetPos);
                 }
-                if(currentSeriesGroupView != null) {
+                if (currentSeriesGroupView != null) {
                     TextView txtView = currentSeriesGroupView.findViewById(R.id.tvSeriesGroup);
                     txtView.setTextColor(0xD9FFFFFF);
                 }
@@ -499,6 +498,11 @@ public class DetailActivity extends BaseActivity {
         setLoadSir(llLayout);
     }
 
+    private void onGridViewFocusChange(View view, boolean hasFocus) {
+        if (llPlayerFragmentContainerBlock.getVisibility() != View.VISIBLE) return;
+        llPlayerFragmentContainerBlock.setFocusable(!hasFocus);
+    }
+
     private View.OnFocusChangeListener focusChangeListener = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
@@ -508,11 +512,6 @@ public class DetailActivity extends BaseActivity {
                 v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(300).setInterpolator(new BounceInterpolator()).start();
         }
     };
-
-    private void onGridViewFocusChange(View view, boolean hasFocus) {
-        if (llPlayerFragmentContainerBlock.getVisibility() != View.VISIBLE) return;
-        llPlayerFragmentContainerBlock.setFocusable(!hasFocus);
-    }
 
     private void initCheckedSourcesForSearch() {
         mCheckSources = SearchHelper.getSourcesForSearch();
@@ -570,33 +569,33 @@ public class DetailActivity extends BaseActivity {
         if (vodInfo.seriesMap.get(vodInfo.playFlag) != null) {
             boolean canSelect = true;
             for (int j = 0; j < vodInfo.seriesMap.get(vodInfo.playFlag).size(); j++) {
-                if(vodInfo.seriesMap.get(vodInfo.playFlag).get(j).selected){
+                if (vodInfo.seriesMap.get(vodInfo.playFlag).get(j).selected) {
                     canSelect = false;
                     break;
                 }
             }
-            if(canSelect)vodInfo.seriesMap.get(vodInfo.playFlag).get(vodInfo.playIndex).selected = true;
+            if (canSelect) vodInfo.seriesMap.get(vodInfo.playFlag).get(vodInfo.playIndex).selected = true;
         }
 
         Paint pFont = new Paint();
-//        pFont.setTypeface(Typeface.DEFAULT );
+//        pFont.setTypeface(Typeface.DEFAULT);
         Rect rect = new Rect();
 
         List<VodInfo.VodSeries> list = vodInfo.seriesMap.get(vodInfo.playFlag);
         int listSize = list.size();
         int w = 1;
-        for(int i =0; i < listSize; ++i){
+        for (int i = 0; i < listSize; ++i) {
             String name = list.get(i).name;
             pFont.getTextBounds(name, 0, name.length(), rect);
-            if(w < rect.width()){
+            if (w < rect.width()) {
                 w = rect.width();
             }
         }
         w += 32;
-        int screenWidth = getWindowManager().getDefaultDisplay().getWidth()/3;
-        int offset = screenWidth/w;
-        if(offset <=2) offset =2;
-        if(offset > 6) offset =6;
+        int screenWidth = getWindowManager().getDefaultDisplay().getWidth() / 3;
+        int offset = screenWidth / w;
+        if (offset <= 2) offset = 2;
+        if (offset > 6) offset = 6;
         mGridViewLayoutMgr.setSpanCount(offset);
         seriesAdapter.setNewData(vodInfo.seriesMap.get(vodInfo.playFlag));
 
@@ -616,32 +615,32 @@ public class DetailActivity extends BaseActivity {
         int listSize = list.size();
         int offset = mGridViewLayoutMgr.getSpanCount();
         seriesGroupOptions.clear();
-        GroupCount=(offset==3 || offset==6)?30:20;
-        if(listSize>100 && listSize<=400)GroupCount=60;
-        if(listSize>400)GroupCount=120;
-        if(listSize > GroupCount) {
+        GroupCount = (offset == 3 || offset == 6) ? 30 : 20;
+        if (listSize > 100 && listSize <= 400) GroupCount = 60;
+        if (listSize > 400) GroupCount = 120;
+        if (listSize > GroupCount) {
             mSeriesGroupView.setVisibility(View.VISIBLE);
             int remainedOptionSize = listSize % GroupCount;
             int optionSize = listSize / GroupCount;
 
             for(int i = 0; i < optionSize; i++) {
-                if(vodInfo.reverseSort)
+                if (vodInfo.reverseSort)
 //                    seriesGroupOptions.add(String.format("%d - %d", i * GroupCount + GroupCount, i * GroupCount + 1));
-                    seriesGroupOptions.add(String.format("%d - %d", listSize - (i * GroupCount + 1)+1, listSize - (i * GroupCount + GroupCount)+1));
+                    seriesGroupOptions.add(String.format("%d - %d", listSize - (i * GroupCount + 1) + 1, listSize - (i * GroupCount + GroupCount) + 1));
                 else
                     seriesGroupOptions.add(String.format("%d - %d", i * GroupCount + 1, i * GroupCount + GroupCount));
             }
-            if(remainedOptionSize > 0) {
-                if(vodInfo.reverseSort)
+            if (remainedOptionSize > 0) {
+                if (vodInfo.reverseSort)
 //                    seriesGroupOptions.add(String.format("%d - %d", optionSize * GroupCount + remainedOptionSize, optionSize * GroupCount + 1));
-                    seriesGroupOptions.add(String.format("%d - %d", listSize - (optionSize * GroupCount + 1)+1, listSize - (optionSize * GroupCount + remainedOptionSize)+1));
+                    seriesGroupOptions.add(String.format("%d - %d", listSize - (optionSize * GroupCount + 1) + 1, listSize - (optionSize * GroupCount + remainedOptionSize) + 1));
                 else
                     seriesGroupOptions.add(String.format("%d - %d", optionSize * GroupCount + 1, optionSize * GroupCount + remainedOptionSize));
             }
-//            if(vodInfo.reverseSort) Collections.reverse(seriesGroupOptions);
+//            if (vodInfo.reverseSort) Collections.reverse(seriesGroupOptions);
 
             seriesGroupAdapter.notifyDataSetChanged();
-        }else {
+        } else {
             mSeriesGroupView.setVisibility(View.GONE);
         }
     }
@@ -668,14 +667,14 @@ public class DetailActivity extends BaseActivity {
             public void onChanged(AbsXml absXml) {
                 if (absXml != null && absXml.movie != null && absXml.movie.videoList != null && absXml.movie.videoList.size() > 0) {
                     showSuccess();
-                    if(!TextUtils.isEmpty(absXml.msg) && !absXml.msg.equals("数据列表")){
+                    if (!TextUtils.isEmpty(absXml.msg) && !absXml.msg.equals("数据列表")) {
                         Toast.makeText(DetailActivity.this, absXml.msg, Toast.LENGTH_SHORT).show();
                         showEmpty();
                         return;
                     }
                     mVideo = absXml.movie.videoList.get(0);
                     mVideo.id = vodId;
-                    if (TextUtils.isEmpty(mVideo.name))mVideo.name = "TVBox";
+                    if (TextUtils.isEmpty(mVideo.name)) mVideo.name = "TVBox";
                     vodInfo = new VodInfo();
                     if ((mVideo.pic == null || mVideo.pic.isEmpty()) && !vod_picture.isEmpty()) {
                          mVideo.pic = vod_picture;
