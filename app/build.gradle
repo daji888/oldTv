@@ -46,12 +46,14 @@ android {
         }
     }
 
-    applicationVariants.configureEach { variant ->
-        variant.outputs.configureEach { output ->
-            def CommitTime = variant.versionName
-            // 构建自定义文件名
-            def fileName = "TVBox-${CommitTime}.apk"
-            outputFileName = fileName
+    androidComponents {
+        onVariants(selector().all()) { variant ->
+            variant.outputs.forEach { output ->
+                def CommitTime = variant.versionName
+                // 构建自定义文件名
+                def fileName = "TVBox-${CommitTime}.apk"
+                output.outputFileName.set(fileName)
+            }
         }
     }
 
