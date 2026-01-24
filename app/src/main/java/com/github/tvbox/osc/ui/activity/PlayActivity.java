@@ -308,7 +308,11 @@ public class PlayActivity extends BaseActivity {
 
     void selectMySubtitle() throws Exception {
         SubtitleDialog subtitleDialog = new SubtitleDialog(PlayActivity.this);
-        
+        if (mController.mSubtitleView.hasInternal) {
+            subtitleDialog.selectInternal.setVisibility(View.VISIBLE);
+        } else {
+            subtitleDialog.selectInternal.setVisibility(View.GONE);
+        }
         subtitleDialog.setSubtitleViewListener(new SubtitleDialog.SubtitleViewListener() {
             @Override
             public void setTextSize(int size) {
