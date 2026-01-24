@@ -324,7 +324,11 @@ public class PlayFragment extends BaseLazyFragment {
 
     void selectMySubtitle() throws Exception {
         SubtitleDialog subtitleDialog = new SubtitleDialog(getActivity());
-        
+        if (mController.mSubtitleView.hasInternal) {
+            subtitleDialog.selectInternal.setVisibility(View.VISIBLE);
+        } else {
+            subtitleDialog.selectInternal.setVisibility(View.GONE);
+        }
         subtitleDialog.setSubtitleViewListener(new SubtitleDialog.SubtitleViewListener() {
             @Override
             public void setTextSize(int size) {
