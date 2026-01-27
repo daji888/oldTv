@@ -4,12 +4,12 @@ plugins {
 
 android {
     namespace = 'com.github.tvbox.osc'
-    compileSdkVersion = 36
+    compileSdk = 36
 
     defaultConfig {
         applicationId = 'com.github.tvbox.osc.dj'
-        minSdkVersion = 23
-        targetSdkVersion = 30
+        minSdk = 23
+        targetSdk = 28
         versionCode = 1
         versionName = '1.0.0'
         //设置room的Schema的位置
@@ -42,9 +42,9 @@ android {
     androidComponents {
         onVariants(selector().all()) { variant ->
             variant.outputs.forEach { output ->
-                def CommitTime = variant.versionName
+                def commitTime = variant.versionName
                 // 构建自定义文件名
-                def fileName = "TVBox-${CommitTime}.apk"
+                def fileName = "TVBox-${commitTime}.apk"
                 output.outputFileName.set(fileName)
             }
         }
