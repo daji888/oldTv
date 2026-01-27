@@ -74,7 +74,7 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:5.0.5'
     annotationProcessor 'com.github.bumptech.glide:compiler:5.0.5'
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.50'  //别升级
-    implementation 'com.github.getActivity:XXPermissions:26.5'
+    implementation 'com.github.getActivity:XXPermissions:28.0'
     implementation 'com.github.hedzr:android-file-chooser:v1.2.0-final'  //2022年
     implementation 'com.github.JessYanCoding:AndroidAutoSize:v1.2.1'  //2020年
     implementation 'com.google.code.gson:gson:2.10.1'  //别升级
@@ -91,10 +91,10 @@ dependencies {
     }
     implementation 'commons-io:commons-io:2.21.0'
     implementation 'net.sourceforge.streamsupport:android-retrofuture:1.7.4'  //2021年
-    implementation 'org.conscrypt:conscrypt-android:2.5.2'
+    implementation 'org.conscrypt:conscrypt-android:2.5.3'
     implementation 'org.greenrobot:eventbus:3.3.1'  //2021年
     implementation 'org.nanohttpd:nanohttpd:2.3.1'  //2016年
-    implementation 'org.jsoup:jsoup:1.21.2'
+    implementation 'org.jsoup:jsoup:1.22.1'
     
     def media3_version = "1.9.0"
     implementation "androidx.media3:media3-common:$media3_version"
