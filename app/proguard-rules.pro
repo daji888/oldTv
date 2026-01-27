@@ -212,6 +212,10 @@
 # Nano
 -keep class fi.iki.elonen.** { *; }
 
+# jsoup
+-dontwarn com.google.re2j.Matcher
+-dontwarn com.google.re2j.Pattern
+
 # from app -> build -> outputs -> mapping -> your_app_name -> missing_rules.txt
 # Please add these rules to your existing keep rules in order to suppress warnings.
 # This is generated automatically by the Android Gradle plugin.
