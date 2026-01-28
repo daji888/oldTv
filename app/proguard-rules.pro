@@ -187,6 +187,7 @@
 
 # 实体类
 #-keep class com.github.tvbox.osc.bean.** { *; }
+-keep class com.github.tvbox.osc.cache.** { *; }
 -keep class com.github.tvbox.osc.viewmodel.** { *; }
 #CardView
 -keep class com.github.tvbox.osc.ui.tv.widget.card.**{*;}
@@ -196,6 +197,7 @@
 }
 
 -keep class com.github.catvod.crawler.*{*;}
+
 # 迅雷下载模块
 -keep class com.xunlei.downloadlib.** {*;}
 # quickjs引擎
