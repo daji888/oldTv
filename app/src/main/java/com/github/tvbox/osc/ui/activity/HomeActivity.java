@@ -265,16 +265,12 @@ public class HomeActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 FastClickCheckUtil.check(v);
-                File dir = getCacheDir();
-                FileUtils.recursiveDelete(dir);
-                dir = getExternalCacheDir();
-                FileUtils.recursiveDelete(dir);
-                Toast.makeText(mContext, "缓存已清除", Toast.LENGTH_LONG).show();
                 if (dataInitOk && jarInitOk) {
                      String cspCachePath = FileUtils.getFilePath() + "/csp/";
                      String jar = ApiConfig.get().getHomeSourceBean().getJar();
                      String jarUrl = !jar.isEmpty() ? jar:ApiConfig.get().getSpider();
                      File cspCacheDir = new File(cspCachePath + MD5.string2MD5(jarUrl) + ".jar");
+                     Toast.makeText(mContext, "jar缓存已清除", Toast.LENGTH_LONG).show();
                      if (!cspCacheDir.exists()) {
                          refreshHome();
                          return;
@@ -357,9 +353,7 @@ public class HomeActivity extends BaseActivity {
                         mHandler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                if (!useCacheConfig) {
-                                    //Toast.makeText(HomeActivity.this, "自定义jar加载成功", Toast.LENGTH_SHORT).show();
-                                }
+                            //    if (!useCacheConfig) Toast.makeText(HomeActivity.this, "自定义jar加载成功", Toast.LENGTH_SHORT).show();
                                 initData();
                             }
                         }, 50);
