@@ -221,7 +221,6 @@
 # from app -> build -> outputs -> mapping -> your_app_name -> missing_rules.txt
 # Please add these rules to your existing keep rules in order to suppress warnings.
 # This is generated automatically by the Android Gradle plugin.
--dontwarn com.android.org.conscrypt.SSLParametersImpl
 -dontwarn com.ctc.wstx.stax.WstxInputFactory
 -dontwarn com.ctc.wstx.stax.WstxOutputFactory
 -dontwarn java.awt.Color
@@ -250,7 +249,6 @@
 -dontwarn nu.xom.ParsingException
 -dontwarn nu.xom.Text
 -dontwarn nu.xom.ValidityException
--dontwarn org.apache.harmony.xnet.provider.jsse.SSLParametersImpl
 -dontwarn org.codehaus.jettison.AbstractXMLStreamWriter
 -dontwarn org.codehaus.jettison.mapped.Configuration
 -dontwarn org.codehaus.jettison.mapped.MappedNamespaceConvention
