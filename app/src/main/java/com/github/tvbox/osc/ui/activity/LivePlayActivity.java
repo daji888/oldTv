@@ -203,8 +203,6 @@ public class LivePlayActivity extends BaseActivity {
     SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd");
     private View backcontroller;
     private CountDownTimer countDownTimer3;
-    private final int videoWidth = 1920;
-    private final int videoHeight = 1080;
     private TextView tv_currentpos;
     private TextView tv_duration;
     private SeekBar sBar;
@@ -2355,19 +2353,11 @@ public class LivePlayActivity extends BaseActivity {
         sBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
            @Override
             public void onProgressChanged(SeekBar sb, int progress, boolean fromuser) {
-                if (!fromuser) {
-                    return;
-                }
-                if (fromuser) {
-                    long duration = mVideoView.getDuration();
-                    long newPosition = (duration * progress) / sBar.getMax();
-                    mVideoView.seekTo((int) newPosition);
-                    if (tv_currentpos != null)
-                        tv_currentpos.setText(PlayerUtils.stringForTime((int) newPosition));
-                    if (countDownTimer != null) {
-                        countDownTimer.cancel();
-                        countDownTimer.start();
-                    }
+                if (!fromuser) return;
+                if (countDownTimer != null) {
+                    mVideoView.seekTo(progress);
+                    countDownTimer.cancel();
+                    countDownTimer.start();
                 }
             }
             
@@ -2391,8 +2381,8 @@ public class LivePlayActivity extends BaseActivity {
                     if (keycode == KeyEvent.KEYCODE_DPAD_CENTER || keycode == KeyEvent.KEYCODE_ENTER) {
                         if (mVideoView.isPlaying()) {
                             mVideoView.pause();
-                            countDownTimer.cancel();
                             tv_top_l_container.setVisibility(View.VISIBLE);
+                            countDownTimer.cancel();
                         } else {
                             mVideoView.start();
                             tv_top_l_container.setVisibility(View.GONE);
