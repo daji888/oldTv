@@ -130,8 +130,6 @@ public class PlayActivity extends BaseActivity {
     private VodController mController;
     private SourceViewModel sourceViewModel;
     private Handler mHandler;
-    private int videoWidth = 1920;
-    private int videoHeight = 1080;
     private String videoURL;
     private long videoDuration = -1;
 
