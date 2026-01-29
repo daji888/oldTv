@@ -208,8 +208,6 @@ public class LivePlayActivity extends BaseActivity {
     private TextView tv_currentpos;
     private TextView tv_duration;
     private SeekBar sBar;
-    private View iv_playpause;
-    private View iv_play;
     private  boolean show = false;
     boolean mIsDragging;
     private LiveController controller;
@@ -283,8 +281,6 @@ public class LivePlayActivity extends BaseActivity {
         tv_currentpos = (TextView) findViewById(R.id.tv_currentpos);
         backcontroller = (View) findViewById(R.id.backcontroller);
         tv_duration = (TextView) findViewById(R.id.tv_duration);
-        iv_playpause = findViewById(R.id.iv_playpause);
-        iv_play = findViewById(R.id.iv_play);
 
         initEpgDateView();
         initEpgListView();
@@ -295,7 +291,7 @@ public class LivePlayActivity extends BaseActivity {
         initSettingItemView();
         initLiveChannelList();
         initLiveSettingGroupList();
-        Hawk.put(HawkConfig.PLAYER_IS_LIVE,true);
+        Hawk.put(HawkConfig.PLAYER_IS_LIVE, true);
     }
 
     public LiveController getLiveController() {
@@ -1100,9 +1096,6 @@ public class LivePlayActivity extends BaseActivity {
                         }
                     });
                     shiyi_time_c = (int) getTime(formatDate.format(nowday) + " " + selectedData.start + ":" + "30", formatDate.format(nowday) + " " + selectedData.end + ":" + "30");
-                    ViewGroup.LayoutParams lp = iv_play.getLayoutParams();
-                    lp.width = videoHeight / 7;
-                    lp.height = videoHeight / 7;
                     showProgressBars(true);
                     ll_right_top_huikan.setVisibility(View.VISIBLE);
                     isBack = true;
@@ -1215,9 +1208,6 @@ public class LivePlayActivity extends BaseActivity {
                         }
                     });
                     shiyi_time_c = (int) getTime(formatDate.format(nowday) + " " + selectedData.start + ":" + "30", formatDate.format(nowday) + " " + selectedData.end + ":" + "30");
-                    ViewGroup.LayoutParams lp = iv_play.getLayoutParams();
-                    lp.width = videoHeight / 7;
-                    lp.height = videoHeight / 7;
                     showProgressBars(true);
                     ll_right_top_huikan.setVisibility(View.VISIBLE);
                     isBack = true;
@@ -2362,36 +2352,7 @@ public class LivePlayActivity extends BaseActivity {
                 ll_epg.setVisibility(View.VISIBLE);
             }
         }
-
-        iv_play.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View arg0) {
-                mVideoView.start();
-                iv_play.setVisibility(View.INVISIBLE);
-                countDownTimer.start();
-                iv_playpause.setBackground(ContextCompat.getDrawable(LivePlayActivity.context, R.drawable.vod_pause));
-            }
-        });
-
-        iv_playpause.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                if (mVideoView.isPlaying()) {
-                    mVideoView.pause();
-                    countDownTimer.cancel();
-                    iv_play.setVisibility(View.VISIBLE);
-                    iv_playpause.setBackground(ContextCompat.getDrawable(LivePlayActivity.context, R.drawable.icon_play));
-                } else {
-                    mVideoView.start();
-                    iv_play.setVisibility(View.INVISIBLE);
-                    countDownTimer.start();
-                    iv_playpause.setBackground(ContextCompat.getDrawable(LivePlayActivity.context, R.drawable.vod_pause));
-                }
-            }
-        });
         sBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-
            @Override
             public void onProgressChanged(SeekBar sb, int progress, boolean fromuser) {
                 if (!fromuser) {
@@ -2432,14 +2393,10 @@ public class LivePlayActivity extends BaseActivity {
                             mVideoView.pause();
                             countDownTimer.cancel();
                             tv_top_l_container.setVisibility(View.VISIBLE);
-                            iv_play.setVisibility(View.VISIBLE);
-                            iv_playpause.setBackground(ContextCompat.getDrawable(LivePlayActivity.context, R.drawable.icon_play));
                         } else {
                             mVideoView.start();
                             tv_top_l_container.setVisibility(View.GONE);
-                            iv_play.setVisibility(View.INVISIBLE);
                             countDownTimer.start();
-                            iv_playpause.setBackground(ContextCompat.getDrawable(LivePlayActivity.context, R.drawable.vod_pause));
                         }
                     } else if (keycode == KeyEvent.KEYCODE_DPAD_LEFT || keycode == KeyEvent.KEYCODE_DPAD_RIGHT) {
                         mIsDragging = true;
@@ -2453,16 +2410,8 @@ public class LivePlayActivity extends BaseActivity {
                 return false;
             }
         });
-        if (mVideoView.isPlaying()) {
-            iv_play.setVisibility(View.INVISIBLE);
-            iv_playpause.setBackground(ContextCompat.getDrawable(LivePlayActivity.context, R.drawable.vod_pause));
-        } else {
-            iv_play.setVisibility(View.VISIBLE);
-            iv_playpause.setBackground(ContextCompat.getDrawable(LivePlayActivity.context, R.drawable.icon_play));
-        }
         if (countDownTimer3 == null) {
             countDownTimer3 = new CountDownTimer(5000, 1000) {
-
                 @Override
                 public void onTick(long arg0) {
                     if (mVideoView != null) {
