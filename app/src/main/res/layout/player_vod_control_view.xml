@@ -246,19 +246,6 @@
                 android:textSize="@dimen/ts_20" />
 
             <TextView
-                android:id="@+id/video_track_select"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/vs_5"
-                android:layout_marginRight="@dimen/vs_5"
-                android:background="@drawable/button_dialog_main"
-                android:focusable="true"
-                android:padding="@dimen/vs_10"
-                android:text="视轨"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/ts_20"/>
-
-            <TextView
                 android:id="@+id/audio_track_select"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -268,6 +255,19 @@
                 android:focusable="true"
                 android:padding="@dimen/vs_10"
                 android:text="音轨"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/ts_20"/>
+
+            <TextView
+                android:id="@+id/video_track_select"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/vs_5"
+                android:layout_marginRight="@dimen/vs_5"
+                android:background="@drawable/button_dialog_main"
+                android:focusable="true"
+                android:padding="@dimen/vs_10"
+                android:text="视轨"
                 android:textColor="@android:color/white"
                 android:textSize="@dimen/ts_20"/>
 
