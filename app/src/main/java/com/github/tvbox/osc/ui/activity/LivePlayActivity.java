@@ -1,5 +1,7 @@
 package com.github.tvbox.osc.ui.activity;
 
+import static xyz.doikki.videoplayer.util.PlayerUtils.stringForTime;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.IntEvaluator;
@@ -110,7 +112,6 @@ import org.json.JSONObject;
 
 import xyz.doikki.videoplayer.player.AbstractPlayer;
 import xyz.doikki.videoplayer.player.VideoView;
-import xyz.doikki.videoplayer.util.PlayerUtils;
 
 /**
  * @author pj567
@@ -1224,7 +1225,7 @@ public class LivePlayActivity extends BaseActivity {
         @SuppressLint("SimpleDateFormat") SimpleDateFormat datePresentFormat = new SimpleDateFormat("M-d EE");
         @SuppressLint("SimpleDateFormat") SimpleDateFormat datePresentFormat1 = new SimpleDateFormat("M-d");
         calendar.add(Calendar.DAY_OF_MONTH, 1);
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < 8; i++) {
             Date dateIns = calendar.getTime();
             LiveEpgDate epgDate = new LiveEpgDate();
             epgDate.setIndex(i);
@@ -2351,27 +2352,27 @@ public class LivePlayActivity extends BaseActivity {
             }
         }
         sBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-           @Override
-            public void onProgressChanged(SeekBar sb, int progress, boolean fromuser) {
+            
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromuser) {
                 if (!fromuser) return;
                 if (countDownTimer != null) {
-                    mVideoView.seekTo(progress);
                     countDownTimer.cancel();
                     countDownTimer.start();
                 }
             }
             
             @Override
-            public void onStartTrackingTouch(SeekBar arg0) {
+            public void onStartTrackingTouch(SeekBar seekBar) {
                 mIsDragging = true;
             }
 
             @Override
-            public void onStopTrackingTouch(SeekBar arg0) {
-                long duration = mVideoView.getDuration();
-                long newPosition = (duration * sBar.getProgress()) / sBar.getMax();
-                mVideoView.seekTo((int) newPosition);
+            public void onStopTrackingTouch(SeekBar seekBar) {
                 mIsDragging = false;
+                long duration = mVideoView.getDuration();
+                long newPosition = (duration * seekBar.getProgress()) / seekBar.getMax();
+                mVideoView.seekTo((int) newPosition);
             }
         });
         sBar.setOnKeyListener(new View.OnKeyListener() {
@@ -2392,10 +2393,10 @@ public class LivePlayActivity extends BaseActivity {
                         mIsDragging = true;
                     }
                 } else if (event.getAction() == KeyEvent.ACTION_UP) {
+                    mIsDragging = false;
                     long duration = mVideoView.getDuration();
                     long newPosition = (duration * sBar.getProgress()) / sBar.getMax();
                     mVideoView.seekTo((int) newPosition);
-                    mIsDragging = false;
                 }
                 return false;
             }
@@ -2409,17 +2410,19 @@ public class LivePlayActivity extends BaseActivity {
                         long currentPosition = mVideoView.getCurrentPosition();
                         long shiyiduration = shiyi_time_c * 1000;
                         sBar.setMax((int) duration);
-                        sBar.setProgress((int) currentPosition);
-                        sBar.setSecondaryProgress((int) mVideoView.getBufferedPercentage());
-                        sBar.setKeyProgressIncrement((int) duration / 100);
-                        tv_currentpos.setText(PlayerUtils.stringForTime((int) currentPosition));
+                        sBar.setKeyProgressIncrement((int) sBar.getMax() / 100);
+                        if (!mIsDragging) {
+                            sBar.setProgress((int) currentPosition);
+                            sBar.setSecondaryProgress(mVideoView.getBufferedPercentage());
+                        }    
+                        tv_currentpos.setText(stringForTime((int) currentPosition));
                         String shiyiUrl = currentLiveChannelItem.getUrl();
                         if (hasCatchup || shiyiUrl.contains("/PLTV/") || shiyiUrl.contains("/TVOD/")) {
-                            tv_duration.setText(PlayerUtils.stringForTime((int) shiyiduration));
-                            ((TextView) findViewById(R.id.tv_pause_progress_text)).setText((PlayerUtils.stringForTime((int) currentPosition)) + " / " + (PlayerUtils.stringForTime((int) shiyiduration)));
+                            tv_duration.setText(stringForTime((int) shiyiduration));
+                            ((TextView) findViewById(R.id.tv_pause_progress_text)).setText((stringForTime((int) currentPosition)) + " / " + (stringForTime((int) shiyiduration)));
                         } else {    
-                            tv_duration.setText(PlayerUtils.stringForTime((int) duration));
-                            ((TextView) findViewById(R.id.tv_pause_progress_text)).setText((PlayerUtils.stringForTime((int) currentPosition)) + " / " + (PlayerUtils.stringForTime((int) duration)));
+                            tv_duration.setText(stringForTime((int) duration));
+                            ((TextView) findViewById(R.id.tv_pause_progress_text)).setText((stringForTime((int) currentPosition)) + " / " + (stringForTime((int) duration)));
                         }
                     }
                 }
