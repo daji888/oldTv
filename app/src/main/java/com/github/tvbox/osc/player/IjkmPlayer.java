@@ -73,7 +73,7 @@ public class IjkmPlayer extends IjkPlayer {
         // 是否允许一些不安全的路径，默认值为 1 ，会拒绝一些不安全的文件路径, 设置为 0 ，关闭安全监测
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "safe", 0);
         // 是否开启精准 seek，默认值为 0：关闭，1：启用
-        mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 1);
+   //     mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "enable-accurate-seek", 0);
         // 当 CPU 处理不过来的时候丢帧帧数，默认值为 0，参数范围是 [-1, 120]
    //     mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "framedrop", 0);
         // 视频最大帧率，默认值为：31，参数范围是 [-1, 121]
