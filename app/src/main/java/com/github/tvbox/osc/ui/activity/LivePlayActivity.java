@@ -634,9 +634,13 @@ public class LivePlayActivity extends BaseActivity {
                         if (isBack) {
                             if (mVideoView.isPlaying()) {
                                 showProgressBars(true);
+                                mVideoView.pause();
+                                tv_top_l_container.setVisibility(View.VISIBLE);
+                                countDownTimer.cancel();
                             } else {
                                 mVideoView.start();
                                 tv_top_l_container.setVisibility(View.GONE);
+                                countDownTimer.start();
                             }    
                         } else {
                             showChannelList();
@@ -2356,6 +2360,10 @@ public class LivePlayActivity extends BaseActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromuser) {
                 if (!fromuser) return;
+                long duration = mVideoView.getDuration();
+                long newPosition = (duration * progress) / seekBar.getMax();
+                if (tv_currentpos != null)
+                    tv_currentpos.setText(stringForTime((int) newPosition));
                 if (countDownTimer != null) {
                     countDownTimer.cancel();
                     countDownTimer.start();
@@ -2379,17 +2387,7 @@ public class LivePlayActivity extends BaseActivity {
             @Override
             public boolean onKey(View arg0, int keycode, KeyEvent event) {
                 if (event.getAction() == KeyEvent.ACTION_DOWN) {
-                    if (keycode == KeyEvent.KEYCODE_DPAD_CENTER || keycode == KeyEvent.KEYCODE_ENTER) {
-                        if (mVideoView.isPlaying()) {
-                            mVideoView.pause();
-                            tv_top_l_container.setVisibility(View.VISIBLE);
-                            countDownTimer.cancel();
-                        } else {
-                            mVideoView.start();
-                            tv_top_l_container.setVisibility(View.GONE);
-                            countDownTimer.start();
-                        }
-                    } else if (keycode == KeyEvent.KEYCODE_DPAD_LEFT || keycode == KeyEvent.KEYCODE_DPAD_RIGHT) {
+                    if (keycode == KeyEvent.KEYCODE_DPAD_LEFT || keycode == KeyEvent.KEYCODE_DPAD_RIGHT) {
                         mIsDragging = true;
                     }
                 } else if (event.getAction() == KeyEvent.ACTION_UP) {
@@ -2414,8 +2412,8 @@ public class LivePlayActivity extends BaseActivity {
                         if (!mIsDragging) {
                             sBar.setProgress((int) currentPosition);
                             sBar.setSecondaryProgress(mVideoView.getBufferedPercentage());
+                            tv_currentpos.setText(stringForTime((int) currentPosition));
                         }    
-                        tv_currentpos.setText(stringForTime((int) currentPosition));
                         String shiyiUrl = currentLiveChannelItem.getUrl();
                         if (hasCatchup || shiyiUrl.contains("/PLTV/") || shiyiUrl.contains("/TVOD/")) {
                             tv_duration.setText(stringForTime((int) shiyiduration));
