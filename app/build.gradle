@@ -96,7 +96,7 @@ dependencies {
     implementation 'org.nanohttpd:nanohttpd:2.3.1'  //2016年
     implementation 'org.jsoup:jsoup:1.22.1'
     
-    def media3_version = "1.9.0"
+    def media3_version = "1.9.1"
     implementation "androidx.media3:media3-common:$media3_version"
     implementation "androidx.media3:media3-datasource-rtmp:$media3_version"
     implementation "androidx.media3:media3-datasource-okhttp:$media3_version"
@@ -106,7 +106,7 @@ dependencies {
     implementation "androidx.media3:media3-exoplayer-rtsp:$media3_version"
     implementation "androidx.media3:media3-exoplayer-smoothstreaming:$media3_version"
 
-    implementation "io.github.anilbeesetti:nextlib-media3ext:1.9.0-0.10.0"  //To add media3 software decoders and extensions
+    implementation "io.github.anilbeesetti:nextlib-media3ext:1.9.1-0.11.0"  //To add media3 software decoders and extensions
     
     configurations {
         configureEach {
