@@ -105,8 +105,6 @@ dependencies {
     implementation "androidx.media3:media3-exoplayer-hls:$media3_version"
     implementation "androidx.media3:media3-exoplayer-rtsp:$media3_version"
     implementation "androidx.media3:media3-exoplayer-smoothstreaming:$media3_version"
-
-    implementation "io.github.anilbeesetti:nextlib-media3ext:1.9.1-0.11.0"  //To add media3 software decoders and extensions
     
     configurations {
         configureEach {
