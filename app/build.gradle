@@ -93,10 +93,10 @@ dependencies {
     implementation 'net.sourceforge.streamsupport:android-retrofuture:1.7.4'  //2021年
     implementation 'org.conscrypt:conscrypt-android:2.5.3'
     implementation 'org.greenrobot:eventbus:3.3.1'  //2021年
-    implementation 'org.nanohttpd:nanohttpd:2.3.1'  //2016年
     implementation 'org.jsoup:jsoup:1.22.1'
+    implementation 'org.nanohttpd:nanohttpd:2.3.1'  //2016年
     
-    def media3_version = "1.9.1"
+    def media3_version = "1.9.2"
     implementation "androidx.media3:media3-common:$media3_version"
     implementation "androidx.media3:media3-datasource-rtmp:$media3_version"
     implementation "androidx.media3:media3-datasource-okhttp:$media3_version"
