@@ -78,14 +78,14 @@ public class ApiDialog extends BaseDialog {
             @Override
             public void onClick(View v) {
                 ArrayList<String> history = Hawk.get(HawkConfig.API_HISTORY, new ArrayList<String>());
-                if (!history.contains("http://ok321.top/tv"))
-                    history.add("http://ok321.top/tv");
-                if (!history.contains("http://tvbox.xn--4kq62z5rby2qupq9ub.top/"))
-                    history.add("http://tvbox.xn--4kq62z5rby2qupq9ub.top/");
-                if (!history.contains("https://www.饭太硬.com/tv/"))
-                    history.add("https://www.饭太硬.com/tv/");
+                if (!history.contains("http://ok213.top/tv"))
+                    history.add("http://ok213.top/tv");
                 if (!history.contains("http://tv.nxog.top/m/"))
                     history.add("http://tv.nxog.top/m/");
+                if (!history.contains("https://www.饭太硬.com/tv/"))
+                    history.add("https://www.饭太硬.com/tv/");
+                if (!history.contains("http://tvbox.xn--4kq62z5rby2qupq9ub.top/"))
+                    history.add("http://tvbox.xn--4kq62z5rby2qupq9ub.top/");
                 if (!history.contains("http://肥猫.com"))
                     history.add("http://肥猫.com");
                 if (!history.contains("http://mitvbox.xyz/小米/DEMO.json"))
