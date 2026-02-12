@@ -42,27 +42,15 @@ import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
-import com.github.tvbox.osc.base.App;
-import com.github.tvbox.osc.util.FileUtils;
-
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import tv.danmaku.ijk.media.player.annotations.AccessedByNative;
 import tv.danmaku.ijk.media.player.annotations.CalledByNative;
@@ -417,74 +405,12 @@ public final class IjkMediaPlayer extends AbstractMediaPlayer {
      * current working directory), and that the pathname should
      * reference a world-readable file.
      */
-    private boolean over = false;
 
     @Override
     public void setDataSource(String path)
             throws IOException, IllegalArgumentException, SecurityException, IllegalStateException {
-        if (path.contains(".xml")) {
-            this.over = false;
-            new Thread() {
-                public void run() {
-                    try {
-                        HttpURLConnection httpURLConnection = (HttpURLConnection) new URL(path).openConnection();
-                        httpURLConnection.setRequestMethod("GET");
-                        httpURLConnection.setDoInput(true);
-                        httpURLConnection.setUseCaches(false);
-                        httpURLConnection.setConnectTimeout(10000);
-                        httpURLConnection.setReadTimeout(10000);
-                        httpURLConnection.connect();
-                        if (httpURLConnection.getResponseCode() == 200) {
-                            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
-                            String str = "";
-                            while (true) {
-                                String readLine = bufferedReader.readLine();
-                                if (readLine == null) {
-                                    break;
-                                }
-                                str = str + readLine + "\n";
-                            }
-                            if (str.length() >= 20) {
-                                mDataSource = xml2ffconcat(str);
-                            }
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    over = true;
-                }
-            }.start();
-
-            while (!this.over) {
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                }
-            }
-        }
         mDataSource = path;
         _setDataSource(path, null, null);
-    }
-
-    public static String xml2ffconcat(String str) {
-        String str2 = FileUtils.getExternalCachePath() + "/" + System.currentTimeMillis() + ".ffconcat";
-        try {
-            File file = new File(str2);
-            if (!file.exists()) {
-                file.createNewFile();
-            }
-            FileOutputStream fileOutputStream = new FileOutputStream(file);
-            Matcher matcher = Pattern.compile("<file><!\\[CDATA\\[(.*?)]]></file><seconds>(.*?)</seconds>").matcher(str);
-            String str3 = "ffconcat version 1.0\n";
-            fileOutputStream.write("ffconcat version 1.0\n".getBytes());
-            while (matcher.find()) {
-                str3 = str3 + "file '" + matcher.group(1) + "'\nduration " + matcher.group(2) + "\n";
-                fileOutputStream.write(("file '" + matcher.group(1) + "'\nduration " + matcher.group(2) + "\n").getBytes());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return str2;
     }
 
     /**
