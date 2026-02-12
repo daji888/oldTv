@@ -24,7 +24,6 @@ import androidx.media3.exoplayer.dash.DashMediaSource;
 import androidx.media3.exoplayer.hls.DefaultHlsExtractorFactory;
 import androidx.media3.exoplayer.hls.HlsMediaSource;
 import androidx.media3.exoplayer.rtsp.RtspMediaSource;
-import androidx.media3.exoplayer.smoothstreaming.SsMediaSource;
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory;
 import androidx.media3.exoplayer.source.MediaSource;
 import androidx.media3.exoplayer.source.ProgressiveMediaSource;
@@ -136,8 +135,6 @@ public final class ExoMediaSourceHelper {
                         .setAllowChunklessPreparation(false)
                         .setExtractorFactory(new DefaultHlsExtractorFactory())
                         .createMediaSource(MediaItem.fromUri(contentUri));
-            case C.CONTENT_TYPE_SS:
-                return new SsMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));    
             default:
             case C.CONTENT_TYPE_OTHER:
                 return new ProgressiveMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));
@@ -151,8 +148,6 @@ public final class ExoMediaSourceHelper {
             return C.CONTENT_TYPE_DASH;
         } else if (fileName.contains("m3u8")) {
             return C.CONTENT_TYPE_HLS;
-        } else if (fileName.contains("ism") || fileName.contains("isml")) {
-            return C.CONTENT_TYPE_SS;    
         } else {
             return C.CONTENT_TYPE_OTHER;
         }
