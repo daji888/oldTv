@@ -1,25 +1,5 @@
 #############################################
 #
-# 对于一些基本指令的添加
-#
-#############################################
--optimizationpasses 5
--dontusemixedcaseclassnames
--dontskipnonpubliclibraryclasses
--dontskipnonpubliclibraryclassmembers
--dontpreverify
--verbose
--printmapping proguardMapping.txt
--optimizations !code/simplification/cast,!field/*,!class/merging/*
--keepattributes *Annotation*,InnerClasses
--keepattributes EnclosingMethod, InnerClasses
--keepattributes *Annotation*
--keepattributes Signature
--keepattributes LineNumberTable
--renamesourcefileattribute SourceFile
-
-#############################################
-#
 # Android开发中一些需要保留的公共部分
 #
 #############################################
