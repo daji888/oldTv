@@ -39,7 +39,6 @@ public class Connect {
             JSObject jsObject = ctx.createJSObject();
             JSObject jsHeader = ctx.createJSObject();
             setHeader(ctx, res, jsHeader);
-            jsObject.set("code", res.code());
             jsObject.set("headers", jsHeader);
             if (req.getBuffer() == 0) jsObject.set("content", new String(res.body().bytes(), req.getCharset()));
             if (req.getBuffer() == 1) {
@@ -48,7 +47,6 @@ public class Connect {
                 jsObject.set("content", array);
             }
             if (req.getBuffer() == 2) jsObject.set("content", Base64.encodeToString(res.body().bytes(), Base64.DEFAULT | Base64.NO_WRAP));
-            if (req.getBuffer() == 3) jsObject.set("content", res.body().bytes());
             return jsObject;
         } catch (Exception e) {
             return error(ctx);
@@ -60,7 +58,6 @@ public class Connect {
         JSObject jsHeader = ctx.createJSObject();
         jsObject.set("headers", jsHeader);
         jsObject.set("content", "");
-        jsObject.set("code", "");
         return jsObject;
     }
 
@@ -79,7 +76,7 @@ public class Connect {
         if (req.getData() != null && req.getPostType().equals("form")) return getFormBody(req);
         if (req.getData() != null && req.getPostType().equals("form-data")) return getFormDataBody(req);
         if (req.getBody() != null && contentType != null) return RequestBody.create(req.getBody(), MediaType.get(contentType));
-        return RequestBody.create(new byte[0]);
+        return RequestBody.create("", null);
     }
 
     private static RequestBody getJsonBody(Req req) {
