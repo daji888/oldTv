@@ -61,14 +61,10 @@ public class Json {
         }
     }
 
-    public static Map<String, String> toMap(String json) {
-        return TextUtils.isEmpty(json) ? null : toMap(JsonParser.parseString(json));
-    }
-
     public static Map<String, String> toMap(JsonElement element) {
         Map<String, String> map = new HashMap<>();
         JsonObject object = safeObject(element);
-        for (Map.Entry<String, JsonElement> entry : object.entrySet()) map.put(entry.getKey(), safeString(object, entry.getKey()));
+        for (String key : object.keySet()) map.put(key, safeString(object, key));
         return map;
     }
 }
