@@ -18,6 +18,7 @@
 
 # 保留support下的所有类及其内部类
 -keep class android.support.** {*;}
+
 # 保留继承的
 -keep public class * extends android.support.v4.**
 -keep public class * extends android.support.v7.**
@@ -95,6 +96,7 @@
     void *(**On*Event);
     void *(**On*Listener);
 }
+
 #xwalk
 -keep class org.xwalk.core.** { *; }
 -keep class org.crosswalk.engine.** { *; }
@@ -102,15 +104,19 @@
 -dontwarn android.view.**
 -dontwarn android.media.**
 -dontwarn org.chromium.**
+
 #okhttp
 -dontwarn okhttp3.**
 -keep class okhttp3.**{*;}
+
 #okio
 -dontwarn okio.**
 -keep class okio.**{*;}
+
 #loadsir
 -dontwarn com.kingja.loadsir.**
 -keep class com.kingja.loadsir.** {*;}
+
 #gson
 # Gson specific classes
 -dontwarn sun.misc.**
@@ -127,6 +133,7 @@
 -keepclassmembers,allowobfuscation class * {
   @com.google.gson.annotations.SerializedName <fields>;
 }
+
 #xstream
 -keep class com.thoughtworks.xstream.converters.extended.SubjectConverter { *; }
 -keep class com.thoughtworks.xstream.converters.extended.ThrowableConverter { *; }
@@ -137,15 +144,18 @@
 -keep class com.thoughtworks.xstream.** { *; }
 -dontwarn com.bea.xml.stream.**
 -dontwarn javax.xml.stream.**
+
 #eventbus
 -keepclassmembers class * {
     @org.greenrobot.eventbus.Subscribe <methods>;
 }
 -keep enum org.greenrobot.eventbus.ThreadMode { *; }
+
 # And if you use AsyncExecutor:
 -keepclassmembers class * extends org.greenrobot.eventbus.util.ThrowableFailureEvent {
     <init>(java.lang.Throwable);
 }
+
 # bugly
 -dontwarn com.tencent.bugly.**
 -keep public class com.tencent.bugly.**{*;}
@@ -169,8 +179,10 @@
 #-keep class com.github.tvbox.osc.bean.** { *; }
 -keep class com.github.tvbox.osc.cache.** { *; }
 -keep class com.github.tvbox.osc.viewmodel.** { *; }
+
 #CardView
 -keep class com.github.tvbox.osc.ui.tv.widget.card.**{*;}
+
 #ViewObj
 -keep class com.github.tvbox.osc.ui.tv.widget.ViewObj{
     <methods>;
@@ -180,10 +192,19 @@
 
 # 迅雷下载模块
 -keep class com.xunlei.downloadlib.** {*;}
+
 # quickjs引擎
+-keepclasseswithmembers class * {
+    native <methods>;
+}
 -keep class com.whl.quickjs.** {*;}
+
+# js
+-keep class com.github.tvbox.osc.util.js.** {*;}
+
 # 支持影视的ali相关的jar
 -keep class com.google.gson.**{*;}
+
 # Zxing
 -keep class com.google.zxing.**{*;}
 -keepclassmembers enum * {
