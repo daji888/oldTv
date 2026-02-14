@@ -195,8 +195,8 @@ public class FileUtils {
 
     public static void cleanPlayerCache() {
         String ijkCachePath = getExternalCachePath() + "/ijkcaches/";
-        String thunderCachePath = getExternalCachePath() + File.separator + "thunder";
-        String jpaliCachePath = getExternalCachePath() + "/jpali";
+        String thunderCachePath = getCachePath() + "/thunder/";
+        String jpaliCachePath = getExternalCachePath() + "/jpali/Downloads/";
         File ijkCacheDir = new File(ijkCachePath);
         File thunderCacheDir = new File(thunderCachePath);
         File jpaliCacheDir = new File(jpaliCachePath);
