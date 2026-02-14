@@ -58,11 +58,7 @@ public class Thunder {
         String substring2 = cd3.substring(0, cd3.length() - 1);
         String cd = substring + substring2;
         XLTaskHelper.init(context, cd, "21.01.07.800002");
-        if (context.getExternalCacheDir() != null) {
-            cacheRoot = context.getExternalCacheDir().getAbsolutePath() + File.separator + "thunder";
-        } else {    
-            cacheRoot = context.getCacheDir().getAbsolutePath() + File.separator + "thunder";
-        }    
+        cacheRoot = context.getCacheDir().getAbsolutePath() + File.separator + "thunder";
     }
 
     public static void stop(Boolean bool) {
