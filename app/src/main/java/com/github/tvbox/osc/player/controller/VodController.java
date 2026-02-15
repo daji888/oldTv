@@ -776,7 +776,12 @@ public class VodController extends BaseController {
                 hideBottom();
             }
         });
-        mNextBtn.setNextFocusLeftId(R.id.play_time_start);
+        mNextBtn.setNextFocusLeftId(R.id.audio_track_select);
+        if (mLandscapePortraitBtn.getVisibility() == View.GONE) {
+            mPlayerTimeResetBtn.setNextFocusRightId(R.id.play_next);
+        } else {
+            mLandscapePortraitBtn.setNextFocusRightId(R.id.play_next);
+        }
     }
 
     private void hideLiveAboutBtn() {
@@ -786,19 +791,17 @@ public class VodController extends BaseController {
             mPlayerTimeStartBtn.setVisibility(GONE);
             mPlayerTimeSkipBtn.setVisibility(GONE);
             mPlayerTimeResetBtn.setVisibility(GONE);
-            mNextBtn.setNextFocusLeftId(R.id.zimu_select);
         } else {
             mPlayerSpeedBtn.setVisibility(View.VISIBLE);
             mPlayerTimeStartEndText.setVisibility(View.VISIBLE);
             mPlayerTimeStartBtn.setVisibility(View.VISIBLE);
             mPlayerTimeSkipBtn.setVisibility(View.VISIBLE);
             mPlayerTimeResetBtn.setVisibility(View.VISIBLE);
-            mNextBtn.setNextFocusLeftId(R.id.play_time_start);
         }
     }
 
     public void initLandscapePortraitBtnInfo() {
-        if(mControlWrapper!=null && mActivity!=null){
+        if (mControlWrapper != null && mActivity != null) {
             int width = mControlWrapper.getVideoSize()[0];
             int height = mControlWrapper.getVideoSize()[1];
             double screenSqrt = ScreenUtils.getSqrt(mActivity);
@@ -1309,5 +1312,6 @@ public class VodController extends BaseController {
     }
     
 }
+
 
 
