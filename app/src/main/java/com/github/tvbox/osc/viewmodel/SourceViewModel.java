@@ -943,7 +943,7 @@ public class SourceViewModel extends ViewModel {
 
     private String getFixUrl(String content) {
         if (content.startsWith("http://127.0.0.1")) {
-            String path = content.replaceAll("^http. + /file/", FileUtils.getRootPath() + "/");
+            String path = content.replaceAll("^http.+/file/", FileUtils.getRootPath() + "/");
             path = path.replaceAll("localhost/", "/");
             content = FileUtils.readFileToString(path,"UTF-8");
         }
