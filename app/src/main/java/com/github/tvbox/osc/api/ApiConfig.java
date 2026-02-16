@@ -57,7 +57,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import okhttp3.OkHttp;
-import okhttp3.OkHttpClient;
 
 /**
  * @author pj567
@@ -146,30 +145,6 @@ public class ApiConfig {
         return "".getBytes();
     }
 
-    private String TempKey = null;
-    private String configUrl(String apiUrl) {
-        String configUrl = "", pk = ";pk;";
-        apiUrl = apiUrl.replace("file://", "clan://localhost/");
-        if (apiUrl.contains(pk)) {
-            String[] a = apiUrl.split(pk);
-            TempKey = a[1];
-            if (apiUrl.startsWith("clan")) {
-                configUrl = clanToAddress(a[0]);
-            } else if (apiUrl.startsWith("http")) {
-                configUrl = a[0];
-            } else {
-                configUrl = "http://" + a[0];
-            }
-        } else if (apiUrl.startsWith("clan")) {
-            configUrl = clanToAddress(apiUrl);
-        } else if (!apiUrl.startsWith("http")) {
-            configUrl = "http://" + apiUrl;
-        } else {
-            configUrl = apiUrl;
-        }
-        return configUrl;
-    }
-
     public void loadConfig(boolean useCache, LoadConfigCallback callback, Activity activity) {
         String apiUrl = Hawk.get(HawkConfig.API_URL, "");
         if (apiUrl.isEmpty()) {
@@ -186,22 +161,28 @@ public class ApiConfig {
                 th.printStackTrace();
             }
         }
-        
+        String TempKey = null, configUrl = "", pk = ";pk;";
+        if (apiUrl.contains(pk)) {
+            String[] a = apiUrl.split(pk);
+            TempKey = a[1];
+            if (apiUrl.startsWith("clan")) {
+                configUrl = clanToAddress(a[0]);
+            } else if (apiUrl.startsWith("http")) {
+                configUrl = a[0];
+            } else {
+                configUrl = "http://" + a[0];
+            }
+        } else if (apiUrl.startsWith("clan")) {
+            configUrl = clanToAddress(apiUrl);
+        } else if (!apiUrl.startsWith("http")) {
+            configUrl = "http://" + configUrl;
+        } else {
+            configUrl = apiUrl;
+        }
         String configKey = TempKey;
-        OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        builder.readTimeout(10, TimeUnit.SECONDS); //设置当前请求的读取超时时间
-        builder.writeTimeout(10, TimeUnit.SECONDS); //设置当前请求的写入超时时间
-        builder.connectTimeout(5, TimeUnit.SECONDS); //设置当前请求的连接超时时间
-     
-        String configUrl = configUrl(apiUrl);
-        // 使用内部存储，将当前配置地址写入到应用的私有目录中
-        File configUrlFile = new File(App.getInstance().getFilesDir().getAbsolutePath() + "/config_url");
-        FileUtils.saveCache(configUrlFile,configUrl);
-     
         OkGo.<String>get(configUrl)
                 .headers("User-Agent", userAgent)
                 .headers("Accept", requestAccept)
-                .client(builder.build())
                 .execute(new AbsCallback<String>() {
                     @Override
                     public void onSuccess(Response<String> response) {
@@ -255,7 +236,7 @@ public class ApiConfig {
         String[] urls = spider.split(";md5;");
         String jarUrl = urls[0];
         String md5 = urls.length > 1 ? urls[1].trim() : "";
-        File cache = new File(App.getInstance().getFilesDir().getAbsolutePath() + "/csp/"+MD5.string2MD5(jarUrl)+".jar");
+        File cache = new File(App.getInstance().getFilesDir().getAbsolutePath() + "/csp/" + MD5.string2MD5(jarUrl) + ".jar");
 
         if (!md5.isEmpty() || useCache) {
             if (cache.exists() && (useCache || MD5.getFileMd5(cache).equalsIgnoreCase(md5))) {
@@ -388,11 +369,7 @@ public class ApiConfig {
             sb.setQuickSearch(DefaultConfig.safeJsonInt(obj, "quickSearch", 1));
             sb.setFilterable(DefaultConfig.safeJsonInt(obj, "filterable", 1));
             sb.setPlayerUrl(DefaultConfig.safeJsonString(obj, "playUrl", ""));
-            if (obj.has("ext") && (obj.get("ext").isJsonObject() || obj.get("ext").isJsonArray())) {
-                sb.setExt(obj.get("ext").toString());
-            } else {
-                sb.setExt(DefaultConfig.safeJsonString(obj, "ext", ""));
-            }
+            sb.setExt(DefaultConfig.safeJsonString(obj, "ext", ""));
             sb.setJar(DefaultConfig.safeJsonString(obj, "jar", ""));
             sb.setPlayerType(DefaultConfig.safeJsonInt(obj, "playerType", -1));
             sb.setCategories(DefaultConfig.safeJsonStringList(obj, "categories"));
