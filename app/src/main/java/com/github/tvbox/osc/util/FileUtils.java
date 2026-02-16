@@ -195,13 +195,20 @@ public class FileUtils {
 
     public static void cleanPlayerCache() {
         String ijkCachePath = getExternalCachePath() + "/ijkcaches/";
+        String exoCachePath = getExternalCachePath() + "/exo-video-cache/";
         String thunderCachePath = getCachePath() + "/thunder/";
-        String jpaliCachePath = getExternalCachePath() + "/jpali/Downloads/";
+        String jpaliCachePath = getExternalCachePath() + "/jpali/";
         File ijkCacheDir = new File(ijkCachePath);
+        File exoCacheDir = new File(exoCachePath);
         File thunderCacheDir = new File(thunderCachePath);
         File jpaliCacheDir = new File(jpaliCachePath);
         try {
             if (ijkCacheDir.exists()) cleanDirectory(ijkCacheDir);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            if (exoCacheDir.exists()) cleanDirectory(exoCacheDir);
         } catch (Exception e) {
             e.printStackTrace();
         }
