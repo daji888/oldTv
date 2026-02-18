@@ -407,8 +407,6 @@ public class VodController extends BaseController {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                            mPlayerScaleBtn.requestFocus();
-                            mPlayerScaleBtn.requestFocusFromTouch();
                         }
 
                         @Override
@@ -497,8 +495,6 @@ public class VodController extends BaseController {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                            mPlayerSpeedBtn.requestFocus();
-                            mPlayerSpeedBtn.requestFocusFromTouch();
                         }
 
                         @Override
@@ -552,8 +548,6 @@ public class VodController extends BaseController {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                mPlayerBtn.requestFocus();
-                mPlayerBtn.requestFocusFromTouch();
             }
         });
 
@@ -593,8 +587,6 @@ public class VodController extends BaseController {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                            mPlayerBtn.requestFocus();
-                            mPlayerBtn.requestFocusFromTouch();
                         }
 
                         @Override
@@ -646,8 +638,6 @@ public class VodController extends BaseController {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                mPlayerDecodeBtn.requestFocus();
-                mPlayerDecodeBtn.requestFocusFromTouch();
             }
         });
 //        增加播放页面片头片尾时间重置
@@ -1312,6 +1302,3 @@ public class VodController extends BaseController {
     }
     
 }
-
-
-
