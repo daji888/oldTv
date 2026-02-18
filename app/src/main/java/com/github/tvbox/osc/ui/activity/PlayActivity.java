@@ -61,6 +61,7 @@ import com.github.tvbox.osc.player.TrackInfoBean;
 import com.github.tvbox.osc.player.controller.VodController;
 import com.github.tvbox.osc.server.ControlManager;
 import com.github.tvbox.osc.server.RemoteServer;
+import com.github.tvbox.osc.subtitle.model.Subtitle;
 import com.github.tvbox.osc.ui.adapter.SelectDialogAdapter;
 import com.github.tvbox.osc.ui.dialog.SearchSubtitleDialog;
 import com.github.tvbox.osc.ui.dialog.SelectDialog;
@@ -296,7 +297,7 @@ public class PlayActivity extends BaseActivity {
 
     //设置字幕
     void setSubtitle(String path) {
-        if (path != null && path .length() > 0) {
+        if (path != null && path.length() > 0) {
             // 设置字幕
             mController.mSubtitleView.setVisibility(View.GONE);
             mController.mSubtitleView.setSubtitlePath(path);
@@ -859,7 +860,7 @@ public class PlayActivity extends BaseActivity {
                 public void onTimedText(IMediaPlayer mp, IjkTimedText text) {
                     if (text == null) return;
                     if (mController.mSubtitleView.isInternal) {
-                        com.github.tvbox.osc.subtitle.model.Subtitle subtitle = new com.github.tvbox.osc.subtitle.model.Subtitle();
+                        Subtitle subtitle = new Subtitle();
                         subtitle.content = text.getText();
                         mController.mSubtitleView.onSubtitleChanged(subtitle);
                     }
@@ -877,12 +878,12 @@ public class PlayActivity extends BaseActivity {
                     if (cues.size() > 0) {
                         CharSequence ss = cues.get(0).text;
                         if (ss != null && mController.mSubtitleView.isInternal) {
-                            com.github.tvbox.osc.subtitle.model.Subtitle subtitle = new com.github.tvbox.osc.subtitle.model.Subtitle();
+                            Subtitle subtitle = new Subtitle();
                             subtitle.content = ss.toString();
                             mController.mSubtitleView.onSubtitleChanged(subtitle);
                         }
                      } else {
-                        com.github.tvbox.osc.subtitle.model.Subtitle subtitle = new com.github.tvbox.osc.subtitle.model.Subtitle();
+                        Subtitle subtitle = new Subtitle();
                         subtitle.content = "";
                         mController.mSubtitleView.onSubtitleChanged(subtitle); 
                     }
@@ -891,11 +892,11 @@ public class PlayActivity extends BaseActivity {
         }
         mController.mSubtitleView.bindToMediaPlayer(mVideoView.getMediaPlayer());
         mController.mSubtitleView.setPlaySubtitleCacheKey(subtitleCacheKey);
-        String subtitlePathCache = (String)CacheManager.getCache(MD5.string2MD5(subtitleCacheKey));
+        String subtitlePathCache = (String) CacheManager.getCache(MD5.string2MD5(subtitleCacheKey));
         if (subtitlePathCache != null && !subtitlePathCache.isEmpty()) {
             mController.mSubtitleView.setSubtitlePath(subtitlePathCache);
         } else {
-            if (playSubtitle != null && playSubtitle .length() > 0) {
+            if (playSubtitle != null && playSubtitle.length() > 0) {
                 mController.mSubtitleView.setSubtitlePath(playSubtitle);
             } else {
                 if (mController.mSubtitleView.hasInternal) {
@@ -905,7 +906,7 @@ public class PlayActivity extends BaseActivity {
                         List<TrackInfoBean> subtitleTrackList = trackInfo.getSubtitle();
                         int selectedIndex = trackInfo.getSubtitleSelected(true);
                         boolean hasCh = false;
-                        for(TrackInfoBean subtitleTrackInfoBean : subtitleTrackList) {
+                        for (TrackInfoBean subtitleTrackInfoBean : subtitleTrackList) {
                             String lowerLang = subtitleTrackInfoBean.language.toLowerCase();
                             if (lowerLang.startsWith("zh") || lowerLang.startsWith("ch")) {
                                 hasCh = true;
