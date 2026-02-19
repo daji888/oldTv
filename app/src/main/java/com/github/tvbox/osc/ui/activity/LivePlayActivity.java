@@ -179,7 +179,7 @@ public class LivePlayActivity extends BaseActivity {
     private TextView tv_shownum ;
     private TextView txtNoEpg ;
 
-    public String epgStringAddress = "";
+    private String epgStringAddress = "";
 
     private TvRecyclerView mEpgDateGridView;
     private TvRecyclerView mRightEpgList;
@@ -187,16 +187,15 @@ public class LivePlayActivity extends BaseActivity {
     private LiveEpgAdapter epgListAdapter;
 
     //laodao 7day replay
-    public static SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
-    public static SimpleDateFormat formatDate1 = new SimpleDateFormat("MM-dd");
-    public static String day = formatDate.format(new Date());
-    public static Date nowday = new Date();
+    private static SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
+    private static String day = formatDate.format(new Date());
+    private static Date nowday = new Date();
 
     private boolean isSHIYI = false;
     public static boolean isBack = false;
     private static String shiyi_time;//时移时间
     private static int shiyi_time_c;//时移时间差值
-    public static String playUrl;
+    private static String playUrl;
     //kenson
     private ImageView imgLiveIcon;
     private FrameLayout liveIconNullBg;
@@ -293,7 +292,7 @@ public class LivePlayActivity extends BaseActivity {
         Hawk.put(HawkConfig.PLAYER_IS_LIVE, true);
     }
 
-    public LiveController getLiveController() {
+    private LiveController getLiveController() {
         return controller;
     }
     
@@ -345,7 +344,7 @@ public class LivePlayActivity extends BaseActivity {
         }
     }
 
-    public void getEpg(Date date) {
+    private void getEpg(Date date) {
         String channelName = channel_Name.getChannelName();
         SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd");
         timeFormat.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
@@ -866,7 +865,7 @@ public class LivePlayActivity extends BaseActivity {
         playChannel(groupChannelIndex[0], groupChannelIndex[1], false);
     }
 
-    public void playCurrent() {
+    private void playCurrent() {
         if (!isCurrentLiveChannelValid()) {
             return;
         }
@@ -879,13 +878,13 @@ public class LivePlayActivity extends BaseActivity {
         playChannel(groupChannelIndex[0], groupChannelIndex[1], false);
     }
 
-    public void playPreSource() {
+    private void playPreSource() {
         if (!isCurrentLiveChannelValid()) return;
         currentLiveChannelItem.preSource();
         playChannel(currentChannelGroupIndex, currentLiveChannelIndex, true);
     }
 
-    public void playNextSource() {
+    private void playNextSource() {
         if (!isCurrentLiveChannelValid()) return;
         currentLiveChannelItem.nextSource();
         playChannel(currentChannelGroupIndex, currentLiveChannelIndex, true);
@@ -1936,7 +1935,7 @@ public class LivePlayActivity extends BaseActivity {
         }
     }
 
-    public void loadProxyLives(String url) {
+    private void loadProxyLives(String url) {
         try {
             Uri parsedUrl = Uri.parse(url);
             url = new String(Base64.decode(parsedUrl.getQueryParameter("ext"), Base64.DEFAULT | Base64.URL_SAFE | Base64.NO_WRAP), "UTF-8");
@@ -2318,7 +2317,7 @@ public class LivePlayActivity extends BaseActivity {
     }
 
     //计算两个时间相差的秒数
-    public static long getTime(String startTime, String endTime)  {
+    private static long getTime(String startTime, String endTime)  {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         long eTime = 0;
         try {
@@ -2344,7 +2343,7 @@ public class LivePlayActivity extends BaseActivity {
         return true;
     }
     
-    public void showProgressBars(boolean show) {
+    private void showProgressBars(boolean show) {
         sBar.requestFocus();
         if (show) {
             backcontroller.setVisibility(View.VISIBLE);
