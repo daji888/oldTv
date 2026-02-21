@@ -844,14 +844,6 @@ public class ApiConfig {
         return new ArrayList<>(livesourceBeanList.values());
     }
 
-    public List<SourceBean> getSwitchSourceBeanList() {
-         List<SourceBean> filteredList = new ArrayList<>();
-         for (SourceBean bean : sourceBeanList.values()) {
-             filteredList.add(bean);
-         }
-         return filteredList;
-    }
-
     public List<ParseBean> getParseBeanList() {
         return parseBeanList;
     }
