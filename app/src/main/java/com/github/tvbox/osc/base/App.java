@@ -85,8 +85,7 @@ public class App extends Application {
         putDefault(HawkConfig.SEARCH_VIEW, 0);               //搜索展示: 0=文字列表, 1=缩略图
         putDefault(HawkConfig.PARSE_WEBVIEW, true);          //嗅探Webview: true=系统自带, false=XWalkView
         putDefault(HawkConfig.DOH_URL, 0);                   //DNS: 0=运营商, 1=腾讯, 2=阿里, 3=360, 4=Google, 5=Cloudflare ,6=AdGuard, 7=DNSWatch, 8=Quad9
-        putDefault(HawkConfig.API_URL, "http://ok213.top/tv");
-        putDefault(HawkConfig.LIVE_URL, "https://ghproxy.net/raw.githubusercontent.com/daji888/ys/master/tv.txt");
+        putDefault(HawkConfig.API_URL, "http://tv.nxog.top/m/");
         putDefault(HawkConfig.EPG_URL, "https://api.erw.cc/?ch={name}&date={date}");
     }
 
