@@ -36,16 +36,12 @@ import com.lzy.okgo.callback.AbsCallback;
 import com.lzy.okgo.model.Response;
 import com.orhanobut.hawk.Hawk;
 
-import org.apache.commons.lang3.StringUtils;
-
-import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
- import java.io.IOException;
- import java.io.InputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,6 +53,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import okhttp3.OkHttp;
+import org.apache.commons.lang3.StringUtils;
+import org.json.JSONObject;
 
 /**
  * @author pj567
@@ -72,7 +70,6 @@ public class ApiConfig {
     private List<LiveChannelGroup> liveChannelGroupList;
     private List<ParseBean> parseBeanList;
     private List<String> vipParseFlags;
-    private Map<String,String> myHosts;
     private List<IJKCode> ijkCodes;
     private String spider = null;
     public String wallpaper = "";
@@ -107,7 +104,7 @@ public class ApiConfig {
         return instance;
     }
 
-    public static String FindResult(String json, String configKey) {
+    private static String FindResult(String json, String configKey) {
         String content = json;
         try {
             if (AES.isJson(content)) return content;
@@ -522,7 +519,7 @@ public class ApiConfig {
             }
         }
 
-        String defaultIJKADS = "{\"ijk\":[{\"options\":[{\"name\":\"mediacodec\",\"category\":4,\"value\":\"1\"},{\"name\":\"mediacodec-all-videos\",\"category\":4,\"value\":\"1\"},{\"name\":\"mediacodec-mpeg2\",\"category\":4,\"value\":\"1\"},{\"name\":\"mediacodec-mpeg4\",\"category\":4,\"value\":\"1\"},{\"name\":\"mediacodec-auto-rotate\",\"category\":4,\"value\":\"1\"},{\"name\":\"mediacodec-handle-resolution-change\",\"category\":4,\"value\":\"1\"},{\"name\":\"mediacodec-avc\",\"category\":4,\"value\":\"1\"},{\"name\":\"mediacodec-hevc\",\"category\":4,\"value\":\"1\"}],\"group\":\"硬解\"},{\"options\":[{\"name\":\"mediacodec\",\"category\":4,\"value\":\"0\"},{\"name\":\"mediacodec-all-videos\",\"category\":4,\"value\":\"0\"},{\"name\":\"mediacodec-mpeg2\",\"category\":4,\"value\":\"0\"},{\"name\":\"mediacodec-mpeg4\",\"category\":4,\"value\":\"0\"},{\"name\":\"mediacodec-auto-rotate\",\"category\":4,\"value\":\"0\"},{\"name\":\"mediacodec-handle-resolution-change\",\"category\":4,\"value\":\"0\"},{\"name\":\"mediacodec-avc\",\"category\":4,\"value\":\"0\"},{\"name\":\"mediacodec-hevc\",\"category\":4,\"value\":\"0\"}],\"group\":\"软解\"}],\"ads\":[\"mimg.0c1q0l.cn\",\"www.googletagmanager.com\",\"www.google-analytics.com\",\"mc.usihnbcq.cn\",\"mg.g1mm3d.cn\",\"mscs.svaeuzh.cn\",\"cnzz.hhttm.top\",\"tp.vinuxhome.com\",\"cnzz.mmstat.com\",\"www.baihuillq.com\",\"s23.cnzz.com\",\"z3.cnzz.com\",\"c.cnzz.com\",\"stj.v1vo.top\",\"z12.cnzz.com\",\"img.mosflower.cn\",\"tips.gamevvip.com\",\"ehwe.yhdtns.com\",\"xdn.cqqc3.com\",\"www.jixunkyy.cn\",\"sp.chemacid.cn\",\"hm.baidu.com\",\"s9.cnzz.com\",\"z6.cnzz.com\",\"um.cavuc.com\",\"mav.mavuz.com\",\"wofwk.aoidf3.com\",\"z5.cnzz.com\",\"xc.hubeijieshikj.cn\",\"tj.tianwenhu.com\",\"xg.gars57.cn\",\"k.jinxiuzhilv.com\",\"cdn.bootcss.com\",\"ppl.xunzhuo123.com\",\"xomk.jiangjunmh.top\",\"img.xunzhuo123.com\",\"z1.cnzz.com\",\"s13.cnzz.com\",\"xg.huataisangao.cn\",\"z7.cnzz.com\",\"xg.huataisangao.cn\",\"z2.cnzz.com\",\"s96.cnzz.com\",\"q11.cnzz.com\",\"thy.dacedsfa.cn\",\"xg.whsbpw.cn\",\"s19.cnzz.com\",\"z8.cnzz.com\",\"s4.cnzz.com\",\"f5w.as12df.top\",\"ae01.alicdn.com\",\"www.92424.cn\",\"k.wudejia.com\",\"vivovip.mmszxc.top\",\"qiu.xixiqiu.com\",\"cdnjs.hnfenxun.com\",\"cms.qdwght.com\"]}";
+        String defaultIJKADS = "{\"ijk\":[{\"options\":[{\"name\":\"mediacodec\",\"category\":4,\"value\":\"1\"},{\"name\":\"mediacodec-all-videos\",\"category\":4,\"value\":\"1\"},{\"name\":\"mediacodec-mpeg2\",\"category\":4,\"value\":\"1\"},{\"name\":\"mediacodec-mpeg4\",\"category\":4,\"value\":\"1\"},{\"name\":\"mediacodec-auto-rotate\",\"category\":4,\"value\":\"1\"},{\"name\":\"mediacodec-handle-resolution-change\",\"category\":4,\"value\":\"1\"},{\"name\":\"mediacodec-avc\",\"category\":4,\"value\":\"1\"},{\"name\":\"mediacodec-hevc\",\"category\":4,\"value\":\"1\"}],\"group\":\"硬解\"},{\"options\":[{\"name\":\"mediacodec\",\"category\":4,\"value\":\"0\"},{\"name\":\"mediacodec-all-videos\",\"category\":4,\"value\":\"0\"},{\"name\":\"mediacodec-mpeg2\",\"category\":4,\"value\":\"0\"},{\"name\":\"mediacodec-mpeg4\",\"category\":4,\"value\":\"0\"},{\"name\":\"mediacodec-auto-rotate\",\"category\":4,\"value\":\"0\"},{\"name\":\"mediacodec-handle-resolution-change\",\"category\":4,\"value\":\"0\"},{\"name\":\"mediacodec-avc\",\"category\":4,\"value\":\"0\"},{\"name\":\"mediacodec-hevc\",\"category\":4,\"value\":\"0\"}],\"group\":\"软解\"}],\"ads\":[\"mozai.4gtv.tv\"]}";
         JsonObject defaultJson = new Gson().fromJson(defaultIJKADS, JsonObject.class);
         // 广告地址
         if (AdBlocker.isEmpty()) {
@@ -544,7 +541,7 @@ public class ApiConfig {
             ijkCodes = new ArrayList<>();
             boolean foundOldSelect = false;
             String ijkCodec = Hawk.get(HawkConfig.IJK_CODEC, "");
-         //   JsonArray ijkJsonArray = infoJson.has("ijk")?infoJson.get("ijk").getAsJsonArray():defaultJson.get("ijk").getAsJsonArray();
+         //   JsonArray ijkJsonArray = infoJson.has("ijk") ? infoJson.get("ijk").getAsJsonArray() : defaultJson.get("ijk").getAsJsonArray();
             JsonArray ijkJsonArray = defaultJson.get("ijk").getAsJsonArray();
             for (JsonElement opt : ijkJsonArray) {
                 JsonObject obj = (JsonObject) opt;
@@ -588,7 +585,7 @@ public class ApiConfig {
         }
     }
 
-    public static void putEpgHistory(String url) {
+    private static void putEpgHistory(String url) {
         if (!url.isEmpty()) {
             ArrayList<String> history = Hawk.get(HawkConfig.EPG_HISTORY, new ArrayList<String>());
             if (!history.contains(url))
@@ -807,12 +804,6 @@ public class ApiConfig {
         void error(String msg);
     }
 
-    public interface FastParseCallback {
-        void success(boolean parse, String url, Map<String, String> header);
-
-        void fail(int code, String msg);
-    }
-
     public SourceBean getSource(String key) {
         if (!sourceBeanList.containsKey(key))
             return null;
@@ -840,7 +831,7 @@ public class ApiConfig {
         return new ArrayList<>(sourceBeanList.values());
     }
 
-    public List<LiveSourceBean> getLiveSourceBeanList() {
+    private List<LiveSourceBean> getLiveSourceBeanList() {
         return new ArrayList<>(livesourceBeanList.values());
     }
 
@@ -904,10 +895,6 @@ public class ApiConfig {
         return content;
     }
 
-    public Map<String,String> getMyHost() {
-        return myHosts;
-    }
-
     String miTV(String url) {
         if (url.startsWith("p") || url.startsWith("mitv")) {
 
@@ -917,7 +904,7 @@ public class ApiConfig {
 
     public void clearJarLoader() {
          jarLoader.clear();
-     }
+    }
 
      private void addSuperParse() {
          ParseBean superPb = new ParseBean();
@@ -928,7 +915,7 @@ public class ApiConfig {
          parseBeanList.add(0, superPb);
      }
  
-     public void clearLoader() {
+     private void clearLoader() {
         jarLoader.clear();
         jsLoader.clear();
     }
