@@ -585,7 +585,7 @@ public class ApiConfig {
         }
     }
 
-    private static void putEpgHistory(String url) {
+    private void putEpgHistory(String url) {
         if (!url.isEmpty()) {
             ArrayList<String> history = Hawk.get(HawkConfig.EPG_HISTORY, new ArrayList<String>());
             if (!history.contains(url))
@@ -893,13 +893,6 @@ public class ApiConfig {
             content = content.replace("./", url.substring(0,url.lastIndexOf("/") + 1));
         }
         return content;
-    }
-
-    String miTV(String url) {
-        if (url.startsWith("p") || url.startsWith("mitv")) {
-
-        }
-        return url;
     }
 
     public void clearJarLoader() {
