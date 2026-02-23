@@ -575,6 +575,7 @@ public class ApiConfig {
         List<LiveSourceBean> lives = getLiveSourceBeanList();
         for (LiveSourceBean live : lives) {
             url = live.getLiveUrl();
+            url = url.replace("http://127.0.0.1:9978/proxy?do=live&url=http", "http");
             if (!url.isEmpty()) {
                 ArrayList<String> history = Hawk.get(HawkConfig.LIVE_HISTORY, new ArrayList<String>());
                 if (!history.contains(url))
