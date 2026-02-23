@@ -801,7 +801,6 @@ public class LivePlayActivity extends BaseActivity {
         int position = Hawk.get(HawkConfig.LIVE_GROUP_INDEX, 0);
         JsonArray live_groups = Hawk.get(HawkConfig.LIVE_GROUP_LIST, new JsonArray());
         JsonObject livesOBJ = live_groups.get(position).getAsJsonObject();
-        String type = livesOBJ.has("type") ? livesOBJ.get("type").getAsString() : "";
         if (livesOBJ.has("catchup")) {
             catchup = livesOBJ.getAsJsonObject("catchup");
             LOG.i("echo-catchup :" + catchup.toString());
@@ -810,9 +809,12 @@ public class LivePlayActivity extends BaseActivity {
         if (livesOBJ.has("logo")) {
             logoUrl = livesOBJ.get("logo").getAsString();
         }
-        if (type.equals("3")) {
-            String jarUrl = livesOBJ.has("jar") ? livesOBJ.get("jar").getAsString() : "";
-            ApiConfig.get().setLiveJar(jarUrl);
+        if (livesOBJ.has("type")) {
+            String type = livesOBJ.get("type").getAsString();
+            if (type.equals("3")) {
+                String jarUrl = livesOBJ.has("jar") ? livesOBJ.get("jar").getAsString() : "";
+                ApiConfig.get().setLiveJar(jarUrl);
+            }
         }
     } 
 
