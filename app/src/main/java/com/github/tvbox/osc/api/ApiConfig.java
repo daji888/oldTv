@@ -573,11 +573,12 @@ public class ApiConfig {
 
     private void putLiveHistory(String url) {
         List<LiveSourceBean> lives = getLiveSourceBeanList();
-        ArrayList<String> history = Hawk.get(HawkConfig.LIVE_HISTORY, new ArrayList<String>());
         for (LiveSourceBean live : lives) {
-            if (!live.getLiveUrl().isEmpty()) {
-                if (!history.contains(live.getLiveUrl()))
-                    history.add(0, live.getLiveUrl());
+            url = live.getLiveUrl();
+            if (!url.isEmpty()) {
+                ArrayList<String> history = Hawk.get(HawkConfig.LIVE_HISTORY, new ArrayList<String>());
+                if (!history.contains(url))
+                    history.add(url);
                 if (history.size() > 30)
                     history.remove(30);
                 Hawk.put(HawkConfig.LIVE_HISTORY, history);
@@ -589,7 +590,7 @@ public class ApiConfig {
         if (!url.isEmpty()) {
             ArrayList<String> history = Hawk.get(HawkConfig.EPG_HISTORY, new ArrayList<String>());
             if (!history.contains(url))
-                history.add(0, url);
+                history.add(url);
             if (history.size() > 30)
                 history.remove(30);
             Hawk.put(HawkConfig.EPG_HISTORY, history);
