@@ -301,10 +301,6 @@ public class LivePlayActivity extends BaseActivity {
 
     private void showEpg(Date date, ArrayList<Epginfo> arrayList) {
         if (arrayList != null && arrayList.size() > 0) {
-            if (!((Epginfo) arrayList.get(0)).start.equals("00:00")) {
-                Epginfo epgbcinfo = new Epginfo(date, "精彩节目", date, "00:00", ((Epginfo) arrayList.get(0)).start, 0);
-                arrayList.add(0, epgbcinfo);
-            } 
             epgdata = arrayList;
             epgListAdapter.CanBack(currentLiveChannelItem.getinclude_back());
             epgListAdapter.setNewData(epgdata);
@@ -323,11 +319,7 @@ public class LivePlayActivity extends BaseActivity {
                 if (divEpg.getVisibility() == View.VISIBLE) {
                     mRightEpgList.setSelection(i);
                 }
-                if (((Epginfo) arrayList.get(0)).title.equals("精彩节目")) {
-                    epgListAdapter.setSelectedEpgIndex(i);
-                } else { 
-                    epgListAdapter.setSelectedEpgIndex(i + 1);
-                }
+                epgListAdapter.setSelectedEpgIndex(i);
                 int finalI = i;
                 mRightEpgList.post(new Runnable() {
                     @Override
@@ -338,7 +330,7 @@ public class LivePlayActivity extends BaseActivity {
             }
         } else {
             Epginfo epgbcinfo = new Epginfo(date, "精彩节目-暂未提供节目预告信息", date, "00:00", "23:59", 0);
-            arrayList.add(0, epgbcinfo);
+            arrayList.add(epgbcinfo);
             epgdata = arrayList;
             epgListAdapter.setNewData(epgdata);
         }
@@ -386,7 +378,7 @@ public class LivePlayActivity extends BaseActivity {
                             if (jSONArray != null)
                                 for (int b = 0; b < jSONArray.length(); b++) {
                                     JSONObject jSONObject = jSONArray.getJSONObject(b);
-                                    Epginfo epgbcinfo = new Epginfo(date, jSONObject.optString("title"), date, jSONObject.optString("start"), jSONObject.optString("end"), b + 1);
+                                    Epginfo epgbcinfo = new Epginfo(date, jSONObject.optString("title"), date, jSONObject.optString("start"), jSONObject.optString("end"), b);
                              //       Log.d("EPG信息:", day + "  " + jSONObject.optString("start") + " - " + jSONObject.optString("end") + "  " + jSONObject.optString("title"));
                                     arrayList.add(epgbcinfo);
                                 }
@@ -517,11 +509,7 @@ public class LivePlayActivity extends BaseActivity {
         divLoadEpgleft.setVisibility(View.VISIBLE);
         divLoadEpg.setVisibility(View.GONE);
         mEpgDateGridView.setSelectedPosition(liveEpgDateAdapter.getSelectedIndex());
-        if (epgListAdapter.getItem(0).title.equals("精彩节目")) {
-            mRightEpgList.setSelection(epgListAdapter.getSelectedIndex());
-        } else {
-            mRightEpgList.setSelection(epgListAdapter.getSelectedIndex() - 1);
-        }
+        mRightEpgList.setSelection(epgListAdapter.getSelectedIndex());
         epgListAdapter.notifyDataSetChanged();
     }
     
@@ -990,11 +978,7 @@ public class LivePlayActivity extends BaseActivity {
             public void onItemSelected(TvRecyclerView parent, View itemView, int position) {
                 mHandler.removeCallbacks(mHideChannelListRun);
                 mHandler.postDelayed(mHideChannelListRun, 5000);
-                if (epgListAdapter.getItem(0).title.equals("精彩节目")) {
-                    epgListAdapter.setFocusedEpgIndex(position);
-                } else { 
-                    epgListAdapter.setFocusedEpgIndex(position + 1);
-                }
+                epgListAdapter.setFocusedEpgIndex(position);
             }
 
             @SuppressLint("NotifyDataSetChanged")
@@ -1015,11 +999,7 @@ public class LivePlayActivity extends BaseActivity {
                 if (new Date().compareTo(selectedData.startdateTime) < 0) {
                     return;
                 }
-                if (epgListAdapter.getItem(0).title.equals("精彩节目")) {
-                    epgListAdapter.setSelectedEpgIndex(position);
-                } else { 
-                    epgListAdapter.setSelectedEpgIndex(position + 1);
-                }
+                epgListAdapter.setSelectedEpgIndex(position);
    /*             if (now.compareTo(selectedData.startdateTime) >= 0 && now.compareTo(selectedData.enddateTime) <= 0) {
                     mVideoView.release();
                     isSHIYI = false;
@@ -1086,11 +1066,7 @@ public class LivePlayActivity extends BaseActivity {
 
                     mVideoView.setUrl(playUrl, liveWebHeader());
                     mVideoView.start();
-                    if (epgListAdapter.getItem(0).title.equals("精彩节目")) {
-                        epgListAdapter.setShiyiSelection(position, true, timeFormat.format(date));
-                    } else { 
-                        epgListAdapter.setShiyiSelection(position + 1, true, timeFormat.format(date));
-                    }
+                    epgListAdapter.setShiyiSelection(position, true, timeFormat.format(date));
                     epgListAdapter.notifyDataSetChanged();
                     mRightEpgList.setSelectedPosition(position);
                     mRightEpgList.post(new Runnable() {
@@ -1127,11 +1103,7 @@ public class LivePlayActivity extends BaseActivity {
                 if (new Date().compareTo(selectedData.startdateTime) < 0) {
                     return;
                 }
-                if (epgListAdapter.getItem(0).title.equals("精彩节目")) {
-                    epgListAdapter.setSelectedEpgIndex(position);
-                } else { 
-                    epgListAdapter.setSelectedEpgIndex(position + 1);
-                }
+                epgListAdapter.setSelectedEpgIndex(position);
         /*        if (now.compareTo(selectedData.startdateTime) >= 0 && now.compareTo(selectedData.enddateTime) <= 0) {
                     mVideoView.release();
                     isSHIYI = false;
@@ -1198,11 +1170,7 @@ public class LivePlayActivity extends BaseActivity {
                     if (liveWebHeader() != null) LOG.i("echo-liveWebHeader :" + liveWebHeader().toString());
                     mVideoView.setUrl(playUrl, liveWebHeader());
                     mVideoView.start();
-                    if (epgListAdapter.getItem(0).title.equals("精彩节目")) {
-                        epgListAdapter.setShiyiSelection(position, true, timeFormat.format(date));
-                    } else { 
-                        epgListAdapter.setShiyiSelection(position + 1, true, timeFormat.format(date));
-                    }
+                    epgListAdapter.setShiyiSelection(position, true,timeFormat.format(date));
                     epgListAdapter.notifyDataSetChanged();
                     mRightEpgList.setSelectedPosition(position);
                     mRightEpgList.post(new Runnable() {
@@ -2134,7 +2102,7 @@ public class LivePlayActivity extends BaseActivity {
             if (mVideoView == null) return;
             String width = Integer.toString(mVideoView.getVideoSize()[0]);
             String height = Integer.toString(mVideoView.getVideoSize()[1]);
-            tv_videosize.setText("分辨率 : " + width + " X " + height);
+            tv_videosize.setText("分辨率 : " + width + " x " + height);
             mHandler.postDelayed(this, 1000);
         }
     };
