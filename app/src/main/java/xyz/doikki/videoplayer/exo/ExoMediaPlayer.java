@@ -12,6 +12,7 @@ import android.view.SurfaceHolder;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.media3.common.Format;
 import androidx.media3.common.PlaybackException;
 import androidx.media3.common.PlaybackParameters;
 import androidx.media3.common.Player;
@@ -321,10 +322,12 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
 
     @Override
     public void onVideoSizeChanged(@NonNull VideoSize videoSize) {
+        Format videoFormat = mMediaPlayer.getVideoFormat();
+        int rotationDegrees = (videoFormat != null) ? videoFormat.rotationDegrees : 0;
         if (mPlayerEventListener != null) {
             mPlayerEventListener.onVideoSizeChanged(videoSize.width, videoSize.height);
-            if (videoSize.unappliedRotationDegrees > 0) {
-                mPlayerEventListener.onInfo(MEDIA_INFO_VIDEO_ROTATION_CHANGED, videoSize.unappliedRotationDegrees);
+            if (rotationDegrees > 0) {
+                mPlayerEventListener.onInfo(MEDIA_INFO_VIDEO_ROTATION_CHANGED, rotationDegrees);
             }
         }
     }
