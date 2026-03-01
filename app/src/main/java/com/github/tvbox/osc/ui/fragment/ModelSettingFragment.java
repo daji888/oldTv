@@ -326,7 +326,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
                     @Override
                     public void onchange(String api) {
                         Hawk.put(HawkConfig.LIVE_URL, api);
-                        Hawk.delete(HawkConfig.LIVE_SOURCE);
+                        Hawk.put(HawkConfig.LIVE_SOURCE, 0);
                         tvLiveApi.setText(api);
                     }
                 });
