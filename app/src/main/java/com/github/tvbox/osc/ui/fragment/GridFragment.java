@@ -1,13 +1,18 @@
 package com.github.tvbox.osc.ui.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.animation.BounceInterpolator;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.github.tvbox.osc.R;
@@ -22,6 +27,7 @@ import com.github.tvbox.osc.ui.activity.DetailActivity;
 import com.github.tvbox.osc.ui.activity.FastSearchActivity;
 import com.github.tvbox.osc.ui.activity.SearchActivity;
 import com.github.tvbox.osc.ui.adapter.GridAdapter;
+import com.github.tvbox.osc.ui.adapter.GridFilterKVAdapter;
 import com.github.tvbox.osc.ui.dialog.GridFilterDialog;
 import com.github.tvbox.osc.ui.tv.widget.LoadMoreView;
 import com.github.tvbox.osc.util.FastClickCheckUtil;
@@ -32,6 +38,7 @@ import com.owen.tvrecyclerview.widget.TvRecyclerView;
 import com.owen.tvrecyclerview.widget.V7GridLayoutManager;
 import com.owen.tvrecyclerview.widget.V7LinearLayoutManager;
 
+import java.util.ArrayList;
 import java.util.Stack;
 
 import org.greenrobot.eventbus.EventBus;
@@ -276,7 +283,7 @@ public class GridFragment extends BaseLazyFragment {
                     if (maxPage > 0 && page > maxPage) {
                         gridAdapter.loadMoreEnd();
                         gridAdapter.setEnableLoadMore(false);
-                        if (page > 2)Toast.makeText(getContext(), "最后一页啦", Toast.LENGTH_SHORT).show();
+                        if (page > 2) Toast.makeText(getContext(), "没有更多了", Toast.LENGTH_SHORT).show();
                     } else {
                         gridAdapter.loadMoreComplete();
                         gridAdapter.setEnableLoadMore(true);
@@ -285,9 +292,9 @@ public class GridFragment extends BaseLazyFragment {
                     if (page == 1) {
                         showEmpty();
                     } else {
-                        Toast.makeText(getContext(), "最后一页啦", Toast.LENGTH_SHORT).show();
-                        gridAdapter.loadMoreEnd();
+                        Toast.makeText(getContext(), "没有更多了", Toast.LENGTH_SHORT).show();
                     }
+                    gridAdapter.loadMoreEnd();
                     gridAdapter.setEnableLoadMore(false);
                 }
             }
@@ -327,16 +334,69 @@ public class GridFragment extends BaseLazyFragment {
     public void showFilter() {
         if (!sortData.filters.isEmpty() && gridFilterDialog == null) {
             gridFilterDialog = new GridFilterDialog(mContext);
-            gridFilterDialog.setData(sortData);
-            gridFilterDialog.setOnDismiss(new GridFilterDialog.Callback() {
-                @Override
-                public void change() {
-                    page = 1;
-                    initData();
-                }
-            });
+            setFilterDialogData();
         }
         if (gridFilterDialog != null)
             gridFilterDialog.show();
+    }
+
+    public void setFilterDialogData() {
+        Context context = getContext();
+        LayoutInflater inflater = LayoutInflater.from(context);
+        assert context != null;
+        final int defaultColor = ContextCompat.getColor(context, R.color.color_FFFFFF_85);
+        final int selectedColor = ContextCompat.getColor(context, R.color.color_FF9900);
+        // 遍历过滤条件数据
+        for (MovieSort.SortFilter filter : sortData.filters) {
+            View line = inflater.inflate(R.layout.item_grid_filter, gridFilterDialog.filterRoot, false);
+            TextView filterNameTv = line.findViewById(R.id.filterName);
+            filterNameTv.setText(filter.name);
+            TvRecyclerView gridView = line.findViewById(R.id.mFilterKv);
+            gridView.setHasFixedSize(true);
+            gridView.setLayoutManager(new V7LinearLayoutManager(context, 0, false));
+            GridFilterKVAdapter adapter = new GridFilterKVAdapter();
+            gridView.setAdapter(adapter);
+            final String key = filter.key;
+            final ArrayList<String> values = new ArrayList<>(filter.values.keySet());
+            final ArrayList<String> keys = new ArrayList<>(filter.values.values());
+            adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                // 用于记录上一次选中的 view
+                View previousSelectedView = null;
+                @Override
+                public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                    String currentSelection = sortData.filterSelect.get(key);
+                    String newSelection = keys.get(position);
+                    if (currentSelection == null || !currentSelection.equals(newSelection)) {
+                        // 更新选中状态
+                        sortData.filterSelect.put(key, newSelection);
+                        updateViewStyle(view, selectedColor, true);
+                        if (previousSelectedView != null) {
+                            updateViewStyle(previousSelectedView, defaultColor, false);
+                        }
+                        previousSelectedView = view;
+                    } else {
+                        // 取消选中
+                        sortData.filterSelect.remove(key);
+                        if (previousSelectedView != null) {
+                            updateViewStyle(previousSelectedView, defaultColor, false);
+                        }
+                        previousSelectedView = null;
+                    }
+                    forceRefresh();
+                }
+                private void updateViewStyle(View view, int color, boolean isBold) {
+                    TextView valueTv = view.findViewById(R.id.filterValue);
+                    valueTv.getPaint().setFakeBoldText(isBold);
+                    valueTv.setTextColor(color);
+                }
+            });
+            adapter.setNewData(values);
+            gridFilterDialog.filterRoot.addView(line);
+        }
+    }
+
+    public void forceRefresh() {
+        page = 1;
+        initData();
     }
 }
