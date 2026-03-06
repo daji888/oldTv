@@ -1,5 +1,6 @@
 package com.github.tvbox.osc.ui.activity;
 
+import static com.github.tvbox.osc.util.RegexUtils.getPattern;
 import static xyz.doikki.videoplayer.util.PlayerUtils.stringForTime;
 
 import android.animation.Animator;
@@ -1033,7 +1034,7 @@ public class LivePlayActivity extends BaseActivity {
                         String startHHmm = selectedData.originStart.replace(":", "");
                         String endHHmm = selectedData.originEnd.replace(":", "");
                         // 正则表达式：匹配 ${(b)...} 或 ${(e)...}
-                        Pattern pattern = Pattern.compile("\\$\\{\\((b|e)\\)(.*?)\\}");
+                        Pattern pattern = getPattern("\\$\\{\\((b|e)\\)(.*?)\\}");
                         Matcher matcher = pattern.matcher(source);
                         Map<String, String> valueMap = new HashMap<>();
                         valueMap.put("b", targetDate + "T" + startHHmm);
@@ -1137,7 +1138,7 @@ public class LivePlayActivity extends BaseActivity {
                         String startHHmm = selectedData.originStart.replace(":", "");
                         String endHHmm = selectedData.originEnd.replace(":", "");
                         // 正则表达式：匹配 ${(b)...} 或 ${(e)...}
-                        Pattern pattern = Pattern.compile("\\$\\{\\((b|e)\\)(.*?)\\}");
+                        Pattern pattern = getPattern("\\$\\{\\((b|e)\\)(.*?)\\}");
                         Matcher matcher = pattern.matcher(source);
                         Map<String, String> valueMap = new HashMap<>();
                         valueMap.put("b", targetDate + "T" + startHHmm);
