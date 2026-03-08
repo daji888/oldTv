@@ -855,7 +855,6 @@ public class VodController extends BaseController {
             mPlayerSpeedBtn.setText("x" + mPlayerConfig.getDouble("sp"));
             mPlayerTimeStartBtn.setText(PlayerUtils.stringForTime(mPlayerConfig.getInt("st") * 1000));
             mPlayerTimeSkipBtn.setText(PlayerUtils.stringForTime(mPlayerConfig.getInt("et") * 1000));
-        //    mAudioTrackBtn.setVisibility((playerType == 1) ? VISIBLE : GONE);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -1018,7 +1017,7 @@ public class VodController extends BaseController {
                 break;
             case VideoView.STATE_PREPARING:
             case VideoView.STATE_BUFFERING:
-                if(mProgressRoot.getVisibility()==GONE)mPlayLoadNetSpeed.setVisibility(VISIBLE);
+                if (mProgressRoot.getVisibility() == GONE) mPlayLoadNetSpeed.setVisibility(VISIBLE);
                 break;
             case VideoView.STATE_PLAYBACK_COMPLETED:
                 listener.playNext(true);
@@ -1041,7 +1040,7 @@ public class VodController extends BaseController {
     }
 
     private boolean isPaused = false;
-    private boolean fromLongPress;
+    private boolean fromLongPress = false;
     private float speed_old = 1.0f;
 
     @Override
@@ -1072,18 +1071,32 @@ public class VodController extends BaseController {
                 }
             } else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
                 if (videoPlayState != VideoView.STATE_PAUSED) {
-                    fromLongPress = true;
-                    try {
-                        speed_old = (float) mPlayerConfig.getDouble("sp");
-                        float speed = 3.0f;
-                        mPlayerConfig.put("sp", speed);
-                        updatePlayerCfgView();
-                        listener.updatePlayerCfg();
-                        mControlWrapper.setSpeed(speed);
-                    } catch (JSONException f) {
-                        f.printStackTrace();
-                    }
-                    return true;
+                    if (fromLongPress) {
+                        fromLongPress = false;
+                        try {
+                            mPlayerConfig.put("sp", 1.0f);
+                            updatePlayerCfgView();
+                            listener.updatePlayerCfg();
+                            speed_old = 1.0f;
+                            mControlWrapper.setSpeed(1.0f);
+                        } catch (JSONException f) {
+                            f.printStackTrace();
+                        }
+                        return true;
+                    } else {
+                        fromLongPress = true;
+                        try {
+                            speed_old = (float) mPlayerConfig.getDouble("sp");
+                            float speed = 3.0f;
+                            mPlayerConfig.put("sp", speed);
+                            updatePlayerCfgView();
+                            listener.updatePlayerCfg();
+                            mControlWrapper.setSpeed(speed);
+                        } catch (JSONException f) {
+                            f.printStackTrace();
+                        }
+                        return true;
+                    }    
                 }
             } else if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN || keyCode== KeyEvent.KEYCODE_MENU) {
                 if (!isBottomVisible()) {
@@ -1098,21 +1111,7 @@ public class VodController extends BaseController {
                     tvSlideStop();
                     return true;
                 }
-             } else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
-                if (fromLongPress) {
-                    fromLongPress = false;
-                    try {
-                        mPlayerConfig.put("sp", 1.0f);
-                        updatePlayerCfgView();
-                        listener.updatePlayerCfg();
-                        speed_old = 1.0f;
-                        mControlWrapper.setSpeed(1.0f);
-                    } catch (JSONException f) {
-                        f.printStackTrace();
-                    }
-                    return true;
-                }
-            }
+             }
         }
         return super.dispatchKeyEvent(event);
     }
@@ -1294,3 +1293,4 @@ public class VodController extends BaseController {
     }
     
 }
+
