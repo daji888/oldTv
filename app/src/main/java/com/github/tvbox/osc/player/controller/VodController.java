@@ -963,8 +963,7 @@ public class VodController extends BaseController {
             simStartPosition = (int) mControlWrapper.getCurrentPosition();
             simSeekPosition = simStartPosition;
         }
-        // 每次30秒
-        simSeekPosition += (30000.0f * dir);
+        simSeekPosition += (30000.0f * dir);  // 每次30秒
         if (simSeekPosition > duration) simSeekPosition = duration;
         if (simSeekPosition < 0) simSeekPosition = 0;
         updateSeekUI(simStartPosition, simSeekPosition, duration);
@@ -1040,7 +1039,7 @@ public class VodController extends BaseController {
     }
 
     private boolean isPaused = false;
-    private boolean fromLongPress = false;
+    private boolean fromPress = false;
     private float speed_old = 1.0f;
 
     @Override
@@ -1071,20 +1070,21 @@ public class VodController extends BaseController {
                 }
             } else if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
                 if (videoPlayState != VideoView.STATE_PAUSED) {
-                    if (fromLongPress) {
-                        fromLongPress = false;
+                    if (fromPress) {
+                        fromPress = false;
                         try {
                             mPlayerConfig.put("sp", 1.0f);
                             updatePlayerCfgView();
                             listener.updatePlayerCfg();
                             speed_old = 1.0f;
                             mControlWrapper.setSpeed(1.0f);
+                            Toast.makeText(getContext(), "1 倍速播放", Toast.LENGTH_SHORT).show();
                         } catch (JSONException f) {
                             f.printStackTrace();
                         }
                         return true;
                     } else {
-                        fromLongPress = true;
+                        fromPress = true;
                         try {
                             speed_old = (float) mPlayerConfig.getDouble("sp");
                             float speed = 3.0f;
@@ -1092,6 +1092,7 @@ public class VodController extends BaseController {
                             updatePlayerCfgView();
                             listener.updatePlayerCfg();
                             mControlWrapper.setSpeed(speed);
+                            Toast.makeText(getContext(), "3 倍速播放", Toast.LENGTH_SHORT).show();
                         } catch (JSONException f) {
                             f.printStackTrace();
                         }
@@ -1116,6 +1117,8 @@ public class VodController extends BaseController {
         return super.dispatchKeyEvent(event);
     }
 
+    private boolean fromLongPress;
+
     @Override
     public void onLongPress(MotionEvent e) {
         if (videoPlayState != VideoView.STATE_PAUSED) {
@@ -1127,6 +1130,7 @@ public class VodController extends BaseController {
                 updatePlayerCfgView();
                 listener.updatePlayerCfg();
                 mControlWrapper.setSpeed(speed);
+                Toast.makeText(getContext(), "3 倍速播放", Toast.LENGTH_SHORT).show();
             } catch (JSONException f) {
                 f.printStackTrace();
             }
@@ -1140,11 +1144,12 @@ public class VodController extends BaseController {
             if (fromLongPress) {
                 fromLongPress = false;
                 try {
-                    float speed = speed_old;
-                    mPlayerConfig.put("sp", speed);
+                    mPlayerConfig.put("sp", 1.0f);
                     updatePlayerCfgView();
                     listener.updatePlayerCfg();
-                    mControlWrapper.setSpeed(speed);
+                    speed_old = 1.0f;
+                    mControlWrapper.setSpeed(1.0f);
+                    Toast.makeText(getContext(), "1 倍速播放", Toast.LENGTH_SHORT).show();
                 } catch (JSONException f) {
                     f.printStackTrace();
                 }
@@ -1293,4 +1298,3 @@ public class VodController extends BaseController {
     }
     
 }
-
