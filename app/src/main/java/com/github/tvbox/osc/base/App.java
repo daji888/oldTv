@@ -85,7 +85,7 @@ public class App extends Application {
         putDefault(HawkConfig.SEARCH_VIEW, 0);               //搜索展示: 0=文字列表, 1=缩略图
         putDefault(HawkConfig.PARSE_WEBVIEW, true);          //嗅探Webview: true=系统自带, false=XWalkView
         putDefault(HawkConfig.DOH_URL, 0);                   //DNS: 0=运营商, 1=腾讯, 2=阿里, 3=360, 4=Google, 5=Cloudflare ,6=AdGuard, 7=DNSWatch, 8=Quad9
-        putDefault(HawkConfig.API_URL, "http://tv.nxog.top/m/");
+        putDefault(HawkConfig.API_URL, "http://ok213.top/tv");
         putDefault(HawkConfig.EPG_URL, "https://api.erw.cc/?ch={name}&date={date}");
     }
 
@@ -107,10 +107,11 @@ public class App extends Application {
 
 
     private VodInfo vodInfo;
-    public void setVodInfo(VodInfo vodinfo){
+    public void setVodInfo(VodInfo vodinfo) {
         this.vodInfo = vodinfo;
     }
-    public VodInfo getVodInfo(){
+    
+    public VodInfo getVodInfo() {
         return this.vodInfo;
     }
 
