@@ -283,8 +283,6 @@ public class PlayActivity extends BaseActivity {
 
             @Override
             public void prepared() {
-                initVideoView();
-                initAudioView();
                 initSubtitleView();
             }
 
@@ -820,32 +818,6 @@ public class PlayActivity extends BaseActivity {
             }
         });
     }
-
-    private void initVideoView() {
-        AbstractPlayer mediaPlayer = mVideoView.getMediaPlayer();
-        TrackInfo trackInfo = null;
-        if (mediaPlayer instanceof EXOmPlayer) {
-            //默认选中第一个视轨 一般第一个视轨分辨率最高
-            trackInfo = ((EXOmPlayer) mediaPlayer).getTrackInfo();
-            if (trackInfo != null && trackInfo.getVideo().size() > 1) {
-                TrackInfoBean firsVideo = trackInfo.getVideo().get(0);
-                ((EXOmPlayer) mediaPlayer).selectExoTrack(firsVideo);
-            }
-         }
-     }
-
-    private void initAudioView() {
-        AbstractPlayer mediaPlayer = mVideoView.getMediaPlayer();
-        TrackInfo trackInfo = null;
-        if (mediaPlayer instanceof IjkmPlayer) {
-            //默认选中第一个音轨 一般第一个音轨是国语
-            trackInfo = ((IjkmPlayer) mediaPlayer).getTrackInfo();
-            if (trackInfo != null && trackInfo.getAudio().size() > 1) {
-                int firsIndex = trackInfo.getAudio().get(0).trackId;
-                ((IjkmPlayer) mediaPlayer).setTrack(firsIndex);
-            }
-         }
-     }   
     
     private void initSubtitleView() {
         AbstractPlayer mediaPlayer = mVideoView.getMediaPlayer();
