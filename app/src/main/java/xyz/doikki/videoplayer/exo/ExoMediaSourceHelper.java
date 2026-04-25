@@ -21,7 +21,6 @@ import androidx.media3.datasource.cache.LeastRecentlyUsedCacheEvictor;
 import androidx.media3.datasource.cache.SimpleCache;
 import androidx.media3.datasource.rtmp.RtmpDataSource;
 import androidx.media3.exoplayer.dash.DashMediaSource;
-import androidx.media3.exoplayer.hls.DefaultHlsExtractorFactory;
 import androidx.media3.exoplayer.hls.HlsMediaSource;
 import androidx.media3.exoplayer.rtsp.RtspMediaSource;
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory;
@@ -71,7 +70,7 @@ public final class ExoMediaSourceHelper {
 
     private static MediaItem getMediaItem(String uri, int errorCode) {
         MediaItem.Builder builder = new MediaItem.Builder().setUri(Uri.parse(uri.trim().replace("\\", "")));
-        if (errorCode == PlaybackException.ERROR_CODE_PARSING_CONTAINER_UNSUPPORTED || errorCode == PlaybackException.ERROR_CODE_PARSING_CONTAINER_MALFORMED || errorCode == PlaybackException.ERROR_CODE_IO_UNSPECIFIED)
+        if (errorCode == PlaybackException.ERROR_CODE_PARSING_CONTAINER_UNSUPPORTED)
             builder.setMimeType(MimeTypes.APPLICATION_M3U8);
         return builder.build();
     }
@@ -121,7 +120,7 @@ public final class ExoMediaSourceHelper {
         if (mHttpDataSourceFactory != null) {
             setHeaders(headers);
         }
-        if (errorCode == PlaybackException.ERROR_CODE_PARSING_CONTAINER_UNSUPPORTED || errorCode == PlaybackException.ERROR_CODE_PARSING_CONTAINER_MALFORMED || errorCode == PlaybackException.ERROR_CODE_IO_UNSPECIFIED) {
+        if (errorCode == PlaybackException.ERROR_CODE_PARSING_CONTAINER_UNSUPPORTED) {
             MediaItem.Builder builder = new MediaItem.Builder().setUri(uri);
             builder.setMimeType(MimeTypes.APPLICATION_M3U8);
             return new DefaultMediaSourceFactory(getDataSourceFactory(), getExtractorsFactory()).createMediaSource(getMediaItem(uri, errorCode));
@@ -133,7 +132,6 @@ public final class ExoMediaSourceHelper {
             //    return new HlsMediaSource.Factory(factory).createMediaSource(MediaItem.fromUri(contentUri));
                 return new HlsMediaSource.Factory(mHttpDataSourceFactory)
                         .setAllowChunklessPreparation(false)
-                        .setExtractorFactory(new DefaultHlsExtractorFactory())
                         .createMediaSource(MediaItem.fromUri(contentUri));
             default:
             case C.CONTENT_TYPE_OTHER:
