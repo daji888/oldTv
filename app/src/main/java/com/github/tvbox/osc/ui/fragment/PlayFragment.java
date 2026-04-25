@@ -87,7 +87,6 @@ import com.lzy.okgo.model.HttpHeaders;
 import com.lzy.okgo.model.Response;
 import com.obsez.android.lib.filechooser.ChooserDialog;
 import com.orhanobut.hawk.Hawk;
-import com.p2p.P2PClass;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -824,8 +823,6 @@ public class PlayFragment extends BaseLazyFragment {
                             url = ControlManager.get().getAddress(true) + "dash/proxy.mpd";
                         } else if (url.contains("mpd")) {
                             PlayerHelper.updateCfg(mVideoView, mVodPlayerCfg, 2);
-                        } else if (url.contains(String.valueOf(P2PClass.port))) {
-                            PlayerHelper.updateCfg(mVideoView, mVodPlayerCfg, 1);    
                         } else {
                             PlayerHelper.updateCfg(mVideoView, mVodPlayerCfg);
                         }
