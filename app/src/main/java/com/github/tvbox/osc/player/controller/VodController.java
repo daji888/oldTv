@@ -1,5 +1,7 @@
 package com.github.tvbox.osc.player.controller;
 
+import static xyz.doikki.videoplayer.util.PlayerUtils.stringForTime;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -55,7 +57,6 @@ import java.util.Date;
 import java.util.List;
 
 import xyz.doikki.videoplayer.player.VideoView;
-import xyz.doikki.videoplayer.util.PlayerUtils;
 
 public class VodController extends BaseController {
     public VodController(@NonNull @NotNull Context context) {
@@ -308,7 +309,7 @@ public class VodController extends BaseController {
                 long duration = mControlWrapper.getDuration();
                 long newPosition = (duration * progress) / seekBar.getMax();
                 if (mCurrentTime != null)
-                    mCurrentTime.setText(PlayerUtils.stringForTime((int) newPosition));
+                    mCurrentTime.setText(stringForTime((int) newPosition));
             }
 
             @Override
@@ -853,8 +854,8 @@ public class VodController extends BaseController {
                 mPlayerDecodeBtn.setClickable(false);
             }
             mPlayerSpeedBtn.setText("x" + mPlayerConfig.getDouble("sp"));
-            mPlayerTimeStartBtn.setText(PlayerUtils.stringForTime(mPlayerConfig.getInt("st") * 1000));
-            mPlayerTimeSkipBtn.setText(PlayerUtils.stringForTime(mPlayerConfig.getInt("et") * 1000));
+            mPlayerTimeStartBtn.setText(stringForTime(mPlayerConfig.getInt("st") * 1000));
+            mPlayerTimeSkipBtn.setText(stringForTime(mPlayerConfig.getInt("et") * 1000));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -926,8 +927,8 @@ public class VodController extends BaseController {
                 listener.playNext(true);
             }
         }
-        mCurrentTime.setText(PlayerUtils.stringForTime(position));
-        mTotalTime.setText(PlayerUtils.stringForTime(duration));
+        mCurrentTime.setText(stringForTime(position));
+        mTotalTime.setText(stringForTime(duration));
         if (duration > 0) {
             mSeekBar.setEnabled(true);
             int pos = (int) (position * 1.0 / duration * mSeekBar.getMax());
@@ -977,7 +978,7 @@ public class VodController extends BaseController {
         } else {
             mProgressIcon.setImageResource(R.drawable.icon_back);
         }
-        mProgressText.setText(PlayerUtils.stringForTime(seekTo) + " / " + PlayerUtils.stringForTime(duration));
+        mProgressText.setText(stringForTime(seekTo) + " / " + stringForTime(duration));
         int pos = (int) (seekTo * 1.0 / duration * mProgressSeekBar.getMax());
         mProgressSeekBar.setProgress(pos);
         mHandler.sendEmptyMessage(1000);
