@@ -68,7 +68,7 @@ public class IjkmPlayer extends IjkPlayer {
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "fflags", "fastseek");
         // 参数值为 0 时表示关闭HTTP范围检测支持，这个设置通常用于解决某些网络环境下出现的播放异常问题，特别是当遇到HTTP和HTTPS混合内容时可能导致的播放错误
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "http-detect-range-support", 0);
-        // 允许使用的流媒体传输协议列表
+        // 允许使用的流媒体传输协议白名单
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "protocol_whitelist", "ijkio,ffio,async,cache,crypto,file,dash,http,https,ijkhttphook,ijkinject,ijklivehook,ijklongurl,ijksegment,ijktcphook,pipe,rtp,tcp,tls,udp,ijkurlhook,data,concat,subfile,ffconcat");
         // 是否允许一些不安全的路径，默认值为 1 ，会拒绝一些不安全的文件路径, 设置为 0 ，关闭安全监测
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "safe", 0);
@@ -86,9 +86,9 @@ public class IjkmPlayer extends IjkPlayer {
    //     mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "overlay-format", IjkMediaPlayer.SDL_FCC_RV32);
         // 是否启用暂停输出，直到在停滞之后读取足够的数据包，默认值为 1：启用，0：关闭
    //     mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 1);    
-        // 设置值为 1，网络波动时自动重连
+        // 网络波动时是否自动重连，设置值为 1：允许
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "reconnect", 1);
-        // 启用变速不变调模式，默认值为 0：关闭，1：开启
+        // 是否启用变速不变调模式，默认值为 0：关闭，1：开启
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "soundtouch", 1);
         // 视频缓存好之后是否自动播放 0：不允许，默认值为 1：允许
    //     mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1);
@@ -110,8 +110,6 @@ public class IjkmPlayer extends IjkPlayer {
         try {
             switch (getStreamType(path)) {
                 case RTSP_UDP_RTP:
-                    // 是否启用暂停输出，直到在停滞之后读取足够的数据包，默认值为 1：启用，0：关闭
-                    mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "packet-buffering", 0);
                     // 设置持续输入缓冲模式, 默认值为 0 时，表示关闭持续输入缓冲，值为 1 时，表示启用持续输入缓冲
                     mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "infbuf", 1);
                     // 指定RTSP协议的传输方式，默认使用UDP，使用TCP可以降低延迟并提升稳定性
