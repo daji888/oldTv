@@ -10,116 +10,77 @@ import androidx.media3.common.MimeTypes;
 import androidx.media3.common.Player;
 import androidx.media3.common.TrackGroup;
 import androidx.media3.common.Tracks;
-import androidx.media3.exoplayer.source.TrackGroupArray;
-import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
-import androidx.media3.exoplayer.trackselection.MappingTrackSelector;
+import androidx.media3.common.TrackSelectionParameters;
+import androidx.media3.common.TrackSelectionOverride;
 
 import com.github.tvbox.osc.util.StringUtils;
-
+import java.util.List;
 import xyz.doikki.videoplayer.exo.ExoMediaPlayer;
 
 public class EXOmPlayer extends ExoMediaPlayer {
-    private String videoId = "";
-    private String audioId = "";
-    private String subtitleId = "";
-
     public EXOmPlayer(Context context) {
         super(context);
     }
 
-    @SuppressLint("UnsafeOptInUsageError")
     public TrackInfo getTrackInfo() {
         TrackInfo data = new TrackInfo();
-        MappingTrackSelector.MappedTrackInfo trackInfo = mTrackSelector.getCurrentMappedTrackInfo();
-        if (trackInfo != null) {
-            getExoSelectedTrack();
-            for (int groupArrayIndex = 0; groupArrayIndex < trackInfo.getRendererCount(); groupArrayIndex++) {
-                TrackGroupArray groupArray = trackInfo.getTrackGroups(groupArrayIndex);
-                for (int groupIndex = 0; groupIndex < groupArray.length; groupIndex++) {
-                    TrackGroup group = groupArray.get(groupIndex);
-                    for (int formatIndex = 0; formatIndex < group.length; formatIndex++) {
-                        Format format = group.getFormat(formatIndex);
-                        if (MimeTypes.isVideo(format.sampleMimeType)) {
-                            String trackName = (data.getVideo().size() + 1) + ".  " + trackNameProvider.getTrackName(format) + " [" + format.codecs + "]";
-                            TrackInfoBean t = new TrackInfoBean();
-                            t.name = trackName;
-                            t.trackId = formatIndex;
-                            t.selected = !StringUtils.isEmpty(videoId) && videoId.equals(format.id);
-                            t.trackGroupId = groupIndex;
-                            t.renderId = groupArrayIndex;
-                            data.addVideo(t);
-                        } else if (MimeTypes.isAudio(format.sampleMimeType)) {
-                            String trackName = (data.getAudio().size() + 1) + ".  " + trackNameProvider.getTrackName(format) + " [" + format.codecs + "]";
-                            TrackInfoBean t = new TrackInfoBean();
-                            t.name = trackName;
-                            t.language = "";
-                            t.trackId = formatIndex;
-                            t.selected = !StringUtils.isEmpty(audioId) && audioId.equals(format.id);
-                            t.trackGroupId = groupIndex;
-                            t.renderId = groupArrayIndex;
-                            data.addAudio(t);    
-                        } else if (MimeTypes.isText(format.sampleMimeType)) {
-                            String trackName = (data.getSubtitle().size() + 1) + ".  " + trackNameProvider.getTrackName(format);
-                            TrackInfoBean t = new TrackInfoBean();
-                            t.name = trackName;
-                            t.language = "";
-                            t.trackId = formatIndex;
-                            t.selected = !StringUtils.isEmpty(subtitleId) && subtitleId.equals(format.id);
-                            t.trackGroupId = groupIndex;
-                            t.renderId = groupArrayIndex;
-                            data.addSubtitle(t);
-                        }
-                    }
+        Tracks tracks = mMediaPlayer.getCurrentTracks();
+        if (tracks == null) return data;
+        List<Tracks.Group> groups = tracks.getGroups();
+        for (int groupIndex = 0; groupIndex < groups.size(); groupIndex++) {
+            Tracks.Group group = groups.get(groupIndex);
+            for (int trackIndex = 0; trackIndex < group.length; trackIndex++) {
+                Format format = group.getTrackFormat(trackIndex);
+                if (MimeTypes.isVideo(format.sampleMimeType)) {
+                    String trackName = (data.getVideo().size() + 1) + ".  " + trackNameProvider.getTrackName(format) + " [" + format.codecs + "]";
+                    TrackInfoBean t = new TrackInfoBean();
+                    t.name = trackName;
+                    t.trackId = trackIndex;
+                    t.selected = group.isTrackSelected(trackIndex);
+                    t.trackGroupId = groupIndex;
+                    data.addVideo(t);
+                } else if (MimeTypes.isAudio(format.sampleMimeType)) {
+                    String trackName = (data.getAudio().size() + 1) + ".  " + trackNameProvider.getTrackName(format) + " [" + format.codecs + "]";
+                    TrackInfoBean t = new TrackInfoBean();
+                    t.name = trackName;
+                    t.language = "";
+                    t.trackId = trackIndex;
+                    t.selected = group.isTrackSelected(trackIndex);
+                    t.trackGroupId = groupIndex;
+                    data.addAudio(t);    
+                } else if (MimeTypes.isText(format.sampleMimeType)) {
+                    String trackName = (data.getSubtitle().size() + 1) + ".  " + trackNameProvider.getTrackName(format);
+                    TrackInfoBean t = new TrackInfoBean();
+                    t.name = trackName;
+                    t.language = "";
+                    t.trackId = trackIndex;
+                    t.selected = group.isTrackSelected(trackIndex);
+                    t.trackGroupId = groupIndex;
+                    data.addSubtitle(t);
                 }
             }
         }
         return data;
     }
 
-    @SuppressLint("UnsafeOptInUsageError")
-    private void getExoSelectedTrack() {
-        videoId = "";
-        audioId = "";
-        subtitleId = "";        
-        for (Tracks.Group group : mMediaPlayer.getCurrentTracks().getGroups()) {
-            if (!group.isSelected()) continue;
-            for (int trackIndex = 0; trackIndex < group.length; trackIndex++) {
-                if (!group.isTrackSelected(trackIndex)) continue;
-                Format format = group.getTrackFormat(trackIndex);
-                if (MimeTypes.isVideo(format.sampleMimeType)) {
-                    videoId = format.id;
-                }
-                if (MimeTypes.isAudio(format.sampleMimeType)) {
-                    audioId = format.id;
-                }
-                if (MimeTypes.isText(format.sampleMimeType)) {
-                    subtitleId = format.id;
-                }                
-            }
-        }
-    }
-
-    @SuppressLint("UnsafeOptInUsageError")
-    public void selectExoTrack(@Nullable TrackInfoBean videoTrackBean) {
-        MappingTrackSelector.MappedTrackInfo trackInfo = mTrackSelector.getCurrentMappedTrackInfo();
-        if (trackInfo != null) {
-            if (videoTrackBean == null) {
-                for (int renderIndex = 0; renderIndex < trackInfo.getRendererCount(); renderIndex++) {
-                    if (trackInfo.getRendererType(renderIndex) == C.TRACK_TYPE_TEXT) {
-                        DefaultTrackSelector.Parameters.Builder parametersBuilder = mTrackSelector.buildUponParameters();
-                        parametersBuilder.setRendererDisabled(renderIndex, true);
-                        mTrackSelector.setParameters(parametersBuilder);
-                        break;
-                    }
-                }
-            } else {
-                TrackGroupArray trackGroupArray = trackInfo.getTrackGroups(videoTrackBean.renderId);
-                @SuppressLint("UnsafeOptInUsageError") DefaultTrackSelector.SelectionOverride override = new DefaultTrackSelector.SelectionOverride(videoTrackBean.trackGroupId, videoTrackBean.trackId);
-                DefaultTrackSelector.Parameters.Builder parametersBuilder = mTrackSelector.buildUponParameters();
-                parametersBuilder.setRendererDisabled(videoTrackBean.renderId, false);
-                parametersBuilder.setSelectionOverride(videoTrackBean.renderId, trackGroupArray, override);
-                mTrackSelector.setParameters(parametersBuilder);
-            }
+    public void selectExoTrack(@Nullable TrackInfoBean trackInfoBean) {
+        if (trackInfoBean == null) {
+            TrackSelectionParameters.Builder parametersBuilder = mTrackSelector.buildUponParameters();
+            parametersBuilder.setTrackTypeDisabled(C.TRACK_TYPE_TEXT, true);
+            mTrackSelector.setParameters(parametersBuilder.build());
+            return;
+        } else {
+            Tracks tracks = mMediaPlayer.getCurrentTracks();
+            if (tracks == null) return;
+            List<Tracks.Group> groups = tracks.getGroups();
+            if (trackInfoBean.trackGroupId < 0 || trackInfoBean.trackGroupId >= groups.size()) return;
+            Tracks.Group group = groups.get(trackInfoBean.trackGroupId);
+            if (trackInfoBean.trackId < 0 || trackInfoBean.trackId >= group.length) return;
+            TrackSelectionOverride override = new TrackSelectionOverride(group.getMediaTrackGroup(), trackInfoBean.trackId);
+            TrackSelectionParameters.Builder parametersBuilder = mTrackSelector.buildUponParameters();
+            parametersBuilder.setTrackTypeDisabled(C.TRACK_TYPE_TEXT, false);
+            parametersBuilder.setOverrideForType(override);
+            mTrackSelector.setParameters(parametersBuilder.build());
         }
     }
 
