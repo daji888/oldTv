@@ -1961,12 +1961,26 @@ public class LivePlayActivity extends BaseActivity {
     }
 
     private void initLiveState() {
-        String lastChannelGroupName = Hawk.get(HawkConfig.LIVE_GROUP, "");
-        String lastChannelName = Hawk.get(HawkConfig.LIVE_CHANNEL, "");
+        String lastChannelGroupName = Objects.toString(Hawk.get(HawkConfig.LIVE_GROUP), "");
+        String lastChannelName = Objects.toString(Hawk.get(HawkConfig.LIVE_CHANNEL), "");
         int lastChannelGroupIndex = -1;
         int lastLiveChannelIndex = -1;
+        boolean foundExactMatch = false;
         for (LiveChannelGroup liveChannelGroup : liveChannelGroupList) {
             if (liveChannelGroup.getGroupName().equals(lastChannelGroupName)) {
+                for (LiveChannelItem liveChannelItem : liveChannelGroup.getLiveChannels()) {
+                    if (liveChannelItem.getChannelName().equals(lastChannelName)) {
+                        lastChannelGroupIndex = liveChannelGroup.getGroupIndex();
+                        lastLiveChannelIndex = liveChannelItem.getChannelIndex();
+                        foundExactMatch = true;
+                        break;
+                    }
+                }
+            }
+            if (foundExactMatch) break;
+        }
+        if (!foundExactMatch) {
+            for (LiveChannelGroup liveChannelGroup : liveChannelGroupList) {
                 for (LiveChannelItem liveChannelItem : liveChannelGroup.getLiveChannels()) {
                     if (liveChannelItem.getChannelName().equals(lastChannelName)) {
                         lastChannelGroupIndex = liveChannelGroup.getGroupIndex();
@@ -1974,18 +1988,8 @@ public class LivePlayActivity extends BaseActivity {
                         break;
                     }
                 }
+                if (lastChannelGroupIndex != -1) break;
             }
-            if (lastChannelGroupIndex != -1) break;
-        }
-        for (LiveChannelGroup liveChannelGroup : liveChannelGroupList) {
-            for (LiveChannelItem liveChannelItem : liveChannelGroup.getLiveChannels()) {
-                if (liveChannelItem.getChannelName().equals(lastChannelName)) {
-                    lastChannelGroupIndex = liveChannelGroup.getGroupIndex();
-                    lastLiveChannelIndex = liveChannelItem.getChannelIndex();
-                    break;
-                }
-            }
-            if (lastChannelGroupIndex != -1) break;
         }
         if (lastChannelGroupIndex == -1) {
             lastChannelGroupIndex = getFirstNoPasswordChannelGroup();
