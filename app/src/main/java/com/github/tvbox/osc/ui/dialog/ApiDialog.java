@@ -78,18 +78,14 @@ public class ApiDialog extends BaseDialog {
             @Override
             public void onClick(View v) {
                 ArrayList<String> history = Hawk.get(HawkConfig.API_HISTORY, new ArrayList<String>());
-                if (!history.contains("https://www.饭太硬.com/tv/"))
-                    history.add("https://www.饭太硬.com/tv/");
+                if (!history.contains("https://www.饭太硬.net/tv/"))
+                    history.add("https://www.饭太硬.net/tv/");
                 if (!history.contains("http://tv.nxog.top/m/"))
                     history.add("http://tv.nxog.top/m/");
                 if (!history.contains("http://tvbox.xn--4kq62z5rby2qupq9ub.top/"))
                     history.add("http://tvbox.xn--4kq62z5rby2qupq9ub.top/");
-                if (!history.contains("http://肥猫.com"))
-                    history.add("http://肥猫.com");
-                if (!history.contains("http://mitvbox.xyz/小米/DEMO.json"))
-                     history.add("http://mitvbox.xyz/小米/DEMO.json");
-                if (!history.contains("http://cdn.qiaoji8.com/tvbox.json"))
-                    history.add("http://cdn.qiaoji8.com/tvbox.json");
+                if (!history.contains("https://gh-proxy.com/https://raw.githubusercontent.com/yoursmile66/TVBox/refs/heads/main/XC.json"))
+                    history.add("https://gh-proxy.com/https://raw.githubusercontent.com/yoursmile66/TVBox/refs/heads/main/XC.json");
                 if (!history.contains("https://ghproxy.net/raw.githubusercontent.com/daji888/ys/master/ys99.txt"))
                     history.add("https://ghproxy.net/raw.githubusercontent.com/daji888/ys/master/ys99.txt");
                 String current = Hawk.get(HawkConfig.API_URL, "");
