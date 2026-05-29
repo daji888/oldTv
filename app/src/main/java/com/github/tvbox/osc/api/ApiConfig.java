@@ -342,12 +342,10 @@ public class ApiConfig {
     }
 
     private static  String jarCache = "true";
-    private String liveSpider = "";
     private void parseJson(String apiUrl, String jsonStr) {
         JsonObject infoJson = new Gson().fromJson(jsonStr, JsonObject.class);
         // spider
         spider = DefaultConfig.safeJsonString(infoJson, "spider", "");
-        liveSpider = DefaultConfig.safeJsonString(infoJson, "spider", "");
         jarCache = DefaultConfig.safeJsonString(infoJson, "jarCache", "true");
         // wallpaper
         wallpaper = DefaultConfig.safeJsonString(infoJson, "wallpaper", "");
@@ -684,16 +682,8 @@ public class ApiConfig {
             } else {
                 if (lives.contains("type")) {
                     String type = livesOBJ.get("type").getAsString();
-                    if (type.equals("0") || type.equals("3")) {
+                    if (type.equals("0")) {
                         String url = livesOBJ.get("url").getAsString();
-                        if (type.equals("3")) {
-                            String jarUrl = livesOBJ.get("jar").getAsString().trim();
-                            if (!jarUrl.isEmpty()) {
-                                jarLoader.loadLiveJar(jarUrl);
-                            } else if (!liveSpider.isEmpty()) {
-                                jarLoader.loadLiveJar(liveSpider);
-                            }
-                        }
                         if (url.startsWith("http")) {
                             // takagen99: Capture Live URL into Settings
                                 System.out.println("Live URL :" + url);
@@ -765,11 +755,6 @@ public class ApiConfig {
             th.printStackTrace();
         }
     }
-
-   public void setLiveJar(String liveJar) {
-        String jarUrl = !liveJar.isEmpty() ? liveJar : liveSpider;
-        jarLoader.setRecentJarKey(MD5.string2MD5(jarUrl));
-    } 
 
     public String getSpider() {
         return spider;

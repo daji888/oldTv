@@ -798,16 +798,9 @@ public class LivePlayActivity extends BaseActivity {
         if (livesOBJ.has("logo")) {
             logoUrl = livesOBJ.get("logo").getAsString();
         }
-        if (livesOBJ.has("type")) {
-            String type = livesOBJ.get("type").getAsString();
-            if (type.equals("3")) {
-                String jarUrl = livesOBJ.has("jar") ? livesOBJ.get("jar").getAsString() : "";
-                ApiConfig.get().setLiveJar(jarUrl);
-            }
-        }
     } 
 
-    private HashMap<String,String> liveWebHeader() {
+    private HashMap<String, String> liveWebHeader() {
         return Hawk.get(HawkConfig.LIVE_WEB_HEADER);
     }
 
