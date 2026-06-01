@@ -1,7 +1,6 @@
 package com.github.tvbox.osc.ui.adapter;
 
 import android.graphics.Color;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -35,7 +34,7 @@ public class LiveEpgAdapter extends BaseQuickAdapter<Epginfo, BaseViewHolder> {
         super(R.layout.epglist_item, new ArrayList<>());
     }
 
-    public void CanBack( Boolean source_include_back) {
+    public void CanBack(Boolean source_include_back) {
         this.source_include_back = source_include_back;
     }
 
@@ -58,10 +57,15 @@ public class LiveEpgAdapter extends BaseQuickAdapter<Epginfo, BaseViewHolder> {
             shiyi.setBackgroundColor(Color.YELLOW);
             shiyi.setTextColor(Color.RED);
             shiyi.setText("直播中");
-        } else if (new Date().compareTo(value.enddateTime) > 0 && source_include_back) {
+        } else if (new Date().compareTo(value.enddateTime) > 0) {
             shiyi.setVisibility(View.VISIBLE);
-            shiyi.setBackgroundColor(0xff28713E);
-            shiyi.setTextColor(Color.WHITE);
+            if (source_include_back) {
+                shiyi.setBackgroundColor(0xff28713E);
+                shiyi.setTextColor(Color.WHITE);
+            } else {
+                shiyi.setBackgroundColor(Color.GRAY);
+                shiyi.setTextColor(Color.BLACK);
+            }    
             shiyi.setText("回看");
         } else if (new Date().compareTo(value.startdateTime) < 0) {
             shiyi.setVisibility(View.VISIBLE);
@@ -73,8 +77,7 @@ public class LiveEpgAdapter extends BaseQuickAdapter<Epginfo, BaseViewHolder> {
         }
         textview.setText(value.title);
         timeview.setText(value.start + "-" + value.end);
-        Log.e("roinlong", "getView: " + selectedEpgIndex);
-        if (ShiyiSelection == false) {
+        if (!ShiyiSelection) {
             Date now = new Date();
             if (now.compareTo(value.startdateTime) >= 0 && now.compareTo(value.enddateTime) <= 0) {
                 wqddg_AudioWaveView.setVisibility(View.VISIBLE);
