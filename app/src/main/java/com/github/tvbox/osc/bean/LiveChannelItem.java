@@ -1,6 +1,10 @@
 package com.github.tvbox.osc.bean;
 
+import com.google.gson.JsonObject;
+
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -11,7 +15,8 @@ import java.util.Objects;
 public class LiveChannelItem {
     /**
      * channelIndex : 频道索引号
-     * channelNum : 频道名称
+     * channelName : 频道名称
+     * channelNum : 频道数
      * channelSourceNames : 频道源名称
      * channelUrls : 频道源地址
      * sourceIndex : 频道源索引
@@ -19,12 +24,15 @@ public class LiveChannelItem {
      */
     private int channelIndex;
     private int channelNum;
-    private String channelName;
-    private ArrayList<String> channelSourceNames;
-    private ArrayList<String> channelUrls;
+    public String channelName;
+    private List<String> channelSourceNames = new ArrayList<>();
+    public List<String> channelUrls = new ArrayList<>();
     public int sourceIndex = 0;
     public int sourceNum = 0;
     public boolean include_back = false;
+    public JsonObject catchupConfig = new JsonObject();
+    public String logo = "";
+    public String useragent = "";
 
     public void setinclude_back(boolean include_back) {
         this.include_back = include_back;
@@ -58,33 +66,56 @@ public class LiveChannelItem {
         return channelName;
     }
 
-    public ArrayList<String> getChannelUrls() {
-        return channelUrls;
+    public List<String> getChannelUrls() {
+        return channelUrls != null ? channelUrls : Collections.emptyList();
     }
 
-    public void setChannelUrls(ArrayList<String> channelUrls) {
-        this.channelUrls = channelUrls;
-        sourceNum = channelUrls.size();
+    public void setChannelUrls(List<String> channelUrls) {
+        if (channelUrls == null) {
+            this.channelUrls = new ArrayList<>();
+            this.sourceNum = 0;
+        } else {
+            this.channelUrls = channelUrls;
+            this.sourceNum = this.channelUrls.size();
+        }
+        if (this.sourceIndex >= this.sourceNum) {
+            this.sourceIndex = this.sourceNum > 0 ? 0 : -1;
+        }
     }
 
     public String getUrl() {
+        if (channelUrls == null || channelUrls.isEmpty() || sourceIndex < 0 || sourceIndex >= channelUrls.size()) {
+            return null;
+        }
         return channelUrls.get(sourceIndex);
     }
 
-    public ArrayList<String> getChannelSourceNames() {
-        return channelSourceNames;
+    public List<String> getChannelSourceNames() {
+        return channelSourceNames != null ? channelSourceNames : Collections.emptyList();
     }
 
-    public void setChannelSourceNames(ArrayList<String> channelSourceNames) {
-        this.channelSourceNames = channelSourceNames;
+    public void setChannelSourceNames(List<String> channelSourceNames) {
+        if (channelSourceNames == null) {
+            this.channelSourceNames = new ArrayList<>();
+        } else {
+            this.channelSourceNames = channelSourceNames;
+        }
     }
 
     public String getSourceName() {
+        if (channelSourceNames == null || channelSourceNames.isEmpty() || sourceIndex < 0 || sourceIndex >= channelSourceNames.size()) {
+            return null;
+        }
         return channelSourceNames.get(sourceIndex);
     }
 
     public void setSourceIndex(int sourceIndex) {
-        this.sourceIndex = sourceIndex;
+        if (sourceNum > 0) {
+            this.sourceIndex = sourceIndex % sourceNum;
+            if (this.sourceIndex < 0) this.sourceIndex += sourceNum;
+        } else {
+            this.sourceIndex = 0;
+        }
     }
 
     public int getSourceIndex() {
@@ -105,17 +136,36 @@ public class LiveChannelItem {
         if (sourceIndex == sourceNum) sourceIndex = 0;
     }
 
+    public void addCatchupInfo(String type, String source, String replace) {
+        if (type != null && !type.isEmpty()) {
+            catchupConfig.addProperty("type", type);
+        }
+        if (source != null && !source.isEmpty()) {
+            catchupConfig.addProperty("source", source);
+        }
+        if (replace != null && !replace.isEmpty()) {
+            catchupConfig.addProperty("replace", replace);
+        }
+    }
+
+    public boolean hasCatchup() {
+        return catchupConfig.has("type") || catchupConfig.has("source");
+    }
+
     @Override
-     public boolean equals(Object o) {
-         if (this == o) return true;
-         if (o == null || getClass() != o.getClass()) return false;
-         LiveChannelItem that = (LiveChannelItem) o;
-         return Objects.equals(channelName, that.channelName)
-                 && Objects.equals(channelUrls.get(sourceIndex), that.getUrl());
-     }
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LiveChannelItem that = (LiveChannelItem) o;
+        String thisUrl = this.getUrl();
+        String thatUrl = that.getUrl();
+        return Objects.equals(channelName, that.channelName)
+                && Objects.equals(thisUrl, thatUrl);
+    }
  
      @Override
      public int hashCode() {
-         return Objects.hash(channelName, channelUrls.get(sourceIndex));
-     }
+        String url = this.getUrl();
+        return Objects.hash(channelName, url);
+    }
 }
