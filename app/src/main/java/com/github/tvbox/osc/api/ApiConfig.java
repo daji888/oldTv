@@ -573,7 +573,6 @@ public class ApiConfig {
         List<LiveSourceBean> lives = getLiveSourceBeanList();
         for (LiveSourceBean live : lives) {
             url = live.getLiveUrl();
-            url = url.replace("http://127.0.0.1:9978/proxy?do=live&url=http", "http");
             if (!url.isEmpty()) {
                 ArrayList<String> history = Hawk.get(HawkConfig.LIVE_HISTORY, new ArrayList<String>());
                 if (!history.contains(url))
@@ -645,13 +644,14 @@ public class ApiConfig {
         String liveURL = Hawk.get(HawkConfig.LIVE_URL, "");
         String epgURL = Hawk.get(HawkConfig.EPG_URL, "");
         String liveURL_final = null;
+        String url;
         try {
             LOG.i("echo-loadLiveApi");
             String lives = livesOBJ.toString();
             int index = lives.indexOf("proxy://");
             if (index != -1) {
                 int endIndex = lives.lastIndexOf("\"");
-                String url = lives.substring(index, endIndex);
+                url = lives.substring(index, endIndex);
                 url = DefaultConfig.checkReplaceProxy(url);
 
                 //clan
@@ -683,7 +683,7 @@ public class ApiConfig {
                 if (lives.contains("type")) {
                     String type = livesOBJ.get("type").getAsString();
                     if (type.equals("0")) {
-                        String url = livesOBJ.get("url").getAsString();
+                        url = livesOBJ.has("url") ? livesOBJ.get("url").getAsString() : "";
                         if (url.startsWith("http")) {
                             // takagen99: Capture Live URL into Settings
                                 System.out.println("Live URL :" + url);
@@ -709,8 +709,11 @@ public class ApiConfig {
                     liveURL_final = liveURL;
                 }
                 liveURL_final = Base64.encodeToString(liveURL_final.getBytes("UTF-8"), Base64.DEFAULT | Base64.URL_SAFE | Base64.NO_WRAP);
-                liveURL_final = "http://127.0.0.1:9978/proxy?do=live&type=txt&ext=" + liveURL_final;
-                
+                url = livesOBJ.has("url") ? livesOBJ.get("url").getAsString() : "";
+                if (!url.startsWith("http://127.0.0.1")) {
+                    liveURL_final = "http://127.0.0.1:9978/proxy?do=live&type=txt&ext=" + liveURL_final;
+                }
+            
               //设置epg
               // takagen99 : Getting EPG URL from File Config & put into Settings
                   if (livesOBJ.has("epg")) {
@@ -738,7 +741,14 @@ public class ApiConfig {
                   }  */
          
                   //设置UA
-                  if (livesOBJ.has("ua")) {
+                  if (livesOBJ.has("header")) {
+                      JsonObject headerObj = livesOBJ.getAsJsonObject("header");
+                      HashMap<String, String> liveHeader = new HashMap<>();
+                      for (Map.Entry<String, JsonElement> entry : headerObj.entrySet()) {
+                          liveHeader.put(entry.getKey(), entry.getValue().getAsString());
+                      }
+                      Hawk.put(HawkConfig.LIVE_WEB_HEADER, liveHeader);
+                  } else if (livesOBJ.has("ua")) {
                       String ua = livesOBJ.get("ua").getAsString();
                       HashMap<String, String> liveHeader = new HashMap<>();
                       liveHeader.put("User-Agent", ua);
