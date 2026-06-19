@@ -789,9 +789,6 @@ public class LivePlayActivity extends BaseActivity {
     private String logoUrl = null;
     
     private void updateCurrentChannelInfo(int groupIndex, int channelIndex) {
-        catchup = null;
-        hasCatchup = false;
-        logoUrl = null;
         JsonArray liveGroups = Hawk.get(HawkConfig.LIVE_GROUP_LIST, new JsonArray());
         if (liveGroups == null || liveGroups.size() <= groupIndex) return;
         JsonObject groupObj = liveGroups.get(groupIndex).getAsJsonObject();
@@ -804,8 +801,6 @@ public class LivePlayActivity extends BaseActivity {
             LOG.i("echo-catchup updated for channel: " + channelObj.get("name").getAsString());
             LOG.i("echo-catchup data: " + catchup.toString());
             hasCatchup = true;
-        } else {
-            hasCatchup = false;
         }
         if (channelObj.has("logo")) {
             logoUrl = channelObj.get("logo").getAsString();
@@ -1313,8 +1308,6 @@ public class LivePlayActivity extends BaseActivity {
         });
         liveEpgDateAdapter.setSelectedIndex(1);
     }
-
-
 
     private void initVideoView() {
         LiveController controller = new LiveController(this);
