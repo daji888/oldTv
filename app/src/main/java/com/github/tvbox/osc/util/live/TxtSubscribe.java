@@ -162,24 +162,24 @@ public class TxtSubscribe {
                     if (validUrls.isEmpty()) {
                         continue;
                     }
-                    LiveChannelItem existingBean = null;
+                    LiveChannelItem existingItem = null;
                     for (LiveChannelItem channelItem : channelList) {
                         if (channelItem.channelName != null && channelItem.channelName.equals(channelName)) {
-                            existingBean = channelItem;
+                            existingItem = channelItem;
                             break;
                         }
                     }
-                    if (existingBean != null) {
+                    if (existingItem != null) {
                         for (String url : validUrls) {
-                            if (!existingBean.channelUrls.contains(url)) {
-                                existingBean.channelUrls.add(url);
+                            if (!existingItem.channelUrls.contains(url)) {
+                                existingItem.channelUrls.add(url);
                             }
                         }
                     } else {
-                        LiveChannelItem newBean = new LiveChannelItem();
-                        newBean.channelName = channelName;
-                        newBean.channelUrls.addAll(validUrls);
-                        channelList.add(newBean);
+                        LiveChannelItem newItem = new LiveChannelItem();
+                        newItem.channelName = channelName;
+                        newItem.channelUrls.addAll(validUrls);
+                        channelList.add(newItem);
                     }
                 }
             }
