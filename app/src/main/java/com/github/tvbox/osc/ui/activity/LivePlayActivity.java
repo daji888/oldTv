@@ -77,7 +77,6 @@ import com.github.tvbox.osc.util.urlhttp.UrlHttpUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import org.apache.commons.lang3.StringUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.AbsCallback;
 import com.lzy.okgo.model.Response;
@@ -94,7 +93,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -107,6 +105,7 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -527,7 +526,6 @@ public class LivePlayActivity extends BaseActivity {
         mLiveChannelView.requestFocus();
     }
 
-
     @Override
     public void onBackPressed() {
         if (tvLeftChannelListLayout.getVisibility() == View.VISIBLE) {
@@ -786,12 +784,14 @@ public class LivePlayActivity extends BaseActivity {
     
     private JsonObject catchup = null;
     private Boolean hasCatchup = false;
+    private Boolean hasChannelCatchup = false;
     private String logoUrl = null;
     
     private void updateCurrentChannelInfo(int groupIndex, int channelIndex) {
-        JsonArray liveGroups = Hawk.get(HawkConfig.LIVE_GROUP_LIST, new JsonArray());
-        if (liveGroups == null || liveGroups.size() <= groupIndex) return;
-        JsonObject groupObj = liveGroups.get(groupIndex).getAsJsonObject();
+        hasChannelCatchup = false;
+        JsonArray liveChannelGroups = Hawk.get(HawkConfig.LIVE_CHANNELGROUP_LIST, new JsonArray());
+        if (liveChannelGroups == null || liveChannelGroups.size() <= groupIndex) return;
+        JsonObject groupObj = liveChannelGroups.get(groupIndex).getAsJsonObject();
         if (!groupObj.has("channels")) return;
         JsonArray channels = groupObj.getAsJsonArray("channels");
         if (channels == null || channels.size() <= channelIndex) return;
@@ -800,7 +800,7 @@ public class LivePlayActivity extends BaseActivity {
             catchup = channelObj.getAsJsonObject("catchup");
             LOG.i("echo-catchup updated for channel: " + channelObj.get("name").getAsString());
             LOG.i("echo-catchup data: " + catchup.toString());
-            hasCatchup = true;
+            hasChannelCatchup = true;
         }
         if (channelObj.has("logo")) {
             logoUrl = channelObj.get("logo").getAsString();
@@ -817,9 +817,12 @@ public class LivePlayActivity extends BaseActivity {
     }
 
     private void initLiveObj() {
-        int position = Hawk.get(HawkConfig.LIVE_GROUP_INDEX, 0);
+        catchup = null;
+        hasCatchup = false;
+        logoUrl = null;
+        int live_group_index = Hawk.get(HawkConfig.LIVE_GROUP_INDEX, 0);
         JsonArray live_groups = Hawk.get(HawkConfig.LIVE_GROUP_LIST, new JsonArray());
-        JsonObject livesOBJ = live_groups.get(position).getAsJsonObject();
+        JsonObject livesOBJ = live_groups.get(live_group_index).getAsJsonObject();
         if (livesOBJ.has("catchup")) {
             catchup = livesOBJ.getAsJsonObject("catchup");
             LOG.i("echo-catchup :" + catchup.toString());
@@ -856,7 +859,7 @@ public class LivePlayActivity extends BaseActivity {
         epgListAdapter.setSelectedEpgIndex(-1);
         isSHIYI = false;
         isBack = false;
-        if (hasCatchup || currentLiveChannelItem.getUrl().contains("/PLTV/") || currentLiveChannelItem.getUrl().contains("/TVOD/")) {
+        if (hasChannelCatchup || hasCatchup || currentLiveChannelItem.getUrl().contains("/PLTV/") || currentLiveChannelItem.getUrl().contains("/TVOD/")) {
             currentLiveChannelItem.setinclude_back(true);
         } else {
             currentLiveChannelItem.setinclude_back(false);
@@ -1035,7 +1038,7 @@ public class LivePlayActivity extends BaseActivity {
                 String shiyiUrl = currentLiveChannelItem.getUrl();
                 if (now.compareTo(selectedData.startdateTime) < 0) {
                     return;
-           //     } else if (hasCatchup || shiyiUrl.contains("/PLTV/") || shiyiUrl.contains("/TVOD/")) {
+           //     } else if (hasChannelCatchup || hasCatchup || shiyiUrl.contains("/PLTV/") || shiyiUrl.contains("/TVOD/")) {
                 } else {    
                     shiyiUrl = shiyiUrl.replaceAll("/PLTV/", "/TVOD/");
                     mHandler.removeCallbacks(mHideChannelListRun);
@@ -1043,7 +1046,7 @@ public class LivePlayActivity extends BaseActivity {
                     mVideoView.release();
                     shiyi_time = shiyiStartdate + "-" + shiyiEnddate;
                     isSHIYI = true;
-                    if (hasCatchup && catchup != null) {
+                    if ((hasChannelCatchup || hasCatchup) && catchup != null) {
                         String replace = catchup.has("replace") ? catchup.get("replace").getAsString() : "";
                         String source = catchup.has("source") ? catchup.get("source").getAsString() : "";
                         String type = catchup.has("type") ? catchup.get("type").getAsString() : "";
@@ -1150,7 +1153,7 @@ public class LivePlayActivity extends BaseActivity {
                 String shiyiUrl = currentLiveChannelItem.getUrl();
                 if (now.compareTo(selectedData.startdateTime) < 0) {
                     return;
-            //    } else if (hasCatchup || shiyiUrl.contains("/PLTV/") || shiyiUrl.contains("/TVOD/")) {
+            //    } else if (hasChannelCatchup || hasCatchup || shiyiUrl.contains("/PLTV/") || shiyiUrl.contains("/TVOD/")) {
                 } else {    
                     shiyiUrl = shiyiUrl.replaceAll("/PLTV/", "/TVOD/");
                     mHandler.removeCallbacks(mHideChannelListRun);
@@ -1158,7 +1161,7 @@ public class LivePlayActivity extends BaseActivity {
                     mVideoView.release();
                     shiyi_time = shiyiStartdate + "-" + shiyiEnddate;
                     isSHIYI = true;
-                    if (hasCatchup && catchup != null) {
+                    if ((hasChannelCatchup || hasCatchup) && catchup != null) {
                         String replace = catchup.has("replace") ? catchup.get("replace").getAsString() : "";
                         String source = catchup.has("source") ? catchup.get("source").getAsString() : "";
                         String type = catchup.has("type") ? catchup.get("type").getAsString() : "";
@@ -1741,29 +1744,32 @@ public class LivePlayActivity extends BaseActivity {
                     if (liveURL == null || liveURL.isEmpty()) return;
                     Hawk.put(HawkConfig.LIVE_URL, liveURL);
                     Hawk.put(HawkConfig.LIVE_SOURCE, 0);
+                    JsonArray live_groups = Hawk.get(HawkConfig.LIVE_GROUP_LIST, new JsonArray());
+                    int newIndex = 0;
+                    for (int i = 0; i < live_groups.size(); i++) {
+                        JsonObject obj = live_groups.get(i).getAsJsonObject();
+                        String url = "";
+                        if (obj.has("url") && !obj.get("url").isJsonNull()) {
+                            try {
+                                url = obj.get("url").getAsString();
+                            } catch (Exception e) {
+                                url = "";
+                            }
+                        }
+                        if (url.equals(liveURL)) {
+                            newIndex = i;
+                            break;
+                        }
+                    }
+                    Hawk.put(HawkConfig.LIVE_GROUP_INDEX, newIndex);
                     if (mVideoView != null) {
                         mVideoView.release();
                         mVideoView = null;
                     }
-                    AtomicBoolean isSuccess = new AtomicBoolean(false);
-                    new Thread(() -> {
-                        try {
-                            JsonObject livesOBJ = new JsonObject();
-                            livesOBJ.addProperty("url", liveURL);
-                            ApiConfig.get().loadLiveApi(livesOBJ);
-                            isSuccess.set(true);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        runOnUiThread(() -> {
-                            dialog.dismiss();
-                            if (isSuccess.get()) {
-                                recreate();
-                            } else {
-                                Toast.makeText(LivePlayActivity.this, "加载失败", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }).start();
+                    JsonObject newLivesObj = live_groups.get(newIndex).getAsJsonObject();
+                    ApiConfig.get().loadLiveApi(newLivesObj);
+                    recreate();
+                    dialog.dismiss();
                 }
 
                 @Override
@@ -1979,10 +1985,10 @@ public class LivePlayActivity extends BaseActivity {
             @Override
             public void onSuccess(Response<String> response) {
                 JsonArray livesArray;
-                LinkedHashMap<String, List<LiveChannelItem>> liveData = new LinkedHashMap<>();
+                LinkedHashMap<String, ArrayList<LiveChannelItem>> liveData = new LinkedHashMap<>();
                 TxtSubscribe.parse(liveData, response.body());
                 livesArray = TxtSubscribe.live2JsonArray(liveData);
-                Hawk.put(HawkConfig.LIVE_GROUP_LIST, livesArray);
+                Hawk.put(HawkConfig.LIVE_CHANNELGROUP_LIST, livesArray);
 
                 ApiConfig.get().loadLives(livesArray);
                 List<LiveChannelGroup> list = ApiConfig.get().getChannelGroupList();
@@ -2122,8 +2128,7 @@ public class LivePlayActivity extends BaseActivity {
     }
 
     private void loadCurrentSourceList() {
-        List<String> currentSourceNames = new ArrayList<String>();
-        currentSourceNames = currentLiveChannelItem.getChannelSourceNames();
+        ArrayList<String> currentSourceNames = currentLiveChannelItem.getChannelSourceNames();
         ArrayList<LiveSettingItem> liveSettingItemList = new ArrayList<>();
         for (int j = 0; j < currentSourceNames.size(); j++) {
             LiveSettingItem liveSettingItem = new LiveSettingItem();
@@ -2443,7 +2448,7 @@ public class LivePlayActivity extends BaseActivity {
                             tv_currentpos.setText(stringForTime((int) currentPosition));
                         }    
                         String shiyiUrl = currentLiveChannelItem.getUrl();
-                        if (hasCatchup || shiyiUrl.contains("/PLTV/") || shiyiUrl.contains("/TVOD/")) {
+                        if (hasChannelCatchup || hasCatchup || shiyiUrl.contains("/PLTV/") || shiyiUrl.contains("/TVOD/")) {
                             tv_duration.setText(stringForTime((int) shiyiduration));
                             ((TextView) findViewById(R.id.tv_pause_progress_text)).setText((stringForTime((int) currentPosition)) + " / " + (stringForTime((int) shiyiduration)));
                         } else {    

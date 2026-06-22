@@ -1,11 +1,12 @@
 package com.github.tvbox.osc.api;
 
+import static com.github.tvbox.osc.util.RegexUtils.getPattern;
+
 import android.app.Activity;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Base64;
 
-import static com.github.tvbox.osc.util.RegexUtils.getPattern;
 import com.github.catvod.crawler.JarLoader;
 import com.github.catvod.crawler.JsLoader;
 import com.github.catvod.crawler.Spider;
@@ -13,7 +14,6 @@ import com.github.tvbox.osc.base.App;
 import com.github.tvbox.osc.bean.IJKCode;
 import com.github.tvbox.osc.bean.LiveChannelGroup;
 import com.github.tvbox.osc.bean.LiveChannelItem;
-import com.github.tvbox.osc.bean.LiveSourceBean;
 import com.github.tvbox.osc.bean.ParseBean;
 import com.github.tvbox.osc.bean.SourceBean;
 import com.github.tvbox.osc.server.ControlManager;
@@ -64,7 +64,6 @@ import org.json.JSONObject;
 public class ApiConfig {
     private static ApiConfig instance;
     private LinkedHashMap<String, SourceBean> sourceBeanList;
-    private LinkedHashMap<String, LiveSourceBean> livesourceBeanList;
     private SourceBean mHomeSource;
     private ParseBean mDefaultParse;
     private List<LiveChannelGroup> liveChannelGroupList;
@@ -75,19 +74,16 @@ public class ApiConfig {
     public String wallpaper = "";
 
     private SourceBean emptyHome = new SourceBean();
-    private LiveSourceBean emptyLive = new LiveSourceBean();
 
     private JarLoader jarLoader = new JarLoader();
     private JsLoader jsLoader = new JsLoader();
 
     private String userAgent = "okhttp/" + OkHttp.VERSION;
-
     private String requestAccept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9";
 
     private ApiConfig() {
         clearLoader();
         sourceBeanList = new LinkedHashMap<>();
-        livesourceBeanList = new LinkedHashMap<>();
         liveChannelGroupList = new ArrayList<>();
         parseBeanList = new ArrayList<>();
         Hawk.put(HawkConfig.LIVE_GROUP_LIST, new JsonArray());
@@ -111,7 +107,7 @@ public class ApiConfig {
             Pattern pattern = getPattern("[A-Za-z0]{8}\\*\\*");
             Matcher matcher = pattern.matcher(content);
             if (matcher.find()) {
-                content=content.substring(content.indexOf(matcher.group()) + 10);
+                content = content.substring(content.indexOf(matcher.group()) + 10);
                 content = new String(Base64.decode(content, Base64.DEFAULT));
             }
             if (content.startsWith("2423")) {
@@ -120,7 +116,7 @@ public class ApiConfig {
                 String key = AES.rightPadding(content.substring(content.indexOf("$#") + 2, content.indexOf("#$")), "0", 16);
                 String iv = AES.rightPadding(content.substring(content.length() - 13), "0", 16);
                 json = AES.CBC(data, key, iv);
-            } else if (configKey !=null && !AES.isJson(content)) {
+            } else if (configKey != null && !AES.isJson(content)) {
                 json = AES.ECB(content, configKey);
             }
             else {
@@ -414,30 +410,8 @@ public class ApiConfig {
         }
         // 直播源
         liveChannelGroupList.clear();           //修复从后台切换重复加载频道列表
-          LiveSourceBean firstLive = null; 
-          if (infoJson.has("lives") && infoJson.get("lives").getAsJsonArray() != null) {  
+        if (infoJson.has("lives") && infoJson.get("lives").getAsJsonArray() != null) {  
             JsonArray lives_groups = infoJson.get("lives").getAsJsonArray();
-            for (JsonElement opt : lives_groups) {
-                JsonObject obj = (JsonObject) opt;
-                LiveSourceBean lb = new LiveSourceBean();
-                String liveUrl = (obj.has("url") ? obj.get("url").getAsString().trim() : "");
-                lb.setLiveUrl(liveUrl);
-             /*   lb.setName(obj.has("name") ? obj.get("name").getAsString().trim() : "");
-                lb.setUa(obj.has("ua") ? obj.get("ua").getAsString().trim() : "");
-                lb.setType(obj.get("type").getAsInt());
-                lb.setPlayerType(DefaultConfig.safeJsonInt(obj, "playerType", -1));
-                lb.setEpgUrl(DefaultConfig.safeJsonString(obj, "epg", ""));
-                lb.setLogeUrl(DefaultConfig.safeJsonString(obj, "logo", ""));
-                if (obj.has("ext") && (obj.get("ext").isJsonObject() || obj.get("ext").isJsonArray())) {
-                    lb.setExt(obj.get("ext").toString());
-                } else {
-                    lb.setExt(DefaultConfig.safeJsonString(obj, "ext", ""));
-                }
-                lb.setJar(DefaultConfig.safeJsonString(obj, "jar", ""));  */
-                if (firstLive == null)
-                    firstLive = lb;
-                livesourceBeanList.put(liveUrl, lb);
-            }
             int live_group_index = Hawk.get(HawkConfig.LIVE_GROUP_INDEX, 0);
             if (live_group_index > lives_groups.size() - 1) Hawk.put(HawkConfig.LIVE_GROUP_INDEX, 0);
             Hawk.put(HawkConfig.LIVE_GROUP_LIST, lives_groups);
@@ -450,7 +424,7 @@ public class ApiConfig {
                 }
             }
             loadLiveApi(livesOBJ);
-          }   
+        }   
         //video parse rule for host
         if (infoJson.has("rules")) {
             VideoParseRuler.clearRule();
@@ -570,9 +544,9 @@ public class ApiConfig {
     } 
 
     private void putLiveHistory(String url) {
-        List<LiveSourceBean> lives = getLiveSourceBeanList();
-        for (LiveSourceBean live : lives) {
-            url = live.getLiveUrl();
+        JsonArray live_groups = Hawk.get(HawkConfig.LIVE_GROUP_LIST, new JsonArray());
+        for (JsonElement livesOBJ : live_groups) {
+            url = ((JsonObject) livesOBJ).has("url") ? ((JsonObject) livesOBJ).get("url").getAsString() : "";
             if (!url.isEmpty()) {
                 ArrayList<String> history = Hawk.get(HawkConfig.LIVE_HISTORY, new ArrayList<String>());
                 if (!history.contains(url))
@@ -584,15 +558,19 @@ public class ApiConfig {
         }
     }
 
-    private void putEpgHistory(String url) {
-        if (!url.isEmpty()) {
-            ArrayList<String> history = Hawk.get(HawkConfig.EPG_HISTORY, new ArrayList<String>());
-            if (!history.contains(url))
-                history.add(url);
-            if (history.size() > 30)
-                history.remove(30);
-            Hawk.put(HawkConfig.EPG_HISTORY, history);
-        }
+    private void putEpgHistory(String epg) {
+        JsonArray live_groups = Hawk.get(HawkConfig.LIVE_GROUP_LIST, new JsonArray());
+        for (JsonElement livesOBJ : live_groups) {
+            epg = ((JsonObject) livesOBJ).has("epg") ? ((JsonObject) livesOBJ).get("epg").getAsString() : "";
+            if (!epg.isEmpty()) {
+                ArrayList<String> history = Hawk.get(HawkConfig.EPG_HISTORY, new ArrayList<String>());
+                if (!history.contains(epg))
+                    history.add(epg);
+                if (history.size() > 30)
+                    history.remove(30);
+                Hawk.put(HawkConfig.EPG_HISTORY, history);
+            }
+         }
     }
 
     public void loadLives(JsonArray livesArray) {
@@ -826,10 +804,6 @@ public class ApiConfig {
 
     public List<SourceBean> getSourceBeanList() {
         return new ArrayList<>(sourceBeanList.values());
-    }
-
-    private List<LiveSourceBean> getLiveSourceBeanList() {
-        return new ArrayList<>(livesourceBeanList.values());
     }
 
     public List<ParseBean> getParseBeanList() {

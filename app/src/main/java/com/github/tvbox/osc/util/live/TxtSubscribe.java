@@ -10,7 +10,6 @@ import java.io.StringReader;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,7 +22,7 @@ public class TxtSubscribe {
     private static final Pattern LOGO_PATTERN = Pattern.compile("tvg-logo=\"(.*?)\"");
     private static final Pattern USER_AGENT_PATTERN = Pattern.compile("http-user-agent=\"(.*?)\"");
 
-    public static void parse(LinkedHashMap<String, List<LiveChannelItem>> linkedHashMap, String str) {
+    public static void parse(LinkedHashMap<String, ArrayList<LiveChannelItem>> linkedHashMap, String str) {
         if (str == null || str.isEmpty()) return;
         linkedHashMap.clear();
         String cleanStr = str.trim();
@@ -37,7 +36,7 @@ public class TxtSubscribe {
         }
     }
 
-    private static void parseM3u(LinkedHashMap<String, List<LiveChannelItem>> linkedHashMap, String str) {
+    private static void parseM3u(LinkedHashMap<String, ArrayList<LiveChannelItem>> linkedHashMap, String str) {
         if (str == null || str.isEmpty()) return;
         String globalCatchupType = "";
         String globalCatchupSource = "";
@@ -96,9 +95,9 @@ public class TxtSubscribe {
                     String finalType = lineCatchupType != null && !lineCatchupType.isEmpty() ? lineCatchupType : globalCatchupType;
                     String finalSource = lineCatchupSource != null && !lineCatchupSource.isEmpty() ? lineCatchupSource : globalCatchupSource;
                     String finalReplace = lineCatchupReplace != null && !lineCatchupReplace.isEmpty() ? lineCatchupReplace : globalCatchupReplace;
-                    List<LiveChannelItem> channelList = linkedHashMap.computeIfAbsent(currentGroup, k -> new ArrayList<>());
+                    ArrayList<LiveChannelItem> channelArrayList = linkedHashMap.computeIfAbsent(currentGroup, k -> new ArrayList<>());
                     LiveChannelItem channelItem = null;
-                    for (LiveChannelItem existing : channelList) {
+                    for (LiveChannelItem existing : channelArrayList) {
                         if (existing.channelName.equals(currentName)) {
                             channelItem = existing;
                             break;
@@ -110,7 +109,7 @@ public class TxtSubscribe {
                         channelItem.logo = currentLogo;
                         channelItem.useragent = currentUseragent;
                         channelItem.addCatchupInfo(finalType, finalSource, finalReplace);
-                        channelList.add(channelItem);
+                        channelArrayList.add(channelItem);
                     } else {
                         if (!currentLogo.isEmpty() && channelItem.logo.isEmpty()) {
                             channelItem.logo = currentLogo;
@@ -135,7 +134,7 @@ public class TxtSubscribe {
         }
     }
 
-    private static void parseTxt(LinkedHashMap<String, List<LiveChannelItem>> linkedHashMap, String str) {
+    private static void parseTxt(LinkedHashMap<String, ArrayList<LiveChannelItem>> linkedHashMap, String str) {
         if (str == null || str.isEmpty()) return;
         try (BufferedReader bufferedReader = new BufferedReader(new StringReader(str))) {
             String readLine;
@@ -150,9 +149,9 @@ public class TxtSubscribe {
                 } else {
                     String channelName = split[0].trim();
                     String urlPart = split[1].trim();
-                    List<LiveChannelItem> channelList = linkedHashMap.computeIfAbsent(currentGroup, k -> new ArrayList<>());
+                    ArrayList<LiveChannelItem> channelArrayList = linkedHashMap.computeIfAbsent(currentGroup, k -> new ArrayList<>());
                     String[] channelUrls = urlPart.split("#");
-                    List<String> validUrls = new ArrayList<>();
+                    ArrayList<String> validUrls = new ArrayList<>();
                     for (String u : channelUrls) {
                         String trimUrl = u.trim();
                         if (isUrl(trimUrl)) {
@@ -163,7 +162,7 @@ public class TxtSubscribe {
                         continue;
                     }
                     LiveChannelItem existingItem = null;
-                    for (LiveChannelItem channelItem : channelList) {
+                    for (LiveChannelItem channelItem : channelArrayList) {
                         if (channelItem.channelName != null && channelItem.channelName.equals(channelName)) {
                             existingItem = channelItem;
                             break;
@@ -179,7 +178,7 @@ public class TxtSubscribe {
                         LiveChannelItem newItem = new LiveChannelItem();
                         newItem.channelName = channelName;
                         newItem.channelUrls.addAll(validUrls);
-                        channelList.add(newItem);
+                        channelArrayList.add(newItem);
                     }
                 }
             }
@@ -188,11 +187,11 @@ public class TxtSubscribe {
         }
     }
     
-    public static JsonArray live2JsonArray(LinkedHashMap<String, List<LiveChannelItem>> linkedHashMap) {
+    public static JsonArray live2JsonArray(LinkedHashMap<String, ArrayList<LiveChannelItem>> linkedHashMap) {
         JsonArray jsonArr = new JsonArray();
         if (linkedHashMap == null || linkedHashMap.isEmpty()) return jsonArr;
         for (String groupName : linkedHashMap.keySet()) {
-            List<LiveChannelItem> channels = linkedHashMap.get(groupName);
+            ArrayList<LiveChannelItem> channels = linkedHashMap.get(groupName);
             if (channels == null || channels.isEmpty()) continue;
             JsonObject groupObj = new JsonObject();
             groupObj.addProperty("group", groupName);
