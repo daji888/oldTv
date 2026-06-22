@@ -39,6 +39,7 @@ public class HawkConfig {
     public static final String LIVE_SKIP_PASSWORD = "live_skip_password";
     public static final String LIVE_GROUP_INDEX = "live_group_index";
     public static final String LIVE_GROUP_LIST = "live_group_list";
+    public static final String LIVE_CHANNELGROUP_LIST = "live_channelgroup_list";
     public static final String FAST_SEARCH_MODE = "fast_search_mode";
     public static final String SUBTITLE_TEXT_SIZE = "subtitle_text_size";
     public static final String SUBTITLE_TIME_DELAY = "subtitle_time_delay";
