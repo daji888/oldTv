@@ -38,6 +38,8 @@ import com.github.tvbox.osc.util.HistoryHelper;
 import com.github.tvbox.osc.util.LOG;
 import com.github.tvbox.osc.util.OkGoHelper;
 import com.github.tvbox.osc.util.PlayerHelper;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.FileCallback;
 import com.lzy.okgo.model.Progress;
@@ -328,6 +330,24 @@ public class ModelSettingFragment extends BaseLazyFragment {
                         Hawk.put(HawkConfig.LIVE_URL, api);
                         Hawk.put(HawkConfig.LIVE_SOURCE, 0);
                         tvLiveApi.setText(api);
+                        JsonArray liveGroups = Hawk.get(HawkConfig.LIVE_GROUP_LIST, new JsonArray());
+                        int newIndex = 0;
+                        for (int i = 0; i < liveGroups.size(); i++) {
+                            JsonObject obj = liveGroups.get(i).getAsJsonObject();
+                            String url = "";
+                            if (obj.has("url") && !obj.get("url").isJsonNull()) {
+                                try {
+                                    url = obj.get("url").getAsString();
+                                } catch (Exception e) {
+                                    url = "";
+                                }
+                            }
+                            if (url.equals(api)) {
+                                newIndex = i;
+                                break;
+                            }
+                        }
+                        Hawk.put(HawkConfig.LIVE_GROUP_INDEX, newIndex);
                     }
                 });
                 dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
