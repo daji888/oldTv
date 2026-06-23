@@ -140,11 +140,11 @@ public class ImgUtil {
 
         String header = null;
         String referer = null;
-        String ua = UA.random();
+        String ua = null;
         String cookie = null;
 
         if (url.contains("doubanio.com") && !url.contains("@Referer=") && !url.contains("@User-Agent=")) {
-            url += "@Referer=https://api.douban.com/@User-Agent=" + ua;
+            url += "@Referer=https://api.douban.com/@User-Agent=" + UA.randomOne();
         }
 
         //检查链接里面是否有自定义header
