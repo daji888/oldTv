@@ -1,6 +1,7 @@
 package com.github.tvbox.osc.player.controller;
 
 import static xyz.doikki.videoplayer.util.PlayerUtils.stringForTime;
+import static xyz.doikki.videoplayer.util.PlayerUtils.safeTimeMs;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -309,7 +310,7 @@ public class VodController extends BaseController {
                 long duration = mControlWrapper.getDuration();
                 long newPosition = (duration * progress) / seekBar.getMax();
                 if (mCurrentTime != null)
-                    mCurrentTime.setText(stringForTime((int) newPosition));
+                    mCurrentTime.setText(stringForTime(safeTimeMs(newPosition)));
             }
 
             @Override
@@ -325,7 +326,7 @@ public class VodController extends BaseController {
                 myHandle.postDelayed(myRunnable, myHandleSeconds);
                 long duration = mControlWrapper.getDuration();
                 long newPosition = (duration * seekBar.getProgress()) / seekBar.getMax();
-                mControlWrapper.seekTo((int) newPosition);
+                mControlWrapper.seekTo(safeTimeMs(newPosition));
                 mIsDragging = false;
                 mControlWrapper.startProgress();
                 mControlWrapper.startFadeOut();
@@ -530,7 +531,7 @@ public class VodController extends BaseController {
                     ArrayList<Integer> exsitPlayerTypes = PlayerHelper.getExistPlayerTypes();
                     int playerTypeIdx = 0;
                     int playerTypeSize = exsitPlayerTypes.size();
-                    for(int i = 0; i<playerTypeSize; i++) {
+                    for (int i = 0; i < playerTypeSize; i++) {
                         if (playerType == exsitPlayerTypes.get(i)) {
                             if (i == playerTypeSize - 1) {
                                 playerTypeIdx = 0;
@@ -563,7 +564,7 @@ public class VodController extends BaseController {
                     int defaultPos = 0;
                     ArrayList<Integer> players = PlayerHelper.getExistPlayerTypes();
                     ArrayList<Integer> renders = new ArrayList<>();
-                    for(int p = 0; p<players.size(); p++) {
+                    for (int p = 0; p < players.size(); p++) {
                         renders.add(p);
                         if (players.get(p) == playerType) {
                             defaultPos = p;
@@ -663,8 +664,8 @@ public class VodController extends BaseController {
                 myHandle.removeCallbacks(myRunnable);
                 myHandle.postDelayed(myRunnable, myHandleSeconds);
                 try {
-                    int current = (int) mControlWrapper.getCurrentPosition();
-                    int duration = (int) mControlWrapper.getDuration();
+                    int current = safeTimeMs(mControlWrapper.getCurrentPosition());
+                    int duration = safeTimeMs(mControlWrapper.getDuration());
                     if (current > duration / 2) return;
                     mPlayerConfig.put("st",current/1000);
                     updatePlayerCfgView();
@@ -693,8 +694,8 @@ public class VodController extends BaseController {
                 myHandle.removeCallbacks(myRunnable);
                 myHandle.postDelayed(myRunnable, myHandleSeconds);
                 try {
-                    int current = (int) mControlWrapper.getCurrentPosition();
-                    int duration = (int) mControlWrapper.getDuration();
+                    int current = safeTimeMs(mControlWrapper.getCurrentPosition());
+                    int duration = safeTimeMs(mControlWrapper.getDuration());
                     if (current < duration / 2) return;
                     mPlayerConfig.put("et", (duration - current) / 1000);
                     updatePlayerCfgView();
@@ -956,12 +957,12 @@ public class VodController extends BaseController {
     }
 
     public void tvSlideStart(int dir) {
-        int duration = (int) mControlWrapper.getDuration();
+        int duration = safeTimeMs(mControlWrapper.getDuration());
         if (duration <= 0)
             return;
         if (!simSlideStart) {
             simSlideStart = true;
-            simStartPosition = (int) mControlWrapper.getCurrentPosition();
+            simStartPosition = safeTimeMs(mControlWrapper.getCurrentPosition());
             simSeekPosition = simStartPosition;
         }
         simSeekPosition += (30000.0f * dir);  // 每次30秒
