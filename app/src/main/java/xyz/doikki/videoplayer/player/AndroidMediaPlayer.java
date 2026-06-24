@@ -119,7 +119,7 @@ public class AndroidMediaPlayer extends AbstractPlayer implements MediaPlayer.On
                 //使用这个api seekTo定位更加准确 支持android 8.0以上的设备 https://developer.android.com/reference/android/media/MediaPlayer#SEEK_CLOSEST
                 mMediaPlayer.seekTo(time, MediaPlayer.SEEK_CLOSEST);
             } else {
-                mMediaPlayer.seekTo((int) time);
+                mMediaPlayer.seekTo(PlayerUtils.safeTimeMs(time));
             }
         } catch (IllegalStateException e) {
             mPlayerEventListener.onError(-1, PlayerHelper.getRootCauseMessage(e));
