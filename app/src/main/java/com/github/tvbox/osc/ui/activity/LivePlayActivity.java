@@ -2,6 +2,7 @@ package com.github.tvbox.osc.ui.activity;
 
 import static com.github.tvbox.osc.util.RegexUtils.getPattern;
 import static xyz.doikki.videoplayer.util.PlayerUtils.stringForTime;
+import static xyz.doikki.videoplayer.util.PlayerUtils.safeTimeMs;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -623,11 +624,15 @@ public class LivePlayActivity extends BaseActivity {
                                 showProgressBars(true);
                                 mVideoView.pause();
                                 tv_top_l_container.setVisibility(View.VISIBLE);
-                                countDownTimer.cancel();
+                                if (countDownTimer != null) {
+                                    countDownTimer.cancel();
+                                }
                             } else {
                                 mVideoView.start();
                                 tv_top_l_container.setVisibility(View.GONE);
-                                countDownTimer.start();
+                                if (countDownTimer != null) {
+                                    countDownTimer.start();
+                                }
                             }    
                         } else {
                             showChannelList();
@@ -2396,7 +2401,7 @@ public class LivePlayActivity extends BaseActivity {
                 long duration = mVideoView.getDuration();
                 long newPosition = (duration * progress) / seekBar.getMax();
                 if (tv_currentpos != null)
-                    tv_currentpos.setText(stringForTime((int) newPosition));
+                    tv_currentpos.setText(stringForTime(safeTimeMs(newPosition)));
                 if (countDownTimer != null) {
                     countDownTimer.cancel();
                     countDownTimer.start();
@@ -2413,7 +2418,7 @@ public class LivePlayActivity extends BaseActivity {
                 mIsDragging = false;
                 long duration = mVideoView.getDuration();
                 long newPosition = (duration * seekBar.getProgress()) / seekBar.getMax();
-                mVideoView.seekTo((int) newPosition);
+                mVideoView.seekTo(safeTimeMs(newPosition));
             }
         });
         sBar.setOnKeyListener(new View.OnKeyListener() {
@@ -2427,7 +2432,7 @@ public class LivePlayActivity extends BaseActivity {
                     mIsDragging = false;
                     long duration = mVideoView.getDuration();
                     long newPosition = (duration * sBar.getProgress()) / sBar.getMax();
-                    mVideoView.seekTo((int) newPosition);
+                    mVideoView.seekTo(safeTimeMs(newPosition));
                 }
                 return false;
             }
@@ -2440,20 +2445,20 @@ public class LivePlayActivity extends BaseActivity {
                         long duration = mVideoView.getDuration();
                         long currentPosition = mVideoView.getCurrentPosition();
                         long shiyiduration = shiyi_time_c * 1000;
-                        sBar.setMax((int) duration);
-                        sBar.setKeyProgressIncrement((int) sBar.getMax() / 100);
+                        sBar.setMax(safeTimeMs(duration));
+                        sBar.setKeyProgressIncrement(safeTimeMs(sBar.getMax()) / 100);
                         if (!mIsDragging) {
-                            sBar.setProgress((int) currentPosition);
+                            sBar.setProgress(safeTimeMs(currentPosition));
                             sBar.setSecondaryProgress(mVideoView.getBufferedPercentage());
-                            tv_currentpos.setText(stringForTime((int) currentPosition));
+                            tv_currentpos.setText(stringForTime(safeTimeMs(currentPosition)));
                         }    
                         String shiyiUrl = currentLiveChannelItem.getUrl();
                         if (hasChannelCatchup || hasCatchup || shiyiUrl.contains("/PLTV/") || shiyiUrl.contains("/TVOD/")) {
-                            tv_duration.setText(stringForTime((int) shiyiduration));
-                            ((TextView) findViewById(R.id.tv_pause_progress_text)).setText((stringForTime((int) currentPosition)) + " / " + (stringForTime((int) shiyiduration)));
+                            tv_duration.setText(stringForTime(safeTimeMs(shiyiduration)));
+                            ((TextView) findViewById(R.id.tv_pause_progress_text)).setText((stringForTime(safeTimeMs(currentPosition))) + " / " + (stringForTime(safeTimeMs(shiyiduration))));
                         } else {    
-                            tv_duration.setText(stringForTime((int) duration));
-                            ((TextView) findViewById(R.id.tv_pause_progress_text)).setText((stringForTime((int) currentPosition)) + " / " + (stringForTime((int) duration)));
+                            tv_duration.setText(stringForTime(safeTimeMs(duration)));
+                            ((TextView) findViewById(R.id.tv_pause_progress_text)).setText((stringForTime(safeTimeMs(currentPosition))) + " / " + (stringForTime(safeTimeMs(duration))));
                         }
                     }
                 }
