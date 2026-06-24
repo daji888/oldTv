@@ -223,7 +223,15 @@ public class AndroidMediaPlayer extends AbstractMediaPlayer {
 
     @Override
     public void seekTo(long msec) throws IllegalStateException {
-        mInternalMediaPlayer.seekTo((int) msec);
+        int seekMs;
+        if (msec < 0) {
+            seekMs = 0;
+        } else if (msec > Integer.MAX_VALUE) {
+            seekMs = Integer.MAX_VALUE;
+        } else {
+            seekMs = (int) msec;
+        }
+        mInternalMediaPlayer.seekTo(seekMs);
     }
 
     @Override
