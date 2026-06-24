@@ -8,6 +8,9 @@ import android.widget.TextView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.api.ApiConfig;
@@ -110,6 +113,15 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
     @Override
     protected int getLayoutResID() {
         return R.layout.fragment_user;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        TvRecyclerView hotList = view.findViewById(R.id.tvHotList);
+        if (hotList != null && hotList.getLayoutManager() == null) {
+            hotList.setLayoutManager(new V7LinearLayoutManager(mContext, 0, false));
+        }
     }
 
     private void jumpSearch(Movie.Video vod){
