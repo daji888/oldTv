@@ -1175,7 +1175,7 @@ public class PlayFragment extends BaseLazyFragment {
         if (currentTime - lastRetryTime > 60_000) {
             LOG.i("echo-reset-autoRetryCount");
             autoRetryCount = 0;
-            allowSwitchPlayer = false;
+            allowSwitchPlayer = true;
         }
         lastRetryTime = currentTime;  // 更新上次调用时间
         if (loadFoundVideoUrls != null && loadFoundVideoUrls.size() > 0) {
@@ -1193,6 +1193,7 @@ public class PlayFragment extends BaseLazyFragment {
                     if (allowSwitchPlayer) {
                          //切换播放器不占用重试次数
                          if (mController.switchPlayer()) autoRetryCount++;
+                         allowSwitchPlayer = false;
                      } else {
                          autoRetryCount++;
                          allowSwitchPlayer = true;
