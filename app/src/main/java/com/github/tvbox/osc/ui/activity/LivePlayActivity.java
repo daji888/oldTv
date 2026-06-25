@@ -151,6 +151,7 @@ public class LivePlayActivity extends BaseActivity {
     private int currentLiveChannelIndex = -1;
     private int currentLiveLookBackIndex = -1;
     private int currentLiveChangeSourceTimes = 0;
+    private boolean allowLiveSwitchPlayer = true;
     private LiveChannelItem currentLiveChannelItem = null;
     private LivePlayerManager livePlayerManager = new LivePlayerManager();
     private ArrayList<Integer> channelGroupPasswordConfirmed = new ArrayList<>();
@@ -848,6 +849,7 @@ public class LivePlayActivity extends BaseActivity {
             return true;
         }
         if (mVideoView != null) mVideoView.release();
+        allowLiveSwitchPlayer = true;
         if (!changeSource) {
             currentChannelGroupIndex = channelGroupIndex;
             currentLiveChannelIndex = liveChannelIndex;
@@ -1361,6 +1363,7 @@ public class LivePlayActivity extends BaseActivity {
                         break;
                     case VideoView.STATE_PLAYING:
                         currentLiveChangeSourceTimes = 0;
+                        allowLiveSwitchPlayer = true;
                         mHandler.removeCallbacks(mConnectTimeoutReplayRun);
                         break;
                     case VideoView.STATE_ERROR:
@@ -1410,9 +1413,29 @@ public class LivePlayActivity extends BaseActivity {
         mVideoView.setProgressManager(null);
     }
 
+    private boolean switchLivePlayerAndReplay() {
+        if (!allowLiveSwitchPlayer || currentLiveChannelItem == null || mVideoView == null) {
+            return false;
+        }
+        mHandler.removeCallbacks(mConnectTimeoutChangeSourceRun);
+        mVideoView.release();
+        if (!livePlayerManager.switchLivePlayer(mVideoView, currentLiveChannelItem.getChannelName())) {
+            allowLiveSwitchPlayer = false;
+            return false;
+        }
+        LOG.i("echo-liveAutoRetry switch player and replay current url");
+        allowLiveSwitchPlayer = false;
+        mVideoView.setUrl(currentLiveChannelItem.getUrl(), liveWebHeader());
+        mVideoView.start();
+        return true;
+    }
+
     private Runnable mConnectTimeoutChangeSourceRun = new Runnable() {
         @Override
         public void run() {
+            if (switchLivePlayerAndReplay()) {
+                return;
+            }
             currentLiveChangeSourceTimes++;
             if (currentLiveChannelItem.getSourceNum() == currentLiveChangeSourceTimes) {
                 currentLiveChangeSourceTimes = 0;
