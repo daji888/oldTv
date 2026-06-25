@@ -12,13 +12,13 @@ import androidx.media3.common.MimeTypes;
 import androidx.media3.common.PlaybackException;
 import androidx.media3.common.util.Util;
 import androidx.media3.database.StandaloneDatabaseProvider;
-import androidx.media3.datasource.DataSource;
-import androidx.media3.datasource.DefaultDataSource;
-import androidx.media3.datasource.okhttp.OkHttpDataSource;
 import androidx.media3.datasource.cache.Cache;
 import androidx.media3.datasource.cache.CacheDataSource;
 import androidx.media3.datasource.cache.LeastRecentlyUsedCacheEvictor;
 import androidx.media3.datasource.cache.SimpleCache;
+import androidx.media3.datasource.DataSource;
+import androidx.media3.datasource.DefaultDataSource;
+import androidx.media3.datasource.DefaultHttpDataSource;
 import androidx.media3.datasource.rtmp.RtmpDataSource;
 import androidx.media3.exoplayer.dash.DashMediaSource;
 import androidx.media3.exoplayer.hls.HlsMediaSource;
@@ -35,10 +35,8 @@ import com.github.tvbox.osc.util.FileUtils;
 import com.google.common.base.Ascii;
 
 import java.io.File;
-import java.lang.reflect.Field;
 import java.util.Map;
 
-import okhttp3.Call;
 import okhttp3.OkHttpClient;
 
 public final class ExoMediaSourceHelper {
@@ -47,8 +45,7 @@ public final class ExoMediaSourceHelper {
 
     private final String mUserAgent;
     private final Context mAppContext;
-    private OkHttpDataSource.Factory mHttpDataSourceFactory;
-    private OkHttpClient mOkClient = null;
+    private DefaultHttpDataSource.Factory mHttpDataSourceFactory;
     private Cache mCache;
 
     @SuppressLint("UnsafeOptInUsageError")
@@ -81,7 +78,6 @@ public final class ExoMediaSourceHelper {
     }
 
     public void setOkClient(OkHttpClient client) {
-        mOkClient = client;
     }
 
     public MediaSource getMediaSource(String uri) {
@@ -144,11 +140,24 @@ public final class ExoMediaSourceHelper {
         fileName = Ascii.toLowerCase(fileName);
         if (fileName.contains(".mpd") || fileName.contains("type=mpd")) {
             return C.CONTENT_TYPE_DASH;
-        } else if (fileName.contains("m3u8")) {
+        } else if (isHlsUri(fileName)) {
             return C.CONTENT_TYPE_HLS;
         } else {
             return C.CONTENT_TYPE_OTHER;
         }
+    }
+
+    private boolean isHlsUri(String uri) {
+        if (uri.contains("m3u8") || uri.contains("type=hls") || uri.contains("format=hls")) {
+            return true;
+        }
+        Uri parsedUri = Uri.parse(uri);
+        String path = parsedUri.getPath();
+        if (path == null) {
+            return false;
+        }
+        path = path.toLowerCase();
+        return path.endsWith("/live.php") || path.contains("/live/");
     }
 
     @SuppressLint("UnsafeOptInUsageError")
@@ -187,9 +196,9 @@ public final class ExoMediaSourceHelper {
     @SuppressLint("UnsafeOptInUsageError")
     private DataSource.Factory getHttpDataSourceFactory() {
         if (mHttpDataSourceFactory == null) {
-            mHttpDataSourceFactory = new OkHttpDataSource.Factory((Call.Factory) mOkClient)
-                    .setUserAgent(mUserAgent)/*
-                    .setAllowCrossProtocolRedirects(true)*/;
+            mHttpDataSourceFactory = new DefaultHttpDataSource.Factory()
+                    .setUserAgent(mUserAgent)
+                    .setAllowCrossProtocolRedirects(true);
         }
         return mHttpDataSourceFactory;
     }
@@ -201,13 +210,7 @@ public final class ExoMediaSourceHelper {
             if (headers.containsKey("User-Agent")) {
                 String value = headers.remove("User-Agent");
                 if (!TextUtils.isEmpty(value)) {
-                    try {
-                        Field userAgentField = mHttpDataSourceFactory.getClass().getDeclaredField("userAgent");
-                        userAgentField.setAccessible(true);
-                        userAgentField.set(mHttpDataSourceFactory, value.trim());
-                    } catch (Exception e) {
-                        //ignore
-                    }
+                    mHttpDataSourceFactory.setUserAgent(value.trim());
                 }
             }
             for (String k : headers.keySet()) {
