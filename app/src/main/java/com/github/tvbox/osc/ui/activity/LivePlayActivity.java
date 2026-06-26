@@ -381,7 +381,9 @@ public class LivePlayActivity extends BaseActivity {
                             if (jSONArray != null)
                                 for (int b = 0; b < jSONArray.length(); b++) {
                                     JSONObject jSONObject = jSONArray.getJSONObject(b);
-                                    Epginfo epgbcinfo = new Epginfo(date, jSONObject.optString("title"), date, jSONObject.optString("start"), jSONObject.optString("end"), b);
+                                    String title = jSONObject.optString("title").replace(" --免费使用", "").trim();
+                                    title = jSONObject.optString("title").replace("--免费使用", "").trim();
+                                    Epginfo epgbcinfo = new Epginfo(date, title, date, jSONObject.optString("start"), jSONObject.optString("end"), b);
                              //       Log.d("EPG信息:", day + "  " + jSONObject.optString("start") + " - " + jSONObject.optString("end") + "  " + jSONObject.optString("title"));
                                     arrayList.add(epgbcinfo);
                                 }

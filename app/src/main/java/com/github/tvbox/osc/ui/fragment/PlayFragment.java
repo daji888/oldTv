@@ -732,13 +732,14 @@ public class PlayFragment extends BaseLazyFragment {
                         }
                         if ("".equals(forwardurl)) {
                             int ilast = url.lastIndexOf('/');
-
                             RemoteServer.m3u8Content = M3U8.purify(url.substring(0, ilast + 1), content);
                             if (RemoteServer.m3u8Content == null)
                                 startPlayUrl(url, headers);
                             else {
                                 startPlayUrl("http://127.0.0.1:" + RemoteServer.serverPort + "/m3u8", headers);
-                                Toast.makeText(getContext(), "已移除视频广告 " + M3U8.currentAdCount + " 条", Toast.LENGTH_SHORT).show();
+                                if (M3U8.currentAdCount > 0) {
+                                    Toast.makeText(getContext(), "已移除视频广告 " + M3U8.currentAdCount + " 条", Toast.LENGTH_SHORT).show();
+                                }
                             }
                             return;
                         }
@@ -757,7 +758,9 @@ public class PlayFragment extends BaseLazyFragment {
                                             startPlayUrl(finalforwardurl, headers);
                                         else {
                                             startPlayUrl("http://127.0.0.1:" + RemoteServer.serverPort + "/m3u8", headers);
-                                            Toast.makeText(getContext(), "已移除视频广告 " + M3U8.currentAdCount + " 条", Toast.LENGTH_SHORT).show();
+                                            if (M3U8.currentAdCount > 0) {
+                                                Toast.makeText(getContext(), "已移除视频广告 " + M3U8.currentAdCount + " 条", Toast.LENGTH_SHORT).show();
+                                            }
                                         }
                                     }
 
@@ -961,7 +964,7 @@ public class PlayFragment extends BaseLazyFragment {
                         subtitleCacheKey = info.optString("subtKey", null);
                         String playUrl = info.optString("playUrl", "");
                         String msg = info.optString("msg", "");
-                        if(!msg.isEmpty()){
+                        if (!msg.isEmpty()) {
                             Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
                         }
                         String flag = info.optString("flag");
@@ -2152,7 +2155,7 @@ public class PlayFragment extends BaseLazyFragment {
                         mHandler.removeMessages(100);
                         url = loadFoundVideoUrls.poll();
                         String cookie = CookieManager.getInstance().getCookie(url);
-                        if(!TextUtils.isEmpty(cookie))webHeaders.put("Cookie", " " + cookie);//携带cookie
+                        if (!TextUtils.isEmpty(cookie)) webHeaders.put("Cookie", " " + cookie);//携带cookie
                         playUrl(url, webHeaders);
                     }
                 }

@@ -710,13 +710,14 @@ public class PlayActivity extends BaseActivity {
                         }
                         if ("".equals(forwardurl)) {
                             int ilast = url.lastIndexOf('/');
-
                             RemoteServer.m3u8Content = M3U8.purify(url.substring(0, ilast + 1), content);
                             if (RemoteServer.m3u8Content == null)
                                 startPlayUrl(url, headers);
                             else {
                                 startPlayUrl("http://127.0.0.1:" + RemoteServer.serverPort + "/m3u8", headers);
-                                Toast.makeText(mContext, "已移除视频广告 " + M3U8.currentAdCount + " 条", Toast.LENGTH_SHORT).show();
+                                if (M3U8.currentAdCount > 0) {
+                                    Toast.makeText(mContext, "已移除视频广告 " + M3U8.currentAdCount + " 条", Toast.LENGTH_SHORT).show();
+                                }
                             }
                             return;
                         }
@@ -735,7 +736,9 @@ public class PlayActivity extends BaseActivity {
                                             startPlayUrl(finalforwardurl, headers);
                                         else {
                                             startPlayUrl("http://127.0.0.1:" + RemoteServer.serverPort + "/m3u8", headers);
-                                            Toast.makeText(mContext, "已移除视频广告 " + M3U8.currentAdCount + " 条", Toast.LENGTH_SHORT).show();
+                                            if (M3U8.currentAdCount > 0) {
+                                                Toast.makeText(mContext, "已移除视频广告 " + M3U8.currentAdCount + " 条", Toast.LENGTH_SHORT).show();
+                                            }
                                         }
                                     }
 
@@ -937,7 +940,7 @@ public class PlayActivity extends BaseActivity {
                         subtitleCacheKey = info.optString("subtKey", null);
                         String playUrl = info.optString("playUrl", "");
                         String msg = info.optString("msg", "");
-                        if(!msg.isEmpty()){
+                        if (!msg.isEmpty()) {
                             Toast.makeText(PlayActivity.this, msg, Toast.LENGTH_SHORT).show();
                         }
                         String flag = info.optString("flag");
