@@ -32,7 +32,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
             for (int trackIndex = 0; trackIndex < group.length; trackIndex++) {
                 Format format = group.getTrackFormat(trackIndex);
                 if (MimeTypes.isVideo(format.sampleMimeType)) {
-                    String trackName = (data.getVideo().size() + 1) + ".  " + trackNameProvider.getTrackName(format) + " [" + format.codecs + "]";
+                    String trackName = (data.getVideo().size() + 1) + ".  " + trackNameProvider.getTrackName(format);
                     TrackInfoBean t = new TrackInfoBean();
                     t.name = trackName;
                     t.trackId = trackIndex;
@@ -40,7 +40,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
                     t.trackGroupId = groupIndex;
                     data.addVideo(t);
                 } else if (MimeTypes.isAudio(format.sampleMimeType)) {
-                    String trackName = (data.getAudio().size() + 1) + ".  " + trackNameProvider.getTrackName(format) + " [" + format.codecs + "]";
+                    String trackName = (data.getAudio().size() + 1) + ".  " + trackNameProvider.getTrackName(format);
                     TrackInfoBean t = new TrackInfoBean();
                     t.name = trackName;
                     t.language = "";
