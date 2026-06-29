@@ -230,9 +230,8 @@ public class ModelSettingFragment extends BaseLazyFragment {
                         public void click(SourceBean value, int pos) {
                             ApiConfig.get().setSourceBean(value);
                             tvHomeApi.setText(ApiConfig.get().getHomeSourceBean().getName());
-
-                            Intent intent =new Intent(mContext, HomeActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            Intent intent = new Intent(mContext, HomeActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             Bundle bundle = new Bundle();
                             bundle.putBoolean("useCache", true);
                             intent.putExtras(bundle);
