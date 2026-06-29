@@ -104,13 +104,15 @@ public class ApiConfig {
         String content = json;
         try {
             if (AES.isJson(content)) return content;
-            Pattern pattern = getPattern("[A-Za-z0]{8}\\*\\*");
+            Pattern pattern = getPattern("[A-Za-z0-9]{8}\\*\\*");
             Matcher matcher = pattern.matcher(content);
             if (matcher.find()) {
                 content = content.substring(content.indexOf(matcher.group()) + 10);
                 content = new String(Base64.decode(content, Base64.DEFAULT));
             }
+            content = content.trim();
             if (content.startsWith("2423")) {
+                content = content.replaceAll("\\s+", "");
                 String data = content.substring(content.indexOf("2324") + 4, content.length() - 26);
                 content = new String(AES.toBytes(content)).toLowerCase();
                 String key = AES.rightPadding(content.substring(content.indexOf("$#") + 2, content.indexOf("#$")), "0", 16);
@@ -129,7 +131,7 @@ public class ApiConfig {
     }
 
     private static byte[] getImgJar(String body){
-        Pattern pattern = getPattern("[A-Za-z0]{8}\\*\\*");
+        Pattern pattern = getPattern("[A-Za-z0-9]{8}\\*\\*");
         Matcher matcher = pattern.matcher(body);
         if (matcher.find()) {
             body = body.substring(body.indexOf(matcher.group()) + 10);
@@ -855,13 +857,18 @@ public class ApiConfig {
     }
 
     String fixContentPath(String url, String content) {
-        if (content.contains("\"./")) {
+        if (content.contains("\"./") || content.contains("\"../")) {
             url = url.replace("file://", "clan://localhost/");
             if (!url.startsWith("http") && !url.startsWith("clan://")) {
                 url = "http://" + url;
             }
             if (url.startsWith("clan://")) url = clanToAddress(url);
-            content = content.replace("./", url.substring(0,url.lastIndexOf("/") + 1));
+            String base = url.substring(0,url.lastIndexOf("/") + 1);
+            String parent = base.endsWith("/") ? base.substring(0, base.length() - 1) : base;
+            int parentEnd = parent.lastIndexOf("/");
+            if (parentEnd >= 0) parent = parent.substring(0, parentEnd + 1);
+            content = content.replace("../", parent);
+            content = content.replace("./", base);
         }
         return content;
     }
