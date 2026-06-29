@@ -64,6 +64,8 @@ public class Movie implements Serializable {
         public String sourceKey;
         @XStreamAlias("tag")
         public String tag;
+        @XStreamAlias("action")
+        public String action;
 
         @XStreamAlias("dl")
         public static class UrlBean implements Serializable {
@@ -87,12 +89,8 @@ public class Movie implements Serializable {
                         this.name = name;
                         this.url = url;
                     }
-
                 }
             }
-
         }
-
     }
-
 }

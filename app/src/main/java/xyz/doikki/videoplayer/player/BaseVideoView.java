@@ -471,6 +471,8 @@ public class BaseVideoView<P extends AbstractPlayer> extends FrameLayout
             //切换转态
             setPlayState(STATE_IDLE);
         }
+        mVideoSize[0] = 0;
+        mVideoSize[1] = 0;
     }
 
     /**
@@ -715,6 +717,8 @@ public class BaseVideoView<P extends AbstractPlayer> extends FrameLayout
         mAssetFileDescriptor = null;
         mUrl = url;
         mHeaders = headers;
+        mVideoSize[0] = 0;
+        mVideoSize[1] = 0;
     }
 
     /**

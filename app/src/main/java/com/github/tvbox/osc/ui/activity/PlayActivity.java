@@ -143,7 +143,6 @@ public class PlayActivity extends BaseActivity {
         initView();
         initViewModel();
         initData();
-        Hawk.put(HawkConfig.PLAYER_IS_LIVE, false);
     }
 
     public VodController getVodController() {

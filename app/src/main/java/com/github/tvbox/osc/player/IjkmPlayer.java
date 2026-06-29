@@ -94,16 +94,8 @@ public class IjkmPlayer extends IjkPlayer {
    //     mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "start-on-prepared", 1);
         // 是否开启内置字幕，默认值为 0：关闭，1：开启
         mMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "subtitle", 1);
-        
-        if (Hawk.get(HawkConfig.PLAYER_IS_LIVE)) {
-            LOG.i("echo-type-直播");
-        } else {
-            LOG.i("echo-type-点播");
-        }
         super.setOptions();
     }
-
-    private static final String ITV_TARGET_DOMAIN = "gslbserv.itv.cmvideo.cn";
 
     @Override
     public void setDataSource(String path, Map<String, String> headers) {
@@ -134,14 +126,7 @@ public class IjkmPlayer extends IjkPlayer {
                     }
                     break;
                 case M3U8:
-                    // 直播且是ijk的时候自动走代理解决DNS
-                    if (Hawk.get(HawkConfig.PLAYER_IS_LIVE, false)) {
-                        URI uri = new URI(path);
-                        String host = uri.getHost();
-                        if (ITV_TARGET_DOMAIN.equalsIgnoreCase(host)) path = ControlManager.get().getAddress(true) + "proxy?go=live&type=m3u8&url=" + URLEncoder.encode(path, "UTF-8");
-                    }
                     break;
-
                 default:
                     break;
             }

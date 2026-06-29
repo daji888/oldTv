@@ -39,20 +39,6 @@ public class JarLoader {
         recentJarKey = "main";
         return loadClassLoader(cache, recentJarKey);
     }
-
-    public void setRecentJarKey(String key) {
-        if (key != null && !key.isEmpty()) {
-            recentJarKey = key;
-        }
-    }
-
-    public void loadLiveJar(String jarUrl) {
-        String[] urls = jarUrl.split(";md5;");
-        jarUrl = urls[0];
-        String jarKey = MD5.string2MD5(jarUrl);
-        String jarMd5 = urls.length > 1 ? urls[1].trim() : "";
-        loadJarInternal(jarUrl,jarMd5,jarKey);
-    }
  
     public void clear() {
         spiders.clear();
