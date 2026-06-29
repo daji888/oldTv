@@ -274,12 +274,22 @@ public class PlayerHelper {
         return th.getLocalizedMessage();
     }
 
-    public static String getDisplaySpeed(long speed, boolean show) {
-        if (speed > 1048576)
-            return new DecimalFormat("#.00").format(speed / 1048576d) + "Mb/s";
-        else if (speed > 1024)
-            return (speed / 1024) + "Kb/s";
-        else
-            return speed > 0 ? speed + "B/s" : (show ? "0B/s" : "");
+    public static String getDisplaySpeed(long speed, boolean showZero) {
+        if (speed <= 0) {
+            return showZero ? "0B/s" : "";
+        }
+        final long KB = 1024L;
+        final long MB = 1024L * 1024L;
+        final long GB = 1024L * 1024L * 1024L;
+        DecimalFormat df = new DecimalFormat("#.00");
+        if (speed >= GB) {
+            return df.format(speed / (double) GB) + "GB/s";
+        } else if (speed >= MB) {
+            return df.format(speed / (double) MB) + "MB/s";
+        } else if (speed >= KB) {
+            return df.format(speed / (double) KB) + "KB/s";
+        } else {
+            return speed + "B/s";
+        }
     }
 }
