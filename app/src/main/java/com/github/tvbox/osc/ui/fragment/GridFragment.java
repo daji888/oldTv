@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 import org.greenrobot.eventbus.EventBus;
+import org.json.JSONObject;
 
 /**
  * @author pj567
@@ -228,6 +229,10 @@ public class GridFragment extends BaseLazyFragment {
                 FastClickCheckUtil.check(view);
                 Movie.Video video = gridAdapter.getData().get(position);
                 if (video != null) {
+                    if (video.action != null) {
+                        sourceViewModel.action(video.sourceKey, video.action);
+                        return;
+                    }
                     Bundle bundle = new Bundle();
                     bundle.putString("id", video.id);
                     bundle.putString("sourceKey", video.sourceKey);
@@ -301,12 +306,20 @@ public class GridFragment extends BaseLazyFragment {
                 } else {
                     if (page == 1) {
                         showEmpty();
-                    } else {
+                    } else if (page > 2) {
                         Toast.makeText(getContext(), "没有更多了", Toast.LENGTH_SHORT).show();
                     }
                     gridAdapter.loadMoreEnd();
                     gridAdapter.setEnableLoadMore(false);
                 }
+            }
+        });
+        sourceViewModel.actionResult.observe(this, new Observer<JSONObject>() {
+            @Override
+            public void onChanged(JSONObject jsonObject) {
+                if (jsonObject == null) return;
+                String msg = jsonObject.optString("msg");
+                if (!msg.isEmpty()) Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
             }
         });
     }
