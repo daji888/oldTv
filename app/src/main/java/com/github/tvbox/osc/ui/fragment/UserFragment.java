@@ -181,6 +181,7 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
                     bundle.putString("sourceKey", vod.sourceKey);
                     SourceBean sourceBean = ApiConfig.get().getSource(vod.sourceKey);
                     if (sourceBean != null && !vod.id.startsWith("msearch:")) {
+                        bundle.putString("title", vod.name);
                         bundle.putString("picture", vod.pic);
                         jumpActivity(DetailActivity.class, bundle);
                     } else {
