@@ -674,6 +674,7 @@ public class DetailActivity extends BaseActivity {
                     }
                     mVideo = absXml.movie.videoList.get(0);
                     mVideo.id = vodId;
+                    if (TextUtils.isEmpty(mVideo.name)) mVideo.name = vod_name;
                     if (TextUtils.isEmpty(mVideo.name)) mVideo.name = "TVBox";
                     vodInfo = new VodInfo();
                     if ((mVideo.pic == null || mVideo.pic.isEmpty()) && !vod_picture.isEmpty()) {
@@ -822,16 +823,18 @@ public class DetailActivity extends BaseActivity {
         return label + "<font color=\"#FFFFFF\">" + content + "</font>";
     }
 
+    private String  vod_picture = "";
+    private String  vod_name = "";
     private void initData() {
         Intent intent = getIntent();
         if (intent != null && intent.getExtras() != null) {
             Bundle bundle = intent.getExtras();
+            vod_name = bundle.getString("title", "");
             vod_picture = bundle.getString("picture", "");
             loadDetail(bundle.getString("id", null), bundle.getString("sourceKey", ""));
         }
     }
 
-    private String  vod_picture = "";
     private void loadDetail(String vid, String key) {
         if (vid != null) {
             vodId = vid;
@@ -876,6 +879,8 @@ public class DetailActivity extends BaseActivity {
         } else if (event.type == RefreshEvent.TYPE_QUICK_SEARCH_SELECT) {
             if (event.obj != null) {
                 Movie.Video video = (Movie.Video) event.obj;
+                vod_name = video.name;
+                vod_picture = video.pic;
                 loadDetail(video.id, video.sourceKey);
             }
         } else if (event.type == RefreshEvent.TYPE_QUICK_SEARCH_WORD_CHANGE) {
