@@ -17,7 +17,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.api.ApiConfig;
 import com.github.tvbox.osc.base.BaseLazyFragment;
 import com.github.tvbox.osc.bean.AbsXml;
@@ -25,6 +24,7 @@ import com.github.tvbox.osc.bean.Movie;
 import com.github.tvbox.osc.bean.MovieSort;
 import com.github.tvbox.osc.bean.SourceBean;
 import com.github.tvbox.osc.event.RefreshEvent;
+import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.ui.activity.DetailActivity;
 import com.github.tvbox.osc.ui.activity.FastSearchActivity;
 import com.github.tvbox.osc.ui.activity.SearchActivity;
@@ -41,6 +41,7 @@ import com.owen.tvrecyclerview.widget.V7GridLayoutManager;
 import com.owen.tvrecyclerview.widget.V7LinearLayoutManager;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 import org.greenrobot.eventbus.EventBus;
@@ -60,6 +61,8 @@ public class GridFragment extends BaseLazyFragment {
     private int page = 1;
     private int maxPage = 1;
     private boolean isLoad = false;
+    private boolean isRequesting = false;
+    private boolean hasActionItems = false;
     private boolean isTop = true;
     private View focusedView = null;
     
@@ -70,6 +73,7 @@ public class GridFragment extends BaseLazyFragment {
         public int page = 1;
         public int maxPage = 1;
         public boolean isLoad = false;
+        public boolean hasActionItems = false;
         public View focusedView= null;
     }
     
@@ -138,6 +142,7 @@ public class GridFragment extends BaseLazyFragment {
         info.page = this.page;
         info.maxPage = this.maxPage;
         info.isLoad = this.isLoad;
+        info.hasActionItems = this.hasActionItems;
         info.focusedView = this.focusedView;
         this.mGrids.push(info);
     }
@@ -154,6 +159,7 @@ public class GridFragment extends BaseLazyFragment {
         this.page = info.page;
         this.maxPage = info.maxPage;
         this.isLoad = info.isLoad;
+        this.hasActionItems = info.hasActionItems;
         this.focusedView = info.focusedView;
         this.mGridView.setVisibility(View.VISIBLE);
 //        if (this.focusedView != null) { this.focusedView.requestFocus(); }
@@ -285,12 +291,15 @@ public class GridFragment extends BaseLazyFragment {
         sourceViewModel.listResult.observe(this, new Observer<AbsXml>() {
             @Override
             public void onChanged(AbsXml absXml) {
+                isRequesting = false;
                 if (absXml != null && absXml.movie != null && absXml.movie.videoList != null && absXml.movie.videoList.size() > 0) {
                     if (page == 1) {
                         showSuccess();
                         isLoad = true;
+                        hasActionItems = hasActionVideo(absXml.movie.videoList);
                         gridAdapter.setNewData(absXml.movie.videoList);
                     } else {
+                        hasActionItems = hasActionItems || hasActionVideo(absXml.movie.videoList);
                         gridAdapter.addData(absXml.movie.videoList);
                     }
                     page++;
@@ -305,6 +314,7 @@ public class GridFragment extends BaseLazyFragment {
                     }
                 } else {
                     if (page == 1) {
+                        hasActionItems = false;
                         showEmpty();
                     } else if (page > 2) {
                         Toast.makeText(getContext(), "没有更多了", Toast.LENGTH_SHORT).show();
@@ -328,12 +338,26 @@ public class GridFragment extends BaseLazyFragment {
         return isLoad || !mGrids.empty(); //如果有缓存页的话也可以认为是加载了数据的
     }
 
+    public boolean shouldReloadOnSelect() {
+        return !isRequesting && mGrids.empty() && (hasActionItems || !isLoad);
+    }
+
     private void initData() {
         showLoading();
+        isRequesting = true;
         isLoad = false;
+        hasActionItems = false;
         scrollTop();
         toggleFilterColor();
         sourceViewModel.getList(sortData, page);
+    }
+
+    private boolean hasActionVideo(List<Movie.Video> videos) {
+        if (videos == null) return false;
+        for (Movie.Video video : videos) {
+            if (video != null && video.action != null) return true;
+        }
+        return false;
     }
 
     private void toggleFilterColor() {
