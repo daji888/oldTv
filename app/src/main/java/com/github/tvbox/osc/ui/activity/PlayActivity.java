@@ -105,6 +105,7 @@ import org.xwalk.core.XWalkWebResourceResponse;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -646,6 +647,8 @@ public class PlayActivity extends BaseActivity {
     }
 
     void playUrl(String url, HashMap<String, String> headers) {
+        url = attachProxySiteKey(url);
+        final String finalUrl = url;
         if (!Hawk.get(HawkConfig.VIDEO_PURIFY, true)) {
             startPlayUrl(url, headers);
             return;
@@ -671,6 +674,7 @@ public class PlayActivity extends BaseActivity {
                 .tag("m3u8-1")
                 .headers(hheaders)
                 .execute(new AbsCallback<String>() {
+                    String url = finalUrl;
                     @Override
                     public void onSuccess(com.lzy.okgo.model.Response<String> response) {
                         String content = response.body();
@@ -816,6 +820,17 @@ public class PlayActivity extends BaseActivity {
                 }
             }
         });
+    }
+
+    private String attachProxySiteKey(String url) {
+        if (TextUtils.isEmpty(url) || TextUtils.isEmpty(sourceKey)) return url;
+        if (!url.startsWith(ControlManager.get().getAddress(true) + "proxy?")) return url;
+        if (url.contains("siteKey=")) return url;
+        try {
+            return url + (url.contains("?") ? "&" : "?") + "siteKey=" + URLEncoder.encode(sourceKey, "UTF-8");
+        } catch (Throwable th) {
+            return url + (url.contains("?") ? "&" : "?") + "siteKey=" + sourceKey;
+        }
     }
     
     private void initSubtitleView() {
@@ -996,6 +1011,7 @@ public class PlayActivity extends BaseActivity {
             mVodInfo = App.getInstance().getVodInfo();
             sourceKey = bundle.getString("sourceKey");
             sourceBean = ApiConfig.get().getSource(sourceKey);
+            ApiConfig.get().setCurrentPlaySourceKey(sourceKey);
             initPlayerCfg();
             play(false);
         }
@@ -1076,6 +1092,8 @@ public class PlayActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        ApiConfig.get().setCurrentPlaySourceKey("");
+        EventBus.getDefault().unregister(this);
         if (mVideoView != null) {
             mVideoView.release();
             mVideoView = null;
