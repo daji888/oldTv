@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.Log;
 
 import com.github.tvbox.osc.base.App;
+import com.github.tvbox.osc.server.ControlManager;
+import com.github.tvbox.osc.server.RemoteServer;
 import com.github.tvbox.osc.util.FileUtils;
 import com.github.tvbox.osc.util.MD5;
 import com.lzy.okgo.OkGo;
@@ -18,6 +20,7 @@ import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -32,6 +35,7 @@ public class JarLoader {
     private final ConcurrentHashMap<String, DexClassLoader> classLoaders = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, Method> proxyMethods = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, Spider> spiders = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, String> siteJarKeys = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, Boolean> protectedInitJars = new ConcurrentHashMap<>();
     private volatile String recentJarKey = "";
     private static final String DEFAULT_CONFIG_JSON = "{\"version\":\"25.0\",\"update\":\"关闭\",\"danmuColor\":\"默认\",\"aliHD\":\"阿里原画\",\"quarkHD\":\"夸克原画\",\"ucHD\":\"UC原画\",\"panBlock\":\"\",\"proxyMode\":\"Go多线程\",\"pansouUrl\":\"https://so.252035.xyz\",\"panOrder\":\"百度,夸克,UC,天翼,123,阿里,移动\",\"homePage\":\"热门电影,热播剧集,热门动漫,热播综艺,电影筛选,电视筛选,电影榜单,电视剧榜单\",\"aliThread\":\"64\",\"quarkThread\":\"16\",\"ucThread\":\"自动\"}";
@@ -50,10 +54,12 @@ public class JarLoader {
         spiders.clear();
         proxyMethods.clear();
         classLoaders.clear();
+        siteJarKeys.clear();
     }
 
     private boolean loadClassLoader(String jar, String key) {
          if (classLoaders.containsKey(key)) {
+             injectProxyPort(classLoaders.get(key));
              Log.i("JarLoader", "echo-loadClassLoader jar缓存: " + key);
              ensureDefaultConfig();
              return true;
@@ -64,6 +70,8 @@ public class JarLoader {
              if (!cacheDir.exists())
                  cacheDir.mkdirs();
              final DexClassLoader classLoader = new DexClassLoader(jar, cacheDir.getAbsolutePath(), null, App.getInstance().getClassLoader());
+             injectProxyPort(classLoader);
+             injectProtectedClassLoader(classLoader);
              int count = 0;
              do {
                  try {
@@ -185,6 +193,51 @@ public class JarLoader {
         invokeStartGoProxy(classInit);
     }
 
+    private void injectProtectedClassLoader(DexClassLoader classLoader) {
+        if (classLoader == null) return;
+        injectClassLoaderFields(classLoader, "com.github.catvod.spider.Init");
+        injectClassLoaderFields(classLoader, "com.github.catvod.spider.DexNative");
+        injectClassLoaderFields(classLoader, "com.github.catvod.spider.BaseSpiderGuard");
+    }
+
+    private void injectClassLoaderFields(DexClassLoader classLoader, String className) {
+        try {
+            Class<?> cls = classLoader.loadClass(className);
+            setClassLoaderFields(cls, null, classLoader);
+            Object singleton = getSingleton(cls);
+            if (singleton != null) {
+                setClassLoaderFields(cls, singleton, classLoader);
+            }
+        } catch (Throwable ignored) {
+        }
+    }
+
+    private Object getSingleton(Class<?> cls) {
+        try {
+            Method get = cls.getMethod("get");
+            return get.invoke(null);
+        } catch (Throwable ignored) {
+            return null;
+        }
+    }
+
+    private void setClassLoaderFields(Class<?> cls, Object instance, DexClassLoader classLoader) {
+        try {
+            for (Field field : cls.getDeclaredFields()) {
+                if (!ClassLoader.class.isAssignableFrom(field.getType()) && field.getType() != Object.class) continue;
+                boolean isStatic = Modifier.isStatic(field.getModifiers());
+                if (instance == null && !isStatic) continue;
+                if (instance != null && isStatic) continue;
+                field.setAccessible(true);
+                Object current = field.get(instance);
+                if (current == null) {
+                    field.set(instance, classLoader);
+                }
+            }
+        } catch (Throwable ignored) {
+        }
+    }
+
     private void invokeSaveConfig(Class<?> classInit) {
         try {
             Method saveConfig = classInit.getMethod("saveConfig");
@@ -207,6 +260,29 @@ public class JarLoader {
             method.invoke(null, App.getInstance());
         } catch (Throwable ignored) {
         }
+    }
+
+    private void injectProxyPort(DexClassLoader classLoader) {
+        com.github.catvod.Proxy.set(getServerPort());
+        if (classLoader == null) return;
+        try {
+            Class<?> proxy = classLoader.loadClass("com.github.catvod.Proxy");
+            Method set = proxy.getMethod("set", int.class);
+            set.invoke(null, getServerPort());
+        } catch (Throwable ignored) {
+        }
+    }
+
+    private int getServerPort() {
+        try {
+            String address = ControlManager.get().getAddress(true);
+            if (address != null && address.startsWith("http://127.0.0.1:")) {
+                String baseUrl = address.endsWith("/") ? address.substring(0, address.length() - 1) : address;
+                return Integer.parseInt(baseUrl.substring(baseUrl.lastIndexOf(":") + 1));
+            }
+        } catch (Throwable ignored) {
+        }
+        return RemoteServer.serverPort;
     }
 
     private void ensureDefaultConfig() {
@@ -279,6 +355,10 @@ public class JarLoader {
 
     public Spider getSpider(String key, String cls, String ext, String jar) {
         if (spiders.containsKey(key)) {
+             String jarKey = getJarKey(jar);
+             recentJarKey = jarKey;
+             siteJarKeys.put(key, jarKey);
+             injectProxyPort(classLoaders.get(jarKey));
              Log.i("JarLoader", "echo-getSpider spider缓存: " + key);
              ensureDefaultConfig();
              return spiders.get(key);
@@ -296,12 +376,14 @@ public class JarLoader {
             jarMd5 = urls.length > 1 ? urls[1].trim() : "";
         }
         recentJarKey = jarKey;
+        siteJarKeys.put(key, jarKey);
         assert jarKey != null;
         DexClassLoader classLoader = jarKey.equals("main")? classLoaders.get("main"):loadJarInternal(jarUrl, jarMd5, jarKey);
         if (classLoader == null) return new SpiderNull();
         try {
             ensureDefaultConfig();
             Log.i("JarLoader", "echo-getSpider 加载spider: " + key);
+            injectProtectedClassLoader(classLoader);
             try {
                 Class<?> clazz = classLoader.loadClass("com.github.catvod.spider." + clsKey);
                 Constructor<?> constructor = clazz.getDeclaredConstructor();
@@ -310,7 +392,7 @@ public class JarLoader {
                 sp.initApi(new SpiderApi());
                 sp.init(App.getInstance(), ext);
     //            if (!jar.isEmpty()) {
-    //                sp.homeContent(false); // 增加此行 应该可以解决部分写的有问题源的历史记录问题 但会增加这个源的首次加载时间 不需要可以已删掉
+    //                sp.homeContent(false); // 增加此行 应该可以解决部分写的有问题源的历史记录问题 但会增加这个源的首次加载时间 不需要可以删掉
     //            }
                 spiders.put(key, sp);
                 return sp;
@@ -321,6 +403,14 @@ public class JarLoader {
             th.printStackTrace();
         }
         return new SpiderNull();
+    }
+
+    private String getJarKey(String jar) {
+        if (jar == null || jar.isEmpty()) {
+            return "main";
+        }
+        String[] urls = jar.split(";md5;");
+        return MD5.string2MD5(urls[0]);
     }
 
     public JSONObject jsonExt(String key, LinkedHashMap<String, String> jxs, String url) {
@@ -354,14 +444,26 @@ public class JarLoader {
     }
 
     public Object[] proxyInvoke(Map<String,String> params) {
+        String jarKey = getProxyJarKey(params);
+        injectProxyPort(classLoaders.get(jarKey));
+        return invokeProxy(proxyMethods.get(jarKey), params);
+    }
+
+    private String getProxyJarKey(Map<String, String> params) {
+        String siteKey = params == null ? null : params.get("siteKey");
+        if (siteKey != null && siteJarKeys.containsKey(siteKey)) {
+            return siteJarKeys.get(siteKey);
+        }
+        return recentJarKey;
+    }
+
+    private Object[] invokeProxy(Method proxyFun, Map<String, String> params) {
+        if (proxyFun == null) return null;
         try {
-            Method proxyFun = proxyMethods.get(recentJarKey);
-            if (proxyFun != null) {
-                return (Object[]) proxyFun.invoke(null, params);
-            }
+            return (Object[]) proxyFun.invoke(null, params);
         } catch (Throwable th) {
             th.printStackTrace();
+            return null;
         }
-        return null;
     }
 }
