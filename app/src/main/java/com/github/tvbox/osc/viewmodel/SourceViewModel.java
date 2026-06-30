@@ -97,7 +97,8 @@ public class SourceViewModel extends ViewModel {
      };
 
     private static void cacheSort(String sourceKey, AbsSortXml sortXml) {
-        if (!hasActionSort(sortXml)) {
+        SourceBean sourceBean = ApiConfig.get().getSource(sourceKey);
+        if (!shouldBypassSortCache(sourceKey, sourceBean) && !hasActionSort(sortXml)) {
             sortCache.put(sourceKey, sortXml);
         }
     }
@@ -116,6 +117,29 @@ public class SourceViewModel extends ViewModel {
         return false;
     }
 
+    private static boolean shouldBypassSortCache(String sourceKey, SourceBean sourceBean) {
+        return isFirstSource(sourceKey) && isDoubanSource(sourceBean);
+    }
+
+    private static boolean isFirstSource(String sourceKey) {
+        List<SourceBean> sources = ApiConfig.get().getSourceBeanList();
+        return !sources.isEmpty() && sources.get(0) != null && sourceKey.equals(sources.get(0).getKey());
+    }
+
+    private static boolean isDoubanSource(SourceBean sourceBean) {
+        if (sourceBean == null) return false;
+        return containsDouban(sourceBean.getKey())
+                || containsDouban(sourceBean.getName())
+                || containsDouban(sourceBean.getApi())
+                || containsDouban(sourceBean.getExt());
+    }
+
+    private static boolean containsDouban(String value) {
+        if (TextUtils.isEmpty(value)) return false;
+        String lower = value.toLowerCase();
+        return lower.contains("douban") || value.contains("\u8c46\u74e3");
+    }
+
     // homeContent
     public void getSort(final String sourceKey) {
         LOG.i("echo--getSort-start");
@@ -125,20 +149,6 @@ public class SourceViewModel extends ViewModel {
         }
         
         // 优先检查缓存
-         AbsSortXml cached = sortCache.get(sourceKey);
-         if (cached != null) {
-             if (hasActionSort(cached)) {
-                sortCache.remove(sourceKey);
-            } else {
-                int homeRec = Hawk.get(HawkConfig.HOME_REC, 0);
-                boolean shouldUseCache = (homeRec != 1) || (cached.videoList != null && !cached.videoList.isEmpty());
-                if (shouldUseCache) {
-                    sortResult.postValue(cached);
-                    return;
-                }
-             }
-         }
-        
         SourceBean sourceBean = ApiConfig.get().getSource(sourceKey);
         if (sourceBean == null) {
             LOG.i("echo--getSort-source-null--" + sourceKey);
@@ -149,6 +159,18 @@ public class SourceViewModel extends ViewModel {
              sortResult.postValue(null);
              return;
          }
+
+        if (!shouldBypassSortCache(sourceKey, sourceBean)) {
+            AbsSortXml cached = sortCache.get(sourceKey);
+            if (cached != null) {
+                int homeRec = Hawk.get(HawkConfig.HOME_REC, 0);
+                boolean shouldUseCache = (homeRec != 1) || (cached.videoList != null && !cached.videoList.isEmpty());
+                if (shouldUseCache) {
+                    sortResult.postValue(cached);
+                    return;
+                }
+            }
+        }
         
         final int type = sourceBean.getType();
         if (type == 3) {
