@@ -48,7 +48,6 @@ public class SettingActivity extends BaseActivity {
     private String currentLive;
     private String currentEpg;
     private int homeRec;
-    private int dnsOpt;
 
     @Override
     protected int getLayoutResID() {
@@ -114,7 +113,6 @@ public class SettingActivity extends BaseActivity {
         currentEpg = Hawk.get(HawkConfig.EPG_URL, "");
         homeSourceKey = ApiConfig.get().getHomeSourceBean().getKey();
         homeRec = Hawk.get(HawkConfig.HOME_REC, 0);
-        dnsOpt = Hawk.get(HawkConfig.DOH_URL, 0);
         List<String> sortList = new ArrayList<>();
         sortList.add("设置其它");
         sortAdapter.setNewData(sortList);
@@ -184,8 +182,7 @@ public class SettingActivity extends BaseActivity {
     public void onBackPressed() {
         if ((homeSourceKey != null && !homeSourceKey.equals(Hawk.get(HawkConfig.HOME_API, ""))) ||
                 !currentApi.equals(Hawk.get(HawkConfig.API_URL, "")) || !currentLive.equals(Hawk.get(HawkConfig.LIVE_URL, "")) || !currentEpg.equals(Hawk.get(HawkConfig.EPG_URL, "")) ||
-                homeRec != Hawk.get(HawkConfig.HOME_REC, 0) ||
-                dnsOpt != Hawk.get(HawkConfig.DOH_URL, 0)) {
+                homeRec != Hawk.get(HawkConfig.HOME_REC, 0)) {
             AppManager.getInstance().finishAllActivity();
             if (currentApi.equals(Hawk.get(HawkConfig.API_URL, ""))) {
                 Bundle bundle = new Bundle();
