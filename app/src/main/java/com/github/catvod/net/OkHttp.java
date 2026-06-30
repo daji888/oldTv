@@ -34,7 +34,7 @@ public class OkHttp {
         if (client != null) return client;
         OkHttpClient base = OkGoHelper.getDefaultClient();
         if (base != null) return client = base.newBuilder().dns(dns()).addInterceptor(defaultHeaders()).build();
-        return client = new OkHttpClient.Builder().dns(dns()).addInterceptor(defaultHeaders()).connectTimeout(TIMEOUT, TimeUnit.MILLISECONDS).readTimeout(TIMEOUT, TimeUnit.MILLISECONDS).writeTimeout(TIMEOUT, TimeUnit.MILLISECONDS).build();
+        return client = new OkHttpClient.Builder().dns(dns()).proxySelector(OkGoHelper.proxySelector()).proxyAuthenticator(OkGoHelper.proxyAuthenticator()).addInterceptor(defaultHeaders()).connectTimeout(TIMEOUT, TimeUnit.MILLISECONDS).readTimeout(TIMEOUT, TimeUnit.MILLISECONDS).writeTimeout(TIMEOUT, TimeUnit.MILLISECONDS).build();
     }
 
     public static OkHttpClient player() {
@@ -53,6 +53,15 @@ public class OkHttp {
         OkHttpClient base = OkGoHelper.getNoRedirectClient();
         if (base == null) base = client();
         return base.newBuilder().dns(dns()).addInterceptor(defaultHeaders()).connectTimeout(timeout, TimeUnit.MILLISECONDS).readTimeout(timeout, TimeUnit.MILLISECONDS).writeTimeout(timeout, TimeUnit.MILLISECONDS).followRedirects(false).followSslRedirects(false).build();
+    }
+
+    public static synchronized void reset() {
+        client = null;
+        dns = null;
+    }
+
+    public static synchronized void resetClient() {
+        client = null;
     }
 
     public static OkHttpClient client(boolean redirect, long timeout) {
