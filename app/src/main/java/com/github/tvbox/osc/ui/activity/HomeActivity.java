@@ -598,6 +598,7 @@ public class HomeActivity extends BaseActivity {
         public void run() {
             if (sortChange) {
                 sortChange = false;
+                BaseLazyFragment baseLazyFragment = fragments.get(sortFocused);
                 if (sortFocused != currentSelected) {
                     currentSelected = sortFocused;
                     mViewPager.setCurrentItem(sortFocused, false);
@@ -606,6 +607,11 @@ public class HomeActivity extends BaseActivity {
                     } else {
                         changeTop(true);
                     }
+                    if (baseLazyFragment instanceof GridFragment && ((GridFragment) baseLazyFragment).shouldReloadOnSelect()) {
+                        ((GridFragment) baseLazyFragment).forceRefresh();
+                    }
+                } else if (baseLazyFragment instanceof GridFragment && ((GridFragment) baseLazyFragment).shouldReloadOnSelect()) {
+                    ((GridFragment) baseLazyFragment).forceRefresh();
                 }
             }
         }
