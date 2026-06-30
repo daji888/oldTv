@@ -6,9 +6,13 @@ import static okhttp3.ConnectionSpec.CLEARTEXT;
 import static okhttp3.ConnectionSpec.COMPATIBLE_TLS;
 import static okhttp3.ConnectionSpec.MODERN_TLS;
 import static okhttp3.ConnectionSpec.RESTRICTED_TLS;
+
 import com.github.catvod.net.SSLCompat;
-import com.github.tvbox.osc.base.App;
 import com.github.tvbox.osc.api.ApiConfig;
+import com.github.tvbox.osc.base.App;
+import com.github.tvbox.osc.bean.ProxyRule;
+import com.github.tvbox.osc.util.net.OkProxySelector;
+import com.github.tvbox.osc.util.net.ProxyAuthenticator;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -49,9 +53,28 @@ public class OkGoHelper {
     public static final long DEFAULT_MILLISECONDS = 10000;  //默认的超时时间
     private static final String userAgent = "okhttp/" + OkHttp.VERSION;
     static OkHttpClient ItvClient = null;
+    private static OkProxySelector proxySelector = null;
+    private static ProxyAuthenticator proxyAuthenticator = null;
 
+    public static synchronized OkProxySelector proxySelector() {
+        if (proxySelector == null) proxySelector = new OkProxySelector();
+        return proxySelector;
+    }
+
+    public static synchronized ProxyAuthenticator proxyAuthenticator() {
+        if (proxyAuthenticator == null) proxyAuthenticator = new ProxyAuthenticator(proxySelector());
+        return proxyAuthenticator;
+    }
+
+    public static synchronized void setProxyList(List<ProxyRule> proxyRules) {
+        proxySelector().clear();
+        if (proxyRules != null && !proxyRules.isEmpty()) proxySelector().addAll(proxyRules);
+        com.github.catvod.net.OkHttp.reset();
+    }
+    
     static void initExoOkHttpClient() {
-        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        OkHttpClient base = getDefaultClient();
+        OkHttpClient.Builder builder = base != null ? base.newBuilder() : new OkHttpClient.Builder();
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor("OkExoPlayer");
 
         if (Hawk.get(HawkConfig.DEBUG_OPEN, false)) {
@@ -66,7 +89,8 @@ public class OkGoHelper {
         builder.retryOnConnectionFailure(true);
         builder.followRedirects(true);
         builder.followSslRedirects(true);
-
+        builder.proxySelector(proxySelector());
+        builder.proxyAuthenticator(proxyAuthenticator());
 
         try {
             setOkHttpSsl(builder);
@@ -128,6 +152,8 @@ public class OkGoHelper {
         dnsHttpsList.add("Quad9");
         
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        builder.proxySelector(proxySelector());
+        builder.proxyAuthenticator(proxyAuthenticator());
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor("OkExoPlayer");
         if (Hawk.get(HawkConfig.DEBUG_OPEN, false)) {
             loggingInterceptor.setPrintLevel(HttpLoggingInterceptor.Level.BODY);
@@ -180,6 +206,8 @@ public class OkGoHelper {
         builder.writeTimeout(DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
         builder.connectTimeout(DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
         builder.dns(dnsOverHttps);
+        builder.proxySelector(proxySelector());
+        builder.proxyAuthenticator(proxyAuthenticator());
         try {
             setOkHttpSsl(builder);
         } catch (Throwable th) {
@@ -196,6 +224,46 @@ public class OkGoHelper {
         noRedirectClient = builder.build();
 
         initExoOkHttpClient();        
+    }
+
+    public static synchronized void reloadDns() {
+        initDnsOverHttps();
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor("OkGo");
+
+        if (Hawk.get(HawkConfig.DEBUG_OPEN, false)) {
+            loggingInterceptor.setPrintLevel(HttpLoggingInterceptor.Level.BODY);
+            loggingInterceptor.setColorLevel(Level.INFO);
+        } else {
+            loggingInterceptor.setPrintLevel(HttpLoggingInterceptor.Level.NONE);
+            loggingInterceptor.setColorLevel(Level.OFF);
+        }
+
+        builder.addInterceptor(loggingInterceptor);
+        builder.connectionSpecs(getConnectionSpec());
+        builder.readTimeout(DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
+        builder.writeTimeout(DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
+        builder.connectTimeout(DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
+        builder.dns(dnsOverHttps);
+        builder.proxySelector(proxySelector());
+        builder.proxyAuthenticator(proxyAuthenticator());
+        try {
+            setOkHttpSsl(builder);
+        } catch (Throwable th) {
+            th.printStackTrace();
+        }
+
+        HttpHeaders.setUserAgent(userAgent);
+        OkHttpClient okHttpClient = builder.build();
+        OkGo.getInstance().setOkHttpClient(okHttpClient);
+
+        defaultClient = okHttpClient;
+        builder.followRedirects(false);
+        builder.followSslRedirects(false);
+        noRedirectClient = builder.build();
+
+        initExoOkHttpClient();
+        com.github.catvod.net.OkHttp.resetClient();
     }
 
     private static synchronized OkHttpClient.Builder setOkHttpSsl(OkHttpClient.Builder builder) {
