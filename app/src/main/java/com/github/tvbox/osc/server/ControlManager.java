@@ -49,11 +49,17 @@ public class ControlManager {
     }
 
     public String getAddress(boolean local) {
+        if (mServer == null || !mServer.isStarting()) {
+            startServer();
+        }
+        if (mServer == null || !mServer.isStarting()) {
+            return "";
+        }
         return local ? mServer.getLoadAddress() : mServer.getServerAddress();
     }
 
     public void startServer() {
-        if (mServer != null) {
+        if (mServer != null && mServer.isStarting()) {
             return;
         }
         do {
@@ -85,6 +91,7 @@ public class ControlManager {
             });
             try {
                 mServer.start();
+                com.github.catvod.Proxy.set(RemoteServer.serverPort);
                 IjkMediaPlayer.setDotPort(Hawk.get(HawkConfig.DOH_URL, 0) > 0, RemoteServer.serverPort);
                 break;
             } catch (IOException ex) {
@@ -98,5 +105,6 @@ public class ControlManager {
         if (mServer != null && mServer.isStarting()) {
             mServer.stop();
         }
+        mServer = null;
     }
 }
