@@ -168,7 +168,8 @@ public class Proxy {
     }
 
     public static String getRedirectedUrl(String url) throws IOException {
-        OkHttpClient client = new OkHttpClient.Builder()
+        OkHttpClient base = OkGoHelper.getDefaultClient();
+        OkHttpClient client = (base != null ? base.newBuilder() : new OkHttpClient.Builder().proxySelector(OkGoHelper.proxySelector()).proxyAuthenticator(OkGoHelper.proxyAuthenticator()))
                 .followRedirects(false) // 不自动跟随重定向
                 .build();
 
