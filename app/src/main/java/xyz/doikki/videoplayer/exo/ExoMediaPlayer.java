@@ -31,13 +31,8 @@ import com.github.tvbox.osc.util.LOG;
 import com.github.tvbox.osc.util.PlayerHelper;
 import com.orhanobut.hawk.Hawk;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
-
-import okhttp3.Dns;
-import okhttp3.OkHttpClient;
 
 import xyz.doikki.videoplayer.player.AbstractPlayer;
 import xyz.doikki.videoplayer.util.PlayerUtils;
@@ -57,8 +52,9 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     protected DefaultTrackSelector mTrackSelector;
 
     private int errorCode = -100;
-    private String path;
-    private Map<String, String> headers;
+    private String currentPlayPath;
+    protected Map<String, String> currentHeaders;
+    private boolean mRetriedAsHls;
     private long lastTotalRxBytes = 0;
     private long lastTimeStamp = 0;
 
@@ -99,9 +95,10 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
 
     @Override
     public void setDataSource(String path, Map<String, String> headers) {
-        this.path = path;
-        this.headers = headers;
-        mMediaSource = mMediaSourceHelper.getMediaSource(path, headers);
+        currentPlayPath = path;
+        currentHeaders = copyHeaders(headers);
+        mRetriedAsHls = false;
+        mMediaSource = mMediaSourceHelper.getMediaSource(path, copyHeaders(currentHeaders));
         errorCode = -1;
     }
 
@@ -152,6 +149,7 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
             mMediaPlayer.clearMediaItems();
             mMediaPlayer.setVideoSurface(null);
             mIsPreparing = false;
+            mRetriedAsHls = false;
         }
     }
 
@@ -308,9 +306,12 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     public void onPlayerError(@NonNull PlaybackException error) {
         errorCode = error.errorCode;
         Log.e("tag--", "" + error.errorCode);
-        if (path != null) {
-            setDataSource(path, headers);
-            path = null;
+        if (retryAsHls(error)) {
+            return;
+        }
+        if (currentPlayPath != null) {
+            setDataSource(currentPlayPath, copyHeaders(currentHeaders));
+            currentPlayPath = null;
             prepareAsync();
             start();
         } else {
@@ -318,6 +319,36 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
                 mPlayerEventListener.onError(error.errorCode, PlayerHelper.getRootCauseMessage(error));
             }
         }
+    }
+
+    private boolean retryAsHls(PlaybackException error) {
+        if (mRetriedAsHls || mMediaPlayer == null || currentPlayPath == null) {
+            return false;
+        }
+        if (!isParsingError(error)) {
+            return false;
+        }
+        mRetriedAsHls = true;
+        Log.i("Tvbox-runtime", "echo-Exo retry as HLS: " + currentPlayPath);
+        mMediaSource = mMediaSourceHelper.getHlsMediaSource(currentPlayPath, copyHeaders(currentHeaders));
+        mIsPreparing = true;
+        mMediaPlayer.setMediaSource(mMediaSource);
+        mMediaPlayer.prepare();
+        mMediaPlayer.setPlayWhenReady(true);
+        return true;
+    }
+
+    private boolean isParsingError(PlaybackException error) {
+        int errorCode = error.errorCode;
+        return errorCode == PlaybackException.ERROR_CODE_IO_UNSPECIFIED
+                || errorCode == PlaybackException.ERROR_CODE_PARSING_CONTAINER_MALFORMED
+                || errorCode == PlaybackException.ERROR_CODE_PARSING_CONTAINER_UNSUPPORTED
+                || errorCode == PlaybackException.ERROR_CODE_PARSING_MANIFEST_MALFORMED
+                || errorCode == PlaybackException.ERROR_CODE_PARSING_MANIFEST_UNSUPPORTED;
+    }
+
+    private Map<String, String> copyHeaders(Map<String, String> headers) {
+        return headers == null ? null : new HashMap<>(headers);
     }
 
     @Override
