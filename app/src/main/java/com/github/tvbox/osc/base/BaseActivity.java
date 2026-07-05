@@ -46,20 +46,21 @@ public abstract class BaseActivity extends AppCompatActivity implements CustomAd
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        try {
-            if (screenRatio < 0) {
+        super.onCreate(savedInstanceState);
+        setContentView(getLayoutResID());
+        mContext = this;
+        if (screenRatio < 0) {
+            try {
                 DisplayMetrics dm = new DisplayMetrics();
                 getWindowManager().getDefaultDisplay().getMetrics(dm);
                 int screenWidth = dm.widthPixels;
                 int screenHeight = dm.heightPixels;
                 screenRatio = (float) Math.max(screenWidth, screenHeight) / (float) Math.min(screenWidth, screenHeight);
+            } catch (Throwable th) {
+                th.printStackTrace();
+                screenRatio = 1.0f;
             }
-        } catch (Throwable th) {
-            th.printStackTrace();
         }
-        super.onCreate(savedInstanceState);
-        setContentView(getLayoutResID());
-        mContext = this;
         CutoutUtil.adaptCutoutAboveAndroidP(mContext, true);//设置刘海
         AppManager.getInstance().addActivity(this);
         init();

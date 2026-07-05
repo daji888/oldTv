@@ -625,8 +625,40 @@ public class ApiConfig {
                 JsonObject obj = (JsonObject) channelElement;
                 LiveChannelItem liveChannelItem = new LiveChannelItem();
                 liveChannelItem.setChannelName(obj.get("name").getAsString().trim());
-                liveChannelItem.setChannelIndex(channelIndex++);
-                liveChannelItem.setChannelNum(++channelNum);
+                liveChannelItem.setChannelLogo(DefaultConfig.safeJsonString(obj, "logo", ""));
+                liveChannelItem.setChannelEpg(DefaultConfig.safeJsonString(obj, "epg", ""));
+                liveChannelItem.setChannelUa(DefaultConfig.safeJsonString(obj, "ua", ""));
+                liveChannelItem.setChannelClick(DefaultConfig.safeJsonString(obj, "click", ""));
+                liveChannelItem.setChannelFormat(DefaultConfig.safeJsonString(obj, "format", ""));
+                liveChannelItem.setChannelOrigin(DefaultConfig.safeJsonString(obj, "origin", ""));
+                liveChannelItem.setChannelReferer(DefaultConfig.safeJsonString(obj, "referer", ""));
+                liveChannelItem.setChannelTvgId(DefaultConfig.safeJsonString(obj, "tvg-id", ""));
+                liveChannelItem.setChannelTvgName(DefaultConfig.safeJsonString(obj, "tvg-name", ""));
+                if (obj.has("parse")) {
+                    try {
+                        liveChannelItem.setChannelParse(obj.get("parse").getAsInt());
+                    } catch (Throwable ignored) {
+                    }
+                }
+                if (obj.has("catchup")) {
+                    JsonObject catchupObj = new JsonObject();
+                    if (obj.get("catchup").isJsonObject()) {
+                        catchupObj = obj.getAsJsonObject("catchup");
+                    } else {
+                        catchupObj.addProperty("type", obj.get("catchup").getAsString());
+                        if (obj.has("catchup-source")) catchupObj.addProperty("source", obj.get("catchup-source").getAsString());
+                        if (obj.has("catchup-replace")) catchupObj.addProperty("replace", obj.get("catchup-replace").getAsString());
+                    }
+                    liveChannelItem.setChannelCatchup(catchupObj);
+                }
+                if (obj.has("header") && obj.get("header").isJsonObject()) {
+                    JsonObject headerObj = obj.getAsJsonObject("header");
+                    HashMap<String, String> channelHeader = new HashMap<>();
+                    for (Map.Entry<String, JsonElement> entry : headerObj.entrySet()) {
+                        channelHeader.put(entry.getKey(), entry.getValue().getAsString());
+                    }
+                    liveChannelItem.setChannelHeader(channelHeader);
+                }
                 ArrayList<String> urls = DefaultConfig.safeJsonStringList(obj, "urls");
                 ArrayList<String> sourceNames = new ArrayList<>();
                 ArrayList<String> sourceUrls = new ArrayList<>();
@@ -642,10 +674,61 @@ public class ApiConfig {
                 }
                 liveChannelItem.setChannelSourceNames(sourceNames);
                 liveChannelItem.setChannelUrls(sourceUrls);
-                liveChannelGroup.getLiveChannels().add(liveChannelItem);
+                if (mergeLiveChannel(liveChannelGroup.getLiveChannels(), liveChannelItem)) {
+                    liveChannelItem.setChannelIndex(channelIndex++);
+                    liveChannelItem.setChannelNum(++channelNum);
+                }
             }
             liveChannelGroupList.add(liveChannelGroup);
         }
+    }
+
+    private boolean mergeLiveChannel(ArrayList<LiveChannelItem> channelItems, LiveChannelItem newItem) {
+        LiveChannelItem oldItem = findLiveChannel(channelItems, newItem.getChannelName());
+        if (oldItem == null) {
+            channelItems.add(newItem);
+            return true;
+        }
+        mergeLiveChannelUrls(oldItem, newItem);
+        return false;
+    }
+
+    private LiveChannelItem findLiveChannel(ArrayList<LiveChannelItem> channelItems, String channelName) {
+        for (LiveChannelItem item : channelItems) {
+            if (channelName != null && channelName.equals(item.getChannelName())) return item;
+        }
+        return null;
+    }
+
+    private void mergeLiveChannelUrls(LiveChannelItem oldItem, LiveChannelItem newItem) {
+        ArrayList<String> oldUrls = oldItem.getChannelUrls();
+        ArrayList<String> oldSourceNames = oldItem.getChannelSourceNames();
+        if (oldUrls == null) {
+            oldUrls = new ArrayList<>();
+            oldItem.setChannelUrls(oldUrls);
+        }
+        if (oldSourceNames == null) {
+            oldSourceNames = new ArrayList<>();
+            oldItem.setChannelSourceNames(oldSourceNames);
+        }
+        while (oldSourceNames.size() < oldUrls.size()) {
+            oldSourceNames.add("线路" + Integer.toString(oldSourceNames.size() + 1));
+        }
+        ArrayList<String> newUrls = newItem.getChannelUrls();
+        ArrayList<String> newSourceNames = newItem.getChannelSourceNames();
+        if (newUrls == null) return;
+        for (int i = 0; i < newUrls.size(); i++) {
+            String url = newUrls.get(i);
+            if (oldUrls.contains(url)) continue;
+            oldUrls.add(url);
+            if (newSourceNames != null && i < newSourceNames.size()) {
+                oldSourceNames.add(newSourceNames.get(i));
+            } else {
+                oldSourceNames.add("线路" + Integer.toString(oldSourceNames.size() + 1));
+            }
+        }
+        oldItem.setChannelUrls(oldUrls);
+        oldItem.setChannelSourceNames(oldSourceNames);
     }
 
    public void loadLiveApi(JsonObject livesOBJ) {
