@@ -112,6 +112,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import xyz.doikki.videoplayer.player.AbstractPlayer;
+import xyz.doikki.videoplayer.exo.ExoMediaSourceHelper;
 import xyz.doikki.videoplayer.player.VideoView;
 
 /**
@@ -837,14 +838,17 @@ public class LivePlayActivity extends BaseActivity {
     }
 
     private HashMap<String, String> liveChannelHeader() {
+        if (currentLiveChannelItem == null) return liveWebHeader();
         HashMap<String, String> header = new HashMap<>();
         HashMap<String, String> liveHeader = liveWebHeader();
-        if (liveHeader != null) {
-            header.putAll(liveHeader);
-        }
-        if (currentLiveChannelItem != null && currentLiveChannelItem.getHeaders() != null) {
+        if (liveHeader != null) header.putAll(liveHeader);
+        if (currentLiveChannelItem.getHeaders() != null) {
             header.putAll(currentLiveChannelItem.getHeaders());
         }
+        if (!currentLiveChannelItem.getChannelFormat().isEmpty() && liveSettingGroupList.get(2).getLiveSettingItems().get(3).isItemSelected()) {
+            header.put(ExoMediaSourceHelper.HEADER_FORMAT, currentLiveChannelItem.getChannelFormat());
+        }
+        if (header.isEmpty()) return null;
         return header;
     }
 
