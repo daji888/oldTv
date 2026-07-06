@@ -15,6 +15,7 @@ public class SourceBean {
     private String jar; // 自定义jar
     private ArrayList<String> categories = null; // 分类&排序
     private int playerType; // 0 system 1 ikj 2 exo 10 mxplayer -1 以参数设置页面的为准
+    private int timeout; // 站点播放信息获取超时，单位秒
     private String clickSelector; // 需要点击播放的嗅探站点selector   ddrk.me;#id
 
     public String getKey() {
@@ -105,11 +106,31 @@ public class SourceBean {
         this.jar = jar;
     }
 
-    public int getPlayerType() { return playerType; }
+    public int getPlayerType() {
+        return playerType;
+    }
 
-    public void setPlayerType(int playerType) { this.playerType = playerType; }
+    public void setPlayerType(int playerType) {
+        this.playerType = playerType;
+    }
 
-    public String getClickSelector() { return clickSelector; }
+    public int getTimeout() {
+        return timeout;
+    }
 
-    public void setClickSelector(String clickSelector) { this.clickSelector = clickSelector; }
+    public void setTimeout(int timeout) {
+        this.timeout = timeout;
+    }
+
+    public int getPlayTimeoutSeconds() {
+        return timeout > 0 ? Math.max(5, Math.min(60, timeout)) : 15;
+    }
+
+    public String getClickSelector() {
+        return clickSelector;
+    }
+
+    public void setClickSelector(String clickSelector) {
+        this.clickSelector = clickSelector;
+    }
 }
