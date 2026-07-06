@@ -191,6 +191,8 @@ public class PlayFragment extends BaseLazyFragment {
                 if (msg.what == 100) {
                     stopParse();
                     errorWithRetry("嗅探错误", false);
+                } else if (msg.what == 101) {
+                    handleResolvePlayUrlTimeout();    
                 } else if (msg.what == 200) {
                     if (mHandler.hasMessages(100)) {
                         setTip("加载完成，嗅探视频中", true, false);
@@ -793,6 +795,10 @@ public class PlayFragment extends BaseLazyFragment {
 
     void startPlayUrl(String url, HashMap<String, String> headers) {
         LOG.i("echo-playUrl:" + url);
+        if (TextUtils.isEmpty(url)) {
+            handleResolvePlayUrlFailed("获取播放地址为空", true);
+            return;
+        }
         if (autoRetryCount == 0) webPlayUrl = url;
         if (mActivity == null) return;
         if (!isAdded()) return;
@@ -1006,7 +1012,6 @@ public class PlayFragment extends BaseLazyFragment {
                                 }
                                 webHeaderMap = headers;
                             } catch (Throwable th) {
-
                             }
                         }
                         if (parse || jx) {
@@ -1017,9 +1022,11 @@ public class PlayFragment extends BaseLazyFragment {
                             playUrl(playUrl + url, headers);
                         }
                     } catch (Throwable th) {
+                        handleResolvePlayUrlFailed("获取播放信息错误", true);
                     }
                 } else {
-                    errorWithRetry("获取播放信息错误", true);
+                    // 获取播放信息错误后只需再重试一次
+                    handleResolvePlayUrlFailed("获取播放信息错误", true);
                 }
             }
         });
@@ -1051,7 +1058,6 @@ public class PlayFragment extends BaseLazyFragment {
         try {
             if (!mVodPlayerCfg.has("pl")) {
                 mVodPlayerCfg.put("pl", (sourceBean.getPlayerType() == -1) ? (int) Hawk.get(HawkConfig.PLAY_TYPE, 1) : sourceBean.getPlayerType());
-            //   mVodPlayerCfg.put("pl", ((int) Hawk.get(HawkConfig.PLAY_TYPE, 1)));
             }
             if (!mVodPlayerCfg.has("pr")) {
                 mVodPlayerCfg.put("pr", Hawk.get(HawkConfig.PLAY_RENDER, 0));
@@ -1260,6 +1266,7 @@ public class PlayFragment extends BaseLazyFragment {
         if (mVideoView != null) mVideoView.release();
         subtitleCacheKey = mVodInfo.sourceKey + "-" + mVodInfo.id + "-" + mVodInfo.playFlag + "-" + mVodInfo.playIndex+ "-" + vs.name + "-subt";
         progressKey = mVodInfo.sourceKey + mVodInfo.id + mVodInfo.playFlag + mVodInfo.playIndex + vs.name;
+        startResolvePlayUrlTimeout();
         //重新播放清除现有进度
         if (reset) {
             CacheManager.delete(MD5.string2MD5(progressKey), 0);
@@ -1367,6 +1374,33 @@ public class PlayFragment extends BaseLazyFragment {
         taskResult.put("header", headers);
         taskResult.put("url", url);
         return taskResult;
+    }
+
+    void startResolvePlayUrlTimeout() {
+        mHandler.removeMessages(101);
+        mHandler.sendEmptyMessageDelayed(101, getResolvePlayUrlTimeoutMs());
+    }
+
+    private long getResolvePlayUrlTimeoutMs() {
+        if (sourceBean == null) return 12 * 1000L;
+        return Math.max(12 * 1000L, (sourceBean.getPlayTimeoutSeconds() + 1L) * 1000L);
+    }
+
+    void handleResolvePlayUrlTimeout() {
+        if (sourceViewModel != null) sourceViewModel.cancelPlayRequest();
+        stopParse();
+        if (autoRetryCount > 0 && !allowSwitchPlayer) setTip("获取播放地址超时", false, true);
+    }
+
+    void handleResolvePlayUrlFailed(String err, boolean finish) {
+        if (sourceViewModel != null) sourceViewModel.cancelPlayRequest();
+        stopParse();
+        if (finish) {
+            setTip(err, false, true);
+            Toast.makeText(mContext, err, Toast.LENGTH_SHORT).show();
+        } else {
+            setTip(err, false, true);
+        }
     }
 
     void stopParse() {
@@ -1515,7 +1549,6 @@ public class PlayFragment extends BaseLazyFragment {
                                     headers.put(key, hds.getString(key));
                                 }
                             } catch (Throwable th) {
-
                             }
                         }
                         if (rs.has("jxFrom")) {
@@ -1542,8 +1575,7 @@ public class PlayFragment extends BaseLazyFragment {
          }
      }
  
-     private void parseMix(ParseBean pb,boolean isSuper)
-     {
+     private void parseMix(ParseBean pb,boolean isSuper) {
          setTip("正在解析播放地址", true, false);
          parseThreadPool = Executors.newSingleThreadExecutor();
          LinkedHashMap<String, HashMap<String, String>> jxs = new LinkedHashMap<>();
@@ -1630,6 +1662,7 @@ public class PlayFragment extends BaseLazyFragment {
             }
          });
     }
+    
     private void rsJsonJX(JSONObject rs,boolean isSuper) {
          if (isSuper) {
              if (rs == null || !rs.has("url")) return;
