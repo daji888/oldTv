@@ -71,9 +71,17 @@ public class TxtSubscribe {
         for (JsonElement groupElement : groups) {
             JsonObject groupObj = groupElement.getAsJsonObject();
             JsonObject outGroup = new JsonObject();
-            outGroup.addProperty("group", DefaultConfig.safeJsonString(groupObj, "group", "未分组"));
-            if (groupObj.has("channels")) {
-                for (JsonElement channelElement : groupObj.getAsJsonArray("channels")) {
+            String groupName = DefaultConfig.safeJsonString(groupObj, "group", "");
+            if (groupName.isEmpty()) groupName = DefaultConfig.safeJsonString(groupObj, "group", "未分组");
+            outGroup.addProperty("group", groupName);
+            JsonArray channels = null;
+            if (groupObj.has("channels") && groupObj.get("channels").isJsonArray()) {
+                channels = groupObj.getAsJsonArray("channels");
+            } else if (groupObj.has("channel") && groupObj.get("channel").isJsonArray()) {
+                channels = groupObj.getAsJsonArray("channel");
+            }
+            if (channels != null) {
+                for (JsonElement channelElement : channels) {
                     JsonObject channelObj = channelElement.getAsJsonObject();
                     JsonObject outChannel = new JsonObject();
                     copyIfExists(channelObj, outChannel, "name");
