@@ -371,7 +371,7 @@ public class HomeActivity extends BaseActivity {
                         mHandler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(HomeActivity.this, msg, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(HomeActivity.this, msg+" jar加载错误", Toast.LENGTH_SHORT).show();
                                 initData();
                             }
                         },50);
