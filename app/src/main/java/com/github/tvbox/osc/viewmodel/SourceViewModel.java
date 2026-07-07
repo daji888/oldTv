@@ -42,6 +42,7 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 
 import org.apache.commons.lang3.BooleanUtils;
 import org.greenrobot.eventbus.EventBus;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -1055,6 +1056,25 @@ public class SourceViewModel extends ViewModel {
             String playUrl = result.optString("playUrl", "");
             String url = result.optString("url", "");
             if (TextUtils.isEmpty(url)) return result;
+            if (url.startsWith("[") && url.endsWith("]")) {
+                JSONArray array = new JSONArray(url);
+                for (int i = 0; i < array.length(); i++) {
+                    Object item = array.get(i);
+                    if (item instanceof String) {
+                        String str = (String) item;
+                        if (str.startsWith("proxy://")) {
+                            str = DefaultConfig.checkReplaceProxy(str);
+                            array.put(i, str);
+                        } else if (str.startsWith("video://")) {
+                            str = str.substring(8);
+                            array.put(i, str);
+                        }
+                    }
+                }
+                result.put("url", array.toString());
+                result.put("parse", 0);
+                return result;
+            }
             if (url.startsWith("video://")) {
                 url = url.substring(8);
                 result.put("url", url);
@@ -1063,7 +1083,10 @@ public class SourceViewModel extends ViewModel {
                 url = DefaultConfig.checkReplaceProxy(url);
                 result.put("url", url);
                 result.put("parse", 0);
-            } else if (playUrl.length() == 0 && DefaultConfig.isVideoFormat(url) && !result.has("parse") && !result.has("jx")) {
+            } else if (playUrl.length() == 0
+                    && DefaultConfig.isVideoFormat(url)
+                    && !result.has("parse")
+                    && !result.has("jx")) {
                 result.put("parse", 0);
             }
         } catch (Throwable th) {

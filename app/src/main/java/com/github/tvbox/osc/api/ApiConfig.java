@@ -29,6 +29,7 @@ import com.github.tvbox.osc.util.M3U8;
 import com.github.tvbox.osc.util.LOG;
 import com.github.tvbox.osc.util.MD5;
 import com.github.tvbox.osc.util.OkGoHelper;
+import com.github.tvbox.osc.util.Proxy;
 import com.github.tvbox.osc.util.VideoParseRuler;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -46,6 +47,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -53,7 +55,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -959,10 +960,65 @@ public class ApiConfig {
     }
 
     public Object[] proxyLocal(Map<String,String> param) {
-        if ("js".equals(param.get("do"))) {
+        SourceBean source = getCurrentProxySource(param);
+        String api = source.getApi();
+        String siteKey = param.get("siteKey");
+        String action = param.get("do");
+        boolean isJs = "js".equals(action);
+        boolean isApiJs = api.contains(".js");
+        boolean canUseType3 = !TextUtils.isEmpty(siteKey)
+                && source.getType() == 3
+                && !isJs
+                && !isApiJs;
+        if (canUseType3) {
+            try {
+                Spider spider = getCSP(source);
+                Object[] result = spider.proxy(param);
+                if (result != null) return result;
+                result = jarLoader.proxyInvoke(param);
+                if (result != null) return result;
+                result = proxyDirect(param);
+                if (result != null) return result;
+                return null;
+            } catch (Throwable th) {
+                LOG.e("echo-proxy siteKey error: " + th.getMessage());
+                return null;
+            }
+        }
+        if (isJs) {
             return jsLoader.proxyInvoke(param);
         }
         return jarLoader.proxyInvoke(param);
+    }
+
+    private Object[] proxyDirect(Map<String, String> param) {
+        try {
+            String url = param.get("url");
+            if (TextUtils.isEmpty(url)) return null;
+            url = URLDecoder.decode(url, "UTF-8");
+            if (!url.startsWith("http://") && !url.startsWith("https://")) return null;
+            if (!DefaultConfig.isVideoFormat(url)) return null;
+            if (url.contains(".m3u8")) {
+                param.put("url", url);
+                param.put("go", "live");
+                param.put("type", "m3u8");
+                return Proxy.itv(param);
+            }
+            return null;
+        } catch (Throwable th) {
+            LOG.e("echo-proxy direct fallback error: " + th.getMessage());
+            return null;
+        }
+    }
+
+    private SourceBean getCurrentProxySource(Map<String, String> param) {
+        String siteKey = param.get("siteKey");
+        if (TextUtils.isEmpty(siteKey)) {
+            siteKey = currentPlaySourceKey;
+            if (!TextUtils.isEmpty(siteKey)) param.put("siteKey", siteKey);
+        }
+        SourceBean sourceBean = TextUtils.isEmpty(siteKey) ? null : getSource(siteKey);
+        return sourceBean == null ? ApiConfig.get().getHomeSourceBean() : sourceBean;
     }
 
     public void setCurrentPlaySourceKey(String sourceKey) {
