@@ -18,36 +18,40 @@ public class SourceBean {
     private int timeout; // 站点播放信息获取超时，单位秒
     private String clickSelector; // 需要点击播放的嗅探站点selector   ddrk.me;#id
 
+    private String safeString(String value) {
+        return value == null ? "" : value;
+    }
+
     public String getKey() {
-        return key;
+        return safeString(key);
     }
 
     public void setKey(String key) {
-        this.key = key;
+        this.key = safeString(key);
     }
 
     public String getName() {
-        return name;
+        return safeString(name);
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = safeString(name);
     }
 
     public String getApi() {
-        return api;
+        return safeString(api);
     }
 
     public void setApi(String api) {
-        this.api = api;
+        this.api = safeString(api);
     }
 
     public void setPlayerUrl(String playerUrl) {
-        this.playerUrl = playerUrl;
+        this.playerUrl = safeString(playerUrl);
     }
 
     public String getPlayerUrl() {
-        return playerUrl;
+        return safeString(playerUrl);
     }
 
     public int getType() {
@@ -83,11 +87,11 @@ public class SourceBean {
     }
 
     public String getExt() {
-        return ext;
+        return safeString(ext);
     }
 
     public void setExt(String ext) {
-        this.ext = ext;
+        this.ext = safeString(ext);
     }
 
     public ArrayList<String> getCategories() {
@@ -99,11 +103,11 @@ public class SourceBean {
     }
 
     public String getJar() {
-        return jar;
+        return safeString(jar);
     }
 
     public void setJar(String jar) {
-        this.jar = jar;
+        this.jar = safeString(jar);
     }
 
     public int getPlayerType() {
@@ -127,10 +131,10 @@ public class SourceBean {
     }
 
     public String getClickSelector() {
-        return clickSelector;
+        return safeString(clickSelector);
     }
 
     public void setClickSelector(String clickSelector) {
-        this.clickSelector = clickSelector;
+        this.clickSelector = safeString(clickSelector);
     }
 }
