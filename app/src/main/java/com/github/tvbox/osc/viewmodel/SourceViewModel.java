@@ -396,14 +396,32 @@ public class SourceViewModel extends ViewModel {
             spThreadPool.execute(new Runnable() {
                 @Override
                 public void run() {
+                    ExecutorService executor = Executors.newSingleThreadExecutor();
+                    Future<String> future = executor.submit(new Callable<String>() {
+                        @Override
+                        public String call() throws Exception {
+                            Spider sp = ApiConfig.get().getCSP(homeSourceBean);
+                            return sp.categoryContent(sortData.id, page + "", true, sortData.filterSelect);
+                        }
+                    });
+                    String json = null;
                     try {
-                        Spider sp = ApiConfig.get().getCSP(homeSourceBean);
-                        String json = sp.categoryContent(sortData.id, page + "", true, sortData.filterSelect);
-                        LOG.i("echo-categoryContent:" + json);
-                        json(listResult, json,homeSourceBean.getKey());
-                    } catch (Throwable th) {
-                        th.printStackTrace();
-                        listResult.postValue(null);
+                        json = future.get(homeSourceBean.getPlayTimeoutSeconds(), TimeUnit.SECONDS);
+                    } catch (TimeoutException e) {
+                        LOG.i("echo--getList-timeout--" + homeSourceBean.getKey());
+                        e.printStackTrace();
+                        future.cancel(true);
+                    } catch (InterruptedException | ExecutionException e) {
+                        Throwable cause = e.getCause();
+                        LOG.i("echo--getList-error--" + homeSourceBean.getKey() + "--" + e.getClass().getSimpleName() + "--" + (cause != null ? cause.getClass().getSimpleName() + ":" + cause.getMessage() : e.getMessage()));
+                        e.printStackTrace();
+                    } finally {
+                        executor.shutdown();
+                        if (json != null) {
+                            json(listResult, json,homeSourceBean.getKey());
+                        } else {
+                            listResult.postValue(null);
+                        }
                     }
                 }
             });

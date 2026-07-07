@@ -4,6 +4,8 @@ import static com.github.tvbox.osc.util.RegexUtils.getPattern;
 
 import android.app.Activity;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Base64;
 
@@ -49,6 +51,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -79,6 +83,8 @@ public class ApiConfig {
 
     private JarLoader jarLoader = new JarLoader();
     private JsLoader jsLoader = new JsLoader();
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
+    private final ExecutorService jarLoadExecutor = Executors.newSingleThreadExecutor();
 
     private String userAgent = "okhttp/" + OkHttp.VERSION;
     private String requestAccept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9";
@@ -234,6 +240,31 @@ public class ApiConfig {
         loadJar(useCache, spider, callback, 0);
     }
 
+    private interface JarLoadCallback {
+        void complete(boolean success);
+    }
+
+    private void loadJarAsync(File file, JarLoadCallback callback) {
+        jarLoadExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                boolean success = false;
+                try {
+                    success = file != null && file.exists() && jarLoader.load(file.getAbsolutePath());
+                } catch (Throwable th) {
+                    LOG.e("echo---jar Loader threw exception: " + th.getMessage());
+                }
+                final boolean result = success;
+                mainHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        callback.complete(result);
+                    }
+                });
+            }
+        });
+    }
+
     private void loadJar(boolean useCache, String spider, LoadConfigCallback callback, int retryCount) {
         String[] urls = spider.split(";md5;");
         String jarUrl = urls[0];
@@ -242,6 +273,19 @@ public class ApiConfig {
 
         if (!md5.isEmpty() || useCache) {
             if (cache.exists() && (useCache || MD5.getFileMd5(cache).equalsIgnoreCase(md5))) {
+                if (cache.exists()) {
+                    loadJarAsync(cache, new JarLoadCallback() {
+                        @Override
+                        public void complete(boolean success) {
+                            if (success) {
+                                callback.success();
+                            } else {
+                                callback.error("md5缓存失效");
+                            }
+                        }
+                    });
+                    return;
+                }
                 if (jarLoader.load(cache.getAbsolutePath())) {
                     callback.success();
                 } else {
@@ -251,7 +295,20 @@ public class ApiConfig {
             }
           } else {
              if (Boolean.parseBoolean(jarCache) && cache.exists() && !FileUtils.isWeekAgo(cache)) {
-                 LOG.i("echo-load jar jarCache:"+jarUrl);
+                 LOG.i("echo-load jar jarCache:" + jarUrl);
+                 if (cache.exists()) {
+                    loadJarAsync(cache, new JarLoadCallback() {
+                        @Override
+                        public void complete(boolean success) {
+                            if (success) {
+                                callback.success();
+                            } else {
+                                loadJar(false, spider, callback, retryCount);
+                            }
+                        }
+                    });
+                    return;
+                }
                  if (jarLoader.load(cache.getAbsolutePath())) {
                      callback.success();
                      return;
@@ -318,6 +375,22 @@ public class ApiConfig {
                      public void onSuccess(Response<File> response) {
                          File file = response.body();
                          if (file != null && file.exists()) {
+                            loadJarAsync(file, new JarLoadCallback() {
+                                @Override
+                                public void complete(boolean success) {
+                                    if (success) {
+                                        LOG.i("echo---load-jar-success");
+                                        callback.success();
+                                    } else {
+                                        LOG.e("echo---jar Loader returned false");
+                                        if (retryLoad("loader_false")) return;
+                                        callback.error("JAR加载失败");
+                                    }
+                                }
+                            });
+                            return;
+                         }
+                         if (file != null && file.exists()) {
                              try {
                                  if (jarLoader.load(file.getAbsolutePath())) {
                                      LOG.i("echo---load-jar-success");
@@ -344,6 +417,20 @@ public class ApiConfig {
                          Throwable ex = response.getException();
                          if (ex != null) {
                              LOG.i("echo---jar Request failed: " + ex.getMessage());
+                         }
+                         if (cache.exists()) {
+                            loadJarAsync(cache, new JarLoadCallback() {
+                                @Override
+                                public void complete(boolean success) {
+                                    if (success) {
+                                        callback.success();
+                                    } else {
+                                        if (retryLoad("request_error")) return;
+                                        callback.error("网络错误");
+                                    }
+                                }
+                            });
+                            return;
                          }
                          if (cache.exists() && jarLoader.load(cache.getAbsolutePath())) {
                              callback.success();
