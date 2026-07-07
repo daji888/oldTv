@@ -1311,30 +1311,54 @@ public class PlayActivity extends BaseActivity {
 
     JSONObject jsonParse(String input, String json) throws JSONException {
         JSONObject jsonPlayData = new JSONObject(json);
-        String url;
-        if (jsonPlayData.has("data")) {
-            url = jsonPlayData.getJSONObject("data").getString("url");
-        } else {
-            url = jsonPlayData.getString("url");
+        JSONObject playData = jsonPlayData.optJSONObject("data");
+        if (playData == null) {
+            playData = jsonPlayData;
         }
+        String url = playData.optString("url", jsonPlayData.optString("url", ""));
         if (url.startsWith("//")) {
             url = "http:" + url;
         }
-        if (!url.startsWith("http")) {
+        boolean parse = false;
+        if (url.startsWith("video://")) {
+            url = url.substring(8);
+            parse = true;
+        }
+        url = DefaultConfig.checkReplaceProxy(url);
+        if (!url.startsWith("http") && !url.startsWith("data:application")) {
             return null;
         }
+        parse = parse || playData.optInt("parse", jsonPlayData.optInt("parse", 0)) == 1;
         JSONObject headers = new JSONObject();
-        String ua = jsonPlayData.optString("user-agent", "");
+        JSONObject headerJson = playData.optJSONObject("header");
+        if (headerJson == null) {
+            headerJson = playData.optJSONObject("headers");
+        }
+        if (headerJson == null) {
+            headerJson = jsonPlayData.optJSONObject("header");
+        }
+        if (headerJson == null) {
+            headerJson = jsonPlayData.optJSONObject("headers");
+        }
+        if (headerJson != null) {
+            Iterator<String> keys = headerJson.keys();
+            while (keys.hasNext()) {
+                String key = keys.next();
+                headers.put(key, headerJson.optString(key, ""));
+            }
+        }
+        String ua = playData.optString("user-agent", jsonPlayData.optString("user-agent", ""));
         if (ua.trim().length() > 0) {
             headers.put("User-Agent", " " + ua);
         }
-        String referer = jsonPlayData.optString("referer", "");
+        String referer = playData.optString("referer", jsonPlayData.optString("referer", ""));
         if (referer.trim().length() > 0) {
             headers.put("Referer", " " + referer);
         }
         JSONObject taskResult = new JSONObject();
         taskResult.put("header", headers);
         taskResult.put("url", url);
+        taskResult.put("parse", parse ? 1 : 0);
         return taskResult;
     }
 
@@ -1462,10 +1486,22 @@ public class PlayActivity extends BaseActivity {
                                             headers.put(key, hds.getString(key));
                                         }
                                     } catch (Throwable th) {
-
                                     }
                                 }
-                                playUrl(rs.getString("url"), headers);
+                                if (rs.optInt("parse", 0) == 1) {
+                                    webHeaderMap = headers;
+                                    if (headers != null) {
+                                        for (String key : headers.keySet()) {
+                                            if (key.equalsIgnoreCase("user-agent")) {
+                                                webUserAgent = headers.get(key).trim();
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    loadWebView(DefaultConfig.checkReplaceProxy(rs.getString("url")));
+                                } else {
+                                    playUrl(rs.getString("url"), headers);
+                                }
                             } catch (Throwable e) {
                                 e.printStackTrace();
                                 errorWithRetry("解析错误", false);
