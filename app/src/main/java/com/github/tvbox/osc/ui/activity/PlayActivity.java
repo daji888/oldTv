@@ -180,8 +180,6 @@ public class PlayActivity extends BaseActivity {
                     if (mHandler.hasMessages(100)) {
                         setTip("加载完成，嗅探视频中", true, false);
                     }
-                } else if (msg.what == 300) {
-                    setTip((String)msg.obj, false, true);
                 }
                 return false;
             }
@@ -197,7 +195,7 @@ public class PlayActivity extends BaseActivity {
         ProgressManager progressManager = new ProgressManager() {
             @Override
             public void saveProgress(String url, long progress) {
-                if (videoDuration ==0) return;
+                if (videoDuration == 0) return;
                 CacheManager.save(MD5.string2MD5(url), progress);
             }
 
@@ -251,7 +249,7 @@ public class PlayActivity extends BaseActivity {
                         stopParse();
                         initParseLoadFound();
                         if (mVideoView != null) mVideoView.release();
-                        playUrl(webPlayUrl,webHeaderMap);
+                        playUrl(webPlayUrl, webHeaderMap);
                     } else {
                         play(false);
                     }
@@ -530,14 +528,12 @@ public class PlayActivity extends BaseActivity {
     void selectMyInternalSubtitle() {
         AbstractPlayer mediaPlayer = mVideoView.getMediaPlayer();
         TrackInfo trackInfo = null;
-        
         if (mediaPlayer instanceof EXOmPlayer) {
             trackInfo = ((EXOmPlayer) mediaPlayer).getTrackInfo();
         }
         if (mediaPlayer instanceof IjkmPlayer) {
             trackInfo = ((IjkmPlayer) mediaPlayer).getTrackInfo();
         }
-        
         if (trackInfo == null) {
             Toast.makeText(mContext, "没有内置字幕", Toast.LENGTH_SHORT).show();
             return;
@@ -638,7 +634,6 @@ public class PlayActivity extends BaseActivity {
                 public void run() {
                     if (finish) {
                         setTip(err, false, true);
-                        Toast.makeText(mContext, err, Toast.LENGTH_SHORT).show();
                         finish();
                     } else {
                         setTip(err, false, true);
@@ -804,7 +799,6 @@ public class PlayActivity extends BaseActivity {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        hideTip();
                         if (url.startsWith("data:application/dash+xml;base64,")) {
                             PlayerHelper.updateCfg(mVideoView, mVodPlayerCfg, 2);
                             App.getInstance().setDashData(url.split("base64,")[1]);
@@ -822,6 +816,8 @@ public class PlayActivity extends BaseActivity {
                         }
                         mVideoView.start();
                         mController.resetSpeed();
+                        mHandler.removeMessages(101);
+                        hideTip();
                     }
                 }
             }
@@ -928,7 +924,7 @@ public class PlayActivity extends BaseActivity {
                         boolean parse = info.optString("parse", "1").equals("1");
                         boolean jx = info.optString("jx", "0").equals("1");
                         playSubtitle = info.optString("subt", /*"https://dash.akamaized.net/akamai/test/caption_test/ElephantsDream/ElephantsDream_en.vtt"*/"");
-                        if(playSubtitle.isEmpty() && info.has("subs")) {
+                        if (playSubtitle.isEmpty() && info.has("subs")) {
                             try {
                                 JSONObject obj =info.getJSONArray("subs").optJSONObject(0);
                                 String url = obj.optString("url", "");
@@ -1124,14 +1120,14 @@ public class PlayActivity extends BaseActivity {
             hasNext = mVodInfo.playIndex + 1 < mVodInfo.seriesMap.get(mVodInfo.playFlag).size();
         }
         if (!hasNext) {
-            if(isProgress && mVodInfo!=null){
+            if (isProgress && mVodInfo != null) {
                 mVodInfo.playIndex=0;
-                Toast.makeText(this, "已经是最后一集了!,即将跳到第一集继续播放", Toast.LENGTH_SHORT).show();
-            }else {
+                Toast.makeText(this, "已经是最后一集了, 即将跳到第一集继续播放", Toast.LENGTH_SHORT).show();
+            } else {
                 Toast.makeText(this, "已经是最后一集了!", Toast.LENGTH_SHORT).show();
                 return;
             }
-        }else {
+        } else {
             mVodInfo.playIndex++;
         }
         play(false);
@@ -1219,7 +1215,6 @@ public class PlayActivity extends BaseActivity {
         setTip("正在获取播放信息", true, false);
         String playTitleInfo = mVodInfo.name + " " + vs.name;
         mController.setTitle(playTitleInfo);
-
         stopParse();
         initParseLoadFound();
         allowSwitchPlayer = true;
@@ -1375,7 +1370,7 @@ public class PlayActivity extends BaseActivity {
     void handleResolvePlayUrlTimeout() {
         if (sourceViewModel != null) sourceViewModel.cancelPlayRequest();
         stopParse();
-        if (autoRetryCount > 0 && !allowSwitchPlayer) setTip("获取播放地址超时", false, true);
+        setTip("获取播放地址超时", false, true);
     }
 
     void handleResolvePlayUrlFailed(String err, boolean finish) {
@@ -1383,7 +1378,6 @@ public class PlayActivity extends BaseActivity {
         stopParse();
         if (finish) {
             setTip(err, false, true);
-            Toast.makeText(mContext, err, Toast.LENGTH_SHORT).show();
         } else {
             setTip(err, false, true);
         }
@@ -1410,8 +1404,7 @@ public class PlayActivity extends BaseActivity {
         initParseLoadFound();
         if (pb.getType() == 4) {
              parseMix(pb,true);
-         }
-         else if (pb.getType() == 0) {
+         } else if (pb.getType() == 0) {
             setTip("正在嗅探播放地址", true, false);
             mHandler.removeMessages(100);
             mHandler.sendEmptyMessageDelayed(100, 20 * 1000);
@@ -1571,7 +1564,7 @@ public class PlayActivity extends BaseActivity {
          }
      }
  
-     private void parseMix(ParseBean pb,boolean isSuper) {
+     private void parseMix(ParseBean pb, boolean isSuper) {
          setTip("正在解析播放地址", true, false);
          parseThreadPool = Executors.newSingleThreadExecutor();
          LinkedHashMap<String, HashMap<String, String>> jxs = new LinkedHashMap<>();
@@ -1650,7 +1643,7 @@ public class PlayActivity extends BaseActivity {
          });
     }
     
-    private void rsJsonJx(JSONObject rs,boolean isSuper) {
+    private void rsJsonJx(JSONObject rs, boolean isSuper) {
          if (isSuper) {
              if (rs == null || !rs.has("url")) return;
              stopLoadWebView(false);
@@ -1741,25 +1734,25 @@ public class PlayActivity extends BaseActivity {
             public void run() {
                 if (mXwalkWebView != null) {
                     mXwalkWebView.stopLoading();
-                    if(webUserAgent != null) {
+                    if (webUserAgent != null) {
                         mXwalkWebView.getSettings().setUserAgentString(webUserAgent);
                     }
                     //mXwalkWebView.clearCache(true);
-                    if(webHeaderMap != null){
+                    if (webHeaderMap != null) {
                         mXwalkWebView.loadUrl(url,webHeaderMap);
-                    }else {
+                    } else {
                         mXwalkWebView.loadUrl(url);
                     }
                 }
                 if (mSysWebView != null) {
                     mSysWebView.stopLoading();
-                    if(webUserAgent != null) {
+                    if (webUserAgent != null) {
                         mSysWebView.getSettings().setUserAgentString(webUserAgent);
                     }
                     //mSysWebView.clearCache(true);
-                    if(webHeaderMap != null){
+                    if (webHeaderMap != null) {
                         mSysWebView.loadUrl(url,webHeaderMap);
-                    }else {
+                    } else {
                         mSysWebView.loadUrl(url);
                     }
                 }
@@ -1771,7 +1764,6 @@ public class PlayActivity extends BaseActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-
                 if (mXwalkWebView != null) {
                     mXwalkWebView.stopLoading();
                     mXwalkWebView.loadUrl("about:blank");
@@ -1943,7 +1935,7 @@ public class PlayActivity extends BaseActivity {
 
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
-            super.onPageStarted( view,  url, favicon);
+            super.onPageStarted(view, url, favicon);
         }
 
         @Override
@@ -1951,7 +1943,7 @@ public class PlayActivity extends BaseActivity {
              super.onPageFinished(view,url);
              LOG.i("echo-onPageFinished url:" + url);
              if (!url.equals("about:blank")) {
-                mController.evaluateScript(sourceBean,url,view,null);
+                mController.evaluateScript(sourceBean, url, view, null);
             }
             mHandler.sendEmptyMessage(200);
         }
@@ -1966,7 +1958,7 @@ public class PlayActivity extends BaseActivity {
 
             boolean isFilter = VideoParseRuler.isFilter(webUrl, url);
             if (isFilter) {
-                LOG.i( "shouldInterceptLoadRequest filter:" + url);
+                LOG.i("shouldInterceptLoadRequest filter:" + url);
                 return null;
             }
 
@@ -2144,7 +2136,7 @@ public class PlayActivity extends BaseActivity {
 
             boolean isFilter = VideoParseRuler.isFilter(webUrl, url);
             if (isFilter) {
-                LOG.i( "shouldInterceptLoadRequest filter:" + url);
+                LOG.i("shouldInterceptLoadRequest filter:" + url);
                 return null;
             }
 
