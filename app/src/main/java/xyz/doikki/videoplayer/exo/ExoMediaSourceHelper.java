@@ -10,7 +10,6 @@ import androidx.media3.common.MediaItem;
 import androidx.media3.common.util.Log;
 import androidx.media3.common.MimeTypes;
 import androidx.media3.common.PlaybackException;
-import androidx.media3.common.util.Util;
 import androidx.media3.database.StandaloneDatabaseProvider;
 import androidx.media3.datasource.cache.Cache;
 import androidx.media3.datasource.cache.CacheDataSource;
@@ -18,7 +17,7 @@ import androidx.media3.datasource.cache.LeastRecentlyUsedCacheEvictor;
 import androidx.media3.datasource.cache.SimpleCache;
 import androidx.media3.datasource.DataSource;
 import androidx.media3.datasource.DefaultDataSource;
-import androidx.media3.datasource.DefaultHttpDataSource;
+import androidx.media3.datasource.okhttp.OkHttpDataSource;
 import androidx.media3.datasource.rtmp.RtmpDataSource;
 import androidx.media3.exoplayer.dash.DashMediaSource;
 import androidx.media3.exoplayer.hls.HlsMediaSource;
@@ -35,6 +34,7 @@ import com.github.tvbox.osc.util.FileUtils;
 import com.google.common.base.Ascii;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 
 import okhttp3.OkHttpClient;
@@ -42,15 +42,14 @@ import okhttp3.OkHttpClient;
 public final class ExoMediaSourceHelper {
     public static final String HEADER_FORMAT = "TVBox-Format";
     private static volatile ExoMediaSourceHelper sInstance;
-    private final String mUserAgent;
     private final Context mAppContext;
-    private DefaultHttpDataSource.Factory mHttpDataSourceFactory;
+    private OkHttpDataSource.Factory mHttpDataSourceFactory;
     private Cache mCache;
+    private OkHttpClient mClient;
 
     @SuppressLint("UnsafeOptInUsageError")
     private ExoMediaSourceHelper(Context context) {
         mAppContext = context.getApplicationContext();
-        mUserAgent = Util.getUserAgent(mAppContext, mAppContext.getApplicationInfo().name);
     }
 
     public static ExoMediaSourceHelper getInstance(Context context) {
@@ -77,6 +76,8 @@ public final class ExoMediaSourceHelper {
     }
 
     public void setOkClient(OkHttpClient client) {
+        mClient = client;
+        mHttpDataSourceFactory = null;
     }
 
     public MediaSource getMediaSource(String uri) {
@@ -115,9 +116,7 @@ public final class ExoMediaSourceHelper {
         } else {
             factory = getDataSourceFactory();
         }
-        if (mHttpDataSourceFactory != null) {
-            setHeaders(headers);
-        }
+        applyHeaders(headers);
         if (errorCode == PlaybackException.ERROR_CODE_PARSING_CONTAINER_UNSUPPORTED) {
             MediaItem.Builder builder = new MediaItem.Builder().setUri(uri);
             builder.setMimeType(MimeTypes.APPLICATION_M3U8);
@@ -158,7 +157,7 @@ public final class ExoMediaSourceHelper {
         if (headers == null || !headers.containsKey(HEADER_FORMAT)) {
             return C.CONTENT_TYPE_OTHER;
         }
-        String format = headers.remove(HEADER_FORMAT);
+        String format = headers.get(HEADER_FORMAT);
         if (format == null) {
             return C.CONTENT_TYPE_OTHER;
         }
@@ -219,33 +218,37 @@ public final class ExoMediaSourceHelper {
      * @return A new HttpDataSource factory.
      */
     @SuppressLint("UnsafeOptInUsageError")
-    private DataSource.Factory getHttpDataSourceFactory() {
+    private OkHttpDataSource.Factory getHttpDataSourceFactory() {
         if (mHttpDataSourceFactory == null) {
-            mHttpDataSourceFactory = new DefaultHttpDataSource.Factory()
-                    .setUserAgent(mUserAgent)
-                    .setAllowCrossProtocolRedirects(true);
+            OkHttpClient client = mClient != null ? mClient : new OkHttpClient.Builder().build();
+            mHttpDataSourceFactory = new OkHttpDataSource.Factory(client);
         }
         return mHttpDataSourceFactory;
     }
 
     @SuppressLint("UnsafeOptInUsageError")
-    private void setHeaders(Map<String, String> headers) {
+    private void applyHeaders(Map<String, String> headers) {
+        Map<String, String> requestHeaders = new HashMap<>();
+        String userAgent = null;
         if (headers != null && headers.size() > 0) {
-            headers.remove(HEADER_FORMAT);
-            //如果发现用户通过header传递了UA，则强行将HttpDataSourceFactory里面的userAgent字段替换成用户的
-            if (headers.containsKey("User-Agent")) {
-                String value = headers.remove("User-Agent");
-                if (!TextUtils.isEmpty(value)) {
-                    mHttpDataSourceFactory.setUserAgent(value.trim());
+            for (Map.Entry<String, String> entry : headers.entrySet()) {
+                String key = entry.getKey();
+                String value = entry.getValue();
+                if (TextUtils.isEmpty(key) || TextUtils.isEmpty(value)) {
+                    continue;
+                }
+                if (HEADER_FORMAT.equalsIgnoreCase(key)) {
+                    continue;
+                }
+                if ("User-Agent".equalsIgnoreCase(key)) {
+                    userAgent = value.trim();
+                } else {
+                    requestHeaders.put(key, value.trim());
                 }
             }
-            for (String k : headers.keySet()) {
-                String v = headers.get(k);
-                if (v != null)
-                    headers.put(k, v.trim());
-            }
-            mHttpDataSourceFactory.setDefaultRequestProperties(headers);
         }
+        mHttpDataSourceFactory.setUserAgent(userAgent);
+        mHttpDataSourceFactory.setDefaultRequestProperties(requestHeaders);
     }
 
     public void setCache(Cache cache) {
