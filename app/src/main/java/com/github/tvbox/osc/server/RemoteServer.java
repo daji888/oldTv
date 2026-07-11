@@ -1,12 +1,13 @@
 package com.github.tvbox.osc.server;
 
+import static com.github.tvbox.osc.util.RegexUtils.getPattern;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.wifi.WifiManager;
 import android.os.Environment;
 import android.util.Base64;
 
-import static com.github.tvbox.osc.util.RegexUtils.getPattern;
 import com.github.tvbox.osc.api.ApiConfig;
 import com.github.tvbox.osc.base.App;
 import com.github.tvbox.osc.event.RefreshEvent;
@@ -106,6 +107,9 @@ public class RemoteServer extends NanoHTTPD {
 
     private Response getProxy(Object[] rs) {
          try {
+             if (rs == null || rs.length < 3) {
+                 return NanoHTTPD.newFixedLengthResponse(Response.Status.INTERNAL_ERROR, NanoHTTPD.MIME_PLAINTEXT, "500");
+             }
              if (rs[0] instanceof NanoHTTPD.Response) return (NanoHTTPD.Response) rs[0];
              int code = (int) rs[0];
              String mime = (String) rs[1];
