@@ -967,26 +967,11 @@ public class PlayActivity extends BaseActivity {
                         HashMap<String, String> headers = null;
                         webUserAgent = null;
                         webHeaderMap = null;
-                        if (info.has("header")) {
-                            try {
-                                JSONObject hds = new JSONObject(info.getString("header"));
-                                Iterator<String> keys = hds.keys();
-                                while (keys.hasNext()) {
-                                    String key = keys.next();
-                                    if (headers == null) {
-                                        headers = new HashMap<>();
-                                    }
-                                    headers.put(key, hds.getString(key));
-                                    if (key.equalsIgnoreCase("user-agent")) {
-                                        webUserAgent = hds.getString(key).trim();
-                                    } else if (key.equalsIgnoreCase("cookie")) {
-                                        for (String split : hds.getString(key).split(";"))
-                                            CookieManager.getInstance().setCookie(url, split.trim());
-                                    }
-                                }
-                                webHeaderMap = headers;
-                            } catch (Throwable th) {
-                            }
+                        headers = getHeaders(info);
+                        if (headers != null) {
+                            webHeaderMap = headers;
+                            webUserAgent = getHeaderValue(headers, "user-agent");
+                            if (webUserAgent != null) webUserAgent = webUserAgent.trim();
                         }
                         if (parse || jx) {
                             boolean userJxList = (playUrl.isEmpty() && ApiConfig.get().getVipParseFlags().contains(flag)) || jx;
@@ -1325,23 +1310,10 @@ public class PlayActivity extends BaseActivity {
         }
         parse = parse || playData.optInt("parse", jsonPlayData.optInt("parse", 0)) == 1;
         JSONObject headers = new JSONObject();
-        JSONObject headerJson = playData.optJSONObject("header");
-        if (headerJson == null) {
-            headerJson = playData.optJSONObject("headers");
-        }
-        if (headerJson == null) {
-            headerJson = jsonPlayData.optJSONObject("header");
-        }
-        if (headerJson == null) {
-            headerJson = jsonPlayData.optJSONObject("headers");
-        }
-        if (headerJson != null) {
-            Iterator<String> keys = headerJson.keys();
-            while (keys.hasNext()) {
-                String key = keys.next();
-                headers.put(key, headerJson.optString(key, ""));
-            }
-        }
+        HashMap<String, String> headerMap = getHeaders(jsonPlayData);
+        HashMap<String, String> dataHeaderMap = getHeaders(playData);
+        if (headerMap != null) putHeaders(headers, headerMap);
+        if (dataHeaderMap != null) putHeaders(headers, dataHeaderMap);
         String ua = playData.optString("user-agent", jsonPlayData.optString("user-agent", ""));
         if (ua.trim().length() > 0) {
             headers.put("User-Agent", " " + ua);
@@ -1355,6 +1327,55 @@ public class PlayActivity extends BaseActivity {
         taskResult.put("url", url);
         taskResult.put("parse", parse ? 1 : 0);
         return taskResult;
+    }
+
+    private HashMap<String, String> getHeaders(JSONObject object) {
+        if (object == null) return null;
+        HashMap<String, String> headers = new HashMap<>();
+        appendHeaders(headers, object.opt("header"));
+        appendHeaders(headers, object.opt("headers"));
+        return headers.isEmpty() ? null : headers;
+    }
+
+    private void appendHeaders(HashMap<String, String> headers, Object rawHeaders) {
+        if (rawHeaders == null || rawHeaders == JSONObject.NULL) return;
+        try {
+            JSONObject json = null;
+            if (rawHeaders instanceof JSONObject) {
+                json = (JSONObject) rawHeaders;
+            } else if (rawHeaders instanceof String) {
+                String text = ((String) rawHeaders).trim();
+                if (!TextUtils.isEmpty(text)) {
+                    json = new JSONObject(text);
+                }
+            }
+            if (json == null) return;
+            Iterator<String> keys = json.keys();
+            while (keys.hasNext()) {
+                String key = keys.next();
+                if (!TextUtils.isEmpty(key)) {
+                    headers.put(key, json.optString(key, ""));
+                }
+            }
+        } catch (Throwable ignored) {
+        }
+    }
+
+    private void putHeaders(JSONObject target, HashMap<String, String> headers) throws JSONException {
+        if (target == null || headers == null) return;
+        for (String key : headers.keySet()) {
+            target.put(key, headers.get(key));
+        }
+    }
+
+    private String getHeaderValue(HashMap<String, String> headers, String name) {
+        if (headers == null || name == null) return null;
+        for (String key : headers.keySet()) {
+            if (name.equalsIgnoreCase(key)) {
+                return headers.get(key);
+            }
+        }
+        return null;
     }
 
     void startResolvePlayUrlTimeout() {
@@ -1413,15 +1434,13 @@ public class PlayActivity extends BaseActivity {
                 try {
                     HashMap<String, String> reqHeaders = new HashMap<>();
                     JSONObject jsonObject = new JSONObject(pb.getExt());
-                    if (jsonObject.has("header")) {
-                        JSONObject headerJson = jsonObject.optJSONObject("header");
-                        Iterator<String> keys = headerJson.keys();
-                        while (keys.hasNext()) {
-                            String key = keys.next();
+                    HashMap<String, String> headerMap = getHeaders(jsonObject);
+                    if (headerMap != null) {
+                        for (String key : headerMap.keySet()) {
                             if (key.equalsIgnoreCase("user-agent")) {
-                                webUserAgent = headerJson.getString(key).trim();
+                                webUserAgent = headerMap.get(key).trim();
                             } else {
-                                reqHeaders.put(key, headerJson.optString(key, ""));
+                                reqHeaders.put(key, headerMap.get(key));
                             }
                         }
                         if (reqHeaders.size() > 0) webHeaderMap = reqHeaders;
@@ -1437,12 +1456,10 @@ public class PlayActivity extends BaseActivity {
             HttpHeaders reqHeaders = new HttpHeaders();
             try {
                 JSONObject jsonObject = new JSONObject(pb.getExt());
-                if (jsonObject.has("header")) {
-                    JSONObject headerJson = jsonObject.optJSONObject("header");
-                    Iterator<String> keys = headerJson.keys();
-                    while (keys.hasNext()) {
-                        String key = keys.next();
-                        reqHeaders.put(key, headerJson.optString(key, ""));
+                HashMap<String, String> headerMap = getHeaders(jsonObject);
+                if (headerMap != null) {
+                    for (String key : headerMap.keySet()) {
+                        reqHeaders.put(key, headerMap.get(key));
                     }
                 }
             } catch (Throwable e) {
@@ -1466,30 +1483,12 @@ public class PlayActivity extends BaseActivity {
                             String json = response.body();
                             try {
                                 JSONObject rs = jsonParse(webUrl, json);
-                                HashMap<String, String> headers = null;
-                                if (rs.has("header")) {
-                                    try {
-                                        JSONObject hds = rs.getJSONObject("header");
-                                        Iterator<String> keys = hds.keys();
-                                        while (keys.hasNext()) {
-                                            String key = keys.next();
-                                            if (headers == null) {
-                                                headers = new HashMap<>();
-                                            }
-                                            headers.put(key, hds.getString(key));
-                                        }
-                                    } catch (Throwable th) {
-                                    }
-                                }
+                                HashMap<String, String> headers = getHeaders(rs);
                                 if (rs.optInt("parse", 0) == 1) {
                                     webHeaderMap = headers;
                                     if (headers != null) {
-                                        for (String key : headers.keySet()) {
-                                            if (key.equalsIgnoreCase("user-agent")) {
-                                                webUserAgent = headers.get(key).trim();
-                                                break;
-                                            }
-                                        }
+                                        webUserAgent = getHeaderValue(headers, "user-agent");
+                                        if (webUserAgent != null) webUserAgent = webUserAgent.trim();
                                     }
                                     loadWebView(DefaultConfig.checkReplaceProxy(rs.getString("url")));
                                 } else {
@@ -1526,21 +1525,7 @@ public class PlayActivity extends BaseActivity {
 //                        errorWithRetry("解析错误", false);//没有url重试也没有重新获取
                         setTip("解析错误", false, true);
                     } else {
-                        HashMap<String, String> headers = null;
-                        if (rs.has("header")) {
-                            try {
-                                JSONObject hds = rs.getJSONObject("header");
-                                Iterator<String> keys = hds.keys();
-                                while (keys.hasNext()) {
-                                    String key = keys.next();
-                                    if (headers == null) {
-                                        headers = new HashMap<>();
-                                    }
-                                    headers.put(key, hds.getString(key));
-                                }
-                            } catch (Throwable th) {
-                            }
-                        }
+                        HashMap<String, String> headers = getHeaders(rs);
                         if (rs.has("jxFrom")) {
                             runOnUiThread(new Runnable() {
                                 @Override
@@ -1648,21 +1633,7 @@ public class PlayActivity extends BaseActivity {
              if (rs == null || !rs.has("url")) return;
              stopLoadWebView(false);
          }
-         HashMap<String, String> headers = null;
-         if (rs.has("header")) {
-             try {
-                 JSONObject hds = rs.getJSONObject("header");
-                 Iterator<String> keys = hds.keys();
-                 while (keys.hasNext()) {
-                     String key = keys.next();
-                     if (headers == null) {
-                         headers = new HashMap<>();
-                     }
-                     headers.put(key, hds.getString(key));
-                 }
-             } catch (Throwable th) {
-             }
-         }
+         HashMap<String, String> headers = getHeaders(rs);
          if (rs.has("jxFrom")) {
              runOnUiThread(new Runnable() {
                  @Override
