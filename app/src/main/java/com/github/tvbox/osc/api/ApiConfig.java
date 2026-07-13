@@ -245,6 +245,10 @@ public class ApiConfig {
         void complete(boolean success);
     }
 
+    private interface JarDownloadCallback {
+        void complete(File file, String error);
+    }
+
     private void loadJarAsync(File file, JarLoadCallback callback) {
         jarLoadExecutor.execute(new Runnable() {
             @Override
@@ -264,6 +268,96 @@ public class ApiConfig {
                 });
             }
         });
+    }
+
+    private void downloadJarAsync(String url, boolean isJarInImg, File cache, JarDownloadCallback callback) {
+        jarLoadExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                File result = null;
+                String error = "";
+                okhttp3.Response response = null;
+                InputStream inputStream = null;
+                FileOutputStream outputStream = null;
+                File temp = new File(cache.getAbsolutePath() + ".tmp");
+                try {
+                    File cacheDir = cache.getParentFile();
+                    if (cacheDir != null && !cacheDir.exists()) cacheDir.mkdirs();
+                    if (temp.exists()) temp.delete();
+                    okhttp3.Request request = new okhttp3.Request.Builder()
+                            .url(url)
+                            .header("User-Agent", userAgent)
+                            .build();
+                    okhttp3.OkHttpClient client = OkGoHelper.getDefaultClient();
+                    if (client == null) client = com.github.catvod.net.OkHttp.client();
+                    response = client.newCall(request).execute();
+                    if (!response.isSuccessful()) {
+                        error = "HTTP " + response.code();
+                    } else if (response.body() == null) {
+                        error = "empty body";
+                    } else if (isJarInImg) {
+                        String respData = response.body().string();
+                        LOG.i("echo---jar Response: " + respData);
+                        byte[] imgJar = getImgJar(respData);
+                        if (imgJar == null || imgJar.length == 0) {
+                            error = "empty img jar";
+                        } else {
+                            outputStream = new FileOutputStream(temp);
+                            outputStream.write(imgJar);
+                            outputStream.flush();
+                            closeQuietly(outputStream);
+                            outputStream = null;
+                            result = replaceCache(temp, cache);
+                        }
+                    } else {
+                        inputStream = response.body().byteStream();
+                        outputStream = new FileOutputStream(temp);
+                        byte[] buffer = new byte[16384];
+                        int bytesRead;
+                        while ((bytesRead = inputStream.read(buffer)) != -1) {
+                            outputStream.write(buffer, 0, bytesRead);
+                        }
+                        outputStream.flush();
+                        closeQuietly(outputStream);
+                        outputStream = null;
+                        result = replaceCache(temp, cache);
+                    }
+                } catch (Throwable th) {
+                    error = th.getMessage();
+                } finally {
+                    closeQuietly(inputStream);
+                    closeQuietly(outputStream);
+                    if (response != null) closeQuietly(response.body());
+                    if (result == null && temp.exists()) temp.delete();
+                }
+                final File finalResult = result;
+                final String finalError = error;
+                mainHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        callback.complete(finalResult, finalError);
+                    }
+                });
+            }
+        });
+    }
+
+    private File replaceCache(File temp, File cache) throws IOException {
+        if (cache.exists() && !cache.delete()) {
+            LOG.i("echo---delete old jar cache failed:" + cache.getAbsolutePath());
+        }
+        if (!temp.renameTo(cache)) {
+            FileUtils.copyFile(temp, cache);
+            temp.delete();
+        }
+        return cache;
+    }
+
+    private void closeQuietly(java.io.Closeable closeable) {
+        try {
+            if (closeable != null) closeable.close();
+        } catch (Throwable ignored) {
+        }
     }
 
     private void loadJar(boolean useCache, String spider, LoadConfigCallback callback, int retryCount) {
@@ -294,10 +388,10 @@ public class ApiConfig {
                 }
                 return;
             }
-          } else {
-             if (Boolean.parseBoolean(jarCache) && cache.exists() && !FileUtils.isWeekAgo(cache)) {
-                 LOG.i("echo-load jar jarCache:" + jarUrl);
-                 if (cache.exists()) {
+        } else {
+            if (Boolean.parseBoolean(jarCache) && cache.exists() && !FileUtils.isWeekAgo(cache)) {
+                LOG.i("echo-load jar jarCache:" + jarUrl);
+                if (cache.exists()) {
                     loadJarAsync(cache, new JarLoadCallback() {
                         @Override
                         public void complete(boolean success) {
@@ -310,139 +404,68 @@ public class ApiConfig {
                     });
                     return;
                 }
-                 if (jarLoader.load(cache.getAbsolutePath())) {
-                     callback.success();
-                     return;
-                 }
-             }
+                if (jarLoader.load(cache.getAbsolutePath())) {
+                    callback.success();
+                    return;
+                }
+            }
         }
 
         boolean isJarInImg = jarUrl.startsWith("img+");
         jarUrl = jarUrl.replace("img+", "");
         LOG.i("echo-load jar start:" + jarUrl);
         final String requestUrl = jarUrl;
-        OkGo.<File>get(jarUrl)
-                .headers("User-Agent", userAgent)
-                .headers("Accept", requestAccept)
-                .execute(new AbsCallback<File>() {
-                    
-                    private boolean retryLoad(String reason) {
-                        if (retryCount >= LOAD_JAR_MAX_RETRY) return false;
-                        if (cache.exists() && !cache.delete()) {
-                            LOG.i("echo---delete bad jar cache failed:" + cache.getAbsolutePath());
+        downloadJarAsync(requestUrl, isJarInImg, cache, new JarDownloadCallback() {
+            private boolean retryLoad(String reason) {
+                if (retryCount >= LOAD_JAR_MAX_RETRY) return false;
+                if (cache.exists() && !cache.delete()) {
+                    LOG.i("echo---delete bad jar cache failed:" + cache.getAbsolutePath());
+                }
+                LOG.i("echo---retry load jar reason:" + reason + " url:" + requestUrl + " retry:" + (retryCount + 1));
+                loadJar(false, spider, callback, retryCount + 1);
+                return true;
+            }
+
+            @Override
+            public void complete(File file, String error) {
+                if (file != null && file.exists()) {
+                    loadJarAsync(file, new JarLoadCallback() {
+                        @Override
+                        public void complete(boolean success) {
+                            if (success) {
+                                LOG.i("echo---load-jar-success");
+                                callback.success();
+                            } else {
+                                LOG.e("echo---jar Loader returned false");
+                                if (retryLoad("loader_false")) return;
+                                callback.error("JAR加载失败");
+                            }
                         }
-                        LOG.i("echo---retry load jar reason:" + reason + " url:" + requestUrl + " retry:" + (retryCount + 1));
-                        loadJar(false, spider, callback, retryCount + 1);
-                        return true;
-                    }
-
-                     @Override
-                     public File convertResponse(okhttp3.Response response) {
-                         File cacheDir = cache.getParentFile();
-                         assert cacheDir != null;
-                         if (!cacheDir.exists()) cacheDir.mkdirs();
-                         if (cache.exists()) cache.delete();
-                         // 3. 使用 try-with-resources 确保流关闭
-                         assert response.body() != null;
-                         try (FileOutputStream fos = new FileOutputStream(cache)) {
-                             if (isJarInImg) {
-                                 String respData = response.body().string();
-                                 LOG.i("echo---jar Response: " + respData);
-                                 byte[] imgJar = getImgJar(respData);
-                                 if (imgJar == null || imgJar.length == 0) {
-                                     LOG.e("echo---Generated JAR data is empty");
-                                     if (retryLoad("empty_img_jar")) return null;
-                                     callback.error("JAR 是空的");
-                                     return null;
-                                 }
-                                 fos.write(imgJar);
-                             } else {
-                                 // 使用流式传输避免内存溢出
-                                 InputStream inputStream = response.body().byteStream();
-                                 byte[] buffer = new byte[4096];
-                                 int bytesRead;
-                                 while ((bytesRead = inputStream.read(buffer)) != -1) {
-                                     fos.write(buffer, 0, bytesRead);
-                                 }
-                             }
-                             fos.flush();
-                         } catch (IOException e) {
-                             return null;
-                         }
-                         return cache;
-                     }
-
-                     @Override
-                     public void onSuccess(Response<File> response) {
-                         File file = response.body();
-                         if (file != null && file.exists()) {
-                            loadJarAsync(file, new JarLoadCallback() {
-                                @Override
-                                public void complete(boolean success) {
-                                    if (success) {
-                                        LOG.i("echo---load-jar-success");
-                                        callback.success();
-                                    } else {
-                                        LOG.e("echo---jar Loader returned false");
-                                        if (retryLoad("loader_false")) return;
-                                        callback.error("JAR加载失败");
-                                    }
-                                }
-                            });
-                            return;
-                         }
-                         if (file != null && file.exists()) {
-                             try {
-                                 if (jarLoader.load(file.getAbsolutePath())) {
-                                     LOG.i("echo---load-jar-success");
-                                     callback.success();
-                                 } else {
-                                     LOG.e("echo---jar Loader returned false");
-                                     if (retryLoad("loader_false")) return;
-                                     callback.error("JAR加载失败");
-                                 }
-                             } catch (Exception e) {
-                                 LOG.e("echo---jar Loader threw exception: " + e.getMessage());
-                                 if (retryLoad("loader_exception")) return;
-                                 callback.error("JAR加载异常: ");
-                             }
-                         } else {
-                             LOG.e("echo---jar File not found");
-                             if (retryLoad("file_missing")) return;
-                             callback.error("JAR文件不存在");
-                         }
-                     }
-
-                     @Override
-                     public void onError(Response<File> response) {
-                         Throwable ex = response.getException();
-                         if (ex != null) {
-                             LOG.i("echo---jar Request failed: " + ex.getMessage());
-                         }
-                         if (cache.exists()) {
-                            loadJarAsync(cache, new JarLoadCallback() {
-                                @Override
-                                public void complete(boolean success) {
-                                    if (success) {
-                                        callback.success();
-                                    } else {
-                                        if (retryLoad("request_error")) return;
-                                        callback.error("网络错误");
-                                    }
-                                }
-                            });
-                            return;
-                         }
-                         if (cache.exists() && jarLoader.load(cache.getAbsolutePath())) {
-                             callback.success();
-                             return;
-                         }
-                         if (retryLoad("request_error")) return;
-                         if (cache.exists()) jarLoader.load(cache.getAbsolutePath()); 
-                         callback.error("网络错误");
-                     }
-                 });
-     }
+                    });
+                    return;
+                }
+                if (!TextUtils.isEmpty(error)) {
+                    LOG.i("echo---jar Request failed: " + error);
+                }
+                if (cache.exists()) {
+                    loadJarAsync(cache, new JarLoadCallback() {
+                        @Override
+                        public void complete(boolean success) {
+                            if (success) {
+                                callback.success();
+                            } else {
+                                if (retryLoad("request_error")) return;
+                                callback.error("网络错误");
+                            }
+                        }
+                    });
+                    return;
+                }
+                if (retryLoad("request_error")) return;
+                callback.error("网络错误");
+            }
+        });
+    }
 
     private void parseJson(String apiUrl, File f) throws Throwable {
         BufferedReader bReader = new BufferedReader(new InputStreamReader(new FileInputStream(f), "UTF-8"));
