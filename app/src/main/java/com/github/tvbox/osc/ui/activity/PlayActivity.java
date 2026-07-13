@@ -808,6 +808,7 @@ public class PlayActivity extends BaseActivity {
                         } else {
                             PlayerHelper.updateCfg(mVideoView, mVodPlayerCfg);
                         }
+                        mController.hidePauseRoot();
                         mVideoView.setProgressKey(progressKey);
                         if (headers != null) {
                             mVideoView.setUrl(url, headers);
