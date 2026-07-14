@@ -35,9 +35,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.lzy.okgo.OkGo;
-import com.lzy.okgo.callback.AbsCallback;
-import com.lzy.okgo.model.Response;
 import com.orhanobut.hawk.Hawk;
 
 import java.io.BufferedReader;
@@ -85,10 +82,10 @@ public class ApiConfig {
     private JarLoader jarLoader = new JarLoader();
     private JsLoader jsLoader = new JsLoader();
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
+    private final ExecutorService configLoadExecutor = Executors.newSingleThreadExecutor();
     private final ExecutorService jarLoadExecutor = Executors.newSingleThreadExecutor();
 
     private String userAgent = "okhttp/" + OkHttp.VERSION;
-    private String requestAccept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9";
 
     private ApiConfig() {
         clearLoader();
@@ -183,56 +180,34 @@ public class ApiConfig {
         } else {
             configUrl = apiUrl;
         }
-        String configKey = TempKey;
-        OkGo.<String>get(configUrl)
-                .headers("User-Agent", userAgent)
-                .headers("Accept", requestAccept)
-                .execute(new AbsCallback<String>() {
-                    @Override
-                    public void onSuccess(Response<String> response) {
-                        try {
-                            String json = response.body();
-                            LOG.i("echo-ConfigJson"+json);
-                            parseJson(apiUrl, json);
-                            FileUtils.saveCache(cache, json);
-                            callback.success();
-                        } catch (Throwable th) {
-                            th.printStackTrace();
-                            callback.error("解析配置失败");
-                        }
-                    }
+        final String configKey = TempKey;
+        fetchConfigAsync(apiUrl, configUrl, configKey, new ConfigFetchCallback() {
+            @Override
+            public void success(String json) {
+                try {
+                    parseJson(apiUrl, json);
+                    FileUtils.saveCache(cache, json);
+                    callback.success();
+                } catch (Throwable th) {
+                    th.printStackTrace();
+                    callback.error("配置解析失败");
+                }
+            }
 
-                    @Override
-                    public void onError(Response<String> response) {
-                        super.onError(response);
-                        if (cache.exists()) {
-                            try {
-                                parseJson(apiUrl, cache);
-                                callback.success();
-                                return;
-                            } catch (Throwable th) {
-                                th.printStackTrace();
-                            }
-                        }
-                        callback.error("拉取配置失败\n" + (response.getException() != null ? response.getException().getMessage() : ""));
+            @Override
+            public void error(String error) {
+                if (cache.exists()) {
+                    try {
+                        parseJson(apiUrl, cache);
+                        callback.success();
+                        return;
+                    } catch (Throwable th) {
+                        th.printStackTrace();
                     }
-
-                    public String convertResponse(okhttp3.Response response) throws Throwable {
-                        String result = "";
-                        if (response.body() == null) {
-                            result = "";
-                        } else {
-                            result = FindResult(response.body().string(), configKey);
-                        }
-
-                        if (apiUrl.startsWith("clan")) {
-                            result = clanContentFix(clanToAddress(apiUrl), result);
-                        }
-                        //假相對路徑
-                        result = fixContentPath(apiUrl,result);
-                        return result;
-                    }
-                });
+                }
+                callback.error("拉取配置失败\n" + error);
+            }
+        });
     }
 
     private static final int LOAD_JAR_MAX_RETRY = 1;
@@ -247,6 +222,58 @@ public class ApiConfig {
 
     private interface JarDownloadCallback {
         void complete(File file, String error);
+    }
+
+    private interface ConfigFetchCallback {
+        void success(String body);
+        void error(String error);
+    }
+
+    private void fetchConfigAsync(final String apiUrl, final String requestUrl, final String configKey, final ConfigFetchCallback callback) {
+        configLoadExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                String result = "";
+                String error = "";
+                okhttp3.Response response = null;
+                try {
+                    okhttp3.Request request = new okhttp3.Request.Builder()
+                            .url(requestUrl)
+                            .build();
+                    okhttp3.OkHttpClient client = OkGoHelper.getDefaultClient();
+                    if (client == null) client = com.github.catvod.net.OkHttp.client();
+                    response = client.newCall(request).execute();
+                    if (!response.isSuccessful()) {
+                        error = "HTTP " + response.code();
+                    } else if (response.body() == null) {
+                        error = "empty body";
+                    } else {
+                        result = FindResult(response.body().string(), configKey);
+                        if (apiUrl.startsWith("clan")) {
+                            result = clanContentFix(clanToAddress(apiUrl), result);
+                        }
+                        result = fixContentPath(apiUrl, result);
+                    }
+                } catch (Throwable th) {
+                    error = th.getMessage();
+                    if (TextUtils.isEmpty(error)) error = th.toString();
+                } finally {
+                    if (response != null) closeQuietly(response.body());
+                }
+                final String finalResult = result;
+                final String finalError = error;
+                mainHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (TextUtils.isEmpty(finalError)) {
+                            callback.success(finalResult);
+                        } else {
+                            callback.error(finalError);
+                        }
+                    }
+                });
+            }
+        });
     }
 
     private void loadJarAsync(File file, JarLoadCallback callback) {
