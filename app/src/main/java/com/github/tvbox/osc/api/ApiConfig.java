@@ -47,9 +47,11 @@ import java.io.InputStreamReader;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
@@ -76,15 +78,13 @@ public class ApiConfig {
     private String spider = null;
     private String currentPlaySourceKey = "";
     public String wallpaper = "";
-
     private SourceBean emptyHome = new SourceBean();
-
     private JarLoader jarLoader = new JarLoader();
     private JsLoader jsLoader = new JsLoader();
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
     private final ExecutorService configLoadExecutor = Executors.newSingleThreadExecutor();
     private final ExecutorService jarLoadExecutor = Executors.newSingleThreadExecutor();
-
+    private final Set<String> warmedSearchSpiderKeys = new HashSet<>();
     private String userAgent = "okhttp/" + OkHttp.VERSION;
 
     private ApiConfig() {
@@ -1009,6 +1009,30 @@ public class ApiConfig {
         }
     }
 
+    public void warmSearchSpiders() {
+        final ArrayList<SourceBean> sources = new ArrayList<>(sourceBeanList.values());
+        configLoadExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                LOG.i("echo-warm-spider start");
+                for (SourceBean source : sources) {
+                    if (source == null || source.getType() != 3 || !source.isSearchable()) continue;
+                    String warmKey = source.getKey() + "|" + source.getApi() + "|" + source.getJar() + "|" + source.getExt();
+                    synchronized (warmedSearchSpiderKeys) {
+                        if (warmedSearchSpiderKeys.contains(warmKey)) continue;
+                        warmedSearchSpiderKeys.add(warmKey);
+                    }
+                    try {
+                        LOG.i("echo-warm-spider load:" + warmKey);
+                        getCSP(source);
+                    } catch (Throwable th) {
+                        LOG.e("echo-warm-search-spider-error " + source.getKey() + ":" + th.getMessage());
+                    }
+                }
+            }
+        });
+    }
+
     public Object[] proxyLocal(Map<String,String> param) {
         SourceBean source = getCurrentProxySource(param);
         String api = source.getApi();
@@ -1212,6 +1236,9 @@ public class ApiConfig {
      private void clearLoader() {
         jarLoader.clear();
         jsLoader.clear();
+        synchronized (warmedSearchSpiderKeys) {
+            warmedSearchSpiderKeys.clear();
+        }
     }
  
 }
