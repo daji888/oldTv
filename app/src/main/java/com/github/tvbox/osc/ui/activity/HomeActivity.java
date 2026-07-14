@@ -329,6 +329,7 @@ public class HomeActivity extends BaseActivity {
 
     private static boolean dataInitOk = false;
     private static boolean jarInitOk = false;
+    private boolean searchSpiderWarmStarted = false;
 
     private void initData() {
         SourceBean home = ApiConfig.get().getHomeSourceBean();
@@ -336,6 +337,7 @@ public class HomeActivity extends BaseActivity {
             tvName.setText(home.getName());
         if (dataInitOk && jarInitOk) {
             showLoading();
+            warmSearchSpidersOnce();
             sourceViewModel.getSort(ApiConfig.get().getHomeSourceBean().getKey());
             if (hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 LOG.e("有");
@@ -463,6 +465,12 @@ public class HomeActivity extends BaseActivity {
                 });
             }
         }, this);
+    }
+
+    private void warmSearchSpidersOnce() {
+        if (searchSpiderWarmStarted) return;
+        searchSpiderWarmStarted = true;
+        ApiConfig.get().warmSearchSpiders();
     }
 
     private void initViewPager(AbsSortXml absXml) {
