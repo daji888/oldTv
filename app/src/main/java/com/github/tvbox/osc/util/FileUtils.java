@@ -4,12 +4,11 @@ import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Base64;
 
+import com.github.catvod.net.OkHttp;
 import com.github.tvbox.osc.base.App;
 import com.github.tvbox.osc.server.ControlManager;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.lzy.okgo.OkGo;
-import com.lzy.okgo.model.HttpHeaders;
 import com.orhanobut.hawk.Hawk;
 
 import java.io.BufferedInputStream;
@@ -31,14 +30,11 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import okhttp3.OkHttp;
-import okhttp3.Response;
-
 import org.json.JSONObject;
 
 public class FileUtils {
 
-    private static String userAgent = "okhttp/" + OkHttp.VERSION;
+    private static String userAgent = "okhttp/" + okhttp3.OkHttp.VERSION;
 
     public static boolean writeSimple(byte[] data, File dst) {
         try {
@@ -411,25 +407,11 @@ public class FileUtils {
     }
 
     public static String get(String str, Map<String, String> headerMap) {
-        try {
-            HttpHeaders h = new HttpHeaders();
-            Response response = null;
-            if (headerMap != null) {
-                for (String key : headerMap.keySet()) {
-                    h.put(key, headerMap.get(key));
-                }
-                response = OkGo.<String>get(str).headers(h).execute();
-            } else {
-                response = OkGo.<String>get(str).headers("User-Agent", str.startsWith("https://gitcode.net/") ? UA.random() : userAgent).execute();
-            }
-            if (response.isSuccessful() && response.body() != null) {
-                return new String(response.body().bytes(), "UTF-8");
-            } else {
-                return "";
-            }
-        } catch (IOException e) {
-            return "";
+        if (headerMap == null) {
+            headerMap = new HashMap<>();
+            headerMap.put("User-Agent", str.startsWith("https://gitcode.net/") ? UA.random() : userAgent);
         }
+        return OkHttp.string(str, headerMap);
     }
 
     public static File open(String str) {

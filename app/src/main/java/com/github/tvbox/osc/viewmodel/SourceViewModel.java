@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.github.catvod.crawler.Spider;
+import com.github.catvod.net.OkHttp;
 import com.github.tvbox.osc.api.ApiConfig;
 import com.github.tvbox.osc.base.App;
 import com.github.tvbox.osc.bean.AbsJson;
@@ -25,6 +26,7 @@ import com.github.tvbox.osc.util.DefaultConfig;
 import com.github.tvbox.osc.util.FileUtils;
 import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.LOG;
+import com.github.tvbox.osc.util.MD5;
 import com.github.tvbox.osc.util.thunder.Thunder;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -55,6 +57,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -79,6 +82,7 @@ public class SourceViewModel extends ViewModel {
     public MutableLiveData<AbsXml> detailResult;
     public MutableLiveData<JSONObject> actionResult;
     public MutableLiveData<JSONObject> playResult;
+    public Gson gson;
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
     private final AtomicInteger playRequestSeq = new AtomicInteger();
     
@@ -90,6 +94,7 @@ public class SourceViewModel extends ViewModel {
         detailResult = new MutableLiveData<>();
         actionResult = new MutableLiveData<>();
         playResult = new MutableLiveData<>();
+        gson = new Gson();
     }
 
     public static final ExecutorService spThreadPool = Executors.newSingleThreadExecutor();
@@ -1108,13 +1113,58 @@ public class SourceViewModel extends ViewModel {
         });
     }
 
-    private String getFixUrl(String content) {
-        if (content.startsWith("http://127.0.0.1")) {
-            String path = content.replaceAll("^http.+/file/", FileUtils.getRootPath() + "/");
-            path = path.replaceAll("localhost/", "/");
-            content = FileUtils.readFileToString(path,"UTF-8");
+    private static final ConcurrentHashMap<String, String> extendCache = new ConcurrentHashMap<>();
+
+    private String getFixUrl(final String extend) {
+        if (TextUtils.isEmpty(extend)) return "";
+        if (!extend.startsWith("http")) return extend;
+        final String key = MD5.string2MD5(extend);
+        if (extendCache.containsKey(key)) {
+            LOG.i("echo-getFixUrl Cache");
+            return extendCache.get(key);
         }
-        return content;
+        Future<String> future = spThreadPool.submit(new Callable<String>() {
+            @Override
+            public String call() {
+                String result = extend;
+                if (extend.startsWith("http://127.0.0.1")) {
+                    String path = extend.replaceAll("^http.+/file/", FileUtils.getRootPath() + "/");
+                    path = path.replaceAll("localhost/", "/");
+                    result = FileUtils.readFileToString(path, "UTF-8");
+                    result = tryMinifyJson(result);
+                    extendCache.putIfAbsent(key, result);
+                } else if (extend.startsWith("http")) {
+                    result = OkHttp.string(extend, null);
+                    if (!result.isEmpty()) {
+                        result = tryMinifyJson(result);
+                        if (result.length() > 2500) result = extend;
+                        extendCache.putIfAbsent(key, result);
+                    }
+                }
+                return result;
+            }
+        });
+
+        try {
+            return future.get(20, TimeUnit.SECONDS);
+        } catch (TimeoutException te) {
+            te.printStackTrace();
+            future.cancel(true);
+            return extend;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return extend;
+        }
+    }
+
+    private String tryMinifyJson(String raw) {
+        try {
+            raw = raw.trim();
+            JsonElement jsonElement = JsonParser.parseString(raw);
+            return gson.toJson(jsonElement);
+        } catch (Exception e) {
+            return raw;
+        }
     }
 
     private MovieSort.SortFilter getSortFilter(JsonObject obj) {
@@ -1141,7 +1191,7 @@ public class SourceViewModel extends ViewModel {
                 return new AbsSortJson().toAbsSortXml();
             }
             JsonObject obj = JsonParser.parseString(json).getAsJsonObject();
-            AbsSortJson sortJson = new Gson().fromJson(obj, new TypeToken<AbsSortJson>() {
+            AbsSortJson sortJson = gson.fromJson(obj, new TypeToken<AbsSortJson>() {
             }.getType());
             AbsSortXml data = sortJson.toAbsSortXml();
             try {
@@ -1289,7 +1339,7 @@ public class SourceViewModel extends ViewModel {
                                                             String res = response.body();
                                                             if (!TextUtils.isEmpty(res)) {
                                                                 try {
-                                                                    AbsJson absJson = new Gson().fromJson(res, new TypeToken<AbsJson>() {
+                                                                    AbsJson absJson = gson.fromJson(res, new TypeToken<AbsJson>() {
                                                                     }.getType());
                                                                     resData[0] = absJson.toAbsXml();
                                                                     absXml(resData[0], sb.getKey());
@@ -1315,7 +1365,7 @@ public class SourceViewModel extends ViewModel {
                                                 String res = sp.detailContent(ids);
                                                 if (!TextUtils.isEmpty(res)) {
                                                     try {
-                                                        AbsJson absJson = new Gson().fromJson(res, new TypeToken<AbsJson>() {
+                                                        AbsJson absJson = gson.fromJson(res, new TypeToken<AbsJson>() {
                                                         }.getType());
                                                         resData[0] = absJson.toAbsXml();
                                                         absXml(resData[0], sb.getKey());
@@ -1491,7 +1541,7 @@ public class SourceViewModel extends ViewModel {
                     "\t\t\"vod_play_url\": \"0$magnet:?xt=urn:btih:e398ca38fb9d64897ed19b4d16efeea11af4d03b\"\n" +
                     "\t}]\n" +
                     "}";*/
-            AbsJson absJson = new Gson().fromJson(json, new TypeToken<AbsJson>() {
+            AbsJson absJson = gson.fromJson(json, new TypeToken<AbsJson>() {
             }.getType());
             AbsXml data = absJson.toAbsXml();
             absXml(data, sourceKey);
