@@ -120,8 +120,24 @@ public class Connect {
                 }
             }
             OkGo.getInstance().cancelTag(tag);
+            cancelDefaultClient(tag);
         } catch (Exception e) {
             LOG.e(e);
+        }
+    }
+
+    private static void cancelDefaultClient(Object tag) {
+        OkHttpClient defaultClient = OkGoHelper.getDefaultClient();
+        if (defaultClient == null || tag == null) return;
+        for (Call call : defaultClient.dispatcher().queuedCalls()) {
+            if (tag.equals(call.request().tag())) {
+                call.cancel();
+            }
+        }
+        for (Call call : defaultClient.dispatcher().runningCalls()) {
+            if (tag.equals(call.request().tag())) {
+                call.cancel();
+            }
         }
     }
 }
