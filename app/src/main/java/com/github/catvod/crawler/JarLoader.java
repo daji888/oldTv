@@ -38,6 +38,7 @@ public class JarLoader {
     private final ConcurrentHashMap<String, Object> locks = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, String> siteJarKeys = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, String> aliases = new ConcurrentHashMap<>();
+    private final ProtectedInitJar protectedInitJar = new ProtectedInitJar();
     private volatile String recent = MAIN_KEY;
 
     public boolean load(String cache) {
@@ -70,7 +71,7 @@ public class JarLoader {
             file.setReadOnly();
             String cachePath = jarDir().getAbsolutePath();
             DexClassLoader loader = new DexClassLoader(file.getAbsolutePath(), cachePath, cachePath, App.getInstance().getClassLoader());
-            invokeInit(loader);
+            invokeInit(loader, file.getAbsolutePath());
             invokeProxy(key, loader);
             injectProxyPort(loader);
             loaders.put(key, loader);
@@ -83,11 +84,16 @@ public class JarLoader {
         }
     }
 
-    private void invokeInit(DexClassLoader loader) {
+    private void invokeInit(DexClassLoader loader, String jar) {
         try {
             Class<?> clz = loader.loadClass("com.github.catvod.spider.Init");
             Method method = clz.getMethod("init", Context.class);
-            method.invoke(null, App.getInstance());
+            if (protectedInitJar.check(jar)) {
+                Log.i(TAG, "echo-load initProtectedJar file=" + jar);
+                protectedInitJar.init(clz);
+            } else {
+                method.invoke(null, App.getInstance());
+            }
         } catch (Throwable e) {
             e.printStackTrace();
         }
