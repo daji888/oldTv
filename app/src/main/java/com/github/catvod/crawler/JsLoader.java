@@ -25,8 +25,7 @@ import okhttp3.Response;
 public class JsLoader {
     private static final ConcurrentHashMap<String, Spider> spiders = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<String, Class<?>> classes = new ConcurrentHashMap<>();
-    //当前的Js爬虫key
-    private volatile String recentKey = "";
+    private volatile String recentKey = ""; // 当前的Js爬虫key
 
     public static void destroy() {
         for (Spider spider : spiders.values()){
@@ -34,9 +33,15 @@ public class JsLoader {
             spider.destroy();
         }
     }
-    public void clear() {     
+    
+    public synchronized void clear() {
+        for (Spider spider : spiders.values()) {
+            spider.cancelByTag();
+            spider.destroy();
+        }     
         spiders.clear();
         classes.clear();
+        recentKey = "";
     }
 
     public static void stopAll() {
@@ -123,7 +128,8 @@ public class JsLoader {
         return null;
     }
 
-    public Spider getSpider(String key, String api, String ext, String jar) {
+    public synchronized Spider getSpider(String key, String api, String ext, String jar) {
+        recentKey = key;
         if (spiders.containsKey(key)) {
             Log.i("JSLoader", "echo-getSpider cached");
             return spiders.get(key);
@@ -136,10 +142,10 @@ public class JsLoader {
             String jarMd5 = urls.length > 1 ? urls[1].trim() : "";
             classLoader = loadJarInternal(jarUrl, jarMd5, jarKey);
         }
-        recentKey = key;
         try {
             Log.i("JSLoader", "echo-getSpider load");
             Spider sp = new JsSpider(key, api, classLoader);
+            sp.siteKey = key;
             sp.init(App.getInstance(), ext);
             spiders.put(key, sp);
             return sp;
