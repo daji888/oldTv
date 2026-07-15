@@ -35,7 +35,6 @@ public class InputRequestProcess implements RequestProcess {
             case "/action":
                 if (params.get("do") != null && mDataReceiver != null) {
                     String action = params.get("do");
-
                     switch (action) {
                         case "search": {
                             mDataReceiver.onTextReceived(params.get("word").trim());
@@ -46,8 +45,10 @@ public class InputRequestProcess implements RequestProcess {
                             break;
                         }
                         case "push": {
-                            // 暂未实现
-                            mDataReceiver.onPushReceived(params.get("url").trim());
+                            String url = params.get("url");
+                            if (url != null && url.trim().length() > 0) {
+                                mDataReceiver.onPushReceived(url.trim());
+                            }
                             break;
                         }
                     }
