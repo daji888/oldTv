@@ -396,6 +396,11 @@ public class SourceViewModel extends ViewModel {
     // categoryContent
     public void getList(MovieSort.SortData sortData, int page) {
         LOG.i("echo-getList:");
+        if (sortData == null) {
+            LOG.i("echo-getList-sortData-null");
+            listResult.postValue(null);
+            return;
+        }
         SourceBean homeSourceBean = ApiConfig.get().getHomeSourceBean();
         int type = homeSourceBean.getType();
         if (type == 3) {
