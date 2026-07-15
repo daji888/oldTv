@@ -83,6 +83,15 @@ public class ImgUtil {
             .into(imageView);
     }
 
+    public static void clearMemoryCache() {
+        try {
+            Glide.get(App.getInstance()).clearMemory();
+            LOG.i("echo-img-clear-memory-cache");
+        } catch (Throwable th) {
+            LOG.i("echo-img-clear-memory-cache-error:" + th.getMessage());
+        }
+    }
+
     private static Object getUrl(String url) {
         if (url.startsWith("data:")) return url;
         String header = null;
