@@ -12,7 +12,6 @@ import java.util.List;
  * @description:
  */
 public class AbsJson implements Serializable {
-
     public int code;    // : 1
     public String limit;    // : "20"
     public ArrayList<AbsJsonVod> list; // : [{vod_id: 71930, type_id: 22, type_id_1: 20, group_id: 0, vod_name: "意式情歌",…},…]
@@ -20,8 +19,6 @@ public class AbsJson implements Serializable {
     public int page;    // : "2"
     public int pagecount;   // : 209
     public int total;   // : 4166
-
-
     public class AbsJsonVod implements Serializable {
         public int group_id; //: 0
         public int type_id; //: 32
@@ -135,13 +132,12 @@ public class AbsJson implements Serializable {
                 String[] playFlags = vod_play_from.split("\\$\\$\\$");
                 String[] playUrls = vod_play_url.split("\\$\\$\\$");
                 List<Movie.Video.UrlBean.UrlInfo> infoList = new ArrayList<>();
-                for (int i = 0; i < playFlags.length; i++) {
+                for (int i = 0; i < playFlags.length && i < playUrls.length; i++) {
+                    if (playFlags[i].trim().isEmpty() || playUrls[i].trim().isEmpty())
+                        continue;
                     Movie.Video.UrlBean.UrlInfo urlInfo = new Movie.Video.UrlBean.UrlInfo();
-                    urlInfo.flag = playFlags[i];
-                    if (i < playUrls.length)
-                        urlInfo.urls = playUrls[i];
-                    else
-                        urlInfo.urls = "";
+                    urlInfo.flag = playFlags[i].trim();
+                    urlInfo.urls = playUrls[i];
                     infoList.add(urlInfo);
                 }
                 urlBean.infoList = infoList;
