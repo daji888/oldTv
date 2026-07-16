@@ -792,7 +792,7 @@ public class PlayFragment extends BaseLazyFragment {
     void startPlayUrl(String url, HashMap<String, String> headers) {
         LOG.i("echo-playUrl:" + url);
         if (TextUtils.isEmpty(url)) {
-            handleResolvePlayUrlFailed("获取播放地址为空", true);
+            handleResolvePlayUrlFailed("获取播放地址为空");
             return;
         }
         if (autoRetryCount == 0) webPlayUrl = url;
@@ -980,8 +980,9 @@ public class PlayFragment extends BaseLazyFragment {
                         subtitleCacheKey = info.optString("subtKey", null);
                         String playUrl = info.optString("playUrl", "");
                         String msg = info.optString("msg", "");
-                        if (!msg.isEmpty()) {
-                            Toast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
+                        if (!TextUtils.isEmpty(msg)) {
+                            handleResolvePlayUrlFailed(msg);
+                            return;
                         }
                         String flag = info.optString("flag");
                         String url = info.getString("url");
@@ -1005,11 +1006,11 @@ public class PlayFragment extends BaseLazyFragment {
                             playUrl(playUrl + url, headers);
                         }
                     } catch (Throwable th) {
-                        handleResolvePlayUrlFailed("获取播放信息错误", true);
+                        handleResolvePlayUrlFailed("获取播放信息错误");
                     }
                 } else {
                     // 获取播放信息错误后只需再重试一次
-                    handleResolvePlayUrlFailed("获取播放信息错误", true);
+                    handleResolvePlayUrlFailed("获取播放信息错误");
                 }
             }
         });
@@ -1424,8 +1425,8 @@ public class PlayFragment extends BaseLazyFragment {
     }
 
     private long getResolvePlayUrlTimeoutMs() {
-        if (sourceBean == null) return 12 * 1000L;
-        return Math.max(12 * 1000L, (sourceBean.getPlayTimeoutSeconds() + 1L) * 1000L);
+        if (sourceBean == null) return 15 * 1000L;
+        return Math.max(15 * 1000L, (sourceBean.getPlayTimeoutSeconds() + 1L) * 1000L);
     }
 
     void handleResolvePlayUrlTimeout() {
@@ -1434,14 +1435,11 @@ public class PlayFragment extends BaseLazyFragment {
         setTip("获取播放地址超时", false, true);
     }
 
-    void handleResolvePlayUrlFailed(String err, boolean finish) {
+    void handleResolvePlayUrlFailed(String err) {
         if (sourceViewModel != null) sourceViewModel.cancelPlayRequest();
         stopParse();
-        if (finish) {
-            setTip(err, false, true);
-        } else {
-            setTip(err, false, true);
-        }
+        mHandler.removeMessages(101);
+        setTip(err, false, true);
     }
 
     void stopParse() {
