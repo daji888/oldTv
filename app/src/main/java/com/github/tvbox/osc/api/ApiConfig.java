@@ -970,6 +970,12 @@ public class ApiConfig {
                   } else {
                       Hawk.put(HawkConfig.LIVE_PLAY_TYPE, Hawk.get(HawkConfig.PLAY_TYPE, 0));
                   }
+
+                  //设置超时
+                  if (livesOBJ.has("timeout")) {
+                      int timeout = Math.max(5, Math.min(30, livesOBJ.get("timeout").getAsInt()));
+                      Hawk.put(HawkConfig.LIVE_CONNECT_TIMEOUT, (timeout + 4) / 5);
+                  }
          
                   //设置UA
                   if (livesOBJ.has("header")) {
