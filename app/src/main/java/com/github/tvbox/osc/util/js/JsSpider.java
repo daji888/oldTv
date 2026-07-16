@@ -3,6 +3,7 @@ package com.github.tvbox.osc.util.js;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Base64;
+
 import com.github.catvod.crawler.Spider;
 import com.github.tvbox.osc.util.FileUtils;
 import com.github.tvbox.osc.util.LOG;
@@ -11,7 +12,6 @@ import com.github.tvbox.osc.util.MD5;
 import com.whl.quickjs.wrapper.ContextSetter;
 import com.whl.quickjs.wrapper.Function;
 import com.whl.quickjs.wrapper.JSArray;
-
 import com.whl.quickjs.wrapper.JSCallFunction;
 import com.whl.quickjs.wrapper.JSMethod;
 import com.whl.quickjs.wrapper.JSObject;
@@ -26,16 +26,16 @@ import org.json.JSONObject;
 import java.io.ByteArrayInputStream;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public class JsSpider extends Spider {
     private static final byte BYTECODE_VERSION = 67;
@@ -210,6 +210,15 @@ public class JsSpider extends Spider {
     public String searchContent(String key, boolean quick)  {
         try {
             return (String) call("search", key, quick);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    @Override
+    public String searchContent(String key, boolean quick, String pg)  {
+        try {
+            return (String) call("search", key, quick, pg);
         } catch (Exception e) {
             return null;
         }
