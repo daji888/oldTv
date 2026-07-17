@@ -590,11 +590,20 @@ public class LivePlayActivity extends BaseActivity {
         } else if (tvRightSettingLayout.getVisibility() == View.VISIBLE) {
             mHandler.removeCallbacks(mHideSettingLayoutRun);
             mHandler.post(mHideSettingLayoutRun);
-        } else if ( backcontroller.getVisibility() == View.VISIBLE) {
+        } else if (backcontroller.getVisibility() == View.VISIBLE) {
             backcontroller.setVisibility(View.GONE);
         } else if (isBack) {
+            mVideoView.release();
+            currentLiveLookBackIndex = -1;
+            epgListAdapter.setSelectedEpgIndex(-1);
+            isSHIYI = false;
             isBack = false;
-            playChannel(currentChannelGroupIndex, currentLiveChannelIndex, true);
+            showBottomEpg();
+            getEpg(new Date());
+            backcontroller.setVisibility(View.GONE);
+            ll_right_top_huikan.setVisibility(View.GONE);
+            mVideoView.setUrl(currentLiveChannelItem.getUrl(), liveChannelHeader());
+            mVideoView.start();
         } else {
             mHandler.removeCallbacks(mConnectTimeoutChangeSourceRun);
             mHandler.removeCallbacks(mUpdateNetSpeedRun);
