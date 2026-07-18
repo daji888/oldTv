@@ -510,7 +510,22 @@ public class ApiConfig {
         JsonObject infoJson = new Gson().fromJson(jsonStr, JsonObject.class);
         // spider
         spider = DefaultConfig.safeJsonString(infoJson, "spider", "");
+        // jarCache
         jarCache = DefaultConfig.safeJsonString(infoJson, "jarCache", "true");
+        // urls
+        if (infoJson.has("urls") && infoJson.get("urls").getAsJsonArray() != null) {
+            for (JsonElement opt : infoJson.getAsJsonArray("urls")) {
+                String url = ((JsonObject) opt).has("url") ? ((JsonObject) opt).get("url").getAsString() : "";
+                if (!url.isEmpty()) {
+                    ArrayList<String> history = Hawk.get(HawkConfig.API_HISTORY, new ArrayList<String>());
+                    if (!history.contains(url))
+                        history.add(url);
+                    if (history.size() > 30)
+                        history.remove(30);
+                    Hawk.put(HawkConfig.API_HISTORY, history);
+                }
+            }
+        }
         // wallpaper
         wallpaper = DefaultConfig.safeJsonString(infoJson, "wallpaper", "");
         // 远端站点源
