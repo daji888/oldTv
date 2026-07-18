@@ -1142,7 +1142,7 @@ public class PlayFragment extends BaseLazyFragment {
     private SourceBean sourceBean;
 
     private void playNext(boolean isProgress) {
-        boolean hasNext;
+        boolean hasNext = true;
         if (mVodInfo == null || mVodInfo.seriesMap.get(mVodInfo.playFlag) == null) {
             hasNext = false;
         } else {
