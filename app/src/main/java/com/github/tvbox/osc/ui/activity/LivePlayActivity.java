@@ -2547,7 +2547,9 @@ public class LivePlayActivity extends BaseActivity {
                             tv_currentpos.setText(stringForTime(safeTimeMs(currentPosition)));
                         }    
                         String shiyiUrl = currentLiveChannelItem.getUrl();
-                        if (hasCatchup || currentChannelHasCatchup() || shiyiUrl.contains("/PLTV/") || shiyiUrl.contains("/TVOD/")) {
+                        Epginfo selectedData = epgListAdapter.getItem(epgListAdapter.getSelectedIndex());
+                        Date now = new Date();
+                        if ((hasCatchup || currentChannelHasCatchup() || shiyiUrl.contains("/PLTV/") || shiyiUrl.contains("/TVOD/")) && (now.compareTo(selectedData.startdateTime) >= 0 && now.compareTo(selectedData.enddateTime) <= 0)) {
                             tv_duration.setText(stringForTime(safeTimeMs(shiyiduration)));
                             ((TextView) findViewById(R.id.tv_pause_progress_text)).setText((stringForTime(safeTimeMs(currentPosition))) + " / " + (stringForTime(safeTimeMs(shiyiduration))));
                         } else {    
