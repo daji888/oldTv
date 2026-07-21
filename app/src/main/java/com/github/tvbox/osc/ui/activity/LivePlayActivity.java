@@ -593,20 +593,15 @@ public class LivePlayActivity extends BaseActivity {
         } else if (backcontroller.getVisibility() == View.VISIBLE) {
             backcontroller.setVisibility(View.GONE);
         } else if (isBack) {
-            mVideoView.release();
-            currentLiveLookBackIndex = -1;
-            epgListAdapter.setSelectedEpgIndex(-1);
-            isSHIYI = false;
-            isBack = false;
-            showBottomEpg();
-            getEpg(new Date());
-            backcontroller.setVisibility(View.GONE);
-            ll_right_top_huikan.setVisibility(View.GONE);
-            mVideoView.setUrl(currentLiveChannelItem.getUrl(), liveChannelHeader());
-            mVideoView.start();
+            mHandler.removeCallbacks(mConnectTimeoutReplayRun);
+            mHandler.post(mConnectTimeoutReplayRun);
         } else {
             mHandler.removeCallbacks(mConnectTimeoutChangeSourceRun);
+            mHandler.removeCallbacks(mConnectTimeoutReplayRun);
             mHandler.removeCallbacks(mUpdateNetSpeedRun);
+            mHandler.removeCallbacks(mUpdateTimeRun);
+            mHandler.removeCallbacks(mUpdatetv_videosizeRun);
+            mHandler.removeCallbacks(mUpdatetv_play_load_net_speedRun);
             super.onBackPressed();
         }
     }
@@ -969,10 +964,18 @@ public class LivePlayActivity extends BaseActivity {
     }
 
     private void playCurrent() {
-        if (!isCurrentLiveChannelValid()) {
-            return;
-        }
-        playChannel(currentChannelGroupIndex, currentLiveChannelIndex, false);
+        if (!isCurrentLiveChannelValid()) return;
+        mVideoView.release();
+        currentLiveLookBackIndex = -1;
+        epgListAdapter.setSelectedEpgIndex(-1);
+        isSHIYI = false;
+        isBack = false;
+        showBottomEpg();
+        getEpg(new Date());
+        backcontroller.setVisibility(View.GONE);
+        ll_right_top_huikan.setVisibility(View.GONE);
+        mVideoView.setUrl(currentLiveChannelItem.getUrl(), liveChannelHeader());
+        mVideoView.start();
     }
 
     private void playPrevious() {
@@ -1431,6 +1434,7 @@ public class LivePlayActivity extends BaseActivity {
             @Override
             public void playStateChanged(int playState) {
                 mHandler.removeCallbacks(mConnectTimeoutChangeSourceRun);
+                mHandler.removeCallbacks(mConnectTimeoutReplayRun);
                 switch (playState) {
                     case VideoView.STATE_IDLE:
                     case VideoView.STATE_PAUSED:
@@ -1445,23 +1449,32 @@ public class LivePlayActivity extends BaseActivity {
                     case VideoView.STATE_PLAYING:
                         currentLiveChangeSourceTimes = 0;
                         allowLiveSwitchPlayer = true;
-                        mHandler.removeCallbacks(mConnectTimeoutReplayRun);
                         break;
                     case VideoView.STATE_ERROR:
+                        if (Hawk.get(HawkConfig.LIVE_CONNECT_TIMEOUT, 2) == 0) {
+                            //缓冲10s重新播放
+                            mHandler.postDelayed(mConnectTimeoutReplayRun, 10 * 1000);
+                        } else {
+                            mHandler.post(mConnectTimeoutChangeSourceRun);
+                        }
+                        break;
                     case VideoView.STATE_PLAYBACK_COMPLETED:
-                        mHandler.removeCallbacks(mConnectTimeoutReplayRun);
-                        mHandler.postDelayed(mConnectTimeoutChangeSourceRun, 2 * 1000);
+                        if (hasCatchup || currentChannelHasCatchup() || currentLiveChannelItem.getUrl().contains("/PLTV/") || currentLiveChannelItem.getUrl().contains("/TVOD/")) {
+                            mHandler.postDelayed(mConnectTimeoutReplayRun, 2 * 1000);
+                        } else {
+                            allowLiveSwitchPlayer = false;
+                            mHandler.postDelayed(mConnectTimeoutChangeSourceRun, 2 * 1000);
+                        }
                         break;
                     case VideoView.STATE_PREPARING:
                     case VideoView.STATE_BUFFERING:
-                        mHandler.removeCallbacks(mConnectTimeoutReplayRun);
                         if (((View) findViewById(R.id.tv_pause_container)).getVisibility() != View.VISIBLE) {
                             tv_play_load_net_speed.setVisibility(View.VISIBLE);
                             mHandler.post(mUpdatetv_play_load_net_speedRun);
                         }
                         if (Hawk.get(HawkConfig.LIVE_CONNECT_TIMEOUT, 2) == 0 ) {
-                            //缓冲30s重新播放
-                            mHandler.postDelayed(mConnectTimeoutReplayRun, 30 * 1000);
+                            //缓冲10s重新播放
+                            mHandler.postDelayed(mConnectTimeoutReplayRun, 10 * 1000);
                         } else {
                             mHandler.postDelayed(mConnectTimeoutChangeSourceRun, (Hawk.get(HawkConfig.LIVE_CONNECT_TIMEOUT, 2)) * 5000);
                         }
@@ -2488,7 +2501,6 @@ public class LivePlayActivity extends BaseActivity {
             }
         }
         sBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromuser) {
                 if (!fromuser) return;
@@ -2535,17 +2547,15 @@ public class LivePlayActivity extends BaseActivity {
             countDownTimer3 = new CountDownTimer(5000, 1000) {
                 @Override
                 public void onTick(long arg0) {
-                    if (mVideoView != null) {
+                    if (mVideoView != null & !mIsDragging) {
                         long duration = mVideoView.getDuration();
                         long currentPosition = mVideoView.getCurrentPosition();
                         long shiyiduration = shiyi_time_c * 1000;
                         sBar.setMax(safeTimeMs(duration));
                         sBar.setKeyProgressIncrement(safeTimeMs(sBar.getMax()) / 100);
-                        if (!mIsDragging) {
-                            sBar.setProgress(safeTimeMs(currentPosition));
-                            sBar.setSecondaryProgress(mVideoView.getBufferedPercentage());
-                            tv_currentpos.setText(stringForTime(safeTimeMs(currentPosition)));
-                        }    
+                        sBar.setProgress(safeTimeMs(currentPosition));
+                        sBar.setSecondaryProgress(mVideoView.getBufferedPercentage());
+                        tv_currentpos.setText(stringForTime(safeTimeMs(currentPosition)));
                         String shiyiUrl = currentLiveChannelItem.getUrl();
                         Epginfo selectedData = epgListAdapter.getItem(epgListAdapter.getSelectedIndex());
                         Date now = new Date();
