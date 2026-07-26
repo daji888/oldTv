@@ -29,7 +29,6 @@
                     android:layout_marginBottom="@dimen/vs_10"
                     android:background="@drawable/shape_setting_model_focus"
                     android:focusable="true"
-
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:paddingLeft="@dimen/vs_20"
@@ -96,6 +95,7 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="middle"
                         android:singleLine="true"
+                        android:paddingLeft="@dimen/vs_10"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/ts_24" />
 
@@ -139,6 +139,7 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="middle"
                         android:singleLine="true"
+                        android:paddingLeft="@dimen/vs_10"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/ts_24" />
 
@@ -182,6 +183,7 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="middle"
                         android:singleLine="true"
+                        android:paddingLeft="@dimen/vs_10"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/ts_24" />
 
@@ -225,6 +227,7 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="middle"
                         android:singleLine="true"
+                        android:paddingLeft="@dimen/vs_10"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/ts_24" />
 
@@ -1241,7 +1244,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="数据备份还原"
+                            android:text="备份还原"
                             android:textColor="@android:color/white"
                             android:textSize="@dimen/ts_24" />
 
