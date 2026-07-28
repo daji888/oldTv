@@ -710,9 +710,8 @@ public class HomeActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
-        if (isFinishing()) {
-            ControlManager.get().stopServer();
-        }
+        AppManager.getInstance().appExit(0);
+        ControlManager.get().stopServer();
     }
 
     private SelectDialog<SourceBean> mSiteSwitchDialog;
