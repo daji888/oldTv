@@ -697,7 +697,7 @@ public class ApiConfig {
         if (ijkCodes == null) {
             ijkCodes = new ArrayList<>();
             boolean foundOldSelect = false;
-            String ijkCodec = Hawk.get(HawkConfig.IJK_CODEC, "");
+            String ijkCodec = Hawk.get(HawkConfig.IJK_CODEC, "硬解");
          //   JsonArray ijkJsonArray = infoJson.has("ijk") ? infoJson.get("ijk").getAsJsonArray() : defaultJson.get("ijk").getAsJsonArray();
             JsonArray ijkJsonArray = defaultJson.get("ijk").getAsJsonArray();
             for (JsonElement opt : ijkJsonArray) {
@@ -1206,7 +1206,7 @@ public class ApiConfig {
     }
 
     public IJKCode getCurrentIJKCode() {
-        String codeName = Hawk.get(HawkConfig.IJK_CODEC, "");
+        String codeName = Hawk.get(HawkConfig.IJK_CODEC, "硬解");
         return getIJKCodec(codeName);
     }
 

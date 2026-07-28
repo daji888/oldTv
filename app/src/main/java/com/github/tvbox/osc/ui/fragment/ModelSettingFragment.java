@@ -107,7 +107,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
         tvDebugOpen = findViewById(R.id.tvDebugOpen);
         tvParseWebView = findViewById(R.id.tvParseWebView);
         tvMediaCodec = findViewById(R.id.tvMediaCodec);
-        tvMediaCodec.setText(Hawk.get(HawkConfig.IJK_CODEC, ""));
+        tvMediaCodec.setText(Hawk.get(HawkConfig.IJK_CODEC, "硬解"));
         tvPlay = findViewById(R.id.tvPlay);
         tvRender = findViewById(R.id.tvRenderType);
         tvScale = findViewById(R.id.tvScaleType);
@@ -438,7 +438,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
                 FastClickCheckUtil.check(v);
 
                 int defaultPos = 0;
-                String ijkSel = Hawk.get(HawkConfig.IJK_CODEC, "");
+                String ijkSel = Hawk.get(HawkConfig.IJK_CODEC, "硬解");
                 for (int j = 0; j < ijkCodes.size(); j++) {
                     if (ijkSel.equals(ijkCodes.get(j).getName())) {
                         defaultPos = j;
