@@ -9,7 +9,6 @@ import com.github.tvbox.osc.util.FileUtils;
 import com.github.tvbox.osc.util.LOG;
 import com.github.tvbox.osc.util.MD5;
 
-import com.whl.quickjs.wrapper.ContextSetter;
 import com.whl.quickjs.wrapper.JSArray;
 import com.whl.quickjs.wrapper.JSCallFunction;
 import com.whl.quickjs.wrapper.JSMethod;
@@ -98,15 +97,7 @@ public class JsSpider extends Spider {
 
     private void bind(JSObject target, Object receiver) {
         for (Method method : receiver.getClass().getMethods()) {
-            if (method.isAnnotationPresent(ContextSetter.class)) {
-                try {
-                    method.invoke(receiver, ctx);
-                } catch (Throwable ignored) {
-                }
-            }
-        }
-        for (Method method : receiver.getClass().getMethods()) {
-            if (!isQuickJsMethod(method)) continue;
+            if (!method.isAnnotationPresent(JSMethod.class)) continue;
             String name = methodName(method);
             set(target, name, new JSCallFunction() {
                 @Override
@@ -119,10 +110,6 @@ public class JsSpider extends Spider {
                 }
             });
         }
-    }
-
-    private boolean isQuickJsMethod(Method method) {
-        return method.isAnnotationPresent(JSMethod.class);
     }
 
     private String methodName(Method method) {
@@ -415,7 +402,7 @@ public class JsSpider extends Spider {
             }
         });
 
-        bind(ctx.getGlobalObject(), new Global(executor));
+        bind(ctx.getGlobalObject(), new Global(ctx, executor));
 
         JSObject local = createObject();
         set(ctx.getGlobalObject(), "local", local);
@@ -506,7 +493,7 @@ public class JsSpider extends Spider {
 
     private void invoke(Class<?> clz, JSObject jsObj, Object javaObj) {
         for (Method method : clz.getMethods()) {
-            if (!isQuickJsMethod(method)) continue;
+            if (!method.isAnnotationPresent(JSMethod.class)) continue;
             invoke(jsObj, method, javaObj);
         }
     }
