@@ -10,7 +10,6 @@ import com.github.tvbox.osc.util.LOG;
 import com.github.tvbox.osc.util.MD5;
 
 import com.whl.quickjs.wrapper.ContextSetter;
-import com.whl.quickjs.wrapper.Function;
 import com.whl.quickjs.wrapper.JSArray;
 import com.whl.quickjs.wrapper.JSCallFunction;
 import com.whl.quickjs.wrapper.JSMethod;
@@ -123,12 +122,10 @@ public class JsSpider extends Spider {
     }
 
     private boolean isQuickJsMethod(Method method) {
-        return method.isAnnotationPresent(Function.class) || method.isAnnotationPresent(JSMethod.class);
+        return method.isAnnotationPresent(JSMethod.class);
     }
 
     private String methodName(Method method) {
-        Function function = method.getAnnotation(Function.class);
-        if (function != null && !TextUtils.isEmpty(function.name())) return function.name();
         return method.getName();
     }
 
