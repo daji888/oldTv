@@ -5,7 +5,6 @@ import androidx.annotation.NonNull;
 
 import com.github.catvod.Proxy;
 import com.github.tvbox.osc.util.js.rsa.RSAEncrypt;
-import com.whl.quickjs.wrapper.ContextSetter;
 import com.whl.quickjs.wrapper.JSArray;
 import com.whl.quickjs.wrapper.JSFunction;
 import com.whl.quickjs.wrapper.JSMethod;
@@ -27,13 +26,14 @@ import okhttp3.Response;
 import org.json.JSONObject;
 
 public class Global {
-    private QuickJSContext runtime;
-    public ExecutorService executor;
+    private final QuickJSContext runtime;
+    private final ExecutorService executor;
     private final Timer timer;
 
-    public Global(ExecutorService executor) {
+    public Global(QuickJSContext runtime, ExecutorService executor) {
         this.executor = executor;
         this.timer = new Timer();
+        this.runtime = runtime;
     }
 
     @Keep
@@ -320,12 +320,6 @@ public class Global {
                 });
             }
         };
-    }
-    
-    @Keep
-    @ContextSetter // 声明用于依赖注入的 QuickJSContext
-    public void setJSContext(QuickJSContext runtime) {
-        this.runtime = runtime;
     }
 
 }
