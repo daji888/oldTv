@@ -125,12 +125,11 @@ public class JsSpider extends Spider {
     }
 
     private Object call(String func, Object... args) {
-//        return executor.submit((FunCall.call(jsObject, func, args))).get();
         if (destroyed.get() || jsObject == null) return null;
         try {
             return submit(() -> Async.run(jsObject, func, args).get()).get();  // 等待 executor 线程完成 JS 调用
         } catch (InterruptedException | ExecutionException e) {
-            LOG.i("Executor 提交或等待失败"+ e);
+            LOG.i("Executor 提交或等待失败" + e);
             return null;
         }
     }
@@ -248,9 +247,7 @@ public class JsSpider extends Spider {
     @Override
     public Object[] proxyLocal(Map<String, String> params)  {
         try {
-            if ("catvod".equals(params.get("from"))) return proxy2(params);
-            else return submit(() -> proxy1(params)).get();
-
+            return "catvod".equals(params.get("from")) ? proxy2(params) : proxy1(params);
         } catch (Exception E) {
             return new Object[0];
         }
@@ -511,69 +508,19 @@ public class JsSpider extends Spider {
         });
     }
 
-    private String getContent() {
-        String global = "globalThis." + key;
-        String content = FileUtils.loadModule(api);
-        if (isInvalidModuleContent(content)) {return null;}
-        if (content.contains("__jsEvalReturn")) {
-            ctx.evaluate("req = http");
-            return content.concat(global).concat(" = __jsEvalReturn()");
-        } else if (content.contains("__JS_SPIDER__")) {
-            return content.replace("__JS_SPIDER__", global);
-        } else {
-            return content.replaceAll("export default.*?[{]", global + " = {");
-        }
-    }
-
-    private Object[] proxy1(Map<String, String> params) {
-        JSObject object = new JSUtils<String>().toObj(ctx, params);
-        JSONArray array = toJsonArray((JSArray) jsObject.getJSFunction("proxy").call(object));
-        boolean headerAvailable = array.length() > 3 && array.opt(3) != null;
+    private Object[] proxy1(Map<String, String> params) throws Exception {
+        JSObject obj = submit(() -> new JSUtils<String>().toObj(ctx, params)).get();
+        JSArray proxy = (JSArray) call("proxy", obj);
+        String json = submit(proxy::stringify).get();
+        JSONArray array = new JSONArray(json);
+        Map<String, String> headers = array.length() > 3 ? Json.toMap(array.optString(3)) : null;
+        boolean base64 = array.length() > 4 && array.optInt(4) == 1;
         Object[] result = new Object[4];
-        result[0] = array.opt(0);
-        result[1] = array.opt(1);
-        result[2] = getStream(array.opt(2));
-        result[3] = headerAvailable ? getHeader(array.opt(3)) : null;
-        if (array.length() > 4) {
-            try {
-                if ( array.optInt(4) == 1) {
-                    String content = array.optString(2);
-                    if (content.contains("base64,")) content = content.substring(content.indexOf("base64,") + 7);
-                    result[2] = new ByteArrayInputStream(Base64.decode(content, Base64.DEFAULT));
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        result[0] = array.optInt(0);
+        result[1] = array.optString(1);
+        result[2] = getStream(array.opt(2), base64);
+        result[3] = headers;
         return result;
-    }
-
-    private Map<String, String> getHeader(Object headerRaw) {
-        Map<String, String> headers = new HashMap<>();
-        if (headerRaw instanceof JSONObject) {
-            JSONObject json = (JSONObject) headerRaw;
-            Iterator<String> keys = json.keys();
-            while (keys.hasNext()) {
-                String key = keys.next();
-                headers.put(key, json.optString(key));
-            }
-        } else if (headerRaw instanceof String) {
-            try {
-                JSONObject json = new JSONObject((String) headerRaw);
-                Iterator<String> keys = json.keys();
-                while (keys.hasNext()) {
-                    String key = keys.next();
-                    headers.put(key, json.optString(key));
-                }
-            } catch (JSONException e) {
-                LOG.i("getHeader: 无法解析 String 为 JSON" + e);
-            }
-        } else if (headerRaw instanceof Map) {
-            for (Map.Entry<?, ?> entry : ((Map<?, ?>) headerRaw).entrySet()) {
-                headers.put(String.valueOf(entry.getKey()), String.valueOf(entry.getValue()));
-            }
-        }
-        return headers;
     }
     
     private Object[] proxy2(Map<String, String> params) throws Exception {
@@ -581,29 +528,22 @@ public class JsSpider extends Spider {
         String header = params.get("header");
         JSArray array = submit(() -> new JSUtils<String>().toArray(ctx, Arrays.asList(url.split("/")))).get();
         Object object = submit(() -> ctx.parse(header)).get();
-        String json = (String) call("proxy", array, object);
-        Res res = Res.objectFrom(json);
-        String contentType = res.getContentType();
-        if (TextUtils.isEmpty(contentType)) contentType = "application/octet-stream";
+        String proxy = (String) call("proxy", array, object);
+        Res res = Res.objectFrom(proxy);
         Object[] result = new Object[3];
-        result[0] = 200;
-        result[1] = contentType;
-        if (res.getBuffer() == 2) {
-            result[2] = new ByteArrayInputStream(Base64.decode(res.getContent(), Base64.DEFAULT));
-        } else {
-            result[2] = new ByteArrayInputStream(res.getContent().getBytes());
-        }
+        result[0] = res.getCode();
+        result[1] = res.getContentType();
+        result[2] = res.getStream();
         return result;
     }
     
-    private ByteArrayInputStream getStream(Object o) {
-        if (o instanceof JSONArray) {
-            JSONArray a = (JSONArray) o;
-            byte[] bytes = new byte[a.length()];
-            for (int i = 0; i < a.length(); i++) bytes[i] = (byte) a.optInt(i);
-            return new ByteArrayInputStream(bytes);
+    private ByteArrayInputStream getStream(Object o, boolean base64) {
+        if (o instanceof byte[]) {
+            return new ByteArrayInputStream((byte[]) o);
         } else {
-            return new ByteArrayInputStream(o.toString().getBytes());
+            String content = o.toString();
+            if (base64 && content.contains("base64,")) content = content.split("base64,")[1];
+            return new ByteArrayInputStream(base64 ? Base64.decode(content, Base64.DEFAULT | Base64.NO_WRAP) : content.getBytes());
         }
     }
 }
