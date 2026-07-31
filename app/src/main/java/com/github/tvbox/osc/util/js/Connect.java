@@ -2,8 +2,8 @@ package com.github.tvbox.osc.util.js;
 
 import android.util.Base64;
 
+import com.github.catvod.net.OkHttp;
 import com.github.tvbox.osc.util.LOG;
-import com.github.tvbox.osc.util.OkGoHelper;
 import com.google.common.net.HttpHeaders;
 import com.lzy.okgo.OkGo;
 import com.whl.quickjs.wrapper.JSArray;
@@ -11,9 +11,9 @@ import com.whl.quickjs.wrapper.JSObject;
 import com.whl.quickjs.wrapper.JSUtils;
 import com.whl.quickjs.wrapper.QuickJSContext;
 
+import java.security.SecureRandom;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 import okhttp3.Call;
 import okhttp3.FormBody;
@@ -26,27 +26,25 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class Connect {
+    
     static OkHttpClient client;
     
     public static Call to(String url, Req req) {
-        client = OkGoHelper.getDefaultClient();
+        client = OkHttp.client(req.isRedirect(), req.getTimeout());
         return client.newCall(getRequest(url, req, Headers.of(req.getHeader())));
     }    
 
-    public static JSObject success(QuickJSContext ctx, Req req, Response res) {
-        try {
+    public static JSObject success(QuickJSContext ctx, Req req, Response response) {
+        try (Response res = response) {
             JSObject jsObject = ctx.createNewJSObject();
             JSObject jsHeader = ctx.createNewJSObject();
             setHeader(ctx, res, jsHeader);
-            ctx.setProperty(jsObject, "headers", jsHeader);
-            if (req.getBuffer() == 0) ctx.setProperty(jsObject, "content", new String(res.body().bytes(), req.getCharset()));
-            if (req.getBuffer() == 1) {
-                JSArray array = ctx.createNewJSArray();
-                byte[] bytes = res.body().bytes();
-                for (int i = 0; i < bytes.length; i++) array.set((int) bytes[i], i);
-                ctx.setProperty(jsObject, "content", array);
-            }
-            if (req.getBuffer() == 2) ctx.setProperty(jsObject, "content", Base64.encodeToString(res.body().bytes(), Base64.DEFAULT | Base64.NO_WRAP));
+            jsObject.setProperty("code", res.code());
+            jsObject.setProperty("headers", jsHeader);
+            if (req.getBuffer() == 0) jsObject.setProperty("content", new String(res.body().bytes(), req.getCharset()));
+            if (req.getBuffer() == 1) jsObject.setProperty("content", new JSUtils<String>().toArray(ctx, res.body().bytes()));
+            if (req.getBuffer() == 2) jsObject.setProperty("content", Base64.encodeToString(res.body().bytes(), Base64.DEFAULT | Base64.NO_WRAP));
+            if (req.getBuffer() == 3) jsObject.setProperty("content", res.body().bytes());
             return jsObject;
         } catch (Exception e) {
             return error(ctx);
@@ -56,8 +54,9 @@ public class Connect {
     public static JSObject error(QuickJSContext ctx) {
         JSObject jsObject = ctx.createNewJSObject();
         JSObject jsHeader = ctx.createNewJSObject();
-        ctx.setProperty(jsObject, "headers", jsHeader);
-        ctx.setProperty(jsObject, "content", "");
+        jsObject.setProperty("headers", jsHeader);
+        jsObject.setProperty("content", "");
+        jsObject.setProperty("code", "");
         return jsObject;
     }
 
@@ -75,12 +74,12 @@ public class Connect {
         if (req.getData() != null && req.getPostType().equals("json")) return getJsonBody(req);
         if (req.getData() != null && req.getPostType().equals("form")) return getFormBody(req);
         if (req.getData() != null && req.getPostType().equals("form-data")) return getFormDataBody(req);
-        if (req.getBody() != null && contentType != null) return RequestBody.create(MediaType.get(contentType), req.getBody());
-        return RequestBody.create(null, "");
+        if (req.getBody() != null && contentType != null) return RequestBody.create(req.getBody(), MediaType.get(contentType));
+        return RequestBody.create(new byte[0]);
     }
 
     private static RequestBody getJsonBody(Req req) {
-        return RequestBody.create(MediaType.get("application/json"), req.getData().toString());
+        return RequestBody.create(req.getData().toString(), MediaType.get("application/json; charset=utf-8"));
     }
 
     private static RequestBody getFormBody(Req req) {
@@ -91,7 +90,7 @@ public class Connect {
     }
 
     private static RequestBody getFormDataBody(Req req) {
-        String boundary = "--dio-boundary-" + new Random().nextInt(42949) + "" + new Random().nextInt(67296);
+        String boundary = "--dio-boundary-" + new SecureRandom().nextInt(42949) + new SecureRandom().nextInt(67296);
         MultipartBody.Builder builder = new MultipartBody.Builder(boundary).setType(MultipartBody.FORM);
         Map<String, String> params = Json.toMap(req.getData());
         for (String key : params.keySet()) builder.addFormDataPart(key, params.get(key));
@@ -104,6 +103,7 @@ public class Connect {
             if (entry.getValue().size() >= 2) ctx.setProperty(object, entry.getKey(), new JSUtils<String>().toArray(ctx, entry.getValue()));
         }
     }
+    
     public static void cancelByTag(Object tag) {
         try {
             if (client != null) {
@@ -125,14 +125,13 @@ public class Connect {
     }
 
     private static void cancelDefaultClient(Object tag) {
-        OkHttpClient defaultClient = OkGoHelper.getDefaultClient();
-        if (defaultClient == null || tag == null) return;
-        for (Call call : defaultClient.dispatcher().queuedCalls()) {
+        if (client == null || tag == null) return;
+        for (Call call : client.dispatcher().queuedCalls()) {
             if (tag.equals(call.request().tag())) {
                 call.cancel();
             }
         }
-        for (Call call : defaultClient.dispatcher().runningCalls()) {
+        for (Call call : client.dispatcher().runningCalls()) {
             if (tag.equals(call.request().tag())) {
                 call.cancel();
             }
