@@ -61,6 +61,10 @@ public class Json {
         }
     }
 
+    public static Map<String, String> toMap(String json) {
+        return TextUtils.isEmpty(json) ? null : toMap(JsonParser.parseString(json));
+    }
+
     public static Map<String, String> toMap(JsonElement element) {
         Map<String, String> map = new HashMap<>();
         JsonObject object = safeObject(element);
