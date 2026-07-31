@@ -111,7 +111,7 @@ public class Global {
     @Keep
     @JSMethod
     public String rsaX(String mode, boolean pub, boolean encrypt, String input, boolean inBase64, String key, boolean outBase64) {
-        String result = Crypto.rsa(pub, encrypt, input, inBase64, key, outBase64);
+        String result = Crypto.rsa(mode, pub, encrypt, input, inBase64, key, outBase64);
         //LOG.e("aesX",String.format("mode:%s\npub:%s\nencrypt:%s\ninBase64:%s\noutBase64:%s\nkey:\n%s\ninput:\n%s\nresult:\n%s", mode, pub, encrypt, inBase64, outBase64, key, input, result));
         return result;
     }
