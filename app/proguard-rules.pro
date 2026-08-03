@@ -134,6 +134,21 @@
   @com.google.gson.annotations.SerializedName <fields>;
 }
 
+# Gson 通过字段名反序列化源站首页分类和影片列表。
+-keepclassmembers class com.github.tvbox.osc.bean.AbsJson {
+  <fields>;
+}
+-keepclassmembers class com.github.tvbox.osc.bean.AbsJson$* {
+  <fields>;
+}
+-keepclassmembers class com.github.tvbox.osc.bean.AbsSortJson {
+  <fields>;
+}
+-keepclassmembers class com.github.tvbox.osc.bean.AbsSortJson$* {
+  <fields>;
+}
+-keep,allowobfuscation,allowoptimization class * extends com.google.gson.reflect.TypeToken
+
 #xstream
 -keep class com.thoughtworks.xstream.converters.extended.SubjectConverter { *; }
 -keep class com.thoughtworks.xstream.converters.extended.ThrowableConverter { *; }
@@ -191,6 +206,9 @@
 -keep class com.github.catvod.Proxy { *; }
 -keep class com.github.catvod.crawler.*{*;}
 -keep class com.github.catvod.net.** { *; }
+-keepclassmembers class com.github.tvbox.osc.base.App {
+    public android.app.Activity getCurrentActivity();
+}
 -keep class com.github.tvbox.osc.bean.ProxyRule { *; }
 -keep class com.github.tvbox.osc.util.net.** { *; }
 
