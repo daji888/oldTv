@@ -14,4 +14,19 @@ function http(url, options = {}) {
             url
         }
     })
-};
+}
+
+function defineGlobalAlias(name) {
+    const descriptor = Object.getOwnPropertyDescriptor(globalThis, name);
+    if (descriptor && !descriptor.configurable) return;
+    Object.defineProperty(globalThis, name, {
+        enumerable: true,
+        configurable: true,
+        get() {
+            return globalThis;
+        },
+        set() {}
+    });
+}
+
+['global', 'window', 'self'].forEach(defineGlobalAlias);
