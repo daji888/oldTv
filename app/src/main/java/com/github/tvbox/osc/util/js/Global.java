@@ -9,10 +9,10 @@ import com.whl.quickjs.wrapper.JSArray;
 import com.whl.quickjs.wrapper.JSFunction;
 import com.whl.quickjs.wrapper.JSMethod;
 import com.whl.quickjs.wrapper.JSObject;
-import com.whl.quickjs.wrapper.JSUtils;
 import com.whl.quickjs.wrapper.QuickJSContext;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.URLEncoder;
 
 import java.util.Timer;
@@ -34,6 +34,24 @@ public class Global {
         this.executor = executor;
         this.timer = new Timer();
         this.runtime = runtime;
+        setProperty();
+    }
+
+    public void destroy() {
+        timer.cancel();
+    }
+
+    private void setProperty() {
+        for (Method method : getClass().getMethods()) {
+            if (!method.isAnnotationPresent(JSMethod.class)) continue;
+            runtime.getGlobalObject().setProperty(method.getName(), args -> {
+                try {
+                    return method.invoke(this, args);
+                } catch (Exception e) {
+                    return null;
+                }
+            });
+        }
     }
 
     @Keep

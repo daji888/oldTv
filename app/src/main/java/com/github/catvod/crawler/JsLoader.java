@@ -24,7 +24,7 @@ import okhttp3.Response;
 
 public class JsLoader {
     private static final ConcurrentHashMap<String, Spider> spiders = new ConcurrentHashMap<>();
-    private static final ConcurrentHashMap<String, Class<?>> classes = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, DexClassLoader> classes = new ConcurrentHashMap<>();
     private volatile String recentKey = ""; // 当前的Js爬虫key
 
     public static void destroy() {
@@ -52,7 +52,6 @@ public class JsLoader {
 
     private boolean loadClassLoader(String jar, String key) {
         boolean success = false;
-        Class<?> classInit = null;
         try {
             File cacheDir = new File(App.getInstance().getCacheDir().getAbsolutePath() + "/catvod_jsapi");
             if (!cacheDir.exists())
@@ -62,6 +61,7 @@ public class JsLoader {
             int count = 0;
             do {
                 try {
+                    Class<?> classInit;
                     try {
                         classInit = classLoader.loadClass("com.github.catvod.js.Function");
                         classInit.getDeclaredConstructor(com.whl.quickjs.wrapper.QuickJSContext.class);
@@ -84,7 +84,7 @@ public class JsLoader {
             } while (count < 5);
 
             if (success) {
-                classes.put(key, classInit);
+                classes.put(key, classLoader);
             }
         } catch (Throwable th) {
             th.printStackTrace();
@@ -92,7 +92,7 @@ public class JsLoader {
         return success;
     }
 
-    private Class<?> loadJarInternal(String jar, String md5, String key) {
+    private DexClassLoader loadJarInternal(String jar, String md5, String key) {
         if (classes.containsKey(key)) {
             Log.i("JSLoader", "echo-loadJarInternal cached");
             return classes.get(key);
@@ -142,23 +142,23 @@ public class JsLoader {
             Log.i("JSLoader", "echo-getSpider cached " + key);
             return spiders.get(key);
         }
-        Class<?> classLoader = null;
+        DexClassLoader dexClassLoader = null;
         if (!jar.isEmpty()) {
             String[] urls = jar.split(";md5;");
             String jarUrl = urls[0];
             String jarKey = MD5.string2MD5(jarUrl);
             String jarMd5 = urls.length > 1 ? urls[1].trim() : "";
-            classLoader = loadJarInternal(jarUrl, jarMd5, jarKey);
+            dexClassLoader = loadJarInternal(jarUrl, jarMd5, jarKey);
         }
         try {
             Log.i("JSLoader", "echo-getSpider load");
-            Spider sp = new JsSpider(key, api, classLoader);
+            Spider sp = new JsSpider(key, api, dexClassLoader);
             sp.siteKey = key;
             sp.init(App.getInstance(), ext);
             spiders.put(key, sp);
             return sp;
         } catch (Throwable th) {
-            LOG.i("echo-getSpider-error "+th.getMessage());
+            LOG.i("echo-getSpider-error " + th.getMessage());
         }
         return new SpiderNull();
     }

@@ -1,35 +1,20 @@
-package com.whl.quickjs.wrapper;
+package com.github.tvbox.osc.util.js;
 
-import org.json.JSONArray;
+import com.whl.quickjs.wrapper.JSArray;
+import com.whl.quickjs.wrapper.JSCallFunction;
+import com.whl.quickjs.wrapper.JSObject;
+import com.whl.quickjs.wrapper.QuickJSContext;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Array;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 public class JSUtils<T> {
 
-    public static boolean isEmpty(Object obj) {
-        if (obj == null) return true;
-        else if (obj instanceof CharSequence) return ((CharSequence) obj).length() == 0;
-        else if (obj instanceof Collection) return ((Collection) obj).isEmpty();
-        else if (obj instanceof Map) return ((Map) obj).isEmpty();
-        else if (obj.getClass().isArray()) return Array.getLength(obj) == 0;
-
-        return false;
-    }
-
-    public static boolean isNotEmpty(CharSequence str) {
-        return !isEmpty(str);
-    }
-
-    public static boolean isNotEmpty(Object obj) {
-        return !isEmpty(obj);
-    }
-
-    public JSArray toArray(QuickJSContext ctx, List<T> items) {
+    public JSArray toArray(QuickJSContext ctx, List<?> items) {
         JSArray array = ctx.createNewJSArray();
         if (items == null || items.isEmpty()) return array;
         for (int i = 0; i < items.size(); i++) array.set(toJSValue(ctx, items.get(i)), i);
@@ -65,7 +50,7 @@ public class JSUtils<T> {
         if (value == null) return null;
         if (value instanceof JSObject || value instanceof JSCallFunction) return value;
         if (value instanceof Map) return toObj(ctx, (Map<?, ?>) value);
-        if (value instanceof List) return toArray(ctx, (List) value);
+        if (value instanceof List) return toArray(ctx, (List<?>) value);
         if (value instanceof byte[]) return toArray(ctx, (byte[]) value);
         Class<?> valueClass = value.getClass();
         if (valueClass.isArray()) {
@@ -85,15 +70,6 @@ public class JSUtils<T> {
             return new JSONObject(object.stringify());
         } catch (JSONException e) {
             return new JSONObject();
-        }
-    }
-
-    public static JSONArray toJsonArray(JSArray array) {
-        if (array == null) return new JSONArray();
-        try {
-            return new JSONArray(array.stringify());
-        } catch (JSONException e) {
-            return new JSONArray();
         }
     }
 }
