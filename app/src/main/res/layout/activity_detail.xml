@@ -23,19 +23,21 @@
 
             <ImageView
                 android:id="@+id/ivThumb"
-                android:layout_width="@dimen/vs_240"
-                android:layout_height="@dimen/vs_325"
+                android:layout_width="@dimen/vs_220"
+                android:layout_height="@dimen/vs_296"
+                android:layout_marginTop="@dimen/vs_2"
+                android:layout_marginLeft="@dimen/vs_10"
                 android:scaleType="fitXY" />
 
             <View
                 android:id="@+id/previewPlayerPlace"
                 android:layout_width="@dimen/vs_480"
-                android:layout_height="@dimen/vs_325"
+                android:layout_height="@dimen/vs_300"
                 android:visibility="gone" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/vs_325"
+                android:layout_height="@dimen/vs_300"
                 android:layout_marginStart="@dimen/vs_20"
                 android:layout_marginLeft="@dimen/vs_20"
                 android:orientation="vertical">
@@ -44,7 +46,7 @@
                     android:id="@+id/tvName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/vs_5"
+                    android:layout_marginBottom="@dimen/vs_0"
                     android:ellipsize="end"
                     android:maxLines="1"
                     android:singleLine="true"
@@ -54,7 +56,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/vs_5"
+                    android:layout_marginBottom="@dimen/vs_0"
                     android:orientation="horizontal">
 
                     <TextView
@@ -122,7 +124,7 @@
                     android:id="@+id/tvActor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/vs_5"
+                    android:layout_marginBottom="@dimen/vs_0"
                     android:ellipsize="end"
                     android:singleLine="true"
                     android:textColor="@color/color_CCFFFFFF"
@@ -132,7 +134,7 @@
                     android:id="@+id/tvDirector"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/vs_5"
+                    android:layout_marginBottom="@dimen/vs_0"
                     android:ellipsize="end"
                     android:singleLine="true"
                     android:textColor="@color/color_CCFFFFFF"
@@ -173,7 +175,7 @@
                         android:id="@+id/tvPlay"
                         android:layout_width="@dimen/vs_120"
                         android:layout_height="@dimen/vs_40"
-                        android:layout_marginTop="@dimen/vs_5"
+                        android:layout_marginTop="@dimen/vs_0"
                         android:layout_marginBottom="@dimen/vs_5"
                         android:layout_marginLeft="@dimen/vs_5"
                         android:layout_marginRight="@dimen/vs_5"
@@ -188,7 +190,7 @@
                         android:id="@+id/tvQuickSearch"
                         android:layout_width="@dimen/vs_120"
                         android:layout_height="@dimen/vs_40"
-                        android:layout_marginTop="@dimen/vs_5"
+                        android:layout_marginTop="@dimen/vs_0"
                         android:layout_marginBottom="@dimen/vs_5"
                         android:layout_marginLeft="@dimen/vs_5"
                         android:layout_marginRight="@dimen/vs_5"
@@ -203,7 +205,7 @@
                         android:id="@+id/tvSynopsis"
                         android:layout_width="@dimen/vs_120"
                         android:layout_height="@dimen/vs_40"
-                        android:layout_marginTop="@dimen/vs_5"
+                        android:layout_marginTop="@dimen/vs_0"
                         android:layout_marginBottom="@dimen/vs_5"
                         android:layout_marginLeft="@dimen/vs_5"
                         android:layout_marginRight="@dimen/vs_5"
@@ -218,7 +220,7 @@
                         android:id="@+id/tvSort"
                         android:layout_width="@dimen/vs_120"
                         android:layout_height="@dimen/vs_40"
-                        android:layout_marginTop="@dimen/vs_5"
+                        android:layout_marginTop="@dimen/vs_0"
                         android:layout_marginBottom="@dimen/vs_5"
                         android:layout_marginLeft="@dimen/vs_5"
                         android:layout_marginRight="@dimen/vs_5"
@@ -233,7 +235,7 @@
                         android:id="@+id/tvCollect"
                         android:layout_width="@dimen/vs_120"
                         android:layout_height="@dimen/vs_40"
-                        android:layout_marginTop="@dimen/vs_5"
+                        android:layout_marginTop="@dimen/vs_0"
                         android:layout_marginBottom="@dimen/vs_5"
                         android:layout_marginLeft="@dimen/vs_5"
                         android:layout_marginRight="@dimen/vs_5"
