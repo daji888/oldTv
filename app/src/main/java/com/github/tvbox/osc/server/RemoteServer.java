@@ -14,7 +14,7 @@ import com.github.tvbox.osc.event.RefreshEvent;
 import com.github.tvbox.osc.event.ServerEvent;
 import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.util.FileUtils;
-import com.github.tvbox.osc.util.OkGoHelper;
+import com.github.tvbox.osc.util.OkHttpHelper;
 import com.github.tvbox.osc.util.Proxy;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -174,7 +174,7 @@ public class RemoteServer extends NanoHTTPD {
                     String name = session.getParms().get("name");
                     byte[] rs = null;
                     try {
-                        rs = OkGoHelper.dnsOverHttps.lookupHttpsForwardSync(name);
+                        rs = OkHttpHelper.dnsOverHttps.lookupHttpsForwardSync(name);
                     } catch (Throwable th) {
                         rs = new byte[0];
                     }
