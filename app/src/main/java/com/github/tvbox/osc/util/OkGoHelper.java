@@ -1,21 +1,15 @@
 package com.github.tvbox.osc.util;
 
-import androidx.annotation.NonNull;
-
 import static okhttp3.ConnectionSpec.CLEARTEXT;
 import static okhttp3.ConnectionSpec.COMPATIBLE_TLS;
 import static okhttp3.ConnectionSpec.MODERN_TLS;
 import static okhttp3.ConnectionSpec.RESTRICTED_TLS;
 
 import com.github.catvod.net.SSLCompat;
-import com.github.tvbox.osc.api.ApiConfig;
 import com.github.tvbox.osc.base.App;
 import com.github.tvbox.osc.bean.ProxyRule;
 import com.github.tvbox.osc.util.net.OkProxySelector;
 import com.github.tvbox.osc.util.net.ProxyAuthenticator;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.https.HttpsUtils;
 import com.lzy.okgo.interceptor.HttpLoggingInterceptor;
@@ -24,24 +18,17 @@ import com.orhanobut.hawk.Hawk;
 
 import java.io.File;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
-import java.util.HashSet;
-import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
-import java.util.Map;
-import java.util.Set;
 
 import javax.net.ssl.SSLSocketFactory;
 
 import okhttp3.Cache;
 import okhttp3.ConnectionSpec;
-import okhttp3.Dns;
 import okhttp3.dnsoverhttps.DnsOverHttps;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttp;
@@ -53,6 +40,7 @@ public class OkGoHelper {
     public static final long DEFAULT_MILLISECONDS = 10000;  //默认的超时时间
     private static final String userAgent = "okhttp/" + OkHttp.VERSION;
     static OkHttpClient ItvClient = null;
+    private static List<String> ips;
     private static OkProxySelector proxySelector = null;
     private static ProxyAuthenticator proxyAuthenticator = null;
 
@@ -108,6 +96,20 @@ public class OkGoHelper {
 
     public static List<ConnectionSpec> getConnectionSpec() {
         return Arrays.asList(RESTRICTED_TLS, MODERN_TLS, COMPATIBLE_TLS, CLEARTEXT);
+    }
+
+    private static List<String> getIps() {
+        return ips == null ? Collections.emptyList() : ips;
+    }
+
+    private static List<InetAddress> getHosts() {
+        try {
+            List<InetAddress> list = new ArrayList<>();
+            for (String ip : getIps()) list.add(InetAddress.getByName(ip));
+            return list.isEmpty() ? null : list;
+        } catch (Exception ignored) {
+            return null;
+        }
     }
 
     public static String getDohUrl(int type) {
@@ -172,7 +174,7 @@ public class OkGoHelper {
         builder.cache(new Cache(new File(App.getInstance().getCacheDir().getAbsolutePath(), "dohcache"), 10 * 1024 * 1024));
         OkHttpClient dohClient = builder.build();
         String dohUrl = getDohUrl(Hawk.get(HawkConfig.DOH_URL, 0));
-        dnsOverHttps = new DnsOverHttps.Builder().client(dohClient).url(dohUrl.isEmpty() ? null : HttpUrl.get(dohUrl)).build();
+        dnsOverHttps = new DnsOverHttps.Builder().client(dohClient).url(dohUrl.isEmpty() ? null : HttpUrl.get(dohUrl)).bootstrapDnsHosts(getHosts()).build();
     }
 
     static OkHttpClient defaultClient = null;

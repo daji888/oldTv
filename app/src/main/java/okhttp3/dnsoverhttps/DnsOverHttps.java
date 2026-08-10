@@ -84,10 +84,6 @@ public class DnsOverHttps implements Dns {
         this.client = builder.client.newBuilder().dns(buildBootstrapClient(builder)).build();
     }
 
-    public void setUrl(HttpUrl newUrl) {
-        this.url = newUrl;
-    }
-
     private static Dns buildBootstrapClient(Builder builder) {
         List<InetAddress> hosts = builder.bootstrapDnsHosts;
 
