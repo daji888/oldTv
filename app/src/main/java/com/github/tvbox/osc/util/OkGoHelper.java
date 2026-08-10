@@ -105,7 +105,9 @@ public class OkGoHelper {
     private static List<InetAddress> getHosts() {
         try {
             List<InetAddress> list = new ArrayList<>();
-            for (String ip : getIps()) list.add(InetAddress.getByName(ip));
+            for (String ip : getIps()) {
+                if (!list.contains("ip")) list.add(InetAddress.getByName(ip));
+            }
             return list.isEmpty() ? null : list;
         } catch (Exception ignored) {
             return null;
@@ -143,15 +145,15 @@ public class OkGoHelper {
     }
 
     static void initDnsOverHttps() {
-        dnsHttpsList.add("运营商");
-        dnsHttpsList.add("腾讯");
-        dnsHttpsList.add("阿里");
-        dnsHttpsList.add("360");
-        dnsHttpsList.add("Google");
-        dnsHttpsList.add("Cloudflare");
-        dnsHttpsList.add("AdGuard");
-        dnsHttpsList.add("DNSWatch");
-        dnsHttpsList.add("Quad9");
+        if (!dnsHttpsList.contains("运营商")) dnsHttpsList.add("运营商");
+        if (!dnsHttpsList.contains("腾讯")) dnsHttpsList.add("腾讯");
+        if (!dnsHttpsList.contains("阿里")) dnsHttpsList.add("阿里");
+        if (!dnsHttpsList.contains("360")) dnsHttpsList.add("360");
+        if (!dnsHttpsList.contains("Google")) dnsHttpsList.add("Google");
+        if (!dnsHttpsList.contains("Cloudflare")) dnsHttpsList.add("Cloudflare");
+        if (!dnsHttpsList.contains("AdGuard")) dnsHttpsList.add("AdGuard");
+        if (!dnsHttpsList.contains("DNSWatch")) dnsHttpsList.add("DNSWatch");
+        if (!dnsHttpsList.contains("Quad9")) dnsHttpsList.add("Quad9");
         
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.proxySelector(proxySelector());
