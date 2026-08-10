@@ -71,7 +71,7 @@ import com.github.tvbox.osc.util.EpgUtil;
 import com.github.tvbox.osc.util.FastClickCheckUtil;
 import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.LOG;
-import com.github.tvbox.osc.util.OkGoHelper;
+import com.github.tvbox.osc.util.OkHttpHelper;
 import com.github.tvbox.osc.util.PlayerHelper;
 import com.github.tvbox.osc.util.live.TxtSubscribe;
 import com.google.gson.Gson;
@@ -359,7 +359,7 @@ public class LivePlayActivity extends BaseActivity {
             } else {
                 epgUrl = epgStringAddress + "?ch=" + URLEncoder.encode(epgTagName, "UTF-8") + "&date=" + timeFormat.format(date);
             }
-            okhttp3.OkHttpClient client = OkGoHelper.getDefaultClient();
+            okhttp3.OkHttpClient client = OkHttpHelper.getDefaultClient();
             if (client == null) client = com.github.catvod.net.OkHttp.client();
             client.newCall(new okhttp3.Request.Builder().url(epgUrl).build()).enqueue(new okhttp3.Callback() {
                 @Override

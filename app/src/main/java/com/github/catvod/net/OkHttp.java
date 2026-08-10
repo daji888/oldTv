@@ -3,7 +3,7 @@ package com.github.catvod.net;
 import androidx.collection.ArrayMap;
 
 import com.github.catvod.net.SSLCompat;
-import com.github.tvbox.osc.util.OkGoHelper;
+import com.github.tvbox.osc.util.OkHttpHelper;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -32,9 +32,9 @@ public class OkHttp {
 
     public static synchronized OkHttpClient client() {
         if (client != null) return client;
-        OkHttpClient base = OkGoHelper.getDefaultClient();
+        OkHttpClient base = OkHttpHelper.getDefaultClient();
         if (base != null) return client = base.newBuilder().dns(dns()).build();
-        OkHttpClient.Builder builder = new OkHttpClient.Builder().dns(dns()).proxySelector(OkGoHelper.proxySelector()).proxyAuthenticator(OkGoHelper.proxyAuthenticator()).connectTimeout(TIMEOUT, TimeUnit.MILLISECONDS).readTimeout(TIMEOUT, TimeUnit.MILLISECONDS).writeTimeout(TIMEOUT, TimeUnit.MILLISECONDS);
+        OkHttpClient.Builder builder = new OkHttpClient.Builder().dns(dns()).proxySelector(OkHttpHelper.proxySelector()).proxyAuthenticator(OkHttpHelper.proxyAuthenticator()).connectTimeout(TIMEOUT, TimeUnit.MILLISECONDS).readTimeout(TIMEOUT, TimeUnit.MILLISECONDS).writeTimeout(TIMEOUT, TimeUnit.MILLISECONDS);
         setOkHttpSsl(builder);
         return client = builder.build();
     }
@@ -52,7 +52,7 @@ public class OkHttp {
     }
 
     public static OkHttpClient noRedirect(long timeout) {
-        OkHttpClient base = OkGoHelper.getNoRedirectClient();
+        OkHttpClient base = OkHttpHelper.getNoRedirectClient();
         if (base == null) base = client();
         return base.newBuilder().dns(dns()).connectTimeout(timeout, TimeUnit.MILLISECONDS).readTimeout(timeout, TimeUnit.MILLISECONDS).writeTimeout(timeout, TimeUnit.MILLISECONDS).followRedirects(false).followSslRedirects(false).build();
     }

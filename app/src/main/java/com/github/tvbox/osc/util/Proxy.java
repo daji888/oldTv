@@ -1,4 +1,5 @@
 package com.github.tvbox.osc.util;
+
 import com.github.catvod.crawler.SpiderDebug;
 import com.github.tvbox.osc.server.ControlManager;
 import com.github.tvbox.osc.util.parser.SuperParse;
@@ -51,7 +52,7 @@ public class Proxy {
             String type = params.get("type");
             url = URLDecoder.decode(url,"UTF-8");
 
-            OkHttpClient client = OkGoHelper.ItvClient;
+            OkHttpClient client = OkHttpHelper.ItvClient;
             assert type != null;
             if (type.equals("m3u8")) {
                 Request request = buildRequest(url, params);
@@ -98,7 +99,7 @@ public class Proxy {
             String url = params.get("url");
             url = URLDecoder.decode(url,"UTF-8");
 
-            OkHttpClient client = OkGoHelper.ItvClient;
+            OkHttpClient client = OkHttpHelper.ItvClient;
             String redirectUrl = getRedirectedUrl(url);
 //                LOG.i("echo-url"+redirectUrl);
 
@@ -304,8 +305,8 @@ public class Proxy {
     }
 
     public static String getRedirectedUrl(String url) throws IOException {
-        OkHttpClient base = OkGoHelper.getDefaultClient();
-        OkHttpClient client = (base != null ? base.newBuilder() : new OkHttpClient.Builder().proxySelector(OkGoHelper.proxySelector()).proxyAuthenticator(OkGoHelper.proxyAuthenticator()))
+        OkHttpClient base = OkHttpHelper.getDefaultClient();
+        OkHttpClient client = (base != null ? base.newBuilder() : new OkHttpClient.Builder().proxySelector(OkHttpHelper.proxySelector()).proxyAuthenticator(OkHttpHelper.proxyAuthenticator()))
                 .followRedirects(false) // 不自动跟随重定向
                 .build();
 
@@ -326,7 +327,7 @@ public class Proxy {
                 .url(url)
                 .build();
 
-        OkHttpClient client = OkGoHelper.ItvClient;
+        OkHttpClient client = OkHttpHelper.ItvClient;
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful()) {
                 return response.body().string(); // 获取 m3u8 文件内容

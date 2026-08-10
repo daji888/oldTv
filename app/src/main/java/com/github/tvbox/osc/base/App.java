@@ -13,7 +13,7 @@ import com.github.tvbox.osc.util.EpgUtil;
 import com.github.tvbox.osc.util.FileUtils;
 import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.LOG;
-import com.github.tvbox.osc.util.OkGoHelper;
+import com.github.tvbox.osc.util.OkHttpHelper;
 import com.github.tvbox.osc.util.PlayerHelper;
 import com.hjq.permissions.XXPermissions;
 import com.kingja.loadsir.core.LoadSir;
@@ -44,7 +44,7 @@ public class App extends Application {
         instance = this;
         initParams();
         // OKGo
-        OkGoHelper.init(); //台标获取
+        OkHttpHelper.init(); //台标获取
         // 闭关检查模式
         XXPermissions.setCheckMode(false);
         // Get EPG Info
