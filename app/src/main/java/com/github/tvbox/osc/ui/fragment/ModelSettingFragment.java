@@ -36,7 +36,7 @@ import com.github.tvbox.osc.util.FileUtils;
 import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.HistoryHelper;
 import com.github.tvbox.osc.util.LOG;
-import com.github.tvbox.osc.util.OkGoHelper;
+import com.github.tvbox.osc.util.OkHttpHelper;
 import com.github.tvbox.osc.util.PlayerHelper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -127,7 +127,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
         tvEpgApi.setText(Hawk.get(HawkConfig.EPG_URL, ""));
         tvHomeDefaultShow = findViewById(R.id.tvHomeDefaultShow);
         tvHomeDefaultShow.setText(Hawk.get(HawkConfig.HOME_DEFAULT_SHOW, false) ? "已开启" : "已关闭");
-        tvDns.setText(OkGoHelper.dnsHttpsList.get(Hawk.get(HawkConfig.DOH_URL, 0)));
+        tvDns.setText(OkHttpHelper.dnsHttpsList.get(Hawk.get(HawkConfig.DOH_URL, 0)));
         tvHomeRec.setText(getHomeRecName(Hawk.get(HawkConfig.HOME_REC, 0)));
         tvHistoryNum.setText(HistoryHelper.getHistoryNumName(Hawk.get(HawkConfig.HISTORY_NUM, 0)));
         tvSearchView.setText(getSearchView(Hawk.get(HawkConfig.SEARCH_VIEW, 0)));
@@ -267,9 +267,9 @@ public class ModelSettingFragment extends BaseLazyFragment {
                 dialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<String>() {
                     @Override
                     public void click(String value, int pos) {
-                        tvDns.setText(OkGoHelper.dnsHttpsList.get(pos));
+                        tvDns.setText(OkHttpHelper.dnsHttpsList.get(pos));
                         Hawk.put(HawkConfig.DOH_URL, pos);
-                        OkGoHelper.reloadDns();
+                        OkHttpHelper.reloadDns();
                         IjkMediaPlayer.toggleDotPort(pos > 0);
                         dialog.dismiss();
                     }
@@ -288,7 +288,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
                     public boolean areContentsTheSame(@NonNull @NotNull String oldItem, @NonNull @NotNull String newItem) {
                         return oldItem.equals(newItem);
                     }
-                }, OkGoHelper.dnsHttpsList, dohUrl);
+                }, OkHttpHelper.dnsHttpsList, dohUrl);
                 dialog.show();
             }
         });
