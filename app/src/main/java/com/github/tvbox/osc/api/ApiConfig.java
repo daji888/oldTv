@@ -30,7 +30,7 @@ import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.M3U8;
 import com.github.tvbox.osc.util.LOG;
 import com.github.tvbox.osc.util.MD5;
-import com.github.tvbox.osc.util.OkGoHelper;
+import com.github.tvbox.osc.util.OkHttpHelper;
 import com.github.tvbox.osc.util.Proxy;
 import com.github.tvbox.osc.util.VideoParseRuler;
 import com.google.gson.Gson;
@@ -242,7 +242,7 @@ public class ApiConfig {
                     okhttp3.Request request = new okhttp3.Request.Builder()
                             .url(requestUrl)
                             .build();
-                    okhttp3.OkHttpClient client = OkGoHelper.getDefaultClient();
+                    okhttp3.OkHttpClient client = OkHttpHelper.getDefaultClient();
                     if (client == null) client = com.github.catvod.net.OkHttp.client();
                     response = client.newCall(request).execute();
                     if (!response.isSuccessful()) {
@@ -317,7 +317,7 @@ public class ApiConfig {
                             .url(url)
                             .header("User-Agent", userAgent)
                             .build();
-                    okhttp3.OkHttpClient client = OkGoHelper.getDefaultClient();
+                    okhttp3.OkHttpClient client = OkHttpHelper.getDefaultClient();
                     if (client == null) client = com.github.catvod.net.OkHttp.client();
                     response = client.newCall(request).execute();
                     if (!response.isSuccessful()) {
@@ -1254,14 +1254,14 @@ public class ApiConfig {
 
     private void loadProxyRules(JsonObject infoJson) {
         if (!infoJson.has("proxy")) {
-            OkGoHelper.setProxyList(null);
+            OkHttpHelper.setProxyList(null);
             return;
         }
         try {
-            OkGoHelper.setProxyList(ProxyRule.arrayFrom(infoJson.get("proxy")));
+            OkHttpHelper.setProxyList(ProxyRule.arrayFrom(infoJson.get("proxy")));
         } catch (Throwable th) {
             th.printStackTrace();
-            OkGoHelper.setProxyList(null);
+            OkHttpHelper.setProxyList(null);
         }
     }
 
