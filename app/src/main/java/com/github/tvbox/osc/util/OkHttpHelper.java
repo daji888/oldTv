@@ -1,12 +1,8 @@
 package com.github.tvbox.osc.util;
 
-import static okhttp3.ConnectionSpec.CLEARTEXT;
-import static okhttp3.ConnectionSpec.COMPATIBLE_TLS;
-import static okhttp3.ConnectionSpec.MODERN_TLS;
-import static okhttp3.ConnectionSpec.RESTRICTED_TLS;
+import android.annotation.SuppressLint;
 
 import com.github.catvod.net.OkHttp;
-import com.github.catvod.net.SSLCompat;
 import com.github.tvbox.osc.base.App;
 import com.github.tvbox.osc.bean.ProxyRule;
 import com.github.tvbox.osc.util.net.OkProxySelector;
@@ -15,13 +11,16 @@ import com.orhanobut.hawk.Hawk;
 
 import java.io.File;
 import java.net.InetAddress;
+import java.security.SecureRandom;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 import java.util.List;
 
-import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import okhttp3.Cache;
 import okhttp3.ConnectionSpec;
@@ -66,18 +65,13 @@ public class OkHttpHelper {
             loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
         }
         builder.addInterceptor(loggingInterceptor);
-        builder.connectionSpecs(getConnectionSpec());
         builder.retryOnConnectionFailure(true);
         builder.followRedirects(true);
         builder.followSslRedirects(true);
         builder.proxySelector(proxySelector());
         builder.proxyAuthenticator(proxyAuthenticator());
-
-        try {
-            setOkHttpSsl(builder);
-        } catch (Throwable th) {
-            th.printStackTrace();
-        }
+        builder.hostnameVerifier((hostname, session) -> true);
+        builder.sslSocketFactory(getSSLContext().getSocketFactory(), trustAllCertificates());
         builder.dns(dnsOverHttps);
         ItvClient = builder.build();
 
@@ -86,10 +80,6 @@ public class OkHttpHelper {
 
     public static DnsOverHttps dnsOverHttps = null;
     public static ArrayList<String> dnsHttpsList = new ArrayList<>();
-
-    public static List<ConnectionSpec> getConnectionSpec() {
-        return Arrays.asList(RESTRICTED_TLS, MODERN_TLS, COMPATIBLE_TLS, CLEARTEXT);
-    }
 
     private static List<String> getIps() {
         return ips == null ? Collections.emptyList() : ips;
@@ -156,12 +146,8 @@ public class OkHttpHelper {
             loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
         }
         builder.addInterceptor(loggingInterceptor);
-        try {
-            setOkHttpSsl(builder);
-        } catch (Throwable th) {
-            th.printStackTrace();
-        }
-        builder.connectionSpecs(getConnectionSpec());
+        builder.hostnameVerifier((hostname, session) -> true);
+        builder.sslSocketFactory(getSSLContext().getSocketFactory(), trustAllCertificates());
         builder.cache(new Cache(new File(App.getInstance().getCacheDir().getAbsolutePath(), "dohcache"), 10 * 1024 * 1024));
         OkHttpClient dohClient = builder.build();
         String dohUrl = getDohUrl(Hawk.get(HawkConfig.DOH_URL, 0));
@@ -191,18 +177,14 @@ public class OkHttpHelper {
 
         //builder.retryOnConnectionFailure(false);
         builder.addInterceptor(loggingInterceptor);
-        builder.connectionSpecs(getConnectionSpec());
         builder.readTimeout(DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
         builder.writeTimeout(DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
         builder.connectTimeout(DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
         builder.dns(dnsOverHttps);
         builder.proxySelector(proxySelector());
         builder.proxyAuthenticator(proxyAuthenticator());
-        try {
-            setOkHttpSsl(builder);
-        } catch (Throwable th) {
-            th.printStackTrace();
-        }
+        builder.hostnameVerifier((hostname, session) -> true);
+        builder.sslSocketFactory(getSSLContext().getSocketFactory(), trustAllCertificates());
 
         OkHttpClient okHttpClient = builder.build();
         defaultClient = okHttpClient;
@@ -225,18 +207,14 @@ public class OkHttpHelper {
         }
 
         builder.addInterceptor(loggingInterceptor);
-        builder.connectionSpecs(getConnectionSpec());
         builder.readTimeout(DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
         builder.writeTimeout(DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
         builder.connectTimeout(DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
         builder.dns(dnsOverHttps);
         builder.proxySelector(proxySelector());
         builder.proxyAuthenticator(proxyAuthenticator());
-        try {
-            setOkHttpSsl(builder);
-        } catch (Throwable th) {
-            th.printStackTrace();
-        }
+        builder.hostnameVerifier((hostname, session) -> true);
+        builder.sslSocketFactory(getSSLContext().getSocketFactory(), trustAllCertificates());
 
         OkHttpClient okHttpClient = builder.build();
         defaultClient = okHttpClient;
@@ -249,14 +227,31 @@ public class OkHttpHelper {
         OkHttp.resetClient();
     }
 
-    private static synchronized OkHttpClient.Builder setOkHttpSsl(OkHttpClient.Builder builder) {
+    public static SSLContext getSSLContext() {
         try {
-            final SSLSocketFactory sslSocketFactory = new SSLCompat();
-            return builder
-                   .sslSocketFactory(sslSocketFactory, SSLCompat.TM)
-                   .hostnameVerifier((hostname, session) -> true);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            SSLContext context = SSLContext.getInstance("TLS");
+            context.init(null, new TrustManager[]{trustAllCertificates()}, new SecureRandom());
+            return context;
+        } catch (Throwable e) {
+            return null;
         }
+    }
+
+    @SuppressLint({"TrustAllX509TrustManager", "CustomX509TrustManager"})
+    public static X509TrustManager trustAllCertificates() {
+        return new X509TrustManager() {
+            @Override
+            public void checkClientTrusted(X509Certificate[] chain, String authType) {
+            }
+
+            @Override
+            public void checkServerTrusted(X509Certificate[] chain, String authType) {
+            }
+
+            @Override
+            public X509Certificate[] getAcceptedIssuers() {
+                return new X509Certificate[0];
+            }
+        };
     }
 }
