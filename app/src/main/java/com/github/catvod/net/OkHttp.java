@@ -2,13 +2,10 @@ package com.github.catvod.net;
 
 import androidx.collection.ArrayMap;
 
-import com.github.catvod.net.SSLCompat;
 import com.github.tvbox.osc.util.OkHttpHelper;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
-import javax.net.ssl.SSLSocketFactory;
 
 import okhttp3.Call;
 import okhttp3.FormBody;
@@ -34,8 +31,7 @@ public class OkHttp {
         if (client != null) return client;
         OkHttpClient base = OkHttpHelper.getDefaultClient();
         if (base != null) return client = base.newBuilder().dns(dns()).build();
-        OkHttpClient.Builder builder = new OkHttpClient.Builder().dns(dns()).proxySelector(OkHttpHelper.proxySelector()).proxyAuthenticator(OkHttpHelper.proxyAuthenticator()).connectTimeout(TIMEOUT, TimeUnit.MILLISECONDS).readTimeout(TIMEOUT, TimeUnit.MILLISECONDS).writeTimeout(TIMEOUT, TimeUnit.MILLISECONDS);
-        setOkHttpSsl(builder);
+        OkHttpClient.Builder builder = new OkHttpClient.Builder().dns(dns()).proxySelector(OkHttpHelper.proxySelector()).proxyAuthenticator(OkHttpHelper.proxyAuthenticator()).connectTimeout(TIMEOUT, TimeUnit.MILLISECONDS).readTimeout(TIMEOUT, TimeUnit.MILLISECONDS).writeTimeout(TIMEOUT, TimeUnit.MILLISECONDS).hostnameVerifier((hostname, session) -> true).sslSocketFactory(OkHttpHelper.getSSLContext().getSocketFactory(), OkHttpHelper.trustAllCertificates());
         return client = builder.build();
     }
 
@@ -162,15 +158,6 @@ public class OkHttp {
 
     private static Headers headers(Map<String, String> headers) {
         return headers == null ? new Headers.Builder().build() : Headers.of(headers);
-    }
-
-    private static void setOkHttpSsl(OkHttpClient.Builder builder) {
-        try {
-            SSLSocketFactory sslSocketFactory = new SSLCompat();
-            builder.sslSocketFactory(sslSocketFactory, SSLCompat.TM);
-            builder.hostnameVerifier((hostname, session) -> true);
-        } catch (Throwable ignored) {
-        }
     }
 
     private static HttpUrl buildUrl(String url, ArrayMap<String, String> params) {
