@@ -98,9 +98,7 @@ public class OkHttpHelper {
     private static List<InetAddress> getHosts() {
         try {
             List<InetAddress> list = new ArrayList<>();
-            for (String ip : getIps()) {
-                if (!list.contains("ip")) list.add(InetAddress.getByName(ip));
-            }
+            for (String ip : getIps()) list.add(InetAddress.getByName(ip));
             return list.isEmpty() ? null : list;
         } catch (Exception ignored) {
             return null;
