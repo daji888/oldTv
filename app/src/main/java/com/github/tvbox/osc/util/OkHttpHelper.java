@@ -23,7 +23,6 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 import okhttp3.Cache;
-import okhttp3.ConnectionSpec;
 import okhttp3.dnsoverhttps.DnsOverHttps;
 import okhttp3.HttpUrl;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -33,7 +32,7 @@ import okhttp3.Request;
 import xyz.doikki.videoplayer.exo.ExoMediaSourceHelper;
 
 public class OkHttpHelper {
-    public static final long DEFAULT_MILLISECONDS = 10000;  //默认的超时时间
+    private static final long DEFAULT_MILLISECONDS = 10000;  //默认的超时时间
     static OkHttpClient ItvClient = null;
     private static List<String> ips;
     private static OkProxySelector proxySelector = null;
@@ -72,7 +71,9 @@ public class OkHttpHelper {
         builder.proxyAuthenticator(proxyAuthenticator());
         builder.hostnameVerifier((hostname, session) -> true);
         builder.sslSocketFactory(getSSLContext().getSocketFactory(), trustAllCertificates());
-        builder.dns(dnsOverHttps);
+        if (dnsOverHttps != null) {
+            builder.dns(dnsOverHttps);
+        }
         ItvClient = builder.build();
 
         ExoMediaSourceHelper.getInstance(App.getInstance()).setOkClient(ItvClient);
@@ -95,7 +96,7 @@ public class OkHttpHelper {
         }
     }
 
-    public static String getDohUrl(int type) {
+    private static String getDohUrl(int type) {
         switch (type) {
             case 1: {
                 return "https://doh.pub/dns-query";
@@ -151,7 +152,11 @@ public class OkHttpHelper {
         builder.cache(new Cache(new File(App.getInstance().getCacheDir().getAbsolutePath(), "dohcache"), 10 * 1024 * 1024));
         OkHttpClient dohClient = builder.build();
         String dohUrl = getDohUrl(Hawk.get(HawkConfig.DOH_URL, 0));
-        dnsOverHttps = new DnsOverHttps.Builder().client(dohClient).url(dohUrl.isEmpty() ? null : HttpUrl.get(dohUrl)).bootstrapDnsHosts(getHosts()).build();
+        if (dohUrl.isEmpty()) {
+            dnsOverHttps = null;
+        } else {
+            dnsOverHttps = new DnsOverHttps.Builder().client(dohClient).url(HttpUrl.get(dohUrl)).bootstrapDnsHosts(getHosts()).build();
+        }
     }
 
     static OkHttpClient defaultClient = null;
@@ -180,7 +185,9 @@ public class OkHttpHelper {
         builder.readTimeout(DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
         builder.writeTimeout(DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
         builder.connectTimeout(DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
-        builder.dns(dnsOverHttps);
+        if (dnsOverHttps != null) {
+            builder.dns(dnsOverHttps);
+        }
         builder.proxySelector(proxySelector());
         builder.proxyAuthenticator(proxyAuthenticator());
         builder.hostnameVerifier((hostname, session) -> true);
@@ -210,7 +217,9 @@ public class OkHttpHelper {
         builder.readTimeout(DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
         builder.writeTimeout(DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
         builder.connectTimeout(DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
-        builder.dns(dnsOverHttps);
+        if (dnsOverHttps != null) {
+            builder.dns(dnsOverHttps);
+        }
         builder.proxySelector(proxySelector());
         builder.proxyAuthenticator(proxyAuthenticator());
         builder.hostnameVerifier((hostname, session) -> true);

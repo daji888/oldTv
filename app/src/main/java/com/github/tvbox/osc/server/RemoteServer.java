@@ -14,7 +14,6 @@ import com.github.tvbox.osc.event.RefreshEvent;
 import com.github.tvbox.osc.event.ServerEvent;
 import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.util.FileUtils;
-import com.github.tvbox.osc.util.OkHttpHelper;
 import com.github.tvbox.osc.util.Proxy;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -170,15 +169,6 @@ public class RemoteServer extends NanoHTTPD {
                     } catch (Throwable th) {
                         return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.INTERNAL_ERROR, NanoHTTPD.MIME_PLAINTEXT, th.getMessage());
                     }
-                } else if (fileName.equals("/dns-query")) {
-                    String name = session.getParms().get("name");
-                    byte[] rs = null;
-                    try {
-                        rs = OkHttpHelper.dnsOverHttps.lookupHttpsForwardSync(name);
-                    } catch (Throwable th) {
-                        rs = new byte[0];
-                    }
-                    return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "application/dns-message", new ByteArrayInputStream(rs), rs.length);
                 } else if (fileName.equals("/m3u8")) {
                     return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.OK, NanoHTTPD.MIME_PLAINTEXT, m3u8Content);
                 } else if (fileName.startsWith("/push/")) {
