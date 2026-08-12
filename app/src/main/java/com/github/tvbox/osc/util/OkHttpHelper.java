@@ -114,7 +114,7 @@ public class OkHttpHelper {
                 return "https://cloudflare-dns.com/dns-query";
             }
             case 6: {
-                return "https://dns.adguard.com/dns-query";
+                return "https://unfiltered.adguard-dns.com/dns-query";
             }
             case 7: {
                 return "https://resolver2.dns.watch/dns-query";
@@ -124,6 +124,57 @@ public class OkHttpHelper {
             }    
         }
         return "";
+    }
+
+    private static List<String> getBootstrapIps(int type) {
+        List<String> ipList = new ArrayList<>();
+        switch (type) {
+        //    case 1: // 腾讯 DNSPod
+        //        ipList.add("2402:4e00::");
+        //        ipList.add("119.29.29.29");
+        //        break;
+            case 2: // 阿里云 DNS
+                ipList.add("2400:3200::1");
+                ipList.add("2400:3200:baba::1");
+                ipList.add("223.5.5.5");
+                ipList.add("223.6.6.6");
+                break;
+            case 3: // 360 DNS
+                ipList.add("101.226.4.6");
+                ipList.add("218.30.118.6");
+                break;
+            case 4: // Google DNS
+                ipList.add("2001:4860:4860::8888");
+                ipList.add("2001:4860:4860::8844");
+                ipList.add("8.8.8.8");
+                ipList.add("8.8.4.4");
+                break;
+            case 5: // Cloudflare DNS
+                ipList.add("2606:4700:4700::1111");
+                ipList.add("2606:4700:4700::1001");
+                ipList.add("1.1.1.1");
+                ipList.add("1.0.0.1");
+                break;
+            case 6: // AdGuard DNS
+                ipList.add("2a10:50c0::1:ff");
+                ipList.add("2a10:50c0::2:ff");
+                ipList.add("94.140.14.140");
+                ipList.add("94.140.14.141");
+                break;
+            case 7: // DNSWatch DNS
+                ipList.add("2001:1608:10:25::1c04:b12f");
+                ipList.add("2001:1608:10:25::9249:d69b");
+                ipList.add("84.200.69.80");
+                ipList.add("84.200.70.40");
+                break;
+            case 8: // Quad9 DNS
+                ipList.add("2620:fe::fe");
+                ipList.add("2620:fe::9");
+                ipList.add("9.9.9.9");
+                ipList.add("149.112.112.112");
+                break;
+        }
+        return ipList;
     }
 
     static void initDnsOverHttps() {
@@ -136,6 +187,9 @@ public class OkHttpHelper {
         if (!dnsHttpsList.contains("AdGuard")) dnsHttpsList.add("AdGuard");
         if (!dnsHttpsList.contains("DNSWatch")) dnsHttpsList.add("DNSWatch");
         if (!dnsHttpsList.contains("Quad9")) dnsHttpsList.add("Quad9");
+
+        int dohType = Hawk.get(HawkConfig.DOH_URL, 0);
+        ips = getBootstrapIps(dohType);
         
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.proxySelector(proxySelector());
