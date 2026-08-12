@@ -49,6 +49,7 @@ public class EXOmPlayer extends ExoMediaPlayer {
                     t.trackGroupId = groupIndex;
                     data.addAudio(t);    
                 } else if (MimeTypes.isText(format.sampleMimeType)) {
+                    if (isUndeclaredClosedCaptionTrack(format)) continue;
                     String trackName = (data.getSubtitle().size() + 1) + ".  " + trackNameProvider.getTrackName(format);
                     TrackInfoBean t = new TrackInfoBean();
                     t.name = trackName;
@@ -61,6 +62,12 @@ public class EXOmPlayer extends ExoMediaPlayer {
             }
         }
         return data;
+    }
+
+    private boolean isUndeclaredClosedCaptionTrack(Format format) {
+        if (format == null || format.accessibilityChannel != Format.NO_VALUE) return false;
+        return MimeTypes.APPLICATION_CEA608.equals(format.sampleMimeType)
+                || MimeTypes.APPLICATION_CEA708.equals(format.sampleMimeType);
     }
 
     public void selectExoTrack(@Nullable TrackInfoBean trackInfoBean) {
