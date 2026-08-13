@@ -38,6 +38,7 @@ public class OkHttpHelper {
     public static ArrayList<String> dnsHttpsList = new ArrayList<>();
     static OkHttpClient defaultClient = null;
     static OkHttpClient noRedirectClient = null;
+    private static OkHttpClient dohClient; // 缓存DOH专用的OkHttpClient
     private static List<String> ips;
     private static OkProxySelector proxySelector = null;
     private static ProxyAuthenticator proxyAuthenticator = null;
@@ -107,7 +108,7 @@ public class OkHttpHelper {
         }
     }
 
-    private static String getDohUrl(int type) {
+    public static String getDohUrl(int type) {
         switch (type) {
             case 1: {
                 return "https://doh.pub/dns-query";
@@ -188,8 +189,12 @@ public class OkHttpHelper {
         return ipList;
     }
 
+    public static synchronized void setDoh(HttpUrl dohUrl) {
+        dnsOverHttps = buildDnsOverHttps(dohUrl);
+    }
+
     static void initDnsOverHttps() {
-        // 初始化公共DNS列表，避免重复添加
+        // 初始化公共DNS列表
         String[] dnsNames = {"运营商", "腾讯", "阿里", "360", "Google", "Cloudflare", "AdGuard", "DNSWatch", "Quad9"};
         for (String dnsName : dnsNames) {
             if (!dnsHttpsList.contains(dnsName)) {
@@ -200,15 +205,28 @@ public class OkHttpHelper {
         int dohType = Hawk.get(HawkConfig.DOH_URL, 0);
         ips = getBootstrapIps(dohType);
         
-        // 复用通用Builder创建逻辑，补充DOH专属缓存配置
-        OkHttpClient.Builder builder = createBaseBuilder();
-        builder.cache(new Cache(new File(App.getInstance().getCacheDir().getAbsolutePath(), "dohcache"), 10 * 1024 * 1024));
-        OkHttpClient dohClient = builder.build();
-        
         String dohUrl = getDohUrl(Hawk.get(HawkConfig.DOH_URL, 0));
-        dnsOverHttps = dohUrl.isEmpty() ? null : new DnsOverHttps.Builder()
+        dnsOverHttps = buildDnsOverHttps(dohUrl.isEmpty() ? null : HttpUrl.get(dohUrl));
+    }
+
+    private static DnsOverHttps buildDnsOverHttps(HttpUrl dohUrl) {
+        if (dohUrl == null) {
+            return null;
+        }
+        
+        // 懒加载DOH客户端，避免重复创建
+        if (dohClient == null) {
+            OkHttpClient.Builder builder = createBaseBuilder();
+            builder.cache(new Cache(
+                new File(App.getInstance().getCacheDir().getAbsolutePath(), "dohcache"), 
+                10 * 1024 * 1024
+            ));
+            dohClient = builder.build();
+        }
+        
+        return new DnsOverHttps.Builder()
                 .client(dohClient)
-                .url(HttpUrl.get(dohUrl))
+                .url(dohUrl)
                 .bootstrapDnsHosts(getHosts())
                 .build();
     }
@@ -239,11 +257,6 @@ public class OkHttpHelper {
         noRedirectClient = builder.build();
 
         initExoOkHttpClient();        
-    }
-
-    public static synchronized void reloadDns() {
-        init();
-        OkHttp.resetClient();
     }
 
     public static SSLContext getSSLContext() {
