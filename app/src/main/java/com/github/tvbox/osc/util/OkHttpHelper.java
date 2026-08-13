@@ -34,6 +34,10 @@ import xyz.doikki.videoplayer.exo.ExoMediaSourceHelper;
 public class OkHttpHelper {
     private static final long DEFAULT_MILLISECONDS = 10000;  //默认的超时时间
     static OkHttpClient ItvClient = null;
+    public static DnsOverHttps dnsOverHttps = null;
+    public static ArrayList<String> dnsHttpsList = new ArrayList<>();
+    static OkHttpClient defaultClient = null;
+    static OkHttpClient noRedirectClient = null;
     private static List<String> ips;
     private static OkProxySelector proxySelector = null;
     private static ProxyAuthenticator proxyAuthenticator = null;
@@ -53,10 +57,11 @@ public class OkHttpHelper {
         if (proxyRules != null && !proxyRules.isEmpty()) proxySelector().addAll(proxyRules);
         OkHttp.reset();
     }
-    
-    static void initExoOkHttpClient() {
-        OkHttpClient base = getDefaultClient();
-        OkHttpClient.Builder builder = base != null ? base.newBuilder() : new OkHttpClient.Builder();
+
+    // 统一封装通用的OkHttpClient.Builder配置逻辑
+    private static OkHttpClient.Builder createBaseBuilder() {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        // 统一配置日志拦截器，根据DEBUG开关控制日志级别
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         if (Hawk.get(HawkConfig.DEBUG_OPEN, false)) {
             loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -64,23 +69,29 @@ public class OkHttpHelper {
             loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
         }
         builder.addInterceptor(loggingInterceptor);
+        // 统一配置代理相关规则
+        builder.proxySelector(proxySelector());
+        builder.proxyAuthenticator(proxyAuthenticator());
+        // 统一配置HTTPS忽略证书校验的逻辑
+        builder.hostnameVerifier((hostname, session) -> true);
+        builder.sslSocketFactory(getSSLContext().getSocketFactory(), trustAllCertificates());
+        return builder;
+    }
+    
+    static void initExoOkHttpClient() {
+        OkHttpClient.Builder builder = getDefaultClient() != null 
+                ? getDefaultClient().newBuilder() 
+                : createBaseBuilder();
+        // 补充ExoPlayer专属的额外配置
         builder.retryOnConnectionFailure(true);
         builder.followRedirects(true);
         builder.followSslRedirects(true);
-        builder.proxySelector(proxySelector());
-        builder.proxyAuthenticator(proxyAuthenticator());
-        builder.hostnameVerifier((hostname, session) -> true);
-        builder.sslSocketFactory(getSSLContext().getSocketFactory(), trustAllCertificates());
         if (dnsOverHttps != null) {
             builder.dns(dnsOverHttps);
         }
         ItvClient = builder.build();
-
         ExoMediaSourceHelper.getInstance(App.getInstance()).setOkClient(ItvClient);
     }
-
-    public static DnsOverHttps dnsOverHttps = null;
-    public static ArrayList<String> dnsHttpsList = new ArrayList<>();
 
     private static List<String> getIps() {
         return ips == null ? Collections.emptyList() : ips;
@@ -178,43 +189,29 @@ public class OkHttpHelper {
     }
 
     static void initDnsOverHttps() {
-        if (!dnsHttpsList.contains("运营商")) dnsHttpsList.add("运营商");
-        if (!dnsHttpsList.contains("腾讯")) dnsHttpsList.add("腾讯");
-        if (!dnsHttpsList.contains("阿里")) dnsHttpsList.add("阿里");
-        if (!dnsHttpsList.contains("360")) dnsHttpsList.add("360");
-        if (!dnsHttpsList.contains("Google")) dnsHttpsList.add("Google");
-        if (!dnsHttpsList.contains("Cloudflare")) dnsHttpsList.add("Cloudflare");
-        if (!dnsHttpsList.contains("AdGuard")) dnsHttpsList.add("AdGuard");
-        if (!dnsHttpsList.contains("DNSWatch")) dnsHttpsList.add("DNSWatch");
-        if (!dnsHttpsList.contains("Quad9")) dnsHttpsList.add("Quad9");
+        // 初始化公共DNS列表，避免重复添加
+        String[] dnsNames = {"运营商", "腾讯", "阿里", "360", "Google", "Cloudflare", "AdGuard", "DNSWatch", "Quad9"};
+        for (String dnsName : dnsNames) {
+            if (!dnsHttpsList.contains(dnsName)) {
+                dnsHttpsList.add(dnsName);
+            }
+        }
 
         int dohType = Hawk.get(HawkConfig.DOH_URL, 0);
         ips = getBootstrapIps(dohType);
         
-        OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        builder.proxySelector(proxySelector());
-        builder.proxyAuthenticator(proxyAuthenticator());
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-        if (Hawk.get(HawkConfig.DEBUG_OPEN, false)) {
-            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        } else {
-            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
-        }
-        builder.addInterceptor(loggingInterceptor);
-        builder.hostnameVerifier((hostname, session) -> true);
-        builder.sslSocketFactory(getSSLContext().getSocketFactory(), trustAllCertificates());
+        // 复用通用Builder创建逻辑，补充DOH专属缓存配置
+        OkHttpClient.Builder builder = createBaseBuilder();
         builder.cache(new Cache(new File(App.getInstance().getCacheDir().getAbsolutePath(), "dohcache"), 10 * 1024 * 1024));
         OkHttpClient dohClient = builder.build();
+        
         String dohUrl = getDohUrl(Hawk.get(HawkConfig.DOH_URL, 0));
-        if (dohUrl.isEmpty()) {
-            dnsOverHttps = null;
-        } else {
-            dnsOverHttps = new DnsOverHttps.Builder().client(dohClient).url(HttpUrl.get(dohUrl)).bootstrapDnsHosts(getHosts()).build();
-        }
+        dnsOverHttps = dohUrl.isEmpty() ? null : new DnsOverHttps.Builder()
+                .client(dohClient)
+                .url(HttpUrl.get(dohUrl))
+                .bootstrapDnsHosts(getHosts())
+                .build();
     }
-
-    static OkHttpClient defaultClient = null;
-    static OkHttpClient noRedirectClient = null;
 
     public static OkHttpClient getDefaultClient() {
         return defaultClient;
@@ -226,30 +223,17 @@ public class OkHttpHelper {
 
     public static void init() {
         initDnsOverHttps();
-        OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-        if (Hawk.get(HawkConfig.DEBUG_OPEN, false)) {
-            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        } else {
-            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
-        }
-
-        //builder.retryOnConnectionFailure(false);
-        builder.addInterceptor(loggingInterceptor);
+        // 复用通用Builder，补充基础超时配置
+        OkHttpClient.Builder builder = createBaseBuilder();
         builder.readTimeout(DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
         builder.writeTimeout(DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
         builder.connectTimeout(DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
         if (dnsOverHttps != null) {
             builder.dns(dnsOverHttps);
         }
-        builder.proxySelector(proxySelector());
-        builder.proxyAuthenticator(proxyAuthenticator());
-        builder.hostnameVerifier((hostname, session) -> true);
-        builder.sslSocketFactory(getSSLContext().getSocketFactory(), trustAllCertificates());
-
-        OkHttpClient okHttpClient = builder.build();
-        defaultClient = okHttpClient;
+        defaultClient = builder.build();
         
+        // 基于已有Builder快速生成禁止重定向的客户端，避免重复创建配置
         builder.followRedirects(false);
         builder.followSslRedirects(false);
         noRedirectClient = builder.build();
@@ -258,35 +242,7 @@ public class OkHttpHelper {
     }
 
     public static synchronized void reloadDns() {
-        initDnsOverHttps();
-        OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-        if (Hawk.get(HawkConfig.DEBUG_OPEN, false)) {
-            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        } else {
-            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
-        }
-
-        builder.addInterceptor(loggingInterceptor);
-        builder.readTimeout(DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
-        builder.writeTimeout(DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
-        builder.connectTimeout(DEFAULT_MILLISECONDS, TimeUnit.MILLISECONDS);
-        if (dnsOverHttps != null) {
-            builder.dns(dnsOverHttps);
-        }
-        builder.proxySelector(proxySelector());
-        builder.proxyAuthenticator(proxyAuthenticator());
-        builder.hostnameVerifier((hostname, session) -> true);
-        builder.sslSocketFactory(getSSLContext().getSocketFactory(), trustAllCertificates());
-
-        OkHttpClient okHttpClient = builder.build();
-        defaultClient = okHttpClient;
-        
-        builder.followRedirects(false);
-        builder.followSslRedirects(false);
-        noRedirectClient = builder.build();
-
-        initExoOkHttpClient();
+        init();
         OkHttp.resetClient();
     }
 
