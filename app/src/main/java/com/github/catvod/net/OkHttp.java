@@ -2,6 +2,10 @@ package com.github.catvod.net;
 
 import androidx.collection.ArrayMap;
 
+import com.github.catvod.net.interceptor.AuthInterceptor;
+import com.github.catvod.net.interceptor.RequestInterceptor;
+import com.github.catvod.net.interceptor.ResponseInterceptor;
+
 import com.github.tvbox.osc.util.OkHttpHelper;
 
 import java.util.Map;
@@ -21,17 +25,35 @@ public class OkHttp {
     private static final long TIMEOUT = TimeUnit.SECONDS.toMillis(30);
     private static OkDns dns;
     private static OkHttpClient client;
+    private static AuthInterceptor authInterceptor;
+    private static RequestInterceptor requestInterceptor;
+    private static ResponseInterceptor responseInterceptor;
 
     public static synchronized OkDns dns() {
         if (dns == null) dns = new OkDns();
         return dns;
     }
 
+    public static synchronized AuthInterceptor authInterceptor() {
+        if (authInterceptor != null) return authInterceptor;
+        return authInterceptor = new AuthInterceptor();
+    }
+
+    public static synchronized RequestInterceptor requestInterceptor() {
+        if (requestInterceptor != null) return requestInterceptor;
+        return requestInterceptor = new RequestInterceptor();
+    }
+
+    public static synchronized ResponseInterceptor responseInterceptor() {
+        if (responseInterceptor != null) return responseInterceptor;
+        return responseInterceptor = new ResponseInterceptor();
+    }
+
     public static synchronized OkHttpClient client() {
         if (client != null) return client;
         OkHttpClient base = OkHttpHelper.getDefaultClient();
         if (base != null) return client = base.newBuilder().dns(dns()).build();
-        OkHttpClient.Builder builder = new OkHttpClient.Builder().dns(dns()).proxySelector(OkHttpHelper.proxySelector()).proxyAuthenticator(OkHttpHelper.proxyAuthenticator()).connectTimeout(TIMEOUT, TimeUnit.MILLISECONDS).readTimeout(TIMEOUT, TimeUnit.MILLISECONDS).writeTimeout(TIMEOUT, TimeUnit.MILLISECONDS).hostnameVerifier((hostname, session) -> true).sslSocketFactory(OkHttpHelper.getSSLContext().getSocketFactory(), OkHttpHelper.trustAllCertificates());
+        OkHttpClient.Builder builder = new OkHttpClient.Builder().addInterceptor(requestInterceptor()).addInterceptor(authInterceptor()).addNetworkInterceptor(responseInterceptor()).connectTimeout(TIMEOUT, TimeUnit.MILLISECONDS).readTimeout(TIMEOUT, TimeUnit.MILLISECONDS).writeTimeout(TIMEOUT, TimeUnit.MILLISECONDS).dns(dns()).hostnameVerifier((hostname, session) -> true).sslSocketFactory(OkHttpHelper.getSSLContext().getSocketFactory(), OkHttpHelper.trustAllCertificates()).proxySelector(OkHttpHelper.proxySelector()).proxyAuthenticator(OkHttpHelper.proxyAuthenticator());
         return client = builder.build();
     }
 
