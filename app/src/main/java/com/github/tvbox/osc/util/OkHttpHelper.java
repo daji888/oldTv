@@ -32,7 +32,7 @@ import okhttp3.Request;
 import xyz.doikki.videoplayer.exo.ExoMediaSourceHelper;
 
 public class OkHttpHelper {
-    private static final long DEFAULT_MILLISECONDS = 10000;  //默认的超时时间
+    private static final long DEFAULT_MILLISECONDS = 30000;  //默认的超时时间
     static OkHttpClient ItvClient = null;
     public static DnsOverHttps dnsOverHttps = null;
     public static ArrayList<String> dnsHttpsList = new ArrayList<>();
@@ -70,12 +70,15 @@ public class OkHttpHelper {
             loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
         }
         builder.addInterceptor(loggingInterceptor);
-        // 统一配置代理相关规则
-        builder.proxySelector(proxySelector());
-        builder.proxyAuthenticator(proxyAuthenticator());
+        builder.addInterceptor(OkHttp.requestInterceptor());
+        builder.addInterceptor(OkHttp.authInterceptor());
+        builder.addNetworkInterceptor(OkHttp.responseInterceptor());
         // 统一配置HTTPS忽略证书校验的逻辑
         builder.hostnameVerifier((hostname, session) -> true);
         builder.sslSocketFactory(getSSLContext().getSocketFactory(), trustAllCertificates());
+        // 统一配置代理相关规则
+        builder.proxySelector(proxySelector());
+        builder.proxyAuthenticator(proxyAuthenticator());
         return builder;
     }
     
