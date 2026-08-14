@@ -212,4 +212,12 @@ public class StringUtils {
         }
         return result;
     }
+
+    public static boolean containOrMatch(String text, String regex) {
+        try {
+            return text.contains(regex) || text.matches(regex);
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }
