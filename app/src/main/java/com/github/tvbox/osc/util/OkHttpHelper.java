@@ -101,7 +101,7 @@ public class OkHttpHelper {
         return ips == null ? Collections.emptyList() : ips;
     }
 
-    private static List<InetAddress> getHosts() {
+    public static List<InetAddress> getHosts() {
         try {
             List<InetAddress> list = new ArrayList<>();
             for (String ip : getIps()) list.add(InetAddress.getByName(ip));
@@ -190,10 +190,6 @@ public class OkHttpHelper {
                 break;
         }
         return ipList;
-    }
-
-    public static synchronized void setDoh(HttpUrl dohUrl) {
-        dnsOverHttps = buildDnsOverHttps(dohUrl);
     }
 
     static void initDnsOverHttps() {
