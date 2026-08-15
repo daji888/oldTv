@@ -49,7 +49,7 @@ public class OkDns implements Dns {
     @NonNull
     @Override
     public List<InetAddress> lookup(@NonNull String hostname) throws UnknownHostException {
-        Dns dns = OkHttpHelper.dnsOverHttps != null ? OkHttpHelper.dnsOverHttps : Dns.SYSTEM;
+        Dns dns = doh != null ? doh : Dns.SYSTEM;
         return dns.lookup(get(hostname));
     }
 }
