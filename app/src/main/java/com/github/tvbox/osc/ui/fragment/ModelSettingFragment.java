@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 
+import com.github.catvod.net.OkHttp;
 import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.api.ApiConfig;
 import com.github.tvbox.osc.base.BaseActivity;
@@ -270,7 +271,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
                         tvDns.setText(OkHttpHelper.dnsHttpsList.get(pos));
                         Hawk.put(HawkConfig.DOH_URL, pos);
                         String url = OkHttpHelper.getDohUrl(pos);
-                        OkHttpHelper.setDoh(url.isEmpty() ? null : HttpUrl.get(url));
+                        OkHttp.dns().setDoh(url.isEmpty() ? null : HttpUrl.get(url));
                         IjkMediaPlayer.toggleDotPort(pos > 0);
                         dialog.dismiss();
                     }

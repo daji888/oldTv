@@ -11,10 +11,18 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import okhttp3.Dns;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.dnsoverhttps.DnsOverHttps;
 
 public class OkDns implements Dns {
 
     private final ConcurrentHashMap<String, String> hosts = new ConcurrentHashMap<>();
+    private volatile DnsOverHttps doh;
+
+    public synchronized void setDoh(HttpUrl url) {
+        this.doh = url == null ? null : new DnsOverHttps.Builder().client(new OkHttpClient()).url(url).bootstrapDnsHosts(OkHttpHelper.getHosts()).build();
+    }
 
     public void addAll(List<String> hosts) {
         if (hosts == null) return;
