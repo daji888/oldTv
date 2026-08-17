@@ -2,8 +2,6 @@ package com.github.catvod.net;
 
 import androidx.annotation.NonNull;
 
-import com.github.tvbox.osc.util.OkHttpHelper;
-
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
@@ -21,7 +19,7 @@ public class OkDns implements Dns {
     private volatile DnsOverHttps doh;
 
     public synchronized void setDoh(HttpUrl url) {
-        this.doh = url == null ? null : new DnsOverHttps.Builder().client(new OkHttpClient()).url(url).bootstrapDnsHosts(OkHttpHelper.getHosts()).build();
+        this.doh = url == null ? null : new DnsOverHttps.Builder().client(new OkHttpClient()).url(url).bootstrapDnsHosts(OkHttp.getHosts()).build();
     }
 
     public void addAll(List<String> hosts) {
