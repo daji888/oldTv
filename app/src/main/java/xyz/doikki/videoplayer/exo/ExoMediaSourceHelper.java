@@ -30,6 +30,7 @@ import androidx.media3.extractor.ExtractorsFactory;
 import androidx.media3.extractor.ts.DefaultTsPayloadReaderFactory;
 import androidx.media3.extractor.ts.TsExtractor;
 
+import com.github.catvod.net.OkHttp;
 import com.github.tvbox.osc.util.FileUtils;
 import com.google.common.base.Ascii;
 
@@ -37,15 +38,12 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import okhttp3.OkHttpClient;
-
 public final class ExoMediaSourceHelper {
     public static final String HEADER_FORMAT = "TVBox-Format";
     private static volatile ExoMediaSourceHelper sInstance;
     private final Context mAppContext;
     private OkHttpDataSource.Factory mHttpDataSourceFactory;
     private Cache mCache;
-    private OkHttpClient mClient;
 
     @SuppressLint("UnsafeOptInUsageError")
     private ExoMediaSourceHelper(Context context) {
@@ -73,11 +71,6 @@ public final class ExoMediaSourceHelper {
     @SuppressLint("UnsafeOptInUsageError")
     private static synchronized ExtractorsFactory getExtractorsFactory() {
         return new DefaultExtractorsFactory().setTsExtractorFlags(DefaultTsPayloadReaderFactory.FLAG_ENABLE_HDMV_DTS_AUDIO_STREAMS).setTsExtractorTimestampSearchBytes(TsExtractor.DEFAULT_TIMESTAMP_SEARCH_BYTES * 3);
-    }
-
-    public void setOkClient(OkHttpClient client) {
-        mClient = client;
-        mHttpDataSourceFactory = null;
     }
 
     public MediaSource getMediaSource(String uri) {
@@ -220,8 +213,7 @@ public final class ExoMediaSourceHelper {
     @SuppressLint("UnsafeOptInUsageError")
     private OkHttpDataSource.Factory getHttpDataSourceFactory() {
         if (mHttpDataSourceFactory == null) {
-            OkHttpClient client = mClient != null ? mClient : new OkHttpClient.Builder().build();
-            mHttpDataSourceFactory = new OkHttpDataSource.Factory(client);
+            mHttpDataSourceFactory = new OkHttpDataSource.Factory(OkHttp.player());
         }
         return mHttpDataSourceFactory;
     }

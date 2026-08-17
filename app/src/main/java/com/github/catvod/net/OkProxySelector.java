@@ -1,4 +1,4 @@
-package com.github.tvbox.osc.util.net;
+package com.github.catvod.net;
 
 import com.github.tvbox.osc.bean.ProxyRule;
 

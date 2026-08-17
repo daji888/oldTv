@@ -36,6 +36,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.github.catvod.net.OkHttp;
 import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.api.ApiConfig;
 import com.github.tvbox.osc.base.App;
@@ -71,7 +72,6 @@ import com.github.tvbox.osc.util.EpgUtil;
 import com.github.tvbox.osc.util.FastClickCheckUtil;
 import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.LOG;
-import com.github.tvbox.osc.util.OkHttpHelper;
 import com.github.tvbox.osc.util.PlayerHelper;
 import com.github.tvbox.osc.util.live.TxtSubscribe;
 import com.google.gson.Gson;
@@ -105,6 +105,7 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.OkHttpClient;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -359,8 +360,7 @@ public class LivePlayActivity extends BaseActivity {
             } else {
                 epgUrl = epgStringAddress + "?ch=" + URLEncoder.encode(epgTagName, "UTF-8") + "&date=" + timeFormat.format(date);
             }
-            okhttp3.OkHttpClient client = OkHttpHelper.getDefaultClient();
-            if (client == null) client = com.github.catvod.net.OkHttp.client();
+            OkHttpClient client = OkHttp.client();
             client.newCall(new okhttp3.Request.Builder().url(epgUrl).build()).enqueue(new okhttp3.Callback() {
                 @Override
                 public void onFailure(okhttp3.Call call, IOException e) {
