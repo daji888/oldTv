@@ -1109,10 +1109,12 @@ public class PlayActivity extends BaseActivity {
         }
         if (!hasNext) {
             Toast.makeText(this, "已经是最后一集了!", Toast.LENGTH_SHORT).show();
+            if (isProgress) {
+                this.finish();
+            }
             return;
-        } else {
-            mVodInfo.playIndex++;
         }
+        mVodInfo.playIndex++;
         play(false);
     }
 
