@@ -3,10 +3,10 @@ package com.github.tvbox.osc.player.thirdparty;
 import android.app.Activity;
 import android.text.TextUtils;
 
+import com.github.catvod.net.OkHttp;
 import com.github.tvbox.osc.base.App;
 import com.github.tvbox.osc.server.RemoteServer;
 import com.github.tvbox.osc.util.HawkConfig;
-import com.github.tvbox.osc.util.OkHttpHelper;
 import com.orhanobut.hawk.Hawk;
 
 import java.io.IOException;
@@ -134,8 +134,8 @@ public class RemoteTVBox {
     }
 
     public static void post(String url, Map<String, String> params, okhttp3.Callback callback) {
-        OkHttpClient base = OkHttpHelper.getDefaultClient();
-        OkHttpClient.Builder builder = base != null ? base.newBuilder() : new OkHttpClient.Builder().proxySelector(OkHttpHelper.proxySelector()).proxyAuthenticator(OkHttpHelper.proxyAuthenticator());
+        OkHttpClient base = OkHttp.client();
+        OkHttpClient.Builder builder = base != null ? base.newBuilder() : new OkHttpClient.Builder().proxySelector(OkHttp.proxySelector()).proxyAuthenticator(OkHttp.proxyAuthenticator());
         builder.readTimeout(1000, TimeUnit.MILLISECONDS);
         builder.writeTimeout(1000, TimeUnit.MILLISECONDS);
         builder.connectTimeout(1000, TimeUnit.MILLISECONDS);
