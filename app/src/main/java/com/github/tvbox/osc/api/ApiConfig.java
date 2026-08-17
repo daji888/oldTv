@@ -14,6 +14,7 @@ import androidx.media3.common.util.UriUtil;
 import com.github.catvod.crawler.JarLoader;
 import com.github.catvod.crawler.JsLoader;
 import com.github.catvod.crawler.Spider;
+import com.github.catvod.net.OkHttp;
 import com.github.tvbox.osc.base.App;
 import com.github.tvbox.osc.bean.IJKCode;
 import com.github.tvbox.osc.bean.LiveChannelGroup;
@@ -30,7 +31,6 @@ import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.M3U8;
 import com.github.tvbox.osc.util.LOG;
 import com.github.tvbox.osc.util.MD5;
-import com.github.tvbox.osc.util.OkHttpHelper;
 import com.github.tvbox.osc.util.Proxy;
 import com.github.tvbox.osc.util.VideoParseRuler;
 import com.google.gson.Gson;
@@ -59,7 +59,6 @@ import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import okhttp3.OkHttp;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 
@@ -87,7 +86,7 @@ public class ApiConfig {
     private final ExecutorService configLoadExecutor = Executors.newSingleThreadExecutor();
     private final ExecutorService jarLoadExecutor = Executors.newSingleThreadExecutor();
     private final Set<String> warmedSearchSpiderKeys = new HashSet<>();
-    private String userAgent = "okhttp/" + OkHttp.VERSION;
+    private String userAgent = "okhttp/" + okhttp3.OkHttp.VERSION;
 
     private ApiConfig() {
         clearLoader();
@@ -242,8 +241,7 @@ public class ApiConfig {
                     okhttp3.Request request = new okhttp3.Request.Builder()
                             .url(requestUrl)
                             .build();
-                    okhttp3.OkHttpClient client = OkHttpHelper.getDefaultClient();
-                    if (client == null) client = com.github.catvod.net.OkHttp.client();
+                    okhttp3.OkHttpClient client = OkHttp.client();
                     response = client.newCall(request).execute();
                     if (!response.isSuccessful()) {
                         error = "HTTP " + response.code();
@@ -317,8 +315,7 @@ public class ApiConfig {
                             .url(url)
                             .header("User-Agent", userAgent)
                             .build();
-                    okhttp3.OkHttpClient client = OkHttpHelper.getDefaultClient();
-                    if (client == null) client = com.github.catvod.net.OkHttp.client();
+                    okhttp3.OkHttpClient client = OkHttp.client();
                     response = client.newCall(request).execute();
                     if (!response.isSuccessful()) {
                         error = "HTTP " + response.code();
@@ -1254,14 +1251,14 @@ public class ApiConfig {
 
     private void loadProxyRules(JsonObject infoJson) {
         if (!infoJson.has("proxy")) {
-            OkHttpHelper.setProxyList(null);
+            OkHttp.setProxyList(null);
             return;
         }
         try {
-            OkHttpHelper.setProxyList(ProxyRule.arrayFrom(infoJson.get("proxy")));
+            OkHttp.setProxyList(ProxyRule.arrayFrom(infoJson.get("proxy")));
         } catch (Throwable th) {
             th.printStackTrace();
-            OkHttpHelper.setProxyList(null);
+            OkHttp.setProxyList(null);
         }
     }
 
