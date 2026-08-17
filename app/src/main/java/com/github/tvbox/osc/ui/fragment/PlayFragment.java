@@ -62,6 +62,7 @@ import com.github.tvbox.osc.player.controller.VodController;
 import com.github.tvbox.osc.server.ControlManager;
 import com.github.tvbox.osc.server.RemoteServer;
 import com.github.tvbox.osc.subtitle.model.Subtitle;
+import com.github.tvbox.osc.ui.activity.DetailActivity;
 import com.github.tvbox.osc.ui.adapter.SelectDialogAdapter;
 import com.github.tvbox.osc.ui.dialog.SearchSubtitleDialog;
 import com.github.tvbox.osc.ui.dialog.SelectDialog;
@@ -1150,10 +1151,15 @@ public class PlayFragment extends BaseLazyFragment {
         }
         if (!hasNext) {
             Toast.makeText(requireContext(), "已经是最后一集了!", Toast.LENGTH_SHORT).show();
+            if (isProgress) {
+                DetailActivity detailActivity = (DetailActivity) mActivity;
+                if (detailActivity.fullWindows) {
+                    detailActivity.toggleFullPreview();
+                }
+            }
             return;
-        } else {
-            mVodInfo.playIndex++;
         }
+        mVodInfo.playIndex++;
         play(false);
     }
 
