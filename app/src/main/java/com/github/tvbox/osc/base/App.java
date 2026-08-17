@@ -3,6 +3,7 @@ package com.github.tvbox.osc.base;
 import android.app.Activity;
 import android.app.Application;
 
+import com.github.catvod.net.OkHttp;
 import com.github.tvbox.osc.bean.VodInfo;
 import com.github.tvbox.osc.callback.EmptyCallback;
 import com.github.tvbox.osc.callback.LoadingCallback;
@@ -13,7 +14,6 @@ import com.github.tvbox.osc.util.EpgUtil;
 import com.github.tvbox.osc.util.FileUtils;
 import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.LOG;
-import com.github.tvbox.osc.util.OkHttpHelper;
 import com.github.tvbox.osc.util.PlayerHelper;
 import com.hjq.permissions.XXPermissions;
 import com.kingja.loadsir.core.LoadSir;
@@ -43,8 +43,8 @@ public class App extends Application {
         super.onCreate();
         instance = this;
         initParams();
-        // OKGo
-        OkHttpHelper.init(); //台标获取
+        // OkHttp
+        OkHttp.init(); //台标获取
         // 闭关检查模式
         XXPermissions.setCheckMode(false);
         // Get EPG Info
