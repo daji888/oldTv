@@ -1,6 +1,7 @@
 package com.github.catvod.net;
 
 import com.github.tvbox.osc.bean.ProxyRule;
+import com.github.tvbox.osc.util.StringUtils;
 
 import java.io.IOException;
 import java.net.ProxySelector;
@@ -53,7 +54,7 @@ public class OkProxySelector extends ProxySelector {
         for (ProxyRule item : proxy) {
             for (String rule : item.getHosts()) {
                 if (rule == null) continue;
-                if (containOrMatch(host, rule)) {
+                if (StringUtils.containOrMatch(host, rule)) {
                     List<java.net.Proxy> proxies = item.getProxies();
                     return proxies.isEmpty() ? fallback(uri) : proxies;
                 }
@@ -65,13 +66,5 @@ public class OkProxySelector extends ProxySelector {
     @Override
     public void connectFailed(URI uri, SocketAddress socketAddress, IOException e) {
         if (system != null) system.connectFailed(uri, socketAddress, e);
-    }
-
-    private boolean containOrMatch(String text, String rule) {
-        try {
-            return text.contains(rule) || text.matches(rule);
-        } catch (Throwable th) {
-            return false;
-        }
     }
 }

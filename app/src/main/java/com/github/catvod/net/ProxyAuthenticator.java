@@ -3,12 +3,14 @@ package com.github.catvod.net;
 import androidx.annotation.NonNull;
 
 import com.github.tvbox.osc.bean.ProxyRule;
+import com.github.tvbox.osc.util.StringUtils;
+
+import java.net.InetSocketAddress;
+
 import okhttp3.Credentials;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.Route;
-
-import java.net.InetSocketAddress;
 
 public class ProxyAuthenticator implements okhttp3.Authenticator {
 
@@ -43,16 +45,9 @@ public class ProxyAuthenticator implements okhttp3.Authenticator {
 
     private boolean matchesHost(ProxyRule item, String requestHost) {
         for (String host : item.getHosts()) {
-            if (host != null && containOrMatch(requestHost, host)) return true;
+            if (host != null && StringUtils.containOrMatch(requestHost, host)) return true;
         }
         return false;
     }
 
-    private boolean containOrMatch(String text, String rule) {
-        try {
-            return text.contains(rule) || text.matches(rule);
-        } catch (Throwable th) {
-            return false;
-        }
-    }
 }
