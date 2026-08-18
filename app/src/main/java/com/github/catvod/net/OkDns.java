@@ -33,7 +33,7 @@ public class OkDns implements Dns {
             if (host == null) continue;
             String[] splits = host.split("=", 2);
             if (splits.length == 2) {
-                this.hosts.put(splits.trim(), splits.trim());
+                this.hosts.put(splits[0].trim(), splits[1].trim());
             }
         }
     }
