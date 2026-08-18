@@ -7,10 +7,12 @@ import androidx.collection.ArrayMap;
 import com.github.catvod.net.interceptor.AuthInterceptor;
 import com.github.catvod.net.interceptor.RequestInterceptor;
 import com.github.catvod.net.interceptor.ResponseInterceptor;
+import com.github.tvbox.osc.base.App;
 import com.github.tvbox.osc.bean.ProxyRule;
 import com.github.tvbox.osc.util.HawkConfig;
 import com.orhanobut.hawk.Hawk;
 
+import java.io.File;
 import java.net.InetAddress;
 import java.security.cert.X509Certificate;
 import java.security.SecureRandom;
@@ -25,6 +27,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import okhttp3.Cache;
 import okhttp3.Call;
 import okhttp3.FormBody;
 import okhttp3.Headers;
@@ -213,20 +216,31 @@ public class OkHttp {
     }
 
     private static OkHttpClient.Builder getBuilder() {
-        OkHttpClient.Builder builder = new OkHttpClient.Builder().addInterceptor(requestInterceptor()).addInterceptor(authInterceptor()).addNetworkInterceptor(responseInterceptor()).connectTimeout(TIMEOUT, TimeUnit.MILLISECONDS).readTimeout(TIMEOUT, TimeUnit.MILLISECONDS).writeTimeout(TIMEOUT, TimeUnit.MILLISECONDS).dns(dns()).hostnameVerifier((hostname, session) -> true).sslSocketFactory(getSSLContext().getSocketFactory(), trustAllCertificates()).proxySelector(proxySelector()).proxyAuthenticator(proxyAuthenticator());
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         if (Hawk.get(HawkConfig.DEBUG_OPEN, false)) {
             loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         } else {
             loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
         }
-        builder.addInterceptor(loggingInterceptor);
+        OkHttpClient.Builder builder = new OkHttpClient.Builder()
+                    .addInterceptor(requestInterceptor())
+                    .addInterceptor(authInterceptor())
+                    .addNetworkInterceptor(responseInterceptor())
+                    .connectTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
+                    .readTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
+                    .writeTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
+                    .dns(dns())
+                    .hostnameVerifier((hostname, session) -> true)
+                    .sslSocketFactory(getSSLContext().getSocketFactory(), trustAllCertificates())
+                    .proxySelector(proxySelector())
+                    .proxyAuthenticator(proxyAuthenticator())
+                    .addInterceptor(loggingInterceptor);
         return builder;
     }
 
     public static void init() {
         initDnsOverHttps();
-        client = getBuilder().build();
+        client = getBuilder().cache(new Cache(new File(App.getInstance().getCacheDir().getAbsolutePath(), "okhttp_cache"), 100 * 1024 * 1024)).build();
         player = getBuilder().build();
     }
 
