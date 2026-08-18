@@ -16,10 +16,15 @@ import okhttp3.dnsoverhttps.DnsOverHttps;
 public class OkDns implements Dns {
 
     private final ConcurrentHashMap<String, String> hosts = new ConcurrentHashMap<>();
+    private final OkHttpClient okHttpClient = new OkHttpClient();
     private volatile DnsOverHttps doh;
 
-    public synchronized void setDoh(HttpUrl url) {
-        this.doh = url == null ? null : new DnsOverHttps.Builder().client(new OkHttpClient()).url(url).bootstrapDnsHosts(OkHttp.getHosts()).build();
+    public void setDoh(HttpUrl url) {
+        this.doh = url == null ? null : new DnsOverHttps.Builder()
+            .client(okHttpClient)
+            .url(url)
+            .bootstrapDnsHosts(OkHttp.getHosts())
+            .build();
     }
 
     public void addAll(List<String> hosts) {
@@ -27,7 +32,9 @@ public class OkDns implements Dns {
         for (String host : hosts) {
             if (host == null) continue;
             String[] splits = host.split("=", 2);
-            if (splits.length == 2) this.hosts.put(splits[0].trim(), splits[1].trim());
+            if (splits.length == 2) {
+                this.hosts.put(splits.trim(), splits.trim());
+            }
         }
     }
 
@@ -39,7 +46,10 @@ public class OkDns implements Dns {
         String target = hosts.get(hostname);
         if (target != null) return target;
         for (Map.Entry<String, String> entry : hosts.entrySet()) {
-            if (hostname.contains(entry.getKey())) return entry.getValue();
+            String key = entry.getKey();
+            if (hostname.equals(key) || hostname.endsWith("." + key)) {
+                return entry.getValue();
+            }
         }
         return hostname;
     }
