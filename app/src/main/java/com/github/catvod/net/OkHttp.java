@@ -7,12 +7,10 @@ import androidx.collection.ArrayMap;
 import com.github.catvod.net.interceptor.AuthInterceptor;
 import com.github.catvod.net.interceptor.RequestInterceptor;
 import com.github.catvod.net.interceptor.ResponseInterceptor;
-import com.github.tvbox.osc.base.App;
 import com.github.tvbox.osc.bean.ProxyRule;
 import com.github.tvbox.osc.util.HawkConfig;
 import com.orhanobut.hawk.Hawk;
 
-import java.io.File;
 import java.net.InetAddress;
 import java.security.cert.X509Certificate;
 import java.security.SecureRandom;
@@ -27,7 +25,6 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import okhttp3.Cache;
 import okhttp3.Call;
 import okhttp3.FormBody;
 import okhttp3.Headers;
@@ -240,13 +237,12 @@ public class OkHttp {
 
     public static void init() {
         initDnsOverHttps();
-        client = getBuilder().cache(new Cache(new File(App.getInstance().getCacheDir().getAbsolutePath(), "okhttp_cache"), 100 * 1024 * 1024)).build();
-        player = getBuilder().build();
+        client();
+        player();
     }
 
     private static void initDnsOverHttps() {
-        String[] dnsNames = {"运营商", "腾讯", "阿里", "360", "Google", "Cloudflare", "AdGuard", "DNSWatch", "Quad9"};
-        for (String dnsName : dnsNames) {
+        for (String dnsName : DNS_PROVIDERS) {
             if (!dnsHttpsList.contains(dnsName)) {
                 dnsHttpsList.add(dnsName);
             }
@@ -273,7 +269,11 @@ public class OkHttp {
         }
     }
 
-    public static String getDohUrl(int type) {
+    private static final String[] DNS_PROVIDERS = {
+        "运营商", "腾讯", "阿里", "360", "Google", "Cloudflare", "AdGuard", "DNSWatch", "Quad9"
+    };
+
+    public static final String getDohUrl(int type) {
         switch (type) {
             case 1: {
                 return "https://doh.pub/dns-query";
@@ -303,7 +303,7 @@ public class OkHttp {
         return "";
     }
 
-    private static List<String> getBootstrapIps(int type) {
+    private static final List<String> getBootstrapIps(int type) {
         List<String> ipList = new ArrayList<>();
         switch (type) {
         //    case 1: // 腾讯 DNSPod
