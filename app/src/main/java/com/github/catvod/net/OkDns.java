@@ -2,8 +2,10 @@ package com.github.catvod.net;
 
 import androidx.annotation.NonNull;
 
+import com.github.tvbox.osc.base.App;
 import com.github.tvbox.osc.util.StringUtils;
 
+import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.concurrent.ConcurrentHashMap;
@@ -12,20 +14,24 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import okhttp3.Cache;
 import okhttp3.Dns;
+import okhttp3.dnsoverhttps.DnsOverHttps;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
-import okhttp3.dnsoverhttps.DnsOverHttps;
 
 public class OkDns implements Dns {
 
     private final ConcurrentHashMap<String, String> hosts = new ConcurrentHashMap<>();
-    private final OkHttpClient okHttpClient = new OkHttpClient();
+    private OkHttpClient bootstrapClient = new OkHttpClient();
     private volatile DnsOverHttps doh;
 
     public void setDoh(HttpUrl url) {
+        bootstrapClient = new OkHttpClient.Builder()
+            .cache(new Cache(new File(App.getInstance().getCacheDir().getAbsolutePath(), "okhttpcache"), 10 * 1024 * 1024))
+            .build();
         this.doh = url == null ? null : new DnsOverHttps.Builder()
-            .client(okHttpClient)
+            .client(bootstrapClient)
             .url(url)
             .bootstrapDnsHosts(OkHttp.getHosts())
             .build();
