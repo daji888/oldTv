@@ -70,8 +70,9 @@ dependencies {
     implementation 'androidx.room:room-runtime:2.8.4'
     annotationProcessor 'androidx.room:room-compiler:2.8.4'
     implementation 'com.github.albfernandez:juniversalchardet:2.5.0'
-    implementation 'com.github.bumptech.glide:glide:5.0.5'
-    annotationProcessor 'com.github.bumptech.glide:compiler:5.0.5'
+    implementation 'com.github.bumptech.glide:glide:5.0.9'
+    annotationProcessor 'com.github.bumptech.glide:compiler:5.0.9'
+    implementation "com.github.bumptech.glide:okhttp3-integration:5.0.9"
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.50'  //别升级
     implementation 'com.github.getActivity:XXPermissions:28.0'
     implementation 'com.github.hedzr:android-file-chooser:v1.2.0-final'  //2022年
