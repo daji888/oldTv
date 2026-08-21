@@ -32,9 +32,6 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.github.catvod.net.OkHttp;
 import com.github.tvbox.osc.R;
@@ -71,6 +68,7 @@ import com.github.tvbox.osc.util.EpgNameFuzzyMatch;
 import com.github.tvbox.osc.util.EpgUtil;
 import com.github.tvbox.osc.util.FastClickCheckUtil;
 import com.github.tvbox.osc.util.HawkConfig;
+import com.github.tvbox.osc.util.ImgUtil;
 import com.github.tvbox.osc.util.LOG;
 import com.github.tvbox.osc.util.PlayerHelper;
 import com.github.tvbox.osc.util.live.TxtSubscribe;
@@ -167,16 +165,16 @@ public class LivePlayActivity extends BaseActivity {
     private View divLoadEpg;
     private View divLoadEpgleft;
     private LinearLayout divEpg;
-    RelativeLayout ll_epg;
-    TextView tv_channelnum;
-    TextView tip_chname;
-    TextView tip_epg1;
-    TextView tip_epg2;
-    TextView tv_current_program_name;
-    TextView tv_next_program_name;
-    TextView tv_srcinfo;
-    TextView tv_curepg_left;
-    TextView tv_nextepg_left;
+    private RelativeLayout ll_epg;
+    private TextView tv_channelnum;
+    private TextView tip_chname;
+    private TextView tip_epg1;
+    private TextView tip_epg2;
+    private TextView tv_current_program_name;
+    private TextView tv_next_program_name;
+    private TextView tv_srcinfo;
+    private TextView tv_curepg_left;
+    private TextView tv_nextepg_left;
     private TextView tv_videosize;
     private TextView tv_play_load_net_speed_right_top;
     private TextView tv_right_top_type;
@@ -203,14 +201,14 @@ public class LivePlayActivity extends BaseActivity {
     private ImageView imgLiveIcon;
     private FrameLayout liveIconNullBg;
     private TextView liveIconNullText;
-    SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd");
     private View backcontroller;
     private CountDownTimer countDownTimer3;
     private TextView tv_currentpos;
     private TextView tv_duration;
     private SeekBar sBar;
     private  boolean show = false;
-    boolean mIsDragging;
+    private boolean mIsDragging;
     private LiveController controller;
 
     @Override
@@ -429,12 +427,12 @@ public class LivePlayActivity extends BaseActivity {
     private void showBottomEpg() {
         if (isSHIYI) return;
         if (channel_Name.getChannelName() != null) {
-            ((TextView) findViewById(R.id.tv_channel_bar_name)).setText(channel_Name.getChannelName());
-            ((TextView) findViewById(R.id.tv_channel_bottom_number)).setText("" + channel_Name.getChannelNum());
+            tip_chname.setText(channel_Name.getChannelName());
+            tv_channelnum.setText("" + channel_Name.getChannelNum());
             tip_epg1.setText("00:00 - 23:59");
-            ((TextView) findViewById(R.id.tv_current_program_name)).setText("精彩节目-暂未提供节目预告信息");
+            tv_current_program_name.setText("精彩节目-暂未提供节目预告信息");
             tip_epg2.setText("00:00 - 23:59");
-            ((TextView) findViewById(R.id.tv_next_program_name)).setText("精彩节目-暂未提供节目预告信息");
+            tv_next_program_name.setText("精彩节目-暂未提供节目预告信息");
             String savedEpgKey = channel_Name.getChannelName() + "_" + liveEpgDateAdapter.getItem(liveEpgDateAdapter.getSelectedIndex()).getDatePresented();
             if (hsEpg.containsKey(savedEpgKey)) {
                 String[] epgInfo = EpgUtil.getEpgInfo(channel_Name.getChannelName());
@@ -446,16 +444,16 @@ public class LivePlayActivity extends BaseActivity {
                     while (size >= 0) {
                         if (new Date().compareTo(((Epginfo) arrayList.get(size)).startdateTime) >= 0 & new Date().compareTo(((Epginfo) arrayList.get(size)).enddateTime) <= 0) {
                             tip_epg1.setText(((Epginfo) arrayList.get(size)).start + " - " + ((Epginfo) arrayList.get(size)).end);
-                            ((TextView) findViewById(R.id.tv_current_program_name)).setText(((Epginfo) arrayList.get(size)).title);
+                            tv_current_program_name.setText(((Epginfo) arrayList.get(size)).title);
                             if (size != arrayList.size() - 1) {
                                 tip_epg2.setText(((Epginfo) arrayList.get(size + 1)).start + " - " + ((Epginfo) arrayList.get(size + 1)).end);
-                                ((TextView) findViewById(R.id.tv_next_program_name)).setText(((Epginfo) arrayList.get(size + 1)).title);
+                                tv_next_program_name.setText(((Epginfo) arrayList.get(size + 1)).title);
                             } else {
                                 tip_epg2.setText("00:00 - 23:59");
-                                if (((TextView) findViewById(R.id.tv_current_program_name)).getText().equals("精彩节目-暂未提供节目预告信息")) {
-                                    ((TextView) findViewById(R.id.tv_next_program_name)).setText("精彩节目-暂未提供节目预告信息");
+                                if (tv_current_program_name.getText().equals("精彩节目-暂未提供节目预告信息")) {
+                                    tv_next_program_name.setText("精彩节目-暂未提供节目预告信息");
                                 } else {    
-                                    ((TextView) findViewById(R.id.tv_next_program_name)).setText("精彩节目-明日继续");
+                                    tv_next_program_name.setText("精彩节目-明日继续");
                                 }    
                             }
                             break;
@@ -496,9 +494,9 @@ public class LivePlayActivity extends BaseActivity {
                 tv_top_r_container.setVisibility(View.GONE);
             }
             if (channel_Name == null || channel_Name.getSourceNum() <= 0) {
-                ((TextView) findViewById(R.id.tv_source)).setText("1 / 1");
+                tv_srcinfo.setText("1 / 1");
             } else {
-                ((TextView) findViewById(R.id.tv_source)).setText("线路 : " + (channel_Name.getSourceIndex() + 1) + " / " + channel_Name.getSourceNum());
+                tv_srcinfo.setText("线路 : " + (channel_Name.getSourceIndex() + 1) + " / " + channel_Name.getSourceNum());
             }
         }
     }
@@ -510,40 +508,11 @@ public class LivePlayActivity extends BaseActivity {
             imgLiveIcon.setVisibility(View.INVISIBLE);
             liveIconNullText.setText("" + channel_Name.getChannelNum());
         } else {
-            RequestOptions options = new RequestOptions();
-            options.diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                    .placeholder(R.drawable.app_banner);
-            Glide.with(App.getInstance())
-                    .load(logoUrl)
-                    .apply(options)
-                    .into(imgLiveIcon);
+            ImgUtil.loadChannelIcon(logoUrl, imgLiveIcon);
             imgLiveIcon.setVisibility(View.VISIBLE);
             liveIconNullBg.setVisibility(View.INVISIBLE);
             liveIconNullText.setVisibility(View.INVISIBLE);
         }
-    }
-
-    private void updateCurrentChannelIcon() {
-        if (channel_Name == null || channel_Name.getChannelName() == null) {
-            return;
-        }
-        String channelName = channel_Name.getChannelName();
-        String epgTagName = channelName;
-        String iconUrl = null;
-        if (!channel_Name.getChannelLogo().isEmpty()) {
-            iconUrl = channel_Name.getChannelLogo();
-        } else if (logoUrl == null || logoUrl.isEmpty()) {
-            String[] epgInfo = EpgUtil.getEpgInfo(channelName);
-            if (epgInfo != null) {
-                iconUrl = epgInfo[0];
-                if (!epgInfo[1].isEmpty()) {
-                    epgTagName = epgInfo[1];
-                }
-            }
-        } else if (!logoUrl.equals("false")) {
-            iconUrl = logoUrl.replace("{name}", epgTagName);
-        }
-        updateChannelIcon(channelName, iconUrl);
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -934,7 +903,6 @@ public class LivePlayActivity extends BaseActivity {
         } else {
             currentLiveChannelItem.setinclude_back(false);
         }
-        updateCurrentChannelIcon();
         showBottomEpg();
         getEpg(new Date());
         backcontroller.setVisibility(View.GONE);

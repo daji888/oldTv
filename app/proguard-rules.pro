@@ -105,6 +105,11 @@
 -dontwarn android.media.**
 -dontwarn org.chromium.**
 
+# OkHttpGlideModule
+-keep class com.bumptech.glide.integration.okhttp3.OkHttpGlideModule {
+    <init>();
+}
+
 #okhttp
 -dontwarn okhttp3.**
 -keep class okhttp3.**{*;}
