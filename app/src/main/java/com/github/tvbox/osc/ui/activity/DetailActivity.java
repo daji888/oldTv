@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.TextPaint;
@@ -655,9 +656,13 @@ public class DetailActivity extends BaseActivity {
     }
 
     private String removeHtmlTag(String info) {
-        if (info == null)
+        if (TextUtils.isEmpty(info))
             return "";
-        return info.replaceAll("\\<.*?\\>", "").replaceAll("\\s", "");
+        String text = info.replaceAll("\\[a=cr:(?:\\{.*?\\}|\\[.*?\\])\\/](.*?)\\[\\/a]", "$1");
+        text = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                ? Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY).toString()
+                : Html.fromHtml(text).toString();
+        return text.replaceAll("\\s", "");
     }
 
     private void initViewModel() {
@@ -694,8 +699,8 @@ public class DetailActivity extends BaseActivity {
                     } else {
                     	setTextShow(tvType, "类型：", mVideo.type);
                     }
-                    setTextShow(tvActor, "演员：", mVideo.actor);
-                    setTextShow(tvDirector, "导演：", mVideo.director);
+                    setTextShow(tvActor, "演员：", removeHtmlTag(mVideo.actor));
+                    setTextShow(tvDirector, "导演：", removeHtmlTag(mVideo.director));
                     setTextShow(tvDes, "内容简介：", removeHtmlTag(mVideo.des));
                     if (!TextUtils.isEmpty(mVideo.pic)) {
                         ImgUtil.load(mVideo.pic, ivThumb, 10);
