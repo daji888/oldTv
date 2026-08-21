@@ -13,6 +13,7 @@ import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
+import com.bumptech.glide.load.MultiTransformation;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestListener;
@@ -55,7 +56,7 @@ public class ImgUtil {
             .fallback(R.drawable.img_loading_placeholder)
             .listener(getListener(view))
             .dontAnimate()
-            .transform(new CenterCrop(), new RoundedCorners(roundingRadius))
+            .transform(new MultiTransformation<Bitmap>(new CenterCrop(), new RoundedCorners(roundingRadius)))
             .into(view);
     }
 
