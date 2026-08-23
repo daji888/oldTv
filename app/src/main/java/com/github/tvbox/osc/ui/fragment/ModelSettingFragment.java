@@ -30,7 +30,6 @@ import com.github.tvbox.osc.ui.dialog.BackupDialog;
 import com.github.tvbox.osc.ui.dialog.SearchRemoteTvDialog;
 import com.github.tvbox.osc.ui.dialog.SelectDialog;
 import com.github.tvbox.osc.ui.dialog.ResetDialog;
-import com.github.tvbox.osc.ui.dialog.XWalkInitDialog;
 import com.github.tvbox.osc.util.DefaultConfig;
 import com.github.tvbox.osc.util.FastClickCheckUtil;
 import com.github.tvbox.osc.util.FileUtils;
@@ -121,7 +120,6 @@ public class ModelSettingFragment extends BaseLazyFragment {
         tvSearchView = findViewById(R.id.tvSearchView);
         tvIjkCachePlay = findViewById(R.id.tvIjkCachePlay);
         tvDebugOpen.setText(Hawk.get(HawkConfig.DEBUG_OPEN, false) ? "已开启" : "已关闭");
-        tvParseWebView.setText(Hawk.get(HawkConfig.PARSE_WEBVIEW, true) ? "系统自带" : "XWalkView");
         tvApi.setText(Hawk.get(HawkConfig.API_URL, ""));
         tvLiveApi.setText(Hawk.get(HawkConfig.LIVE_URL, ""));
         tvEpgApi.setText(Hawk.get(HawkConfig.EPG_URL, ""));
@@ -150,20 +148,7 @@ public class ModelSettingFragment extends BaseLazyFragment {
         findViewById(R.id.llParseWebVew).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FastClickCheckUtil.check(v);
-                boolean useSystem = !Hawk.get(HawkConfig.PARSE_WEBVIEW, true);
-                Hawk.put(HawkConfig.PARSE_WEBVIEW, useSystem);
-                tvParseWebView.setText(Hawk.get(HawkConfig.PARSE_WEBVIEW, true) ? "系统自带" : "XWalkView");
-                if (!useSystem) {
-                    Toast.makeText(mContext, "注意: XWalkView只适用于部分低Android版本，Android5.0以上推荐使用系统自带", Toast.LENGTH_LONG).show();
-                    XWalkInitDialog dialog = new XWalkInitDialog(mContext);
-                    dialog.setOnListener(new XWalkInitDialog.OnListener() {
-                        @Override
-                        public void onchange() {
-                        }
-                    });
-                    dialog.show();
-                }
+                return;
             }
         });
         findViewById(R.id.llBackup).setOnClickListener(new View.OnClickListener() {
