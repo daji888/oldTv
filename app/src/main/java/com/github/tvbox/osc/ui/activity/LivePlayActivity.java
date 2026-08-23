@@ -1068,8 +1068,8 @@ public class LivePlayActivity extends BaseActivity {
                 if (selectedData == null) return;
                 String targetDate = dateFormat.format(date);
                 assert selectedData != null;
-                String shiyiStartdate = targetDate + selectedData.originStart.replace(":", "") + "00";
-                String shiyiEnddate = targetDate + selectedData.originEnd.replace(":", "") + "00";
+                String shiyiStartdate = targetDate + selectedData.originStart.replace(":", "") + "25";
+                String shiyiEnddate = targetDate + selectedData.originEnd.replace(":", "") + "25";
                 Date now = new Date();
                 epgListAdapter.setSelectedEpgIndex(position);
    /*             if (now.compareTo(selectedData.startdateTime) >= 0 && now.compareTo(selectedData.enddateTime) <= 0) {
@@ -1086,85 +1086,84 @@ public class LivePlayActivity extends BaseActivity {
                 if (now.compareTo(selectedData.startdateTime) < 0) {
                     return;
            //     } else if (hasCatchup || currentChannelHasCatchup() || shiyiUrl.contains("/PLTV/") || shiyiUrl.contains("/TVOD/")) {
-                } else {    
-                    shiyiUrl = shiyiUrl.replaceAll("/PLTV/", "/TVOD/");
-                    mHandler.removeCallbacks(mHideChannelListRun);
-                    mHandler.postDelayed(mHideChannelListRun, 100);
-                    mVideoView.release();
-                    shiyi_time = shiyiStartdate + "-" + shiyiEnddate;
-                    isSHIYI = true;
-                    if (hasCurrentCatchupTemplate()) {
-                        JsonObject catchupObj = currentCatchup();
-                        if (catchupObj == null) return;
-                        String replace = catchupObj.has("replace") ? catchupObj.get("replace").getAsString() : "";
-                        String source = catchupObj.has("source") ? catchupObj.get("source").getAsString() : "";
-                        if (source.isEmpty()) return;
-                        if (!replace.isEmpty()) {
-                            String[] parts = replace.split(",", 2);
-                            if (parts.length == 2) {
-                                if (!parts[0].trim().isEmpty()) {
-                                    shiyiUrl = shiyiUrl.replaceAll(parts[0].trim(), parts[1].trim());
-                                }
+                }   
+                shiyiUrl = shiyiUrl.replaceAll("/PLTV/", "/TVOD/");
+                mHandler.removeCallbacks(mHideChannelListRun);
+                mHandler.postDelayed(mHideChannelListRun, 100);
+                mVideoView.release();
+                shiyi_time = shiyiStartdate + "-" + shiyiEnddate;
+                isSHIYI = true;
+                if (hasCurrentCatchupTemplate()) {
+                    JsonObject catchupObj = currentCatchup();
+                    if (catchupObj == null) return;
+                    String replace = catchupObj.has("replace") ? catchupObj.get("replace").getAsString() : "";
+                    String source = catchupObj.has("source") ? catchupObj.get("source").getAsString() : "";
+                    if (source.isEmpty()) return;
+                    if (!replace.isEmpty()) {
+                        String[] parts = replace.split(",", 2);
+                        if (parts.length == 2) {
+                            if (!parts[0].trim().isEmpty()) {
+                                shiyiUrl = shiyiUrl.replaceAll(parts[0].trim(), parts[1].trim());
                             }
-                        }
-                        long startTimestamp = selectedData.startdateTime.getTime() / 1000;
-                        long endTimestamp = selectedData.enddateTime.getTime() / 1000;
-                        // 正则表达式：匹配 ${(b)...} 或 ${(e)...}
-                        Pattern pattern = getPattern("\\$\\{\\((b|e)\\)(.*?)\\}");
-                        Matcher matcher = pattern.matcher(source);
-                        StringBuffer result = new StringBuffer();
-                        while (matcher.find()) {
-                            String shiyiDatetime = matcher.group(1); // 捕获 b 或 e
-                            // 生成替换值（如 "20231023150000"）
-                            String replacement = "b".equals(shiyiDatetime) ? shiyiStartdate : shiyiEnddate;
-                            // 将 ${(b)yyyyMMddHHmmss} 替换为 "20231023150000"
-                            assert replacement != null;
-                            matcher.appendReplacement(result, Matcher.quoteReplacement(replacement));
-                        }
-                        matcher.appendTail(result);
-                        source = result.toString();
-                        source = source.replace("${b}", shiyiStartdate);
-                        source = source.replace("${e}", shiyiEnddate);
-                        source = source.replace("${utc}", String.valueOf(startTimestamp));
-                        source = source.replace("${timestamp}", String.valueOf(startTimestamp));
-                        source = source.replace("${duration}", String.valueOf(endTimestamp - startTimestamp));
-                        if (source.startsWith("http")) {
-                            shiyiUrl = source;
-                        } else {
-                            if (shiyiUrl.contains("?")) {
-                                shiyiUrl = shiyiUrl + "&" + source;
-                            } else {
-                                shiyiUrl = shiyiUrl + "?" + source;
-                            }
-                        }
-                        if (shiyiUrl.endsWith("&") || shiyiUrl.endsWith("?")) shiyiUrl = shiyiUrl.substring(0, shiyiUrl.length() - 1);
-                        LOG.i("echo-shiyiurl:" + shiyiUrl);
-                    } else {
-                        if (shiyiUrl.indexOf("?") <= 0) {
-                            shiyiUrl += "?playseek=" + shiyi_time;
-                        } else if (shiyiUrl.indexOf("playseek") > 0) {
-                            shiyiUrl = shiyiUrl.replaceAll("playseek=(.*)", "playseek=" + shiyi_time);
-                        } else {
-                            shiyiUrl += "&playseek=" + shiyi_time;
                         }
                     }
-                    LOG.i("echo-回看地址playUrl :" + shiyiUrl);
-                    playUrl = shiyiUrl;
-                    mVideoView.setUrl(playUrl, liveChannelHeader());
-                    mVideoView.start();
-                    epgListAdapter.setShiyiSelection(position, true, timeFormat.format(date));
-                    epgListAdapter.notifyDataSetChanged();
-                    mRightEpgList.setSelectedPosition(position);
-                    mRightEpgList.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            mRightEpgList.smoothScrollToPosition(position);
+                    long startTimestamp = selectedData.startdateTime.getTime() / 1000;
+                    long endTimestamp = selectedData.enddateTime.getTime() / 1000;
+                    // 正则表达式：匹配 ${(b)...} 或 ${(e)...}
+                    Pattern pattern = getPattern("\\$\\{\\((b|e)\\)(.*?)\\}");
+                    Matcher matcher = pattern.matcher(source);
+                    StringBuffer result = new StringBuffer();
+                    while (matcher.find()) {
+                        String shiyiDatetime = matcher.group(1); // 捕获 b 或 e
+                        // 生成替换值（如 "20231023150000"）
+                        String replacement = "b".equals(shiyiDatetime) ? shiyiStartdate : shiyiEnddate;
+                        // 将 ${(b)yyyyMMddHHmmss} 替换为 "20231023150000"
+                        assert replacement != null;
+                        matcher.appendReplacement(result, Matcher.quoteReplacement(replacement));
+                    }
+                    matcher.appendTail(result);
+                    source = result.toString();
+                    source = source.replace("${b}", shiyiStartdate);
+                    source = source.replace("${e}", shiyiEnddate);
+                    source = source.replace("${utc}", String.valueOf(startTimestamp));
+                    source = source.replace("${timestamp}", String.valueOf(startTimestamp));
+                    source = source.replace("${duration}", String.valueOf(endTimestamp - startTimestamp));
+                    if (source.startsWith("http")) {
+                        shiyiUrl = source;
+                    } else {
+                        if (shiyiUrl.contains("?")) {
+                            shiyiUrl = shiyiUrl + "&" + source;
+                        } else {
+                            shiyiUrl = shiyiUrl + "?" + source;
                         }
-                    });
-                    showProgressBars(true);
-                    ll_right_top_huikan.setVisibility(View.VISIBLE);
-                    isBack = true;
+                    }
+                    if (shiyiUrl.endsWith("&") || shiyiUrl.endsWith("?")) shiyiUrl = shiyiUrl.substring(0, shiyiUrl.length() - 1);
+                    LOG.i("echo-shiyiurl:" + shiyiUrl);
+                } else {
+                    if (shiyiUrl.indexOf("?") <= 0) {
+                        shiyiUrl += "?playseek=" + shiyi_time;
+                    } else if (shiyiUrl.indexOf("playseek") > 0) {
+                        shiyiUrl = shiyiUrl.replaceAll("playseek=(.*)", "playseek=" + shiyi_time);
+                    } else {
+                        shiyiUrl += "&playseek=" + shiyi_time;
+                    }
                 }
+                LOG.i("echo-回看地址playUrl :" + shiyiUrl);
+                playUrl = shiyiUrl;
+                mVideoView.setUrl(playUrl, liveChannelHeader());
+                mVideoView.start();
+                epgListAdapter.setShiyiSelection(position, true, timeFormat.format(date));
+                epgListAdapter.notifyDataSetChanged();
+                mRightEpgList.setSelectedPosition(position);
+                mRightEpgList.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mRightEpgList.smoothScrollToPosition(position);
+                    }
+                });
+                showProgressBars(true);
+                ll_right_top_huikan.setVisibility(View.VISIBLE);
+                isBack = true;
             }
         });
 
@@ -1183,8 +1182,8 @@ public class LivePlayActivity extends BaseActivity {
                 assert selectedData != null;
                 LOG.i("echo-targetDate" + targetDate);
                 LOG.i("echo-targethm" + selectedData.originStart.replace(":", ""));
-                String shiyiStartdate = targetDate + selectedData.originStart.replace(":", "") + "00";
-                String shiyiEnddate = targetDate + selectedData.originEnd.replace(":", "") + "00";
+                String shiyiStartdate = targetDate + selectedData.originStart.replace(":", "") + "25";
+                String shiyiEnddate = targetDate + selectedData.originEnd.replace(":", "") + "25";
                 Date now = new Date();
                 epgListAdapter.setSelectedEpgIndex(position);
         /*        if (now.compareTo(selectedData.startdateTime) >= 0 && now.compareTo(selectedData.enddateTime) <= 0) {
@@ -1201,86 +1200,85 @@ public class LivePlayActivity extends BaseActivity {
                 if (now.compareTo(selectedData.startdateTime) < 0) {
                     return;
             //    } else if (hasCatchup || currentChannelHasCatchup() || shiyiUrl.contains("/PLTV/") || shiyiUrl.contains("/TVOD/")) {
-                } else {    
-                    shiyiUrl = shiyiUrl.replaceAll("/PLTV/", "/TVOD/");
-                    mHandler.removeCallbacks(mHideChannelListRun);
-                    mHandler.postDelayed(mHideChannelListRun, 100);
-                    mVideoView.release();
-                    shiyi_time = shiyiStartdate + "-" + shiyiEnddate;
-                    isSHIYI = true;
-                    if (hasCurrentCatchupTemplate()) {
-                        JsonObject catchupObj = currentCatchup();
-                        if (catchupObj == null) return;
-                        String replace = catchupObj.has("replace") ? catchupObj.get("replace").getAsString() : "";
-                        String source = catchupObj.has("source") ? catchupObj.get("source").getAsString() : "";
-                        if (source.isEmpty()) return;
-                        if (!replace.isEmpty()) {
-                            String[] parts = replace.split(",", 2);
-                            if (parts.length == 2) {
-                                if (!parts[0].trim().isEmpty()) {
-                                    shiyiUrl = shiyiUrl.replaceAll(parts[0].trim(), parts[1].trim());
-                                }
+                }    
+                shiyiUrl = shiyiUrl.replaceAll("/PLTV/", "/TVOD/");
+                mHandler.removeCallbacks(mHideChannelListRun);
+                mHandler.postDelayed(mHideChannelListRun, 100);
+                mVideoView.release();
+                shiyi_time = shiyiStartdate + "-" + shiyiEnddate;
+                isSHIYI = true;
+                if (hasCurrentCatchupTemplate()) {
+                    JsonObject catchupObj = currentCatchup();
+                    if (catchupObj == null) return;
+                    String replace = catchupObj.has("replace") ? catchupObj.get("replace").getAsString() : "";
+                    String source = catchupObj.has("source") ? catchupObj.get("source").getAsString() : "";
+                    if (source.isEmpty()) return;
+                    if (!replace.isEmpty()) {
+                        String[] parts = replace.split(",", 2);
+                        if (parts.length == 2) {
+                            if (!parts[0].trim().isEmpty()) {
+                                shiyiUrl = shiyiUrl.replaceAll(parts[0].trim(), parts[1].trim());
                             }
-                        }
-                        long startTimestamp = selectedData.startdateTime.getTime() / 1000;
-                        long endTimestamp = selectedData.enddateTime.getTime() / 1000;
-                        // 正则表达式：匹配 ${(b)...} 或 ${(e)...}
-                        Pattern pattern = getPattern("\\$\\{\\((b|e)\\)(.*?)\\}");
-                        Matcher matcher = pattern.matcher(source);
-                        StringBuffer result = new StringBuffer();
-                        while (matcher.find()) {
-                            String shiyiDatetime = matcher.group(1); // 捕获 b 或 e
-                            // 生成替换值（如 "20231023150000"）
-                            String replacement = "b".equals(shiyiDatetime) ? shiyiStartdate : shiyiEnddate;
-                            // 将 ${(b)yyyyMMddHHmmss} 替换为 "20231023150000"
-                            assert replacement != null;
-                            matcher.appendReplacement(result, Matcher.quoteReplacement(replacement));
-                        }
-                        matcher.appendTail(result);
-                        source = result.toString();
-                        source = source.replace("${b}", shiyiStartdate);
-                        source = source.replace("${e}", shiyiEnddate);
-                        source = source.replace("${utc}", String.valueOf(startTimestamp));
-                        source = source.replace("${timestamp}", String.valueOf(startTimestamp));
-                        source = source.replace("${duration}", String.valueOf(endTimestamp - startTimestamp));
-                        if (source.startsWith("http")) {
-                            shiyiUrl = source;
-                        } else {
-                            if (shiyiUrl.contains("?")) {
-                                shiyiUrl = shiyiUrl + "&" + source;
-                            } else {
-                                shiyiUrl = shiyiUrl + "?" + source;
-                            }
-                        }
-                        if (shiyiUrl.endsWith("&") || shiyiUrl.endsWith("?")) shiyiUrl = shiyiUrl.substring(0, shiyiUrl.length() - 1);
-                        LOG.i("echo-shiyiurl:" + shiyiUrl);
-                    } else {
-                        if (shiyiUrl.indexOf("?") <= 0) {
-                            shiyiUrl += "?playseek=" + shiyi_time;
-                        } else if (shiyiUrl.indexOf("playseek") > 0) {
-                            shiyiUrl = shiyiUrl.replaceAll("playseek=(.*)", "playseek=" + shiyi_time);
-                        } else {
-                            shiyiUrl += "&playseek=" + shiyi_time;
                         }
                     }
-                    LOG.i("echo-回看地址playUrl :" + shiyiUrl);
-                    playUrl = shiyiUrl;
-                    if (liveChannelHeader() != null) LOG.i("echo-liveChannelHeader :" + liveChannelHeader().toString());
-                    mVideoView.setUrl(playUrl, liveChannelHeader());
-                    mVideoView.start();
-                    epgListAdapter.setShiyiSelection(position, true,timeFormat.format(date));
-                    epgListAdapter.notifyDataSetChanged();
-                    mRightEpgList.setSelectedPosition(position);
-                    mRightEpgList.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            mRightEpgList.smoothScrollToPosition(position);
+                    long startTimestamp = selectedData.startdateTime.getTime() / 1000;
+                    long endTimestamp = selectedData.enddateTime.getTime() / 1000;
+                    // 正则表达式：匹配 ${(b)...} 或 ${(e)...}
+                    Pattern pattern = getPattern("\\$\\{\\((b|e)\\)(.*?)\\}");
+                    Matcher matcher = pattern.matcher(source);
+                    StringBuffer result = new StringBuffer();
+                    while (matcher.find()) {
+                        String shiyiDatetime = matcher.group(1); // 捕获 b 或 e
+                        // 生成替换值（如 "20231023150000"）
+                        String replacement = "b".equals(shiyiDatetime) ? shiyiStartdate : shiyiEnddate;
+                        // 将 ${(b)yyyyMMddHHmmss} 替换为 "20231023150000"
+                        assert replacement != null;
+                        matcher.appendReplacement(result, Matcher.quoteReplacement(replacement));
+                    }
+                    matcher.appendTail(result);
+                    source = result.toString();
+                    source = source.replace("${b}", shiyiStartdate);
+                    source = source.replace("${e}", shiyiEnddate);
+                    source = source.replace("${utc}", String.valueOf(startTimestamp));
+                    source = source.replace("${timestamp}", String.valueOf(startTimestamp));
+                    source = source.replace("${duration}", String.valueOf(endTimestamp - startTimestamp));
+                    if (source.startsWith("http")) {
+                        shiyiUrl = source;
+                    } else {
+                        if (shiyiUrl.contains("?")) {
+                            shiyiUrl = shiyiUrl + "&" + source;
+                        } else {
+                            shiyiUrl = shiyiUrl + "?" + source;
                         }
-                    });
-                    showProgressBars(true);
-                    ll_right_top_huikan.setVisibility(View.VISIBLE);
-                    isBack = true;
+                    }
+                    if (shiyiUrl.endsWith("&") || shiyiUrl.endsWith("?")) shiyiUrl = shiyiUrl.substring(0, shiyiUrl.length() - 1);
+                    LOG.i("echo-shiyiurl:" + shiyiUrl);
+                } else {
+                    if (shiyiUrl.indexOf("?") <= 0) {
+                        shiyiUrl += "?playseek=" + shiyi_time;
+                    } else if (shiyiUrl.indexOf("playseek") > 0) {
+                        shiyiUrl = shiyiUrl.replaceAll("playseek=(.*)", "playseek=" + shiyi_time);
+                    } else {
+                        shiyiUrl += "&playseek=" + shiyi_time;
+                    }
                 }
+                LOG.i("echo-回看地址playUrl :" + shiyiUrl);
+                playUrl = shiyiUrl;
+                if (liveChannelHeader() != null) LOG.i("echo-liveChannelHeader :" + liveChannelHeader().toString());
+                mVideoView.setUrl(playUrl, liveChannelHeader());
+                mVideoView.start();
+                epgListAdapter.setShiyiSelection(position, true,timeFormat.format(date));
+                epgListAdapter.notifyDataSetChanged();
+                mRightEpgList.setSelectedPosition(position);
+                mRightEpgList.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mRightEpgList.smoothScrollToPosition(position);
+                    }
+                });
+                showProgressBars(true);
+                ll_right_top_huikan.setVisibility(View.VISIBLE);
+                isBack = true;
             }
         });
     }

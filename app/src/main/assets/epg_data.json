@@ -30,14 +30,14 @@
   }, {
     "tvid": "5",
     "epgid": "CCTV5",
-    "name": "CCTV-5体育,CCTV-5,CCTV5,CCTV5体育,CCTV5plus",
+    "name": "CCTV-5体育,CCTV-5,CCTV5,CCTV5体育",
     "status": "1",
     "note": "CCTV-5体育",
     "logo": "http://epg.51zmt.top:8000/tb1/CCTV/CCTV5.png"
   }, {
     "tvid": "6",
     "epgid": "CCTV5+",
-    "name": "CCTV5+,CCTV5⁺体育赛事,CCTV5⁺,CCTV-5⁺,CCTV-5⁺体育赛事,CCTV-体育赛事",
+    "name": "CCTV5+,CCTV5+体育赛事,CCTV-5+,CCTV-5+体育赛事,CCTV5⁺体育赛事,CCTV5⁺,CCTV-5⁺,CCTV-5⁺体育赛事,CCTV-体育赛事,CCTV5plus,CCTV5Plus,CCTV5PLUS,CCTV5p,CCTV5P",
     "status": "1",
     "note": "CCTV-5⁺体育赛事",
     "logo": "http://epg.51zmt.top:8000/tb1/CCTV/CCTV5+.png"
