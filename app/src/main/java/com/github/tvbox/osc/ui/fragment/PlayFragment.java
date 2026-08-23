@@ -1896,7 +1896,7 @@ public class PlayFragment extends BaseLazyFragment {
              super.onPageFinished(view, url);
              LOG.i("echo-onPageFinished url:" + url);
              if (!url.equals("about:blank")) {
-                mController.evaluateScript(sourceBean, url, view, null);
+                mController.evaluateScript(sourceBean, url, view);
             }
             mHandler.sendEmptyMessage(200);
         }
