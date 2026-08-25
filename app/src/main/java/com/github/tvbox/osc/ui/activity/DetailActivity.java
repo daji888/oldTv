@@ -78,10 +78,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -533,32 +529,28 @@ public class DetailActivity extends BaseActivity {
 //            bundle.putSerializable("VodInfo", vodInfo);
             App.getInstance().setVodInfo(vodInfo);
             if (showPreview) {
-                if (previewVodInfo == null) {
-                    try {
-                        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                        ObjectOutputStream oos = new ObjectOutputStream(bos);
-                        oos.writeObject(vodInfo);
-                        oos.flush();
-                        oos.close();
-                        ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(bos.toByteArray()));
-                        previewVodInfo = (VodInfo) ois.readObject();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                if (previewVodInfo != null) {
-                    previewVodInfo.playerCfg = vodInfo.playerCfg;
-                    previewVodInfo.playFlag = vodInfo.playFlag;
-                    previewVodInfo.playIndex = vodInfo.playIndex;
-                    previewVodInfo.seriesMap = vodInfo.seriesMap;
-//                    bundle.putSerializable("VodInfo", previewVodInfo);
-                    App.getInstance().setVodInfo(previewVodInfo);
-                }
+                updatePreviewVodInfo();
+                App.getInstance().setVodInfo(previewVodInfo);
                 playFragment.setData(bundle);
             } else {
                 jumpActivity(PlayActivity.class, bundle);
             }
         }
+    }
+
+    private void updatePreviewVodInfo() {
+        if (previewVodInfo == null) {
+            previewVodInfo = new VodInfo();
+        }
+        previewVodInfo.id = vodInfo.id;
+        previewVodInfo.name = vodInfo.name;
+        previewVodInfo.sourceKey = vodInfo.sourceKey;
+        previewVodInfo.playNote = vodInfo.playNote;
+        previewVodInfo.seriesFlags = vodInfo.seriesFlags;
+        previewVodInfo.seriesMap = vodInfo.seriesMap;
+        previewVodInfo.playerCfg = vodInfo.playerCfg;
+        previewVodInfo.playFlag = vodInfo.playFlag;
+        previewVodInfo.playIndex = vodInfo.playIndex;
     }
 
     @SuppressLint("NotifyDataSetChanged")
