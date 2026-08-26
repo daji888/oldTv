@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.media3.common.Format;
+import androidx.media3.common.MimeTypes;
 import androidx.media3.common.PlaybackException;
 import androidx.media3.common.PlaybackParameters;
 import androidx.media3.common.Player;
@@ -68,7 +69,6 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     public void initPlayer() {
         if (mRenderersFactory == null) {
             mRenderersFactory = new DefaultRenderersFactory(mAppContext);
-        //    mRenderersFactory.setEnableDecoderFallback(true);
         //    mRenderersFactory.setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON);
         }
         if (mTrackSelector == null) {
@@ -77,13 +77,6 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
         if (mLoadControl == null) {
             mLoadControl = new DefaultLoadControl();
         }
-        mTrackSelector.setParameters(
-            mTrackSelector.buildUponParameters()
-                .setTunnelingEnabled(true)
-                .setForceHighestSupportedBitrate(true)
-                .setPreferredAudioLanguages("zh", "zho", "chi")                     
-                .setPreferredTextLanguages("zho", "chi", "zh")                     
-        );
         mMediaPlayer = new ExoPlayer.Builder(mAppContext)
             .setLoadControl(mLoadControl)
             .setRenderersFactory(mRenderersFactory)
@@ -274,6 +267,31 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
     public void onTracksChanged(Tracks tracks) {
         if (trackNameProvider == null)
             trackNameProvider = new ExoTrackNameProvider(mAppContext.getResources());
+    
+        int maxVideoWidth = 0;
+        int maxVideoHeight = 0;
+        for (Tracks.Group group : tracks.getGroups()) {
+            if (!group.isSelected()) continue;
+            for (int j = 0; j < group.length; j++) {
+                Format format = group.getTrackFormat(j);
+                if (MimeTypes.isVideo(format.sampleMimeType)) {
+                    if (format.width > maxVideoWidth || format.height > maxVideoHeight) {
+                        maxVideoWidth = format.width;
+                        maxVideoHeight = format.height;
+                    }
+                }
+            }
+        }
+    
+        if (maxVideoWidth > 0 && maxVideoHeight > 0) {
+            mTrackSelector.setParameters(
+                mTrackSelector.buildUponParameters()
+                    .setMinVideoSize(maxVideoWidth, maxVideoHeight)
+                    .setTunnelingEnabled(true)
+                    .setPreferredAudioLanguages("chi", "chs", "zh-Hans", "zho", "cht", "zh-Hant", "zh")
+                    .setPreferredTextLanguages("chi", "chs", "zh-Hans", "zho", "cht", "zh-Hant", "zh")
+            );
+        }
     }
 
     @Override

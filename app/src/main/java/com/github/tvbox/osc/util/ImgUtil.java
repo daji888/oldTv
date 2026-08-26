@@ -115,7 +115,6 @@ public class ImgUtil {
         return new RequestListener<Bitmap> () {
             @Override
             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target <Bitmap> target, boolean isFirstResource) {
-                view.setImageResource(R.drawable.img_loading_placeholder);
                 return true;
             }
 
