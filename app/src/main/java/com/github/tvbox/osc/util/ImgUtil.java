@@ -47,13 +47,10 @@ public class ImgUtil {
     public static void load(String url, ImageView view, int roundingRadius) {
         if (roundingRadius <= 0) roundingRadius = 1;
         GlideApp.with(view)
-            .asBitmap()
             .load(getUrl(url))
             .placeholder(R.drawable.img_loading_placeholder)
             .error(R.drawable.img_loading_placeholder)
             .fallback(R.drawable.img_loading_placeholder)
-            .listener(getListener(view))
-            .dontAnimate()
             .transform(new RoundedCorners(roundingRadius))
             .into(view);
     }
@@ -109,17 +106,4 @@ public class ImgUtil {
         headers.put(key, value.trim());
     }
 
-    private static RequestListener <Bitmap> getListener(ImageView view) {
-        return new RequestListener<Bitmap> () {
-            @Override
-            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target <Bitmap> target, boolean isFirstResource) {
-                return true;
-            }
-
-            @Override
-            public boolean onResourceReady(Bitmap resource, Object model, Target <Bitmap> target, DataSource dataSource, boolean isFirstResource) {
-                return false;
-            }
-        };
-    }
 }
