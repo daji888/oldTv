@@ -26,6 +26,8 @@ import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 
+import me.jessyan.autosize.utils.AutoSizeUtils;
+
 public class ImgUtil {
     public static boolean isBase64Image(String picUrl) {
         return picUrl != null && picUrl.startsWith("data:image");
@@ -51,7 +53,7 @@ public class ImgUtil {
             .placeholder(R.drawable.img_loading_placeholder)
             .error(R.drawable.img_loading_placeholder)
             .fallback(R.drawable.img_loading_placeholder)
-            .transform(new RoundedCorners(roundingRadius))
+            .transform(new RoundedCorners(AutoSizeUtils.dp2px(view.getContext(), roundingRadius)))
             .into(view);
     }
 
