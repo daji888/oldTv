@@ -8,6 +8,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
 
+import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.GlideException;
@@ -41,14 +42,14 @@ public class ImgUtil {
     }
 
     public static void loadChannelIcon(String logoUrl, ImageView imgLiveIcon) {
-        GlideApp.with(imgLiveIcon)
+        Glide.with(imgLiveIcon)
             .load(getUrl(logoUrl))
             .into(imgLiveIcon);
     }
 
     public static void load(String url, ImageView view, int roundingRadius) {
         if (roundingRadius <= 0) roundingRadius = 1;
-        GlideApp.with(view)
+        Glide.with(view)
             .load(getUrl(url))
             .placeholder(R.drawable.img_loading_placeholder)
             .error(R.drawable.img_loading_placeholder)
@@ -59,7 +60,7 @@ public class ImgUtil {
 
     public static void clearMemoryCache() {
         try {
-            GlideApp.get(App.getInstance()).clearMemory();
+            Glide.get(App.getInstance()).clearMemory();
             LOG.i("echo-img-clear-memory-cache");
         } catch (Throwable th) {
             LOG.i("echo-img-clear-memory-cache-error:" + th.getMessage());
