@@ -32,11 +32,7 @@ public class SearchAdapter extends BaseQuickAdapter<Movie.Video, BaseViewHolder>
                 helper.setText(R.id.tvNote, item.note);
             }
             ImageView ivThumb = helper.getView(R.id.ivThumb);
-            if (!TextUtils.isEmpty(item.pic)) {
-                ImgUtil.load(item.pic, ivThumb, 10);
-            } else {
-                ivThumb.setImageResource(R.drawable.img_loading_placeholder);
-            }
+            ImgUtil.load(item.pic, ivThumb, 10);
         }
     }
 }

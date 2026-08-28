@@ -19,7 +19,6 @@ import com.orhanobut.hawk.Hawk;
 
 import java.util.ArrayList;
 
-
 public class HomeHotVodAdapter extends BaseQuickAdapter<Movie.Video, BaseViewHolder> {
 
     public HomeHotVodAdapter() {
@@ -65,17 +64,10 @@ public class HomeHotVodAdapter extends BaseQuickAdapter<Movie.Video, BaseViewHol
         }
         helper.setText(R.id.tvName, item.name);
         ImageView ivThumb = helper.getView(R.id.ivThumb);
-        //由于部分电视机使用glide报错
-        if (!TextUtils.isEmpty(item.pic)) {
-            item.pic = item.pic.trim();
-            if (ImgUtil.isBase64Image(item.pic)) {
-                // 如果是 Base64 图片，解码并设置
-                ivThumb.setImageBitmap(ImgUtil.decodeBase64ToBitmap(item.pic));
-            } else {
-                ImgUtil.load(item.pic, ivThumb, 10);
-            }
+        if (ImgUtil.isBase64Image(item.pic)) {
+            ivThumb.setImageBitmap(ImgUtil.decodeBase64ToBitmap(item.pic));
         } else {
-            ivThumb.setImageResource(R.drawable.img_loading_placeholder);
+            ImgUtil.load(item.pic, ivThumb, 10);
         }
     }
 }

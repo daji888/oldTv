@@ -82,11 +82,6 @@ public class HistoryAdapter extends BaseQuickAdapter<VodInfo, BaseViewHolder> {
         helper.setText(R.id.tvName, item.name);
         // helper.setText(R.id.tvActor, item.actor);
         ImageView ivThumb = helper.getView(R.id.ivThumb);
-        //由于部分电视机使用glide报错
-        if (!TextUtils.isEmpty(item.pic)) {
-            ImgUtil.load(item.pic, ivThumb, 10); 
-        } else {
-            ivThumb.setImageResource(R.drawable.img_loading_placeholder);
-        }
+        ImgUtil.load(item.pic, ivThumb, 10);
     }
 }

@@ -694,11 +694,7 @@ public class DetailActivity extends BaseActivity {
                     setTextShow(tvActor, "演员：", removeHtmlTag(mVideo.actor));
                     setTextShow(tvDirector, "导演：", removeHtmlTag(mVideo.director));
                     setTextShow(tvDes, "内容简介：", removeHtmlTag(mVideo.des));
-                    if (!TextUtils.isEmpty(mVideo.pic)) {
-                        ImgUtil.load(mVideo.pic, ivThumb, 10);
-                    } else {
-                        ivThumb.setImageResource(R.drawable.img_loading_placeholder);
-                    }
+                    ImgUtil.load(mVideo.pic, ivThumb, 10);
 
                     if (vodInfo.seriesMap != null && vodInfo.seriesMap.size() > 0) {
                         mGridViewFlag.setVisibility(View.VISIBLE);
@@ -1075,7 +1071,7 @@ public class DetailActivity extends BaseActivity {
 
     // preview
     VodInfo previewVodInfo = null;
-    boolean showPreview = Hawk.get(HawkConfig.SHOW_PREVIEW, true);; // true 开启 false 关闭
+    boolean showPreview = Hawk.get(HawkConfig.SHOW_PREVIEW, true); // true 开启 false 关闭
     public boolean fullWindows = false;
     ViewGroup.LayoutParams windowsPreview = null;
     ViewGroup.LayoutParams windowsFull = null;
