@@ -48,12 +48,16 @@ public class ImgUtil {
     }
 
     public static void load(String url, ImageView view, int roundingRadius) {
+        if (url != null) url = url.trim();
+        if (TextUtils.isEmpty(url)) {
+            view.setImageResource(R.drawable.icon_empty);
+            return;
+        }
         if (roundingRadius <= 0) roundingRadius = 1;
         Glide.with(view)
             .load(getUrl(url))
             .placeholder(R.drawable.img_loading_placeholder)
-            .error(R.drawable.img_loading_placeholder)
-            .fallback(R.drawable.img_loading_placeholder)
+            .error(R.drawable.icon_error)
             .transform(new RoundedCorners(AutoSizeUtils.dp2px(view.getContext(), roundingRadius)))
             .into(view);
     }
@@ -69,6 +73,7 @@ public class ImgUtil {
 
     private static Object getUrl(String url) {
         if (url.startsWith("data:")) return url;
+        url = DefaultConfig.checkReplaceProxy(url);
         String header = null;
         String referer = null;
         String ua = null;
