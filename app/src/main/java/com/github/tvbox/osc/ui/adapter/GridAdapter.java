@@ -33,17 +33,10 @@ public class GridAdapter extends BaseQuickAdapter<Movie.Video, BaseViewHolder> {
             helper.setText(R.id.tvNote, item.note);
             helper.setText(R.id.tvName, item.name);
             ImageView ivThumb = helper.getView(R.id.ivThumb);
-            //由于部分电视机使用glide报错
-            if (!TextUtils.isEmpty(item.pic)) {
-            	item.pic = item.pic.trim();
-                if (ImgUtil.isBase64Image(item.pic)) {
-                    // 如果是 Base64 图片，解码并设置
-                    ivThumb.setImageBitmap(ImgUtil.decodeBase64ToBitmap(item.pic));
-                } else {
-                    ImgUtil.load(item.pic, ivThumb, 10);
-                }
+            if (ImgUtil.isBase64Image(item.pic)) {
+                ivThumb.setImageBitmap(ImgUtil.decodeBase64ToBitmap(item.pic));
             } else {
-                ivThumb.setImageResource(R.drawable.img_loading_placeholder);
+                ImgUtil.load(item.pic, ivThumb, 10);
             }
             return;
         }
@@ -57,20 +50,8 @@ public class GridAdapter extends BaseQuickAdapter<Movie.Video, BaseViewHolder> {
         }
         TextView tvLang = helper.getView(R.id.tvLang);
         tvLang.setVisibility(View.GONE);
-        /*if (TextUtils.isEmpty(item.lang)) {
-            tvLang.setVisibility(View.GONE);
-        } else {
-            tvLang.setText(item.lang);
-            tvLang.setVisibility(View.VISIBLE);
-        }*/
         TextView tvArea = helper.getView(R.id.tvArea);
         tvArea.setVisibility(View.GONE);
-        /*if (TextUtils.isEmpty(item.area)) {
-            tvArea.setVisibility(View.GONE);
-        } else {
-            tvArea.setText(item.area);
-            tvArea.setVisibility(View.VISIBLE);
-        }*/
         if (TextUtils.isEmpty(item.note)) {
             helper.setVisible(R.id.tvNote, false);
         } else {
@@ -80,17 +61,10 @@ public class GridAdapter extends BaseQuickAdapter<Movie.Video, BaseViewHolder> {
         helper.setText(R.id.tvName, item.name);
         helper.setText(R.id.tvActor, item.actor);
         ImageView ivThumb = helper.getView(R.id.ivThumb);
-        //由于部分电视机使用glide报错
-        if (!TextUtils.isEmpty(item.pic)) {
-            item.pic = item.pic.trim();
-            if (ImgUtil.isBase64Image(item.pic)) {
-                // 如果是 Base64 图片，解码并设置
-                ivThumb.setImageBitmap(ImgUtil.decodeBase64ToBitmap(item.pic));
-            } else {
-                 ImgUtil.load(item.pic, ivThumb, 10);
-            }
+        if (ImgUtil.isBase64Image(item.pic)) {
+            ivThumb.setImageBitmap(ImgUtil.decodeBase64ToBitmap(item.pic));
         } else {
-            ivThumb.setImageResource(R.drawable.img_loading_placeholder);
+            ImgUtil.load(item.pic, ivThumb, 10);
         }
     }
 }
