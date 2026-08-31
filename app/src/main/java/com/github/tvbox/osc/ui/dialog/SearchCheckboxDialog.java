@@ -71,20 +71,19 @@ public class SearchCheckboxDialog extends BaseDialog{
         });
         mGridView.setHasFixedSize(true);
 
-        int size = mSourceList.size();
-        int spanCount = (int) Math.floor(size / 10);
-        if (spanCount <= 0) spanCount = 1;
-        if (spanCount > 3) spanCount = 3;
+        int spanCount = mSourceList.size();
+        if (spanCount <= 5) spanCount = 1;
+        if (spanCount > 5) spanCount = 3;
         mGridView.setLayoutManager(new V7GridLayoutManager(getContext(), spanCount));
         View root = findViewById(R.id.root);
         ViewGroup.LayoutParams clp = root.getLayoutParams();
-        clp.width = AutoSizeUtils.mm2px(getContext(), 400 + 260 * (spanCount - 1));
+        clp.width = AutoSizeUtils.dp2px(getContext(), 400 + 160 * spanCount);
 
         mGridView.setAdapter(checkboxSearchAdapter);
         checkboxSearchAdapter.setData(mSourceList, mCheckSourcees);
         int pos = 0;
         if (mSourceList != null && mCheckSourcees != null) {
-            for(int i=0; i<mSourceList.size(); i++) {
+            for (int i = 0; i < mSourceList.size(); i++) {
                 String key = mSourceList.get(i).getKey();
                 if (mCheckSourcees.containsKey(key)) {
                     pos = i;
@@ -105,7 +104,7 @@ public class SearchCheckboxDialog extends BaseDialog{
                 FastClickCheckUtil.check(view);
                 mCheckSourcees = new HashMap<>();
                 assert mSourceList != null;
-                for(SourceBean sourceBean : mSourceList) {
+                for (SourceBean sourceBean : mSourceList) {
                     mCheckSourcees.put(sourceBean.getKey(), "1");
                 }
                 checkboxSearchAdapter.setData(mSourceList, mCheckSourcees);
