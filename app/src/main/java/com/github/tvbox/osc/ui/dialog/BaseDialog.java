@@ -40,10 +40,10 @@ public class BaseDialog extends Dialog {
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
         // 限制Dialog最大宽高，适配不同设备的显示区域
         WindowManager.LayoutParams params = getWindow().getAttributes();
-        // 最大宽度不超过屏幕的0.8倍，避免左右边缘裁剪
-        params.width = (int) (getContext().getResources().getDisplayMetrics().widthPixels * 0.8f);
-        // 最大高度不超过屏幕的0.7倍，避免上下边缘裁剪
-        params.height = (int) (getContext().getResources().getDisplayMetrics().heightPixels * 0.7f);
+        // 最大宽度不超过屏幕的0.9倍，避免左右边缘裁剪
+        params.width = (int) (getContext().getResources().getDisplayMetrics().widthPixels * 0.9f);
+        // 最大高度不超过屏幕的0.9倍，避免上下边缘裁剪
+        params.height = (int) (getContext().getResources().getDisplayMetrics().heightPixels * 0.9f);
         getWindow().setAttributes(params);
     }
 
