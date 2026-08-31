@@ -7,6 +7,8 @@ import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
@@ -94,7 +96,6 @@ import java.util.concurrent.Executors;
  */
 
 public class DetailActivity extends BaseActivity {
-    public static Context context;
     private LinearLayout llLayout;
     private FragmentContainerView llPlayerFragmentContainer;
     private View llPlayerFragmentContainerBlock;
@@ -147,7 +148,6 @@ public class DetailActivity extends BaseActivity {
 
     @Override
     protected void init() {
-        context = this;
         EventBus.getDefault().register(this);
         initView();
         initViewModel();
@@ -762,30 +762,30 @@ public class DetailActivity extends BaseActivity {
     }
 
     private void showDialog(String title, String message) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(DetailActivity.this);
-        TextView titleText = new TextView(DetailActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        TextView titleText = new TextView(this);
         titleText.setText(title);
         titleText.setTextColor(0xCC000000);
         titleText.setTextSize(22);
         titleText.setGravity(Gravity.CENTER);
-        TextView messageText = new TextView(DetailActivity.this);
+        TextView messageText = new TextView(this);
         messageText.setText(message);
         messageText.setTextColor(0xCC000000);
         messageText.setTextSize(20);
         messageText.setGravity(Gravity.CENTER);
-        ScrollView scrollView = new ScrollView(DetailActivity.this);
+        ScrollView scrollView = new ScrollView(this);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         scrollView.setLayoutParams(layoutParams);
         scrollView.addView(messageText);
-        LinearLayout layout = new LinearLayout(DetailActivity.this);
+        LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
-        layout.setBackground(ContextCompat.getDrawable(DetailActivity.context, R.drawable.shape_dialog_bg_main));
-   //     layout.setBackgroundColor(0xff6CEE6C);
+        layout.setBackground(ContextCompat.getDrawable(this, R.drawable.shape_dialog_bg_main));
         layout.setPadding(20, 20, 20, 20);
         layout.addView(titleText);
         layout.addView(scrollView);
         builder.setView(layout);
         AlertDialog dialog = builder.create();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.setCanceledOnTouchOutside(true);
         dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         int screenWidth = getResources().getDisplayMetrics().widthPixels;
