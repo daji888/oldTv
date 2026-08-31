@@ -674,13 +674,13 @@ public class HomeActivity extends BaseActivity {
             animatorSet.playTogether(new Animator[]{
                     ObjectAnimator.ofObject(viewObj, "marginTop", new IntEvaluator(),
                             new Object[]{
-                                    Integer.valueOf(AutoSizeUtils.mm2px(this.mContext, 10.0f)),
-                                    Integer.valueOf(AutoSizeUtils.mm2px(this.mContext, 0.0f))
+                                    Integer.valueOf(AutoSizeUtils.dp2px(this.mContext, 10.0f)),
+                                    Integer.valueOf(AutoSizeUtils.dp2px(this.mContext, 0.0f))
                             }),
                     ObjectAnimator.ofObject(viewObj, "height", new IntEvaluator(),
                             new Object[]{
-                                    Integer.valueOf(AutoSizeUtils.mm2px(this.mContext, 50.0f)),
-                                    Integer.valueOf(AutoSizeUtils.mm2px(this.mContext, 1.0f))
+                                    Integer.valueOf(AutoSizeUtils.dp2px(this.mContext, 50.0f)),
+                                    Integer.valueOf(AutoSizeUtils.dp2px(this.mContext, 1.0f))
                             }),
                     ObjectAnimator.ofFloat(this.topLayout, "alpha", new float[]{1.0f, 0.0f})});
             animatorSet.setDuration(200);
@@ -691,13 +691,13 @@ public class HomeActivity extends BaseActivity {
             animatorSet.playTogether(new Animator[]{
                     ObjectAnimator.ofObject(viewObj, "marginTop", new IntEvaluator(),
                             new Object[]{
-                                    Integer.valueOf(AutoSizeUtils.mm2px(this.mContext, 0.0f)),
-                                    Integer.valueOf(AutoSizeUtils.mm2px(this.mContext, 10.0f))
+                                    Integer.valueOf(AutoSizeUtils.dp2px(this.mContext, 0.0f)),
+                                    Integer.valueOf(AutoSizeUtils.dp2px(this.mContext, 10.0f))
                             }),
                     ObjectAnimator.ofObject(viewObj, "height", new IntEvaluator(),
                             new Object[]{
-                                    Integer.valueOf(AutoSizeUtils.mm2px(this.mContext, 1.0f)),
-                                    Integer.valueOf(AutoSizeUtils.mm2px(this.mContext, 50.0f))
+                                    Integer.valueOf(AutoSizeUtils.dp2px(this.mContext, 1.0f)),
+                                    Integer.valueOf(AutoSizeUtils.dp2px(this.mContext, 50.0f))
                             }),
                     ObjectAnimator.ofFloat(this.topLayout, "alpha", new float[]{0.0f, 1.0f})});
             animatorSet.setDuration(200);
@@ -725,13 +725,14 @@ public class HomeActivity extends BaseActivity {
              mSiteSwitchDialog = new SelectDialog<>(HomeActivity.this);
              TvRecyclerView tvRecyclerView = mSiteSwitchDialog.findViewById(R.id.list);
              // 根据 sites 数量动态计算列数
-            int spanCount = (int) Math.floor(sites.size() / 20.0);
-            spanCount = Math.min(spanCount, 2);
-            tvRecyclerView.setLayoutManager(new V7GridLayoutManager(mSiteSwitchDialog.getContext(), spanCount + 1));
+            int spanCount = sites.size();
+            if (spanCount <= 5) spanCount = 1;
+            if (spanCount > 5) spanCount = 3;
+            tvRecyclerView.setLayoutManager(new V7GridLayoutManager(mSiteSwitchDialog.getContext(), spanCount));
              // 设置对话框宽度
             ConstraintLayout cl_root = mSiteSwitchDialog.findViewById(R.id.cl_root);
             ViewGroup.LayoutParams clp = cl_root.getLayoutParams();
-            clp.width = AutoSizeUtils.mm2px(mSiteSwitchDialog.getContext(), 380 + 200 * spanCount);
+            clp.width = AutoSizeUtils.dp2px(mSiteSwitchDialog.getContext(), 400 + 160 * spanCount);
             mSiteSwitchDialog.setTip("请选择首页数据源");
         }
         mSiteSwitchDialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<SourceBean>() {
