@@ -1,6 +1,7 @@
 package com.github.tvbox.osc.ui.adapter;
 
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.view.View;
 import android.widget.TextView;
 
@@ -18,6 +19,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import me.jessyan.autosize.utils.AutoSizeUtils;
+
 public class LiveEpgAdapter extends BaseQuickAdapter<Epginfo, BaseViewHolder> {
     private int selectedEpgIndex = -1;
     private int focusedEpgIndex = -1;
@@ -31,7 +34,7 @@ public class LiveEpgAdapter extends BaseQuickAdapter<Epginfo, BaseViewHolder> {
 
     SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd");
     public LiveEpgAdapter() {
-        super(R.layout.epglist_item, new ArrayList<>());
+        super(R.layout.item_live_epglist, new ArrayList<>());
     }
 
     public void CanBack(Boolean source_include_back) {
@@ -45,31 +48,33 @@ public class LiveEpgAdapter extends BaseQuickAdapter<Epginfo, BaseViewHolder> {
         TextView shiyi = holder.getView(R.id.shiyi);
         AudioWaveView wqddg_AudioWaveView = holder.getView(R.id.wqddg_AudioWaveView);
         wqddg_AudioWaveView.setVisibility(View.GONE);
-        if (value.index == selectedEpgIndex && (value.currentEpgDate.equals(shiyiDate) || value.currentEpgDate.equals(timeFormat.format(new Date())))) {
+        Date now = new Date();
+        String nowStr = timeFormat.format(now);
+        GradientDrawable roundedBg = new GradientDrawable();
+        roundedBg.setCornerRadius(AutoSizeUtils.dp2px(holder.itemView.getContext(), 5));
+        if (value.index == selectedEpgIndex && value.currentEpgDate != null && (value.currentEpgDate.equals(shiyiDate) || value.currentEpgDate.equals(nowStr))) {
             textview.setTextColor(ContextCompat.getColor(mContext, R.color.color_FF5F00));
             timeview.setTextColor(ContextCompat.getColor(mContext, R.color.color_FF5F00));
         } else {
             textview.setTextColor(Color.WHITE);
             timeview.setTextColor(Color.WHITE);
         }
-        if (new Date().compareTo(value.startdateTime) >= 0 && new Date().compareTo(value.enddateTime) <= 0) {
+        if (now.compareTo(value.startdateTime) >= 0 && now.compareTo(value.enddateTime) <= 0) {
             shiyi.setVisibility(View.VISIBLE);
-            shiyi.setBackgroundColor(Color.YELLOW);
+            roundedBg.setColor(Color.YELLOW);
+            shiyi.setBackground(roundedBg);
             shiyi.setTextColor(Color.RED);
             shiyi.setText("直播中");
-        } else if (new Date().compareTo(value.enddateTime) > 0) {
+        } else if (now.compareTo(value.startdateTime) > 0 && now.compareTo(value.enddateTime) > 0) {
             shiyi.setVisibility(View.VISIBLE);
-            if (source_include_back) {
-                shiyi.setBackgroundColor(0xff28713E);
-                shiyi.setTextColor(Color.WHITE);
-            } else {
-                shiyi.setBackgroundColor(Color.GRAY);
-                shiyi.setTextColor(Color.BLACK);
-            }    
+            roundedBg.setColor(source_include_back ? 0xff28713E : Color.GRAY);
+            shiyi.setBackground(roundedBg);
+            shiyi.setTextColor(source_include_back ? Color.WHITE : Color.BLACK);
             shiyi.setText("回看");
-        } else if (new Date().compareTo(value.startdateTime) < 0) {
+        } else if (now.compareTo(value.startdateTime) < 0) {
             shiyi.setVisibility(View.VISIBLE);
-            shiyi.setBackgroundColor(Color.GRAY);
+            roundedBg.setColor(Color.GRAY);
+            shiyi.setBackground(roundedBg);
             shiyi.setTextColor(Color.BLACK);
             shiyi.setText("预约");
         } else {
@@ -78,7 +83,6 @@ public class LiveEpgAdapter extends BaseQuickAdapter<Epginfo, BaseViewHolder> {
         textview.setText(value.title);
         timeview.setText(value.start + "-" + value.end);
         if (!ShiyiSelection) {
-            Date now = new Date();
             if (now.compareTo(value.startdateTime) >= 0 && now.compareTo(value.enddateTime) <= 0) {
                 wqddg_AudioWaveView.setVisibility(View.VISIBLE);
                 textview.setFreezesText(true);
@@ -91,20 +95,22 @@ public class LiveEpgAdapter extends BaseQuickAdapter<Epginfo, BaseViewHolder> {
                 wqddg_AudioWaveView.setVisibility(View.VISIBLE);
                 textview.setFreezesText(true);
                 timeview.setFreezesText(true);
-                shiyi.setText("回看中");
+                roundedBg.setColor(Color.rgb(12, 255, 0));
+                shiyi.setBackground(roundedBg);
                 shiyi.setTextColor(Color.RED);
-                shiyi.setBackgroundColor(Color.rgb(12, 255, 0));
+                shiyi.setText("回看中");
             } else {
                 wqddg_AudioWaveView.setVisibility(View.GONE);
             }
             if (LivePlayActivity.isBack == false) {
-                if (new Date().compareTo(value.startdateTime) >= 0 && new Date().compareTo(value.enddateTime) <= 0) {
+                if (now.compareTo(value.startdateTime) >= 0 && now.compareTo(value.enddateTime) <= 0) {
                     wqddg_AudioWaveView.setVisibility(View.VISIBLE);
                     textview.setFreezesText(true);
                     timeview.setFreezesText(true);
-                    shiyi.setText("直播中");
+                    roundedBg.setColor(Color.YELLOW);
+                    shiyi.setBackground(roundedBg);
                     shiyi.setTextColor(Color.RED);
-                    shiyi.setBackgroundColor(Color.YELLOW);
+                    shiyi.setText("直播中");
                 }    
             }
         }
@@ -124,8 +130,9 @@ public class LiveEpgAdapter extends BaseQuickAdapter<Epginfo, BaseViewHolder> {
     public void setSelectedEpgIndex(int selectedEpgIndex) {
         if (selectedEpgIndex == this.selectedEpgIndex) return;
         this.selectedEpgIndex = selectedEpgIndex;
-        if (this.selectedEpgIndex != -1)
-            notifyItemChanged(this.selectedEpgIndex);
+        notifyItemChanged(this.selectedEpgIndex);
+        if (this.focusedEpgIndex != -1)
+            notifyItemChanged(this.focusedEpgIndex);
     }
 
     public int getFocusedEpgIndex() {
@@ -134,8 +141,6 @@ public class LiveEpgAdapter extends BaseQuickAdapter<Epginfo, BaseViewHolder> {
 
     public void setFocusedEpgIndex(int focusedEpgIndex) {
         this.focusedEpgIndex = focusedEpgIndex;
-        if (this.focusedEpgIndex != -1)
-            notifyItemChanged(this.focusedEpgIndex);
     }
      
 }

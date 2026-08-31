@@ -14,13 +14,13 @@
 
         <ImageView
             android:id="@+id/ivQRCode"
-            android:layout_width="@dimen/vs_240"
-            android:layout_height="@dimen/vs_240"
+            android:layout_width="@dimen/vs_300"
+            android:layout_height="@dimen/vs_300"
             android:layout_gravity="center" />
 
         <TextView
             android:id="@+id/tvAddress"
-            android:layout_width="@dimen/vs_340"
+            android:layout_width="@dimen/vs_480"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/vs_20"

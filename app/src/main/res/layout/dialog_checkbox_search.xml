@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+    
     <LinearLayout
         android:id="@+id/root"
         android:layout_width="@dimen/vs_420"
@@ -12,12 +13,12 @@
         android:background="@drawable/shape_dialog_pg_search_checkbox"
         android:orientation="vertical">
 
-
         <LinearLayout
             android:orientation="horizontal"
             android:weightSum="2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+            
             <TextView
                 android:id="@+id/checkAll"
                 android:layout_width="@dimen/vs_0"
@@ -55,7 +56,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"/>
-
     </LinearLayout>
 
 </FrameLayout>

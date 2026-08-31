@@ -23,7 +23,6 @@ import com.whl.quickjs.android.QuickJSLoader;
 import com.github.catvod.crawler.JsLoader;
 
 import me.jessyan.autosize.AutoSizeConfig;
-import me.jessyan.autosize.unit.Subunits;
 
 /**
  * @author pj567
@@ -57,10 +56,7 @@ public class App extends Application {
                 .addCallback(new EmptyCallback())
                 .addCallback(new LoadingCallback())
                 .commit();
-        AutoSizeConfig.getInstance().setCustomFragment(true).getUnitsManager()
-                .setSupportDP(false)
-                .setSupportSP(false)
-                .setSupportSubunits(Subunits.MM);
+        AutoSizeConfig.getInstance().setCustomFragment(true);
         PlayerHelper.init();
         QuickJSLoader.init();
         FileUtils.cleanPlayerCache();
