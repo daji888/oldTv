@@ -1,23 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-
+    <!-- 输入框获取焦点状态：2dp粗半透黑下划线 + 暗黄色填充 + 完整圆角 -->
     <item android:state_focused="true">
         <layer-list>
-            <item android:bottom="@dimen/vs_5" android:left="@dimen/vs_20_" android:right="@dimen/vs_20_" android:top="@dimen/vs_20_">
+            <!-- 第一层：全局暗黄色圆角填充，覆盖整个输入框背景 -->
+            <item>
                 <shape android:shape="rectangle">
-                    <stroke android:width="@dimen/vs_2" android:color="@color/color_CC000000" />
+                    <corners android:radius="@dimen/vs_5" />
                     <solid android:color="@color/color_BFA100" />
+                </shape>
+            </item>
+            <!-- 第二层：强制锚定在最底部绘制2dp的聚焦态下划线，不会拉伸铺满区域 -->
+            <item 
+                android:gravity="bottom"
+                android:left="@dimen/vs_5"
+                android:right="@dimen/vs_5">
+                <shape android:shape="rectangle">
+                    <solid android:color="@color/color_CC000000" />
+                    <size android:height="@dimen/vs_2" />
                 </shape>
             </item>
         </layer-list>
     </item>
+
+    <!-- 输入框未聚焦常态：1dp细深灰下划线 + 全透明背景 -->
     <item android:state_focused="false">
         <layer-list>
-            <item android:bottom="@dimen/vs_5" android:left="@dimen/vs_20_" android:right="@dimen/vs_20_" android:top="@dimen/vs_20_">
+            <!-- 第一层：全局透明圆角填充，和父背景完全融合 -->
+            <item>
                 <shape android:shape="rectangle">
-                    <stroke android:width="@dimen/vs_1" android:color="@color/color_6C3D3D3D" />
+                    <corners android:radius="@dimen/vs_5" />
                     <solid android:color="@android:color/transparent" />
+                </shape>
+            </item>
+            <!-- 第二层：强制锚定在最底部绘制1dp的常态下划线 -->
+            <item 
+                android:gravity="bottom"
+                android:left="@dimen/vs_5"
+                android:right="@dimen/vs_5">
+                <shape android:shape="rectangle">
+                    <solid android:color="@color/color_6C3D3D3D" />
+                    <size android:height="@dimen/vs_1" />
                 </shape>
             </item>
         </layer-list>
