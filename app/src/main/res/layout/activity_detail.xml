@@ -280,7 +280,7 @@
         <com.owen.tvrecyclerview.widget.TvRecyclerView
             android:id="@+id/mGridViewFlag"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/vs_45"
+            android:layout_height="@dimen/vs_50"
             android:layout_marginLeft="@dimen/vs_50"
             android:layout_marginTop="@dimen/vs_0"
             android:layout_marginRight="@dimen/vs_50"
