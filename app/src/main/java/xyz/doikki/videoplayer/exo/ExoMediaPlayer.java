@@ -77,6 +77,12 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
         if (mLoadControl == null) {
             mLoadControl = new DefaultLoadControl();
         }
+        mTrackSelector.setParameters(
+            mTrackSelector.buildUponParameters()
+                .setTunnelingEnabled(true)
+                .setPreferredAudioLanguages("chi", "chs", "zh-Hans", "zho", "cht", "zh-Hant", "zh")
+                .setPreferredTextLanguages("chi", "chs", "zh-Hans", "zho", "cht", "zh-Hant", "zh")                     
+        );
         mMediaPlayer = new ExoPlayer.Builder(mAppContext)
             .setLoadControl(mLoadControl)
             .setRenderersFactory(mRenderersFactory)
@@ -287,9 +293,6 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
             mTrackSelector.setParameters(
                 mTrackSelector.buildUponParameters()
                     .setMinVideoSize(maxVideoWidth, maxVideoHeight)
-                    .setTunnelingEnabled(true)
-                    .setPreferredAudioLanguages("chi", "chs", "zh-Hans", "zho", "cht", "zh-Hant", "zh")
-                    .setPreferredTextLanguages("chi", "chs", "zh-Hans", "zho", "cht", "zh-Hant", "zh")
             );
         }
     }
