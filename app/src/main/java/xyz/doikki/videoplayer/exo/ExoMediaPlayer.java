@@ -269,27 +269,35 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
         return PlayerUtils.getNetSpeed(mAppContext);
     }
 
+    private int lastSetWidth = 0;
+    private int lastSetHeight = 0;
+    
     @Override
     public void onTracksChanged(Tracks tracks) {
-        if (trackNameProvider == null)
+        if (trackNameProvider == null) {
             trackNameProvider = new ExoTrackNameProvider(mAppContext.getResources());
+        }
     
         int maxVideoWidth = 0;
         int maxVideoHeight = 0;
+    
         for (Tracks.Group group : tracks.getGroups()) {
             if (!group.isSelected()) continue;
             for (int j = 0; j < group.length; j++) {
                 Format format = group.getTrackFormat(j);
                 if (MimeTypes.isVideo(format.sampleMimeType)) {
-                    if (format.width > maxVideoWidth || format.height > maxVideoHeight) {
-                        maxVideoWidth = format.width;
-                        maxVideoHeight = format.height;
-                    }
+                    maxVideoWidth = Math.max(maxVideoWidth, format.width);
+                    maxVideoHeight = Math.max(maxVideoHeight, format.height);
                 }
             }
         }
     
-        if (maxVideoWidth > 0 && maxVideoHeight > 0) {
+        // 只有参数真正变化时才设置，避免触发不必要的重选
+        if (maxVideoWidth > 0 && maxVideoHeight > 0
+                && (maxVideoWidth != lastSetWidth || maxVideoHeight != lastSetHeight)) {
+            lastSetWidth = maxVideoWidth;
+            lastSetHeight = maxVideoHeight;
+    
             mTrackSelector.setParameters(
                 mTrackSelector.buildUponParameters()
                     .setMinVideoSize(maxVideoWidth, maxVideoHeight)
