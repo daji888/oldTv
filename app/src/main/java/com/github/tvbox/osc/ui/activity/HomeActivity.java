@@ -722,17 +722,17 @@ public class HomeActivity extends BaseActivity {
         int select = sites.indexOf(ApiConfig.get().getHomeSourceBean());
         if (select < 0 || select >= sites.size()) select = 0;
         if (mSiteSwitchDialog == null) {
-             mSiteSwitchDialog = new SelectDialog<>(HomeActivity.this);
-             TvRecyclerView tvRecyclerView = mSiteSwitchDialog.findViewById(R.id.list);
+            mSiteSwitchDialog = new SelectDialog<>(HomeActivity.this);
+            TvRecyclerView tvRecyclerView = mSiteSwitchDialog.findViewById(R.id.list);
              // 根据 sites 数量动态计算列数
             int spanCount = sites.size();
-            if (spanCount <= 5) spanCount = 1;
-            if (spanCount > 5) spanCount = 3;
+            if (spanCount < 9) spanCount = 1;
+            if (spanCount > 8) spanCount = 3;
             tvRecyclerView.setLayoutManager(new V7GridLayoutManager(mSiteSwitchDialog.getContext(), spanCount));
              // 设置对话框宽度
             ConstraintLayout cl_root = mSiteSwitchDialog.findViewById(R.id.cl_root);
             ViewGroup.LayoutParams clp = cl_root.getLayoutParams();
-            clp.width = AutoSizeUtils.dp2px(mSiteSwitchDialog.getContext(), 400 + 160 * spanCount);
+            clp.width = clp.WRAP_CONTENT;
             mSiteSwitchDialog.setTip("请选择首页数据源");
         }
         mSiteSwitchDialog.setAdapter(new SelectDialogAdapter.SelectDialogInterface<SourceBean>() {
