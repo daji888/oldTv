@@ -469,7 +469,7 @@
 			android:text="10"
 			android:visibility="gone"
 			android:textColor="@color/color_FFFFFF"
-			android:textSize="@dimen/ts_100"
+			android:textSize="@dimen/ts_96"
 			android:textStyle="bold" />
 			
 			<FrameLayout
