@@ -3,7 +3,6 @@ package com.github.tvbox.osc.ui.dialog;
 import android.app.Activity;
 import android.content.Context;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,8 +21,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
-
-import me.jessyan.autosize.utils.AutoSizeUtils;
 
 public class SearchCheckboxDialog extends BaseDialog{
 
@@ -72,12 +69,9 @@ public class SearchCheckboxDialog extends BaseDialog{
         mGridView.setHasFixedSize(true);
 
         int spanCount = mSourceList.size();
-        if (spanCount <= 5) spanCount = 1;
-        if (spanCount > 5) spanCount = 3;
+        if (spanCount < 9) spanCount = 1;
+        if (spanCount > 8) spanCount = 3;
         mGridView.setLayoutManager(new V7GridLayoutManager(getContext(), spanCount));
-        View root = findViewById(R.id.root);
-        ViewGroup.LayoutParams clp = root.getLayoutParams();
-        clp.width = AutoSizeUtils.dp2px(getContext(), 400 + 160 * spanCount);
 
         mGridView.setAdapter(checkboxSearchAdapter);
         checkboxSearchAdapter.setData(mSourceList, mCheckSourcees);
