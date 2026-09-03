@@ -137,7 +137,8 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
             mMediaPlayer.setPlaybackParameters(mSpeedPlaybackParameters);
         }
         mIsPreparing = true;
-        mMediaPlayer.setMediaSource(mMediaSource);
+        mMediaPlayer.setMediaSource(mMediaSource, getStartPosition());
+        markStartPositionApplied();
         mMediaPlayer.prepare();
     }
 
@@ -361,7 +362,8 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
         Log.i("Tvbox-runtime", "echo-Exo retry as HLS: " + currentPlayPath);
         mMediaSource = mMediaSourceHelper.getHlsMediaSource(currentPlayPath, copyHeaders(currentHeaders));
         mIsPreparing = true;
-        mMediaPlayer.setMediaSource(mMediaSource);
+        mMediaPlayer.setMediaSource(mMediaSource, getStartPosition());
+        markStartPositionApplied();
         mMediaPlayer.prepare();
         mMediaPlayer.setPlayWhenReady(true);
         return true;
