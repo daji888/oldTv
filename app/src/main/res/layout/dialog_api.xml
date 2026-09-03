@@ -44,7 +44,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/vs_10"
                 android:orientation="horizontal">
 
                 <TextView
@@ -57,7 +56,7 @@
                     android:background="@drawable/button_dialog_main"
                     android:focusable="true"
                     android:gravity="center"
-                    android:padding="@dimen/vs_10"
+                    android:padding="@dimen/vs_20"
                     android:text="配置历史"
                     android:textColor="@color/color_FFFFFF"
                     android:textSize="@dimen/ts_22" />
@@ -72,7 +71,7 @@
                 android:background="@drawable/button_dialog_main"
                 android:focusable="true"
                 android:gravity="center"
-                android:padding="@dimen/vs_10"
+                android:padding="@dimen/vs_20"
                 android:text="存储权限"
                 android:textColor="@color/color_FFFFFF"
                 android:textSize="@dimen/ts_22" />
@@ -98,9 +97,9 @@
                     android:hint="请输入配置地址"
                     android:inputType="text"
                     android:maxLines="1"
-                    android:paddingLeft="@dimen/vs_2"
+                    android:paddingLeft="@dimen/vs_5"
                     android:paddingTop="@dimen/vs_10"
-                    android:paddingRight="@dimen/vs_2"
+                    android:paddingRight="@dimen/vs_5"
                     android:paddingBottom="@dimen/vs_10"
                     android:textColor="@color/color_CC000000"
                     android:textColorHint="@color/color_6C3D3D3D"
@@ -120,7 +119,7 @@
                     android:textColor="@color/color_FFFFFF"
                     android:textSize="@dimen/ts_22" />
             </LinearLayout>
-
         </LinearLayout>
     </LinearLayout>
+    
 </FrameLayout>
