@@ -14,11 +14,8 @@
     <dimen name="ts_40">40sp</dimen>
     <dimen name="ts_50">50sp</dimen>
     <dimen name="ts_96">96sp</dimen>
-    <dimen name="ts_100">100sp</dimen>
 
     <dimen name="vs_4_">-4dp</dimen>
-    <dimen name="vs_25_">-25dp</dimen>
-    <dimen name="vs_60_">-60dp</dimen>
 
     <dimen name="vs_0">0dp</dimen>
     <dimen name="vs_1">1dp</dimen>
