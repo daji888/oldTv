@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:paddingLeft="@dimen/vs_40"
     android:paddingRight="@dimen/vs_40">
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/vs_0"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <LinearLayout
             android:id="@+id/tvUserHome"
@@ -35,7 +37,6 @@
                 android:paddingLeft="@dimen/vs_10"
                 android:paddingRight="@dimen/vs_10">
 
-
                 <ImageView
                     android:layout_width="@dimen/vs_40"
                     android:layout_height="@dimen/vs_40"
@@ -55,7 +56,6 @@
                     android:textAlignment="gravity"
                     android:textColor="@color/color_CCFFFFFF"
                     android:textSize="@dimen/ts_30" />
-
             </LinearLayout>
 
             <LinearLayout
@@ -72,7 +72,6 @@
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/vs_10"
                 android:paddingRight="@dimen/vs_10">
-
 
                 <ImageView
                     android:layout_width="@dimen/vs_40"
@@ -93,7 +92,6 @@
                     android:textAlignment="gravity"
                     android:textColor="@color/color_CCFFFFFF"
                     android:textSize="@dimen/ts_30" />
-
             </LinearLayout>
 
             <LinearLayout
@@ -110,7 +108,6 @@
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/vs_10"
                 android:paddingRight="@dimen/vs_10">
-
 
                 <ImageView
                     android:layout_width="@dimen/vs_40"
@@ -131,7 +128,6 @@
                     android:textAlignment="gravity"
                     android:textColor="@color/color_CCFFFFFF"
                     android:textSize="@dimen/ts_30" />
-
             </LinearLayout>
 
             <LinearLayout
@@ -168,9 +164,7 @@
                     android:textAlignment="gravity"
                     android:textColor="@color/color_CCFFFFFF"
                     android:textSize="@dimen/ts_30" />
-
             </LinearLayout>
-
 
             <LinearLayout
                 android:id="@+id/tvPush"
@@ -186,7 +180,6 @@
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/vs_10"
                 android:paddingRight="@dimen/vs_10">
-
 
                 <ImageView
                     android:layout_width="@dimen/vs_40"
@@ -207,9 +200,7 @@
                     android:textAlignment="gravity"
                     android:textColor="@color/color_CCFFFFFF"
                     android:textSize="@dimen/ts_30" />
-
             </LinearLayout>
-
             
             <LinearLayout
                 android:id="@+id/tvSetting"
@@ -225,7 +216,6 @@
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/vs_10"
                 android:paddingRight="@dimen/vs_10">
-
 
                 <ImageView
                     android:layout_width="@dimen/vs_40"
@@ -246,7 +236,6 @@
                     android:textAlignment="gravity"
                     android:textColor="@color/color_CCFFFFFF"
                     android:textSize="@dimen/ts_30" />
-
             </LinearLayout>
 
             <LinearLayout
@@ -264,7 +253,6 @@
                 android:orientation="horizontal"
                 android:paddingLeft="@dimen/vs_10"
                 android:paddingRight="@dimen/vs_10">
-
 
                 <ImageView
                     android:layout_width="@dimen/vs_40"
@@ -285,7 +273,6 @@
                     android:textAlignment="gravity"
                     android:textColor="@color/color_CCFFFFFF"
                     android:textSize="@dimen/ts_30" />
-
             </LinearLayout>
 
         </LinearLayout>
@@ -293,10 +280,13 @@
         <com.owen.tvrecyclerview.widget.TvRecyclerView
             android:id="@+id/tvHotList"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/vs_0"
             android:clipChildren="false"
             android:clipToPadding="false"
-            android:layout_below="@+id/tvUserHome"
+            app:layout_constraintTop_toBottomOf="@+id/tvUserHome"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:paddingLeft="@dimen/vs_10"
             android:paddingTop="@dimen/vs_15"
             android:paddingRight="@dimen/vs_10"
@@ -306,6 +296,6 @@
             app:tv_selectedItemIsCentered="true"
             app:tv_verticalSpacingWithMargins="@dimen/vs_15" />
 
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
