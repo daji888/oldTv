@@ -18,6 +18,7 @@ import android.text.Html;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.Window;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -774,6 +775,7 @@ public class DetailActivity extends BaseActivity {
         messageText.setTextSize(20);
         messageText.setGravity(Gravity.CENTER);
         ScrollView scrollView = new ScrollView(this);
+        messageText.setLineSpacing(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics()), 1.2f);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         scrollView.setLayoutParams(layoutParams);
         scrollView.addView(messageText);
