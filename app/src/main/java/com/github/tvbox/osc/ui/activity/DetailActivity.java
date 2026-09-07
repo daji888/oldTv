@@ -769,13 +769,14 @@ public class DetailActivity extends BaseActivity {
         titleText.setTextColor(0xCC000000);
         titleText.setTextSize(22);
         titleText.setGravity(Gravity.CENTER);
+        titleText.setPadding(0, 0, 0, 20);
         TextView messageText = new TextView(this);
         messageText.setText(message);
         messageText.setTextColor(0xCC000000);
         messageText.setTextSize(20);
         messageText.setGravity(Gravity.CENTER);
-        ScrollView scrollView = new ScrollView(this);
         messageText.setLineSpacing(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics()), 1.2f);
+        ScrollView scrollView = new ScrollView(this);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         scrollView.setLayoutParams(layoutParams);
         scrollView.addView(messageText);
