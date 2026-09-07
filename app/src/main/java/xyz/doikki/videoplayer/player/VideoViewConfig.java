@@ -1,10 +1,10 @@
 package xyz.doikki.videoplayer.player;
 
-
 import androidx.annotation.Nullable;
 
+import com.github.tvbox.osc.player.render.SurfaceRenderViewFactory;
+
 import xyz.doikki.videoplayer.render.RenderViewFactory;
-import xyz.doikki.videoplayer.render.TextureRenderViewFactory;
 
 /**
  * 播放器全局配置
@@ -47,8 +47,8 @@ public class VideoViewConfig {
             mPlayerFactory = builder.mPlayerFactory;
         }
         if (builder.mRenderViewFactory == null) {
-            //默认使用TextureView渲染视频
-            mRenderViewFactory = TextureRenderViewFactory.create();
+            //默认使用SurfaceRenderViewFactory渲染视频
+            mRenderViewFactory = SurfaceRenderViewFactory.create();
         } else {
             mRenderViewFactory = builder.mRenderViewFactory;
         }
