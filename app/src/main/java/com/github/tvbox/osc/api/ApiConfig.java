@@ -986,7 +986,7 @@ public class ApiConfig {
                       String livePlayType = livesOBJ.get("playerType").getAsString();
                       Hawk.put(HawkConfig.LIVE_PLAY_TYPE, livePlayType);
                   } else {
-                      Hawk.put(HawkConfig.LIVE_PLAY_TYPE, Hawk.get(HawkConfig.PLAY_TYPE, 0));
+                      Hawk.put(HawkConfig.LIVE_PLAY_TYPE, Hawk.get(HawkConfig.PLAY_TYPE, 2));
                   }
 
                   //设置超时
