@@ -29,7 +29,7 @@
         <com.owen.tvrecyclerview.widget.TvRecyclerView
             android:id="@+id/list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/vs_180"
             android:orientation="vertical"
             app:layout_constrainedHeight="true"
             app:layout_constraintHeight_max="@dimen/vs_410"
