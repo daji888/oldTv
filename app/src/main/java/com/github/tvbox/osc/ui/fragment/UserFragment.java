@@ -14,7 +14,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.github.tvbox.osc.R;
+import com.github.catvod.net.OkHttp;
 import com.github.tvbox.osc.api.ApiConfig;
 import com.github.tvbox.osc.base.BaseLazyFragment;
 import com.github.tvbox.osc.bean.Movie;
@@ -22,6 +22,7 @@ import com.github.tvbox.osc.bean.SourceBean;
 import com.github.tvbox.osc.bean.VodInfo;
 import com.github.tvbox.osc.cache.RoomDataManger;
 import com.github.tvbox.osc.event.ServerEvent;
+import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.server.ControlManager;
 import com.github.tvbox.osc.ui.activity.CollectActivity;
 import com.github.tvbox.osc.ui.activity.DetailActivity;
@@ -41,22 +42,25 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.lzy.okgo.OkGo;
-import com.lzy.okgo.callback.AbsCallback;
-import com.lzy.okgo.model.Response;
 import com.orhanobut.hawk.Hawk;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
 import com.owen.tvrecyclerview.widget.V7GridLayoutManager;
 import com.owen.tvrecyclerview.widget.V7LinearLayoutManager;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
 
 /**
  * @author pj567
@@ -280,10 +284,18 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
                 }
             }
             String doubanHotURL = "https://movie.douban.com/j/new_search_subjects?sort=U&range=0,10&tags=&playable=1&start=0&year_range=" + year + "," + year;
-            OkGo.<String>get(doubanHotURL).headers("User-Agent", UA.randomOne()).execute(new AbsCallback<String>() {
+            HashMap<String, String> doubanHeaders = new HashMap<>();
+            doubanHeaders.put("User-Agent", UA.randomOne());
+            OkHttp.newCall(doubanHotURL, doubanHeaders).enqueue(new Callback() {
                 @Override
-                public void onSuccess(Response<String> response) {
-                    String netJson = response.body();
+                public void onFailure(Call call, IOException e) {
+                    e.printStackTrace();
+                }
+    
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    if (!response.isSuccessful() || response.body() == null) return;
+                    String netJson = response.body().string();
                     Hawk.put("home_hot_day", today);
                     Hawk.put("home_hot", netJson);
                     mActivity.runOnUiThread(new Runnable() {
@@ -292,10 +304,6 @@ public class UserFragment extends BaseLazyFragment implements View.OnClickListen
                             adapter.setNewData(loadHots(netJson));
                         }
                     });
-                }
-                @Override
-                public String convertResponse(okhttp3.Response response) throws Throwable {
-                    return response.body().string();
                 }
             });
         } catch (Throwable th) {
