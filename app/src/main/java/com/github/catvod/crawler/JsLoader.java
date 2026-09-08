@@ -2,14 +2,12 @@ package com.github.catvod.crawler;
 
 import android.util.Log;
 
+import com.github.catvod.net.OkHttp;
 import com.github.tvbox.osc.base.App;
-
 import com.github.tvbox.osc.util.FileUtils;
+import com.github.tvbox.osc.util.js.JsSpider;
 import com.github.tvbox.osc.util.LOG;
 import com.github.tvbox.osc.util.MD5;
-
-import com.github.tvbox.osc.util.js.JsSpider;
-import com.lzy.okgo.OkGo;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -20,6 +18,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import dalvik.system.DexClassLoader;
+import okhttp3.Call;
 import okhttp3.Response;
 
 public class JsLoader {
@@ -111,7 +110,7 @@ public class JsLoader {
             }
         }
         try {
-            Response response = OkGo.<File>get(jar).execute();
+            Response response = OkHttp.newCall(jar).execute();
             InputStream is = response.body().byteStream();
             OutputStream os = new FileOutputStream(cache);
             try {
