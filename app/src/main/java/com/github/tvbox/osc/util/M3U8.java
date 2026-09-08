@@ -4,6 +4,10 @@ import static com.github.tvbox.osc.util.RegexUtils.getPattern;
 
 import androidx.media3.common.util.UriUtil;
 
+import com.github.catvod.net.OkHttp;
+import com.github.tvbox.osc.server.RemoteServer;
+
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,6 +18,9 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.Call;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * @author asdfgh, FongMi
@@ -103,7 +110,7 @@ public class M3U8 {
         return  maxTimes*1.0 / (totalTimes*1.0);
     }
 
-    private static int timesNoAd = 15;
+    private static final int TIMES_NO_AD = 15;
     private static String removeMinorityUrl(String tsUrlPre, String m3u8content) {
         String linesplit = "\n";
         if (m3u8content.contains("\r\n"))
@@ -235,34 +242,122 @@ public class M3U8 {
         List<String> ads = getRegex(tsUrlPre);
         if (ads != null && !ads.isEmpty()) line = clean(line, ads);
         line = cleanCommonAdMarkers(line);
-        if (hasEndList(line) && line.contains(TAG_DISCONTINUITY)) {
-            line = cleanDecimalPrecisionGroups(line);
-            line = cleanFrameRateGroups(line);
+        if (line.contains(TAG_DISCONTINUITY)) {
+            line = cleanGroups(line);
         }
-        return cleanDiscontinuityGroups(line);
+        return line;
     }
 
     /**
-     * 正片切片的 EXTINF 小数位数通常稳定，广告素材拼接后经常出现另一种精度。
-    * 只删除精度完全不同的短块，不处理块内混合精度，避免误删正常切片。
-    */
-    private static String cleanDecimalPrecisionGroups(String m3u8Content) {
-        List<Group> groups = buildDiscontinuityGroups(m3u8Content.split("\\n"));
+     * 合并 cleanDecimalPrecisionGroups + cleanFrameRateGroups + cleanDiscontinuityGroups
+     * 只构建一次分组，统一应用三种策略，一次 normalize
+     * 修复原来各过滤器独立 30% 上限可能叠加到 ~66% 的误删风险
+     */
+    private static String cleanGroups(String m3u8Content) {
+        String[] lines = m3u8Content.split("\n");
+        List<Group> groups = buildDiscontinuityGroups(lines);
         if (groups.size() < 2) return m3u8Content;
-
-        Map<Integer, Integer> precisionCounts = new HashMap<>();
+    
         int totalSegments = 0;
+        for (Group group : groups) totalSegments += group.segmentCount;
+    
+        boolean hasEnd = hasEndList(m3u8Content);
+    
+        // 精度和帧率只在 VOD（有 ENDLIST）时启用
+        int majorPrecision = hasEnd ? findDominantPrecision(groups, totalSegments) : -1;
+        int masterFrameRate = hasEnd ? findDominantFrameRate(groups) : 0;
+    
+        // discontinuity 策略需要至少 3 个组
+        Group main = null;
+        boolean canUseDiscontinuity = groups.size() >= 3;
+        if (canUseDiscontinuity) {
+            main = findMainGroup(groups);
+            if (main == null || main.segmentCount < 3) {
+                main = null;
+                canUseDiscontinuity = false;
+            }
+        }
+    
+        int segmentLimit = getAdSegmentLimit(m3u8Content);
+        boolean[] removeGroups = new boolean[groups.size()];
+        int removableSegments = 0;
+    
+        for (int i = 0; i < groups.size(); i++) {
+            Group group = groups.get(i);
+            if (group.segmentCount == 0) continue;
+    
+            boolean shouldRemove = false;
+    
+            // 策略1: 小数精度不匹配（VOD，排除末尾组，限制块大小）
+            if (majorPrecision >= 0 && i != groups.size() - 1
+                    && group.segmentCount <= MAX_FRAME_RATE_AD_BLOCK_SIZE) {
+                DecimalPrecisionStats stats = getDecimalPrecisionStats(group, majorPrecision);
+                if (stats.total > 0 && stats.mismatched == stats.total) {
+                    shouldRemove = true;
+                }
+            }
+    
+            // 策略2: 帧率不匹配（VOD，排除末尾组，限制块大小）
+            if (!shouldRemove && masterFrameRate != 0
+                    && i != groups.size() - 1
+                    && group.segmentCount <= MAX_FRAME_RATE_AD_BLOCK_SIZE) {
+                FrameRateStats stats = getFrameRateStats(group, masterFrameRate);
+                if (stats.mismatched > 0 && stats.mismatched >= stats.matched) {
+                    shouldRemove = true;
+                }
+            }
+    
+            // 策略3: 时长/域名/路径差异（原 cleanDiscontinuityGroups）
+            if (!shouldRemove && canUseDiscontinuity && group != main) {
+                shouldRemove = shouldDropGroup(group, main);
+            }
+    
+            if (shouldRemove) {
+                removeGroups[i] = true;
+                removableSegments += group.segmentCount;
+            }
+        }
+    
+        // 统一安全检查：三种策略合计删除量不能超过上限
+        if (removableSegments == 0 || removableSegments > segmentLimit
+                || removableSegments > totalSegments * 0.3) {
+            return m3u8Content;
+        }
+    
+        StringBuilder sb = new StringBuilder();
+        int removedBlocks = 0;
+        for (int i = 0; i < groups.size(); i++) {
+            if (removeGroups[i]) {
+                currentAdCount += groups.get(i).segmentCount;
+                removedBlocks++;
+            } else {
+                groups.get(i).appendTo(sb);
+            }
+        }
+    
+        LOG.i("echo-fixAdM3u8 cleanGroups: removed " + removedBlocks
+                + " blocks, " + removableSegments + " segments");
+        return normalizeMediaPlaylist(sb.toString());
+    }
+    
+    /**
+     * 查找主导小数精度
+     * @return 主导精度值，若无主导精度则返回 -1
+     */
+    private static int findDominantPrecision(List<Group> groups, int totalSegments) {
+        Map<Integer, Integer> precisionCounts = new HashMap<>();
+        int counted = 0;
         for (Group group : groups) {
             for (String raw : group.lines) {
                 int precision = getDecimalPrecision(raw);
                 if (precision < 0) continue;
-                totalSegments += 1;
+                counted++;
                 Integer count = precisionCounts.get(precision);
                 precisionCounts.put(precision, count == null ? 1 : count + 1);
             }
         }
-        if (totalSegments < 8 || precisionCounts.size() < 2) return m3u8Content;
-
+        if (counted < 8 || precisionCounts.size() < 2) return -1;
+    
         int majorPrecision = -1;
         int majorCount = 0;
         for (Map.Entry<Integer, Integer> entry : precisionCounts.entrySet()) {
@@ -271,36 +366,8 @@ public class M3U8 {
                 majorCount = entry.getValue();
             }
         }
-        if (majorPrecision < 0 || majorCount * 1.0 / totalSegments < 0.7) return m3u8Content;
-
-        boolean[] removeGroups = new boolean[groups.size()];
-        int removableSegments = 0;
-        for (int i = 0; i < groups.size(); i++) {
-            Group group = groups.get(i);
-            if (i == groups.size() - 1 || group.segmentCount == 0 || group.segmentCount > MAX_FRAME_RATE_AD_BLOCK_SIZE) continue;
-
-            DecimalPrecisionStats stats = getDecimalPrecisionStats(group, majorPrecision);
-            if (stats.total > 0 && stats.mismatched == stats.total) {
-                removeGroups[i] = true;
-                removableSegments += group.segmentCount;
-            }
-        }
-
-        if (removableSegments == 0 || removableSegments > getAdSegmentLimit(m3u8Content)
-                || removableSegments > totalSegments * 0.3) return m3u8Content;
-
-        StringBuilder sb = new StringBuilder();
-        int removedBlocks = 0;
-        for (int i = 0; i < groups.size(); i++) {
-            if (removeGroups[i]) {
-                currentAdCount += groups.get(i).segmentCount;
-                removedBlocks += 1;
-            } else {
-                groups.get(i).appendTo(sb);
-            }
-        }
-        LOG.i("echo-fixAdM3u8 decimal precision detected: major=" + majorPrecision + ", blocks=" + removedBlocks + ", removed=" + removableSegments);
-        return normalizeMediaPlaylist(sb.toString());
+        if (majorPrecision < 0 || majorCount * 1.0 / counted < 0.7) return -1;
+        return majorPrecision;
     }
 
     private static DecimalPrecisionStats getDecimalPrecisionStats(Group group, int majorPrecision) {
@@ -320,47 +387,6 @@ public class M3U8 {
         int end = getExtInfValueEnd(line, start);
         int dot = line.indexOf('.', start);
         return dot < 0 || dot >= end ? 0 : end - dot - 1;
-    }
-
-    /**
-     * 广告通常由不同素材拼接，切片时长的小数部分会呈现不同的帧率特征。
-    * 仅对点播播放列表中的短不连续块执行，避免影响直播和正常长片段。
-    */
-    private static String cleanFrameRateGroups(String m3u8Content) {
-        List<Group> groups = buildDiscontinuityGroups(m3u8Content.split("\\n"));
-        if (groups.size() < 2) return m3u8Content;
-
-        int masterFrameRate = findDominantFrameRate(groups);
-        if (masterFrameRate == 0) return m3u8Content;
-
-        int removableSegments = 0;
-        boolean[] removeGroups = new boolean[groups.size()];
-        for (int i = 0; i < groups.size(); i++) {
-            Group group = groups.get(i);
-            if (i == groups.size() - 1 || group.segmentCount == 0 || group.segmentCount > MAX_FRAME_RATE_AD_BLOCK_SIZE) continue;
-
-            FrameRateStats stats = getFrameRateStats(group, masterFrameRate);
-            if (stats.mismatched > 0 && stats.mismatched >= stats.matched) {
-                removeGroups[i] = true;
-                removableSegments += group.segmentCount;
-            }
-        }
-
-        int segmentLimit = getAdSegmentLimit(m3u8Content);
-        if (removableSegments == 0 || removableSegments > segmentLimit) return m3u8Content;
-
-        StringBuilder sb = new StringBuilder();
-        int removedBlocks = 0;
-        for (int i = 0; i < groups.size(); i++) {
-            if (removeGroups[i]) {
-                currentAdCount += groups.get(i).segmentCount;
-                removedBlocks += 1;
-            } else {
-                groups.get(i).appendTo(sb);
-            }
-        }
-        LOG.i("echo-fixAdM3u8 frame rate detected: master=" + masterFrameRate + ", blocks=" + removedBlocks + ", removed=" + removableSegments);
-        return normalizeMediaPlaylist(sb.toString());
     }
 
     private static int findDominantFrameRate(List<Group> groups) {
@@ -655,26 +681,6 @@ public class M3U8 {
         return false;
     }
 
-    private static String cleanDiscontinuityGroups(String m3u8Content) {
-        String[] lines = m3u8Content.split("\n");
-        List<Group> groups = buildDiscontinuityGroups(lines);
-        if (groups.size() < 3) return m3u8Content;
-        Group main = findMainGroup(groups);
-        if (main == null || main.segmentCount < 3) return m3u8Content;
-
-        StringBuilder sb = new StringBuilder();
-        boolean changed = false;
-        for (Group group : groups) {
-            if (shouldDropGroup(group, main)) {
-                currentAdCount += group.segmentCount;
-                changed = true;
-                continue;
-            }
-            group.appendTo(sb);
-        }
-        return changed ? sb.toString() : m3u8Content;
-    }
-
     private static List<Group> buildDiscontinuityGroups(String[] lines) {
         List<Group> groups = new ArrayList<>();
         Group group = new Group();
@@ -749,7 +755,7 @@ public class M3U8 {
         int ifirst = absoluteUrl.indexOf('/', 9);
         String domain = (ifirst > 0) ? absoluteUrl.substring(0, ifirst) : absoluteUrl;
         Integer cnt = preUrlMap.get(domain);
-        return domain.equals(maxTimesPreUrl) || (cnt != null && cnt > timesNoAd);
+        return domain.equals(maxTimesPreUrl) || (cnt != null && cnt > TIMES_NO_AD);
     }
 
     private static boolean hasUriAttribute(String line) {
@@ -954,5 +960,115 @@ public class M3U8 {
         } else {
             return UriUtil.resolve(base, line);
         }
+    }
+
+    // M3U8 URL 净化公共接口
+    public interface PurifyUrlCallback {
+        void onSuccess(String purifiedUrl, HashMap<String, String> originalHeaders, int adCount);
+        void onFallback(String originalUrl, HashMap<String, String> originalHeaders);
+    }
+    
+    /**
+     * 使用 OkHttp 封装两层 m3u8 下载 + 净化逻辑
+     */
+    public static void purifyM3u8Url(final String url, final HashMap<String, String> headers, final PurifyUrlCallback callback) {
+        // 取消旧请求
+        OkHttp.cancel("m3u8-1");
+        OkHttp.cancel("m3u8-2");
+    
+        // 第一层：获取主 m3u8
+        OkHttp.newCall(url, headers, "m3u8-1")
+                .enqueue(new okhttp3.Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        callback.onFallback(url, headers);
+                    }
+    
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        if (!response.isSuccessful()) {
+                            callback.onFallback(url, headers);
+                            return;
+                        }
+                        String content = response.body().string();
+                        if (!content.startsWith("#EXTM3U")) {
+                            callback.onFallback(url, headers);
+                            return;
+                        }
+    
+                        String forwardurl = findForwardM3u8Url(url, content);
+                        if (forwardurl.isEmpty()) {
+                            // 单层 m3u8，直接净化
+                            int ilast = url.lastIndexOf('/');
+                            RemoteServer.m3u8Content = purify(url.substring(0, ilast + 1), content);
+                            if (RemoteServer.m3u8Content == null) {
+                                callback.onFallback(url, headers);
+                            } else {
+                                callback.onSuccess("http://127.0.0.1:" + RemoteServer.serverPort + "/m3u8", headers, currentAdCount);
+                            }
+                            return;
+                        }
+    
+                        // 第二层：获取转发 m3u8
+                        OkHttp.cancel("m3u8-2");
+                        OkHttp.newCall(forwardurl, headers, "m3u8-2")
+                                .enqueue(new okhttp3.Callback() {
+                                    @Override
+                                    public void onFailure(Call call, IOException e) {
+                                        callback.onFallback(url, headers);
+                                    }
+    
+                                    @Override
+                                    public void onResponse(Call call, Response response) throws IOException {
+                                        if (!response.isSuccessful()) {
+                                            callback.onFallback(url, headers);
+                                            return;
+                                        }
+                                        String content = response.body().string();
+                                        int ilast = forwardurl.lastIndexOf('/');
+                                        RemoteServer.m3u8Content = purify(forwardurl.substring(0, ilast + 1), content);
+                                        if (RemoteServer.m3u8Content == null) {
+                                            callback.onFallback(url, headers);
+                                        } else {
+                                            callback.onSuccess("http://127.0.0.1:" + RemoteServer.serverPort + "/m3u8", headers, currentAdCount);
+                                        }
+                                    }
+                                });
+                    }
+                });
+    }
+    
+    /**
+     * 从 m3u8 内容中查找转发的子 m3u8 URL
+     */
+    private static String findForwardM3u8Url(String baseUrl, String content) {
+        String[] lines;
+        if (content.contains("\r\n"))
+            lines = content.split("\r\n", 10);
+        else
+            lines = content.split("\n", 10);
+        String forwardurl = "";
+        boolean dealedFirst = false;
+        for (String line : lines) {
+            if (!"".equals(line) && line.charAt(0) != '#') {
+                if (dealedFirst) {
+                    forwardurl = "";
+                    break;
+                }
+                if (line.endsWith(".m3u8") || line.contains(".m3u8?")) {
+                    if (line.startsWith("http://") || line.startsWith("https://")) {
+                        forwardurl = line;
+                    } else if (line.charAt(0) == '/') {
+                        int ifirst = baseUrl.indexOf('/', 9);
+                        forwardurl = baseUrl.substring(0, ifirst) + line;
+                    } else {
+                        int ilast = baseUrl.lastIndexOf('/');
+                        forwardurl = baseUrl.substring(0, ilast + 1) + line;
+                    }
+                }
+                dealedFirst = true;
+            }
+        }
+        return forwardurl;
     }
 }
