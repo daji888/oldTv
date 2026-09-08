@@ -11,7 +11,6 @@ import com.github.tvbox.osc.server.ControlManager;
 import com.github.tvbox.osc.server.RemoteServer;
 import com.github.tvbox.osc.util.FileUtils;
 import com.github.tvbox.osc.util.MD5;
-import com.lzy.okgo.OkGo;
 
 import dalvik.system.DexClassLoader;
 
@@ -269,7 +268,7 @@ public class JarLoader {
         InputStream is = null;
         FileOutputStream os = null;
         try {
-            Response response = OkGo.<File>get(url).execute();
+            Response response = OkHttp.newCall(url).execute();
             if (response.body() == null) return file;
             is = response.body().byteStream();
             os = new FileOutputStream(create(file));
