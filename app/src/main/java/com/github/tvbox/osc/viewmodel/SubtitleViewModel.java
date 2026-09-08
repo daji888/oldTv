@@ -8,8 +8,6 @@ import com.github.catvod.net.OkHttp;
 import com.github.tvbox.osc.bean.SubtitleBean;
 import com.github.tvbox.osc.bean.SubtitleData;
 import com.github.tvbox.osc.ui.dialog.SearchSubtitleDialog;
-import com.lzy.okgo.OkGo;
-import com.lzy.okgo.callback.AbsCallback;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -73,53 +71,49 @@ public class SubtitleViewModel extends ViewModel {
             }
             if (page == 1) pagesTotal = -1;//第一页时 重置页大小
             String searchApiUrl = "https://secure.assrt.net/sub/";
-            OkGo.<String>get(searchApiUrl)
-                    .params("searchword", title)
-                    .params("sort", "rank")
-                    .params("page", page)
-                    .params("no_redir", "1")
-                    .execute(new AbsCallback<String>() {
-                        @Override
-                        public void onSuccess(com.lzy.okgo.model.Response<String> response) {
-                            try {
-                                String content = response.body();
-                                Document doc = Jsoup.parse(content);
-                                Elements items = doc.select(".resultcard .sublist_box_title a.introtitle");
-                                List<SubtitleBean> data = new ArrayList<>();
-                                for (Element item : items) {
-                                    String title = item.attr("title");
-                                    String href = item.attr("href");
-                                    if (TextUtils.isEmpty(href)) continue;
-                                    SubtitleBean one = new SubtitleBean();
-                                    one.setName(title);
-                                    one.setUrl("https://assrt.net" + href);
-                                    one.setIsZip(true);
-                                    data.add(one);
-                                }
-                                setSearchListData(data, page <= 1, true);
-                                Elements pages = doc.select(".pagelinkcard a");
-                                if (pages.size() > 0) {
-                                    String[] ps = pages.last().text().split("/", 2);
-                                    if (ps.length == 2 && !TextUtils.isEmpty(ps[1])) {
-                                        pagesTotal = Integer.valueOf(ps[1].trim());
-                                    }
-                                }
-                            } catch (Throwable th) {
-                                th.printStackTrace();
+            String url = searchApiUrl + "?searchword=" + title + "&sort=rank&page=" + page + "&no_redir=1";
+            OkHttp.newCall(url).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    e.printStackTrace();
+                    setSearchListData(null, page <= 1, true);
+                }
+            
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    if (!response.isSuccessful() || response.body() == null) {
+                        setSearchListData(null, page <= 1, true);
+                        return;
+                    }
+                    String content = response.body().string();
+                    try {
+                        Document doc = Jsoup.parse(content);
+                        Elements items = doc.select(".resultcard .sublist_box_title a.introtitle");
+                        List<SubtitleBean> data = new ArrayList<>();
+                        for (Element item : items) {
+                            String title = item.attr("title");
+                            String href = item.attr("href");
+                            if (TextUtils.isEmpty(href)) continue;
+                            SubtitleBean one = new SubtitleBean();
+                            one.setName(title);
+                            one.setUrl("https://assrt.net" + href);
+                            one.setIsZip(true);
+                            data.add(one);
+                        }
+                        setSearchListData(data, page <= 1, true);
+                        Elements pages = doc.select(".pagelinkcard a");
+                        if (pages.size() > 0) {
+                            String[] ps = pages.last().text().split("/", 2);
+                            if (ps.length == 2 && !TextUtils.isEmpty(ps[1])) {
+                                pagesTotal = Integer.valueOf(ps[1].trim());
                             }
                         }
-
-                        @Override
-                        public String convertResponse(Response response) throws Throwable {
-                            return response.body().string();
-                        }
-
-                        @Override
-                        public void onError(com.lzy.okgo.model.Response<String> response) {
-                            super.onError(response);
-                            setSearchListData(null, page <= 1, true);
-                        }
-                    });
+                    } catch (Throwable th) {
+                        th.printStackTrace();
+                        setSearchListData(null, page <= 1, true);
+                    }
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -130,11 +124,21 @@ public class SubtitleViewModel extends ViewModel {
     private void getSearchResultSubtitleUrlsFromAssrt(SubtitleBean subtitle) {
         try {
             String url = subtitle.getUrl();
-            OkGo.<String>get(url).execute(new AbsCallback<String>() {
+            OkHttp.newCall(url).enqueue(new Callback() {
                 @Override
-                public void onSuccess(com.lzy.okgo.model.Response<String> response) {
+                public void onFailure(Call call, IOException e) {
+                    e.printStackTrace();
+                    setSearchListData(null, true, true);
+                }
+            
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    if (!response.isSuccessful() || response.body() == null) {
+                        setSearchListData(null, true, true);
+                        return;
+                    }
+                    String content = response.body().string();
                     try {
-                        String content = response.body();
                         List<SubtitleBean> data = new ArrayList<>();
                         Document doc = Jsoup.parse(content);
                         Elements items = doc.select("#detail-filelist .waves-effect");
@@ -157,7 +161,10 @@ public class SubtitleViewModel extends ViewModel {
                         } else {//有的字幕 不一定是压缩包
                             Element item = doc.selectFirst(".download a#btn_download");
                             String href = item.attr("href");
-                            if (TextUtils.isEmpty(href)) setSearchListData(null, true, false);
+                            if (TextUtils.isEmpty(href)) {
+                                setSearchListData(null, true, false);
+                                return;
+                            }
                             String h2 = href.toLowerCase();
                             if (h2.endsWith("srt") || h2.endsWith("ass") || h2.endsWith("scc") || h2.endsWith("ttml")) {
                                 String url = "https://assrt.net" + href;
@@ -174,18 +181,8 @@ public class SubtitleViewModel extends ViewModel {
                         }
                     } catch (Throwable th) {
                         th.printStackTrace();
+                        setSearchListData(null, true, true);
                     }
-                }
-
-                @Override
-                public String convertResponse(Response response) throws Throwable {
-                    return response.body().string();
-                }
-
-                @Override
-                public void onError(com.lzy.okgo.model.Response<String> response) {
-                    super.onError(response);
-                    setSearchListData(null, true, true);
                 }
             });
         } catch (Exception e) {
