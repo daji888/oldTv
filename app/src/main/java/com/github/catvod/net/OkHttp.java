@@ -20,7 +20,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.List;
 import java.util.Map;
 
-
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
@@ -174,8 +173,20 @@ public class OkHttp {
         return client().newCall(new Request.Builder().url(url).post(body).tag(tag).build());
     }
 
+    public static Call newCall(String url, Map<String, String> headers, String tag) {
+        return client().newCall(new Request.Builder().url(url).headers(headers(headers)).tag(tag).build());
+    }
+
     public static Call newCall(OkHttpClient client, String url, RequestBody body) {
         return client.newCall(new Request.Builder().url(url).post(body).build());
+    }
+
+    public static Call newCall(String url, String tag, ArrayMap<String, String> params) {
+        return client().newCall(new Request.Builder().url(buildUrl(url, params)).tag(tag).build());
+    }
+
+    public static Call newCall(String url, Map<String, String> headers, String tag, ArrayMap<String, String> params) {
+        return client().newCall(new Request.Builder().url(buildUrl(url, params)).headers(headers(headers)).tag(tag).build());
     }
 
     public static void cancel(String tag) {

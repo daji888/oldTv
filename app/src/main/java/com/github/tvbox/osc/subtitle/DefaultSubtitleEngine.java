@@ -1,28 +1,3 @@
-/*
- *                       Copyright (C) of Avery
- *
- *                              _ooOoo_
- *                             o8888888o
- *                             88" . "88
- *                             (| -_- |)
- *                             O\  =  /O
- *                          ____/`- -'\____
- *                        .'  \\|     |//  `.
- *                       /  \\|||  :  |||//  \
- *                      /  _||||| -:- |||||-  \
- *                      |   | \\\  -  /// |   |
- *                      | \_|  ''\- -/''  |   |
- *                      \  .-\__  `-`  ___/-. /
- *                    ___`. .' /- -.- -\  `. . __
- *                 ."" '<  `.___\_<|>_/___.'  >'"".
- *                | | :  `- \`.;`\ _ /`;.`/ - ` : | |
- *                \  \ `-.   \_ __\ /__ _/   .-` /  /
- *           ======`-.____`-.___\_____/___.-`____.-'======
- *                              `=- -='
- *           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- *              Buddha bless, there will never be bug!!!
- */
-
 package com.github.tvbox.osc.subtitle;
 
 import android.os.Handler;
@@ -48,11 +23,6 @@ import java.util.List;
 import java.util.TreeMap;
 
 import xyz.doikki.videoplayer.player.AbstractPlayer;
-import static com.lzy.okgo.utils.HttpUtils.runOnUiThread;
-
-/**
- * @author AveryZhong.
- */
 
 public class DefaultSubtitleEngine implements SubtitleEngine {
     private static final String TAG = DefaultSubtitleEngine.class.getSimpleName();
@@ -69,7 +39,6 @@ public class DefaultSubtitleEngine implements SubtitleEngine {
     private OnSubtitleChangeListener mOnSubtitleChangeListener;
 
     public DefaultSubtitleEngine() {
-
     }
 
     @Override
@@ -160,6 +129,7 @@ public class DefaultSubtitleEngine implements SubtitleEngine {
     }
 
     private static String playSubtitleCacheKey;
+
     public void setPlaySubtitleCacheKey(String cacheKey) {
         playSubtitleCacheKey = cacheKey;
     }
@@ -190,7 +160,6 @@ public class DefaultSubtitleEngine implements SubtitleEngine {
         if (mWorkHandler != null) {
             mWorkHandler.sendEmptyMessageDelayed(MSG_REFRESH, REFRESH_INTERVAL);
         }
-
     }
 
     @Override
@@ -215,7 +184,6 @@ public class DefaultSubtitleEngine implements SubtitleEngine {
         Log.d(TAG, "destroy: ");
         stopWorkThread();
         reset();
-
     }
 
     private void initWorkThread() {
@@ -224,8 +192,8 @@ public class DefaultSubtitleEngine implements SubtitleEngine {
             @Override
             public boolean handleMessage(final Message msg) {
                 try {
-                         if (mMediaPlayer != null && mMediaPlayer instanceof EXOmPlayer) {
-                        runOnUiThread(new Runnable() {
+                    if (mMediaPlayer != null && mMediaPlayer instanceof EXOmPlayer) {
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
                             @Override
                             public void run() {
                                 long delay = REFRESH_INTERVAL;
@@ -235,7 +203,6 @@ public class DefaultSubtitleEngine implements SubtitleEngine {
                                 if (subtitle != null) {
                                     delay = subtitle.end.mseconds - position;
                                 }
-
                                 if (mWorkHandler != null) {
                                     mWorkHandler.sendEmptyMessageDelayed(MSG_REFRESH, delay);
                                 }
@@ -251,7 +218,6 @@ public class DefaultSubtitleEngine implements SubtitleEngine {
                         if (subtitle != null) {
                             delay = subtitle.end.mseconds - position;
                         }
-
                     }
                     if (mWorkHandler != null) {
                         mWorkHandler.sendEmptyMessageDelayed(MSG_REFRESH, delay);
@@ -293,5 +259,4 @@ public class DefaultSubtitleEngine implements SubtitleEngine {
     public void setOnSubtitleChangeListener(final OnSubtitleChangeListener listener) {
         mOnSubtitleChangeListener = listener;
     }
-
 }

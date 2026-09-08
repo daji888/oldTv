@@ -34,7 +34,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.github.catvod.net.OkHttp;
-import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.api.ApiConfig;
 import com.github.tvbox.osc.base.App;
 import com.github.tvbox.osc.base.BaseActivity;
@@ -51,6 +50,7 @@ import com.github.tvbox.osc.player.IjkmPlayer;
 import com.github.tvbox.osc.player.MyVideoView;
 import com.github.tvbox.osc.player.TrackInfo;
 import com.github.tvbox.osc.player.TrackInfoBean;
+import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.ui.adapter.ApiHistoryDialogAdapter;
 import com.github.tvbox.osc.ui.adapter.LiveChannelGroupAdapter;
 import com.github.tvbox.osc.ui.adapter.LiveChannelItemAdapter;
@@ -75,9 +75,6 @@ import com.github.tvbox.osc.util.live.TxtSubscribe;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.lzy.okgo.OkGo;
-import com.lzy.okgo.callback.AbsCallback;
-import com.lzy.okgo.model.Response;
 import com.orhanobut.hawk.Hawk;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
 import com.owen.tvrecyclerview.widget.V7LinearLayoutManager;
@@ -103,7 +100,12 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+    
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -340,9 +342,9 @@ public class LivePlayActivity extends BaseActivity {
                 epgUrl = epgStringAddress + "?ch=" + URLEncoder.encode(epgTagName, "UTF-8") + "&date=" + timeFormat.format(date);
             }
             OkHttpClient client = OkHttp.client();
-            client.newCall(new okhttp3.Request.Builder().url(epgUrl).build()).enqueue(new okhttp3.Callback() {
+            client.newCall(new Request.Builder().url(epgUrl).build()).enqueue(new Callback() {
                 @Override
-                public void onFailure(okhttp3.Call call, IOException e) {
+                public void onFailure(Call call, IOException e) {
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -353,7 +355,7 @@ public class LivePlayActivity extends BaseActivity {
                 }
 
                 @Override
-                public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+                public void onResponse(Call call, Response response) throws IOException {
                     if (response.code() != 200) {
                         response.close();
                         mHandler.post(new Runnable() {
@@ -2026,42 +2028,48 @@ public class LivePlayActivity extends BaseActivity {
             return;
         }
         showLoading();
-        OkGo.<String>get(url).execute(new AbsCallback<String>() {
-
+        OkHttp.newCall(url).enqueue(new Callback() {
             @Override
-            public String convertResponse(okhttp3.Response response) throws Throwable {
-                assert response.body() != null;
-                return response.body().string();
-            }
-
-            @Override
-            public void onSuccess(Response<String> response) {
-                JsonArray livesArray = TxtSubscribe.parseToJsonArray(response.body());
-
-                ApiConfig.get().loadLives(livesArray);
-                List<LiveChannelGroup> list = ApiConfig.get().getChannelGroupList();
-                if (list.isEmpty()) {
-                    Toast.makeText(App.getInstance(), "频道列表为空", Toast.LENGTH_SHORT).show();
-                    finish();
-                    return;
-                }
-                liveChannelGroupList.clear();
-                liveChannelGroupList.addAll(list);
-
+            public void onFailure(Call call, IOException e) {
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
+                        Toast.makeText(App.getInstance(), "直播地址网络请求失败，请重试", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful() || response.body() == null) {
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(App.getInstance(), "频道列表为空", Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+                    });
+                    return;
+                }
+                String body = response.body().string();
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        JsonArray livesArray = TxtSubscribe.parseToJsonArray(body);
+                        ApiConfig.get().loadLives(livesArray);
+                        List<LiveChannelGroup> list = ApiConfig.get().getChannelGroupList();
+                        if (list.isEmpty()) {
+                            Toast.makeText(App.getInstance(), "频道列表为空", Toast.LENGTH_SHORT).show();
+                            finish();
+                            return;
+                        }
+                        liveChannelGroupList.clear();
+                        liveChannelGroupList.addAll(list);
                         LivePlayActivity.this.showSuccess();
                         initLiveState();
                     }
                 });
-            }
-            
-            @Override
-            public void onError(Response<String> response) {
-                super.onError(response);
-                Toast.makeText(App.getInstance(), "直播地址网络请求失败，请重试", Toast.LENGTH_SHORT).show();
-                finish();
             }
         });
     }

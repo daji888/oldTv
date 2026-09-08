@@ -18,9 +18,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.ConsoleMessage;
 import android.webkit.CookieManager;
+import android.widget.ImageView;
 import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
+import android.widget.ProgressBar;
 import android.webkit.SslErrorHandler;
+import android.widget.TextView;
+import android.widget.Toast;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
@@ -28,22 +32,18 @@ import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.DiffUtil;
 import androidx.media3.common.Player;
 import androidx.media3.common.text.Cue;
+import androidx.recyclerview.widget.DiffUtil;
 
 import com.github.catvod.crawler.Spider;
-import com.github.tvbox.osc.R;
+import com.github.catvod.net.OkHttp;
 import com.github.tvbox.osc.api.ApiConfig;
 import com.github.tvbox.osc.base.App;
 import com.github.tvbox.osc.base.BaseLazyFragment;
@@ -59,8 +59,8 @@ import com.github.tvbox.osc.player.MyVideoView;
 import com.github.tvbox.osc.player.TrackInfo;
 import com.github.tvbox.osc.player.TrackInfoBean;
 import com.github.tvbox.osc.player.controller.VodController;
+import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.server.ControlManager;
-import com.github.tvbox.osc.server.RemoteServer;
 import com.github.tvbox.osc.subtitle.model.Subtitle;
 import com.github.tvbox.osc.ui.activity.DetailActivity;
 import com.github.tvbox.osc.ui.adapter.SelectDialogAdapter;
@@ -82,12 +82,30 @@ import com.github.tvbox.osc.util.parser.SuperParse;
 import com.github.tvbox.osc.util.thunder.Jianpian;
 import com.github.tvbox.osc.util.thunder.Thunder;
 import com.github.tvbox.osc.viewmodel.SourceViewModel;
-import com.lzy.okgo.OkGo;
-import com.lzy.okgo.callback.AbsCallback;
-import com.lzy.okgo.model.HttpHeaders;
-import com.lzy.okgo.model.Response;
 import com.obsez.android.lib.filechooser.ChooserDialog;
 import com.orhanobut.hawk.Hawk;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import me.jessyan.autosize.AutoSize;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Request;
+import okhttp3.Response;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -96,23 +114,9 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import me.jessyan.autosize.AutoSize;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkTimedText;
+
 import xyz.doikki.videoplayer.player.AbstractPlayer;
 import xyz.doikki.videoplayer.player.ProgressManager;
 
@@ -669,117 +673,28 @@ public class PlayFragment extends BaseLazyFragment {
             return;
         }
         if (DefaultConfig.noAd(mVodInfo.playFlag)) {
-             startPlayUrl(url, headers);
-             return;
-         }
-        OkGo.getInstance().cancelTag("m3u8-1");
-        OkGo.getInstance().cancelTag("m3u8-2");
-        //remove ads in m3u8
-        HttpHeaders hheaders = new HttpHeaders();
-        if (headers != null) {
-            for (Map.Entry<String, String> s : headers.entrySet()) {
-                hheaders.put(s.getKey(), s.getValue());
-            }
+            startPlayUrl(url, headers);
+            return;
         }
-        OkGo.<String>get(url)
-                .tag("m3u8-1")
-                .headers(hheaders)
-                .execute(new AbsCallback<String>() {
-                    String url = finalUrl;
-                    @Override
-                    public void onSuccess(com.lzy.okgo.model.Response<String> response) {
-                        String content = response.body();
-                        if (!content.startsWith("#EXTM3U")) {
-                            startPlayUrl(url, headers);
-                            return;
+        M3U8.purifyM3u8Url(url, headers, new M3U8.PurifyUrlCallback() {
+            @Override
+            public void onSuccess(String purifiedUrl, HashMap<String, String> originalHeaders, int adCount) {
+                startPlayUrl(purifiedUrl, originalHeaders);
+                if (adCount > 0 && isAdded()) {
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getContext(), "已移除 " + adCount + " 条视频广告", Toast.LENGTH_SHORT).show();
                         }
-
-                        String[] lines = null;
-                        if (content.contains("\r\n"))
-                            lines = content.split("\r\n", 10);
-                        else
-                            lines = content.split("\n", 10);
-                        String forwardurl = "";
-                        boolean dealedFirst = false;
-                        for (String line : lines) {
-                            if (!"".equals(line) && line.charAt(0) != '#') {
-                                if (dealedFirst) {
-                                    //跳转行后还有内容，说明不需要跳转
-                                    forwardurl = "";
-                                    break;
-                                }
-                                if (line.endsWith(".m3u8") || line.contains(".m3u8?")) {
-                                    if (line.startsWith("http://") || line.startsWith("https://")) {
-                                        forwardurl = line;
-                                    } else if (line.charAt(0) == '/') {
-                                        int ifirst = url.indexOf('/', 9);//skip https://, http://
-                                        forwardurl = url.substring(0, ifirst) + line;
-                                    } else {
-                                        int ilast = url.lastIndexOf('/');
-                                        forwardurl = url.substring(0, ilast + 1) + line;
-                                    }
-                                }
-                                dealedFirst = true;
-                            }
-                        }
-                        if ("".equals(forwardurl)) {
-                            int ilast = url.lastIndexOf('/');
-                            RemoteServer.m3u8Content = M3U8.purify(url.substring(0, ilast + 1), content);
-                            if (RemoteServer.m3u8Content == null)
-                                startPlayUrl(url, headers);
-                            else {
-                                startPlayUrl("http://127.0.0.1:" + RemoteServer.serverPort + "/m3u8", headers);
-                                if (M3U8.currentAdCount > 0) {
-                                    Toast.makeText(getContext(), "已移除视频广告 " + M3U8.currentAdCount + " 条", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                            return;
-                        }
-                        final String finalforwardurl = forwardurl;
-                        OkGo.<String>get(forwardurl)
-                                .tag("m3u8-2")
-                                .headers(hheaders)
-                                .execute(new AbsCallback<String>() {
-                                    @Override
-                                    public void onSuccess(com.lzy.okgo.model.Response<String> response) {
-                                        String content = response.body();
-                                        int ilast = finalforwardurl.lastIndexOf('/');
-                                        RemoteServer.m3u8Content = M3U8.purify(finalforwardurl.substring(0, ilast + 1), content);
-
-                                        if (RemoteServer.m3u8Content == null)
-                                            startPlayUrl(finalforwardurl, headers);
-                                        else {
-                                            startPlayUrl("http://127.0.0.1:" + RemoteServer.serverPort + "/m3u8", headers);
-                                            if (M3U8.currentAdCount > 0) {
-                                                Toast.makeText(getContext(), "已移除视频广告 " + M3U8.currentAdCount + " 条", Toast.LENGTH_SHORT).show();
-                                            }
-                                        }
-                                    }
-
-                                    @Override
-                                    public String convertResponse(okhttp3.Response response) throws Throwable {
-                                        return response.body().string();
-                                    }
-
-                                    @Override
-                                    public void onError(com.lzy.okgo.model.Response<String> response) {
-                                        super.onError(response);
-                                        startPlayUrl(url, headers);
-                                    }
-                                });
-                    }
-
-                    @Override
-                    public String convertResponse(okhttp3.Response response) throws Throwable {
-                        return response.body().string();
-                    }
-
-                    @Override
-                    public void onError(com.lzy.okgo.model.Response<String> response) {
-                        super.onError(response);
-                        startPlayUrl(url, headers);
-                    }
-                });
+                    });
+                }
+            }
+    
+            @Override
+            public void onFallback(String originalUrl, HashMap<String, String> originalHeaders) {
+                startPlayUrl(originalUrl, originalHeaders);
+            }
+        });
     }
 
     void startPlayUrl(String url, HashMap<String, String> headers) {
@@ -1443,7 +1358,7 @@ public class PlayFragment extends BaseLazyFragment {
     void stopParse() {
         mHandler.removeMessages(100);
         stopLoadWebView(false);
-        OkGo.getInstance().cancelTag("json_jx");
+        OkHttp.cancel("json_jx");
         if (parseThreadPool != null) {
             try {
                 parseThreadPool.shutdown();
@@ -1489,34 +1404,32 @@ public class PlayFragment extends BaseLazyFragment {
         } else if (pb.getType() == 1) { // json 解析
             setTip("正在解析播放地址", true, false);
             // 解析ext
-            HttpHeaders reqHeaders = new HttpHeaders();
+            String url = pb.getUrl() + mController.encodeUrl(webUrl);
+            JSONObject jsonObject;
             try {
-                JSONObject jsonObject = new JSONObject(pb.getExt());
-                HashMap<String, String> headerMap = getHeaders(jsonObject);
-                if (headerMap != null) {
-                    for (String key : headerMap.keySet()) {
-                        reqHeaders.put(key, headerMap.get(key));
-                    }
-                }
-            } catch (Throwable e) {
+                jsonObject = new JSONObject(pb.getExt());
+            } catch (JSONException e) {
                 e.printStackTrace();
+                errorWithRetry("解析错误", false);
+                return;
             }
-            OkGo.<String>get(pb.getUrl() + mController.encodeUrl(webUrl))
-                    .tag("json_jx")
-                    .headers(reqHeaders)
-                    .execute(new AbsCallback<String>() {
-                        @Override
-                        public String convertResponse(okhttp3.Response response) throws Throwable {
-                            if (response.body() != null) {
-                                return response.body().string();
-                            } else {
-                                throw new IllegalStateException("网络请求错误");
-                            }
-                        }
+            HashMap<String, String> headers = getHeaders(jsonObject);
+            OkHttp.newCall(url, headers, "json_jx").enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    errorWithRetry("解析错误", false);
+                }
 
+                @Override
+                public void onResponse(Call call, okhttp3.Response response) throws IOException {
+                    if (!response.isSuccessful() || response.body() == null) {
+                        errorWithRetry("解析错误", false);
+                        return;
+                    }
+                    String json = response.body().string();
+                    requireActivity().runOnUiThread(new Runnable() {
                         @Override
-                        public void onSuccess(Response<String> response) {
-                            String json = response.body();
+                        public void run() {
                             try {
                                 JSONObject rs = jsonParse(webUrl, json);
                                 HashMap<String, String> headers = getHeaders(rs);
@@ -1536,14 +1449,9 @@ public class PlayFragment extends BaseLazyFragment {
 //                                setTip("解析错误", false, true);
                             }
                         }
-
-                        @Override
-                        public void onError(Response<String> response) {
-                            super.onError(response);
-                            errorWithRetry("解析错误", false);
-//                            setTip("解析错误", false, true);
-                        }
                     });
+                }
+            });
         } else if (pb.getType() == 2) { // json 扩展
             setTip("正在解析播放地址", true, false);
             parseThreadPool = Executors.newSingleThreadExecutor();
