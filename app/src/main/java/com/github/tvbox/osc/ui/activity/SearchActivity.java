@@ -19,7 +19,8 @@ import android.widget.Toast;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.github.tvbox.osc.R;
+import com.github.catvod.crawler.JsLoader;
+import com.github.catvod.net.OkHttp;
 import com.github.tvbox.osc.api.ApiConfig;
 import com.github.tvbox.osc.base.BaseActivity;
 import com.github.tvbox.osc.bean.AbsXml;
@@ -27,6 +28,7 @@ import com.github.tvbox.osc.bean.Movie;
 import com.github.tvbox.osc.bean.SourceBean;
 import com.github.tvbox.osc.event.RefreshEvent;
 import com.github.tvbox.osc.event.ServerEvent;
+import com.github.tvbox.osc.R;
 import com.github.tvbox.osc.ui.adapter.PinyinAdapter;
 import com.github.tvbox.osc.ui.adapter.SearchAdapter;
 import com.github.tvbox.osc.ui.dialog.RemoteDialog;
@@ -35,30 +37,31 @@ import com.github.tvbox.osc.ui.tv.widget.SearchKeyboard;
 import com.github.tvbox.osc.util.FastClickCheckUtil;
 import com.github.tvbox.osc.util.HawkConfig;
 import com.github.tvbox.osc.util.SearchHelper;
-import com.github.catvod.crawler.JsLoader;
 import com.github.tvbox.osc.viewmodel.SourceViewModel;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.lzy.okgo.OkGo;
-import com.lzy.okgo.callback.AbsCallback;
-import com.lzy.okgo.model.Response;
 import com.orhanobut.hawk.Hawk;
 import com.owen.tvrecyclerview.widget.TvRecyclerView;
 import com.owen.tvrecyclerview.widget.V7GridLayoutManager;
 import com.owen.tvrecyclerview.widget.V7LinearLayoutManager;
 
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * @author pj567
@@ -303,32 +306,36 @@ public class SearchActivity extends BaseActivity {
      * 拼音联想
      */
     private void loadRec(String key) {
-        OkGo.<String>get("https://suggest.video.iqiyi.com/")
-                .params("if", "mobile")
-                .params("key", key)
-                .execute(new AbsCallback<String>() {
+        String url = "https://suggest.video.iqiyi.com/?if=mobile&key=" + key;
+        OkHttp.newCall(url).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+    
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful() || response.body() == null) return;
+                String result = response.body().string();
+                runOnUiThread(new Runnable() {
                     @Override
-                    public void onSuccess(Response<String> response) {
+                    public void run() {
                         try {
                             ArrayList<String> hots = new ArrayList<>();
-                            String result = response.body();
                             JsonObject json = JsonParser.parseString(result).getAsJsonObject();
                             JsonArray itemList = json.get("data").getAsJsonArray();
                             for (JsonElement ele : itemList) {
                                 JsonObject obj = (JsonObject) ele;
-                                hots.add(obj.get("name").getAsString().trim().replaceAll("<|>|《|》|-", ""));
+                                hots.add(obj.get("name").getAsString().trim().replaceAll("<|>|||-", ""));
                             }
                             wordAdapter.setNewData(hots);
                         } catch (Throwable th) {
                             th.printStackTrace();
                         }
                     }
-
-                    @Override
-                    public String convertResponse(okhttp3.Response response) throws Throwable {
-                        return response.body().string();
-                    }
                 });
+            }
+        });
     }
 
     private void initData() {
@@ -346,38 +353,37 @@ public class SearchActivity extends BaseActivity {
             }
         }
         // 加载热词
-        OkGo.<String>get("https://movie.douban.com/j/search_subjects?type=tv&tag=%E7%83%AD%E9%97%A8&sort=recommend&page_limit=20&page_start=0")
-//        OkGo.<String>get("https://api.web.360kan.com/v1/rank")
-//                .params("cat", "1")
-                .headers("User-Agent", "Mozilla/5.0")
-                .execute(new AbsCallback<String>() {
+        String doubanUrl = "https://movie.douban.com/j/search_subjects?type=tv&tag=%E7%83%AD%E9%97%A8&sort=recommend&page_limit=20&page_start=0";
+        HashMap<String, String> doubanHeaders = new HashMap<>();
+        doubanHeaders.put("User-Agent", "Mozilla/5.0");
+        OkHttp.newCall(doubanUrl, doubanHeaders).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+        
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (!response.isSuccessful() || response.body() == null) return;
+                String result = response.body().string();
+                runOnUiThread(new Runnable() {
                     @Override
-                    public void onSuccess(Response<String> response) {
+                    public void run() {
                         try {
                             ArrayList<String> hots = new ArrayList<>();
-                            JsonArray itemList = JsonParser.parseString(response.body()).getAsJsonObject().get("subjects").getAsJsonArray();
-//                            JsonArray itemList = JsonParser.parseString(response.body()).getAsJsonObject().get("data").getAsJsonArray();
+                            JsonArray itemList = JsonParser.parseString(result).getAsJsonObject().get("subjects").getAsJsonArray();
                             for (JsonElement ele : itemList) {
                                 JsonObject obj = (JsonObject) ele;
-                                hots.add(obj.get("title").getAsString().trim().replaceAll("<|>|《|》|-", "").split(" ")[0]);
+                                hots.add(obj.get("title").getAsString().trim().replaceAll("<|>|||-", "").split(" ")[0]);
                             }
                             wordAdapter.setNewData(hots);
                         } catch (Throwable th) {
                             th.printStackTrace();
                         }
                     }
-
-                    @Override
-                    public void onError(Response<String> response) {
-                        super.onError(response);
-                    }
-
-                    @Override
-                    public String convertResponse(okhttp3.Response response) throws Throwable {
-                        return response.body().string();
-                    }
                 });
-
+            }
+        });
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -514,7 +520,7 @@ public class SearchActivity extends BaseActivity {
 
 
     private void cancel() {
-        OkGo.getInstance().cancelTag("search");
+        OkHttp.cancel("search");
     }
 
     @Override
