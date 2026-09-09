@@ -57,7 +57,14 @@ public class SearchHelper {
 
     public static List<String> splitWords(String text) {
         List<String> result = new ArrayList<>();
-        result.add(text);
+        if (text == null || text.trim().isEmpty()) {
+            return result;
+        }
+        result.add(text.trim());
+        String stripped = text.replaceAll("\\d+$", "").trim();
+        if (!stripped.equals(text.trim()) && !stripped.isEmpty()) {
+            result.add(stripped);
+        }
         String[] parts = text.split("\\W+");
         if (parts.length > 1) {
             result.addAll(Arrays.asList(parts));
