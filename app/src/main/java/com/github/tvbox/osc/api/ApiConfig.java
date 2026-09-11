@@ -513,17 +513,17 @@ public class ApiConfig {
         jarCache = DefaultConfig.safeJsonString(infoJson, "jarCache", "true");
         // urls
         if (infoJson.has("urls") && infoJson.get("urls").getAsJsonArray() != null) {
+            ArrayList<String> history = Hawk.get(HawkConfig.API_HISTORY, new ArrayList<String>());
             for (JsonElement opt : infoJson.getAsJsonArray("urls")) {
                 String url = ((JsonObject) opt).has("url") ? ((JsonObject) opt).get("url").getAsString() : "";
                 if (!url.isEmpty()) {
-                    ArrayList<String> history = Hawk.get(HawkConfig.API_HISTORY, new ArrayList<String>());
                     if (!history.contains(url))
                         history.add(url);
                     if (history.size() > 30)
                         history.remove(30);
-                    Hawk.put(HawkConfig.API_HISTORY, history);
                 }
             }
+            Hawk.put(HawkConfig.API_HISTORY, history);
         }
         // wallpaper
         wallpaper = DefaultConfig.safeJsonString(infoJson, "wallpaper", "");
@@ -611,6 +611,25 @@ public class ApiConfig {
                 }
             }
             loadLiveApi(livesOBJ);
+        }
+        // epgs
+        if (infoJson.has("epgs") && infoJson.getAsJsonArray("epgs") != null) {
+            JsonArray epgsArray = infoJson.getAsJsonArray("epgs");
+            if (epgsArray.size() > 0) {
+                String firstEpg = epgsArray.get(0).getAsJsonObject().get("epg").getAsString();
+                Hawk.put(HawkConfig.EPG_URL, firstEpg);
+            }
+            ArrayList<String> history = Hawk.get(HawkConfig.EPG_HISTORY, new ArrayList<String>());
+            for (JsonElement opt : epgsArray) {
+                String epg = ((JsonObject) opt).has("epg") ? ((JsonObject) opt).get("epg").getAsString() : "";
+                if (!epg.isEmpty()) {
+                    if (!history.contains(epg))
+                        history.add(epg);
+                    if (history.size() > 30)
+                        history.remove(30);
+                }
+            }
+            Hawk.put(HawkConfig.EPG_HISTORY, history);
         }
         loadProxyRules(infoJson);
         //video parse rule for host
@@ -733,32 +752,32 @@ public class ApiConfig {
 
     private void putLiveHistory(String url) {
         JsonArray live_groups = Hawk.get(HawkConfig.LIVE_GROUP_LIST, new JsonArray());
+        ArrayList<String> history = Hawk.get(HawkConfig.LIVE_HISTORY, new ArrayList<String>());
         for (JsonElement livesOBJ : live_groups) {
             url = ((JsonObject) livesOBJ).has("url") ? ((JsonObject) livesOBJ).get("url").getAsString() : "";
             if (!url.isEmpty()) {
-                ArrayList<String> history = Hawk.get(HawkConfig.LIVE_HISTORY, new ArrayList<String>());
                 if (!history.contains(url))
                     history.add(url);
                 if (history.size() > 30)
                     history.remove(30);
-                Hawk.put(HawkConfig.LIVE_HISTORY, history);
             }
         }
+        Hawk.put(HawkConfig.LIVE_HISTORY, history);
     }
 
     private void putEpgHistory(String epg) {
         JsonArray live_groups = Hawk.get(HawkConfig.LIVE_GROUP_LIST, new JsonArray());
+        ArrayList<String> history = Hawk.get(HawkConfig.EPG_HISTORY, new ArrayList<String>());
         for (JsonElement livesOBJ : live_groups) {
             epg = ((JsonObject) livesOBJ).has("epg") ? ((JsonObject) livesOBJ).get("epg").getAsString() : "";
             if (!epg.isEmpty()) {
-                ArrayList<String> history = Hawk.get(HawkConfig.EPG_HISTORY, new ArrayList<String>());
                 if (!history.contains(epg))
                     history.add(epg);
                 if (history.size() > 30)
                     history.remove(30);
-                Hawk.put(HawkConfig.EPG_HISTORY, history);
             }
-         }
+        }
+        Hawk.put(HawkConfig.EPG_HISTORY, history);
     }
 
     public void loadLives(JsonArray livesArray) {
