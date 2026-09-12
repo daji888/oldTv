@@ -191,6 +191,7 @@ public class LivePlayActivity extends BaseActivity {
     public static boolean isBack = false;
     private static String shiyi_time;//时移时间
     private static String playUrl;
+    
     //kenson
     private ImageView imgLiveIcon;
     private TextView liveIconNullText;
@@ -200,7 +201,7 @@ public class LivePlayActivity extends BaseActivity {
     private TextView tv_currentpos;
     private TextView tv_duration;
     private SeekBar sBar;
-    private  boolean show = false;
+    private boolean show = false;
     private boolean mIsDragging;
     private LiveController controller;
 
@@ -460,6 +461,7 @@ public class LivePlayActivity extends BaseActivity {
                 ll_epg.setVisibility(View.VISIBLE);
                 tv_videosize.setVisibility(View.VISIBLE);
                 tv_play_load_net_speed_right_top.setVisibility(View.VISIBLE);
+                mHandler.post(mUpdatetv_play_load_net_speed_right_topRun);
                 countDownTimer = new CountDownTimer(5000, 1000) {//底部epg隐藏时间设定
                     public void onTick(long j) {
                     }
@@ -467,6 +469,7 @@ public class LivePlayActivity extends BaseActivity {
                         ll_epg.setVisibility(View.GONE);
                         tv_videosize.setVisibility(View.GONE);
                         tv_play_load_net_speed_right_top.setVisibility(View.GONE);
+                        mHandler.removeCallbacks(mUpdatetv_play_load_net_speed_right_topRun);
                     }
                 };
                 countDownTimer.start();
@@ -474,6 +477,7 @@ public class LivePlayActivity extends BaseActivity {
                 ll_epg.setVisibility(View.GONE);
                 tv_videosize.setVisibility(View.GONE);
                 tv_play_load_net_speed_right_top.setVisibility(View.GONE);
+                mHandler.removeCallbacks(mUpdatetv_play_load_net_speed_right_topRun);
             }
             if (channel_Name == null || channel_Name.getSourceNum() <= 0) {
                 tv_srcinfo.setText("1 / 1");
@@ -539,8 +543,8 @@ public class LivePlayActivity extends BaseActivity {
             mHandler.removeCallbacks(mConnectTimeoutReplayRun);
             mHandler.removeCallbacks(mUpdateNetSpeedRun);
             mHandler.removeCallbacks(mUpdateTimeRun);
-            mHandler.removeCallbacks(mUpdatetv_videosizeRun);
             mHandler.removeCallbacks(mUpdatetv_play_load_net_speedRun);
+            mHandler.removeCallbacks(mUpdatetv_play_load_net_speed_right_topRun);
             super.onBackPressed();
         }
     }
@@ -581,7 +585,6 @@ public class LivePlayActivity extends BaseActivity {
             int keyCode = event.getKeyCode();
             if (keyCode == KeyEvent.KEYCODE_MENU) {
                 showSettingGroup();
-                showtv_videosize();
             } else if (!isListOrSettingLayoutVisible()) {
                 switch (keyCode) {
                     case KeyEvent.KEYCODE_DPAD_UP:
@@ -628,9 +631,6 @@ public class LivePlayActivity extends BaseActivity {
                             } else {
                                 mVideoView.start();
                                 tv_videosize.setVisibility(View.GONE);
-                                if (countDownTimer != null) {
-                                    countDownTimer.start();
-                                }
                             }    
                         } else {
                             showChannelList();
@@ -1048,8 +1048,8 @@ public class LivePlayActivity extends BaseActivity {
                 if (selectedData == null) return;
                 String targetDate = dateFormat.format(date);
                 assert selectedData != null;
-                String shiyiStartdate = targetDate + selectedData.originStart.replace(":", "") + "25";
-                String shiyiEnddate = targetDate + selectedData.originEnd.replace(":", "") + "25";
+                String shiyiStartdate = targetDate + selectedData.originStart.replace(":", "") + "20";
+                String shiyiEnddate = targetDate + selectedData.originEnd.replace(":", "") + "20";
                 Date now = new Date();
                 epgListAdapter.setSelectedEpgIndex(position);
    /*             if (now.compareTo(selectedData.startdateTime) >= 0 && now.compareTo(selectedData.enddateTime) <= 0) {
@@ -1162,8 +1162,8 @@ public class LivePlayActivity extends BaseActivity {
                 assert selectedData != null;
                 LOG.i("echo-targetDate" + targetDate);
                 LOG.i("echo-targethm" + selectedData.originStart.replace(":", ""));
-                String shiyiStartdate = targetDate + selectedData.originStart.replace(":", "") + "25";
-                String shiyiEnddate = targetDate + selectedData.originEnd.replace(":", "") + "25";
+                String shiyiStartdate = targetDate + selectedData.originStart.replace(":", "") + "20";
+                String shiyiEnddate = targetDate + selectedData.originEnd.replace(":", "") + "20";
                 Date now = new Date();
                 epgListAdapter.setSelectedEpgIndex(position);
         /*        if (now.compareTo(selectedData.startdateTime) >= 0 && now.compareTo(selectedData.enddateTime) <= 0) {
@@ -1360,7 +1360,6 @@ public class LivePlayActivity extends BaseActivity {
             @Override
             public void longPress() {
                 showSettingGroup();
-                showtv_videosize();
             }
 
             @Override
@@ -1373,10 +1372,13 @@ public class LivePlayActivity extends BaseActivity {
                         ((TextView) findViewById(R.id.tv_pause_progress_text)).setText((stringForTime(safeTimeMs(mVideoView.getCurrentPosition()))) + " / " + (stringForTime(safeTimeMs(mVideoView.getDuration()))));
                         break;
                     case VideoView.STATE_PREPARED:
+                        getvideosize();
                         tv_play_load_net_speed.setVisibility(View.GONE);
-                        sBar.setMax(safeTimeMs(mVideoView.getDuration()));
-                        sBar.setKeyProgressIncrement(safeTimeMs(sBar.getMax()) / 100);
-                        tv_duration.setText(stringForTime(safeTimeMs(mVideoView.getDuration())));
+                        if (isBack) {
+                            sBar.setMax(safeTimeMs(mVideoView.getDuration()));
+                            sBar.setKeyProgressIncrement(safeTimeMs(sBar.getMax()) / 100);
+                            tv_duration.setText(stringForTime(safeTimeMs(mVideoView.getDuration())));
+                        }
                         break;
                     case VideoView.STATE_BUFFERED:
                         tv_play_load_net_speed.setVisibility(View.GONE);
@@ -2115,8 +2117,6 @@ public class LivePlayActivity extends BaseActivity {
         livePlayerManager.init(mVideoView);
         showTime();
         showNetSpeed();
-        showtv_videosize();
-        showtv_play_load_net_speed_right_top();
         
         tvLeftChannelListLayout.setVisibility(View.INVISIBLE);
         tvRightSettingLayout.setVisibility(View.INVISIBLE);
@@ -2210,25 +2210,13 @@ public class LivePlayActivity extends BaseActivity {
         }
     };
 
-    private void showtv_videosize() {
-       tv_videosize.setVisibility(View.VISIBLE);
-       mHandler.post(mUpdatetv_videosizeRun);
-    }
-
-    private Runnable mUpdatetv_videosizeRun = new Runnable() {
-        @Override
-        public void run() {
-            if (mVideoView == null) return;
-            String width = Integer.toString(mVideoView.getVideoSize()[0]);
-            String height = Integer.toString(mVideoView.getVideoSize()[1]);
-            tv_videosize.setText("分辨率 : " + width + " x " + height);
-            mHandler.postDelayed(this, 1000);
+    private void getvideosize() {
+        if (mVideoView != null) {
+            int[] size = mVideoView.getVideoSize();
+            if (size != null && size.length == 2) {
+                tv_videosize.setText(size[0] + " x " + size[1]);
+            }
         }
-    };
-
-   private void showtv_play_load_net_speed_right_top() {
-        tv_play_load_net_speed_right_top.setVisibility(View.VISIBLE);
-        mHandler.post(mUpdatetv_play_load_net_speed_right_topRun);
     }
 
     private Runnable mUpdatetv_play_load_net_speed_right_topRun = new Runnable() {
@@ -2236,7 +2224,7 @@ public class LivePlayActivity extends BaseActivity {
         public void run() {
             if (mVideoView == null) return;
             String speed = PlayerHelper.getDisplaySpeed(mVideoView.getTcpSpeed(), true);
-            tv_play_load_net_speed_right_top.setText("网速 : " + speed);
+            tv_play_load_net_speed_right_top.setText(speed);
             mHandler.postDelayed(this, 1000);
         }
     };     
