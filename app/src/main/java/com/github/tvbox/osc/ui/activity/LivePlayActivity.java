@@ -173,7 +173,7 @@ public class LivePlayActivity extends BaseActivity {
     private TextView tv_srcinfo;
     private TextView tv_videosize;
     private TextView tv_play_load_net_speed_right_top;
-    private TextView txtNoEpg ;
+    private TextView txtNoEpg;
 
     private String epgStringAddress = "";
 
