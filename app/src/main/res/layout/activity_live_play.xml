@@ -23,7 +23,7 @@
         android:background="@drawable/shape_user_focus"
         android:focusable="false"
         android:visibility="gone"
-        android:text="1280 x 720"
+        android:text="0 x 0"
         android:textColor="@android:color/white"
         android:textSize="@dimen/ts_20" />
 	
