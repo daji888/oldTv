@@ -173,7 +173,7 @@ public class LivePlayActivity extends BaseActivity {
     private TextView tv_srcinfo;
     private TextView tv_videosize;
     private TextView tv_play_load_net_speed_right_top;
-    private TextView txtNoEpg ;
+    private TextView txtNoEpg;
 
     private String epgStringAddress = "";
 
@@ -631,6 +631,9 @@ public class LivePlayActivity extends BaseActivity {
                             } else {
                                 mVideoView.start();
                                 tv_videosize.setVisibility(View.GONE);
+                                if (countDownTimer != null) {
+                                    countDownTimer.start();
+                                }
                             }    
                         } else {
                             showChannelList();
@@ -2190,7 +2193,7 @@ public class LivePlayActivity extends BaseActivity {
         liveSettingGroupList.get(0).setLiveSettingItems(liveSettingItemList);
     }
 
-    void showTime() {
+    private void showTime() {
         if (Hawk.get(HawkConfig.LIVE_SHOW_TIME, false)) {
             mHandler.post(mUpdateTimeRun);
             tvTime.setVisibility(View.VISIBLE);
@@ -2206,6 +2209,26 @@ public class LivePlayActivity extends BaseActivity {
             Date day = new Date();
             SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
             tvTime.setText(df.format(day));
+            mHandler.postDelayed(this, 1000);
+        }
+    };
+
+    private void showNetSpeed() {
+        if (Hawk.get(HawkConfig.LIVE_SHOW_NET_SPEED, false)) {
+            mHandler.post(mUpdateNetSpeedRun);
+            tvNetSpeed.setVisibility(View.VISIBLE);
+        } else {
+            mHandler.removeCallbacks(mUpdateNetSpeedRun);
+            tvNetSpeed.setVisibility(View.GONE);
+        }
+    }
+
+    private Runnable mUpdateNetSpeedRun = new Runnable() {
+        @Override
+        public void run() {
+            if (mVideoView == null) return;
+            String speed = PlayerHelper.getDisplaySpeed(mVideoView.getTcpSpeed(), true);
+            tvNetSpeed.setText(speed);
             mHandler.postDelayed(this, 1000);
         }
     };
@@ -2227,7 +2250,7 @@ public class LivePlayActivity extends BaseActivity {
             tv_play_load_net_speed_right_top.setText(speed);
             mHandler.postDelayed(this, 1000);
         }
-    };     
+    };
 
     private Runnable mUpdatetv_play_load_net_speedRun = new Runnable() {
         @Override
@@ -2235,26 +2258,6 @@ public class LivePlayActivity extends BaseActivity {
             if (mVideoView == null) return;
             String speed = PlayerHelper.getDisplaySpeed(mVideoView.getTcpSpeed(), true);
             tv_play_load_net_speed.setText(speed);
-            mHandler.postDelayed(this, 1000);
-        }
-    };     
-    
-    private void showNetSpeed() {
-        if (Hawk.get(HawkConfig.LIVE_SHOW_NET_SPEED, false)) {
-            mHandler.post(mUpdateNetSpeedRun);
-            tvNetSpeed.setVisibility(View.VISIBLE);
-        } else {
-            mHandler.removeCallbacks(mUpdateNetSpeedRun);
-            tvNetSpeed.setVisibility(View.GONE);
-        }
-    }
-
-    private Runnable mUpdateNetSpeedRun = new Runnable() {
-        @Override
-        public void run() {
-            if (mVideoView == null) return;
-            String speed = PlayerHelper.getDisplaySpeed(mVideoView.getTcpSpeed(), true);
-            tvNetSpeed.setText(speed);
             mHandler.postDelayed(this, 1000);
         }
     };

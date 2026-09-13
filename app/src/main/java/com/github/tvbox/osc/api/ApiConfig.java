@@ -615,9 +615,14 @@ public class ApiConfig {
         // epgs
         if (infoJson.has("epgs") && infoJson.getAsJsonArray("epgs") != null) {
             JsonArray epgsArray = infoJson.getAsJsonArray("epgs");
-            if (epgsArray.size() > 0) {
-                String firstEpg = epgsArray.get(0).getAsJsonObject().get("epg").getAsString();
-                Hawk.put(HawkConfig.EPG_URL, firstEpg);
+            if (epgsArray.size() > 0 && StringUtils.isBlank(Hawk.get(HawkConfig.EPG_URL, ""))) {
+                JsonObject firstObj = epgsArray.get(0).getAsJsonObject();
+                if (firstObj != null && firstObj.has("epg")) {
+                    String firstEpg = firstObj.get("epg").getAsString();
+                    if (!StringUtils.isBlank(firstEpg)) {
+                        Hawk.put(HawkConfig.EPG_URL, firstEpg);
+                    }
+                }
             }
             ArrayList<String> history = Hawk.get(HawkConfig.EPG_HISTORY, new ArrayList<String>());
             for (JsonElement opt : epgsArray) {
