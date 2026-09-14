@@ -102,8 +102,6 @@ import java.util.regex.Pattern;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.Response;
     
 import org.apache.commons.lang3.StringUtils;
@@ -342,8 +340,7 @@ public class LivePlayActivity extends BaseActivity {
             } else {
                 epgUrl = epgStringAddress + "?ch=" + URLEncoder.encode(epgTagName, "UTF-8") + "&date=" + timeFormat.format(date);
             }
-            OkHttpClient client = OkHttp.client();
-            client.newCall(new Request.Builder().url(epgUrl).build()).enqueue(new Callback() {
+            OkHttp.newCall(epgUrl).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     mHandler.post(new Runnable() {
