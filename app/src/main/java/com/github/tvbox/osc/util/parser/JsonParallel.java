@@ -16,8 +16,6 @@ import java.util.concurrent.Future;
 
 import okhttp3.Call;
 import okhttp3.Headers;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.Response;
 
 /**
@@ -25,13 +23,11 @@ import okhttp3.Response;
  */
 public class JsonParallel {
 
-    private static OkHttpClient client;
     private static ExecutorService executorService;
     private static final List<Future<JSONObject>> futures = new ArrayList<>();
     public static JSONObject parse(LinkedHashMap<String, String> jx, String url) {
         try {
             if (jx != null && jx.size() > 0) {
-                client = new OkHttpClient();
                 // 使用线程池并发处理任务
                 executorService = Executors.newFixedThreadPool(5);
                 CompletionService<JSONObject> completionService = new ExecutorCompletionService<>(executorService);
@@ -49,13 +45,8 @@ public class JsonParallel {
                                 String realUrl = reqHeaders.get("url");
                                 reqHeaders.remove("url");
                                 Headers headers = Headers.of(reqHeaders);
-                                Request request = new Request.Builder()
-                                        .url(realUrl + url)
-                                        .headers(headers)
-                                        .tag("ParseTag")
-                                        .build();
 
-                                Call call = client.newCall(request);
+                                Call call = OkHttp.newCall(realUrl + url, headers, "ParseTag");
                                 Response response = call.execute();
                                 String json = response.body().string();
 
