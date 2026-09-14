@@ -103,36 +103,6 @@ public class Connect {
     }
     
     public static void cancelByTag(Object tag) {
-        try {
-            if (client != null) {
-                for (Call call : client.dispatcher().queuedCalls()) {
-                    if (tag.equals(call.request().tag())) {
-                        call.cancel();
-                    }
-                }
-                for (Call call : client.dispatcher().runningCalls()) {
-                    if (tag.equals(call.request().tag())) {
-                        call.cancel();
-                    }
-                }
-            }
-            cancelDefaultClient(tag);
-        } catch (Exception e) {
-        }
-    }
-
-    private static void cancelDefaultClient(Object tag) {
-        OkHttpClient defaultClient = OkHttp.client();
-        if (defaultClient == null || tag == null) return;
-        for (Call call : defaultClient.dispatcher().queuedCalls()) {
-            if (tag.equals(call.request().tag())) {
-                call.cancel();
-            }
-        }
-        for (Call call : defaultClient.dispatcher().runningCalls()) {
-            if (tag.equals(call.request().tag())) {
-                call.cancel();
-            }
-        }
+        OkHttp.cancel(client, tag);
     }
 }
