@@ -8,7 +8,6 @@ import android.util.Base64;
 import android.view.Surface;
 import android.view.WindowManager;
 
-import com.github.catvod.net.OkHttp;
 import com.github.tvbox.osc.server.ControlManager;
 import com.github.tvbox.osc.base.App;
 import com.google.gson.JsonArray;
@@ -25,6 +24,8 @@ import java.util.concurrent.Future;
 
 import okhttp3.FormBody;
 import okhttp3.Headers;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
@@ -112,10 +113,11 @@ public class SpiderApi {
             if (url.isEmpty()) return "";
             String method = string(obj, "method");
             Headers headers = headers(obj.get("headers"));
-            if ("POST".equalsIgnoreCase(method)) {
-                try (Response response = OkHttp.newCall(url, headers, body(obj)).execute()) {
-                    return response.body() != null ? response.body().string() : "";
-                }
+            Request.Builder builder = new Request.Builder().url(url).headers(headers);
+            if ("POST".equalsIgnoreCase(method)) builder.post(body(obj));
+            OkHttpClient client = com.github.catvod.net.OkHttp.client();
+            try (Response response = client.newCall(builder.build()).execute()) {
+                return response.body() != null ? response.body().string() : "";
             }
         } catch (Throwable th) {
             return "";
