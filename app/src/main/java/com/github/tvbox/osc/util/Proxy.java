@@ -306,7 +306,7 @@ public class Proxy {
     }
 
     public static String getRedirectedUrl(String url) throws IOException {
-        try (Response response = OkHttp.noRedirect().newCall(url).execute()) {
+        try (Response response = OkHttp.newCall(OkHttp.noRedirect(), url).execute()) {
             if (response.isRedirect()) { // 判断是否为重定向
                 return response.header("Location"); // 获取重定向后的地址
             }
@@ -315,7 +315,7 @@ public class Proxy {
     }
 
     public static String getM3U8Content(String url) throws IOException {
-        try (Response response = OkHttp.player().newCall(url).execute()) {
+        try (Response response = OkHttp.newCall(OkHttp.player(), url).execute()) {
             if (response.isSuccessful()) {
                 return response.body().string(); // 获取 m3u8 文件内容
             } else {
