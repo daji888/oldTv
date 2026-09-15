@@ -330,7 +330,6 @@ public class LivePlayActivity extends BaseActivity {
             String logo = logoUrl.replace("{name}", epgTagName);
             updateChannelIcon(channelName, logo);
         }
-        String finalChannelName = channelName;
         epgListAdapter.CanBack(currentLiveChannelItem.getinclude_back());
     //    epgListAdapter.updateData(date, new ArrayList<>());
         String epgUrl;
