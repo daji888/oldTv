@@ -98,7 +98,7 @@ public class JsonParallel {
     }
 
     public static void cancelTasks() {
-        OkHttp.cancelAll(OkHttp.client)
+        OkHttp.cancelAll(OkHttp.client);
         if (futures != null) {
             for (Future<JSONObject> future : futures) {
                 try {
