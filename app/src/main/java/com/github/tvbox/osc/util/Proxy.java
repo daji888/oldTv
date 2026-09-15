@@ -306,6 +306,7 @@ public class Proxy {
     }
 
     public static String getRedirectedUrl(String url) throws IOException {
+        if (OkHttp.client() != null) OkHttp.client().newBuilder();
         try (Response response = OkHttp.newCall(OkHttp.noRedirect(), url).execute()) {
             if (response.isRedirect()) { // 判断是否为重定向
                 return response.header("Location"); // 获取重定向后的地址
