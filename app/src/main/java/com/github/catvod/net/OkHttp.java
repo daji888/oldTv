@@ -149,14 +149,6 @@ public class OkHttp {
         return client().newCall(new Request.Builder().url(url).tag(tag).build());
     }
 
-    public static Call newCall(OkHttpClient client, String url) {
-        return client.newCall(new Request.Builder().url(url).build());
-    }
-
-    public static Call newCall(OkHttpClient client, String url, String tag) {
-        return client.newCall(new Request.Builder().url(url).tag(tag).build());
-    }
-
     public static Call newCall(String url, Map<String, String> headers) {
         return client().newCall(new Request.Builder().url(url).headers(headers(headers)).build());
     }
@@ -177,16 +169,24 @@ public class OkHttp {
         return client().newCall(new Request.Builder().url(url).headers(headers(headers)).tag(tag).build());
     }
 
-    public static Call newCall(OkHttpClient client, String url, RequestBody body) {
-        return client.newCall(new Request.Builder().url(url).post(body).build());
-    }
-
     public static Call newCall(String url, String tag, ArrayMap<String, String> params) {
         return client().newCall(new Request.Builder().url(buildUrl(url, params)).tag(tag).build());
     }
 
     public static Call newCall(String url, Map<String, String> headers, String tag, ArrayMap<String, String> params) {
         return client().newCall(new Request.Builder().url(buildUrl(url, params)).headers(headers(headers)).tag(tag).build());
+    }
+
+    public static Call newCall(OkHttpClient client, String url) {
+        return client.newCall(new Request.Builder().url(url).build());
+    }
+
+    public static Call newCall(OkHttpClient client, String url, String tag) {
+        return client.newCall(new Request.Builder().url(url).tag(tag).build());
+    }
+
+    public static Call newCall(OkHttpClient client, String url, RequestBody body) {
+        return client.newCall(new Request.Builder().url(url).post(body).build());
     }
 
     public static void cancel(String tag) {
