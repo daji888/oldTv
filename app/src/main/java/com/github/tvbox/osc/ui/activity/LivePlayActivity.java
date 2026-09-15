@@ -350,7 +350,7 @@ public class LivePlayActivity extends BaseActivity {
                         }
                     });
                 }
-    
+
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
                     if (response.code() != 200) {
@@ -400,7 +400,7 @@ public class LivePlayActivity extends BaseActivity {
             });
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-        }
+        }  
     }
 
     //显示底部EPG
