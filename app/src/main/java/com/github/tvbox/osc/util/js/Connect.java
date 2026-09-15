@@ -102,7 +102,7 @@ public class Connect {
         }
     }
     
-    public static void cancelByTag(Object tag) {
+    public static void cancelByTag(String tag) {
         OkHttp.cancel(client, tag);
     }
 }
