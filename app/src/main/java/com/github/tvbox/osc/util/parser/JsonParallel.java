@@ -72,7 +72,7 @@ public class JsonParallel {
                     try {
                         pTaskResult = completed.get();
                         if (pTaskResult != null) {
-                            client.dispatcher().cancelAll();
+                            OkHttp.client.dispatcher().cancelAll();
                             for (Future<JSONObject> future : futures) {
                                 try {
                                     future.cancel(true);
@@ -98,9 +98,7 @@ public class JsonParallel {
     }
 
     public static void cancelTasks() {
-        if (client != null) {
-            client.dispatcher().cancelAll();
-        }
+        OkHttp.cancelAll(OkHttp.client)
         if (futures != null) {
             for (Future<JSONObject> future : futures) {
                 try {
