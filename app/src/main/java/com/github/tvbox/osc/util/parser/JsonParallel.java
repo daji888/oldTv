@@ -1,10 +1,7 @@
 package com.github.tvbox.osc.util.parser;
-
 import android.util.Base64;
-
 import com.github.catvod.crawler.SpiderDebug;
-import com.github.catvod.net.OkHttp;
-
+import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -19,20 +16,22 @@ import java.util.concurrent.Future;
 
 import okhttp3.Call;
 import okhttp3.Headers;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.Response;
-
-import org.json.JSONObject;
 
 /**
  * 并发解析，直到获得第一个结果
  */
 public class JsonParallel {
 
+    private static OkHttpClient client;
     private static ExecutorService executorService;
     private static final List<Future<JSONObject>> futures = new ArrayList<>();
     public static JSONObject parse(LinkedHashMap<String, String> jx, String url) {
         try {
             if (jx != null && jx.size() > 0) {
+                client = new OkHttpClient();
                 // 使用线程池并发处理任务
                 executorService = Executors.newFixedThreadPool(5);
                 CompletionService<JSONObject> completionService = new ExecutorCompletionService<>(executorService);
@@ -50,8 +49,13 @@ public class JsonParallel {
                                 String realUrl = reqHeaders.get("url");
                                 reqHeaders.remove("url");
                                 Headers headers = Headers.of(reqHeaders);
+                                Request request = new Request.Builder()
+                                        .url(realUrl + url)
+                                        .headers(headers)
+                                        .tag("ParseTag")
+                                        .build();
 
-                                Call call = OkHttp.newCall(realUrl + url, headers, "ParseTag");
+                                Call call = client.newCall(request);
                                 Response response = call.execute();
                                 String json = response.body().string();
 
@@ -72,7 +76,7 @@ public class JsonParallel {
                     try {
                         pTaskResult = completed.get();
                         if (pTaskResult != null) {
-                            OkHttp.client.dispatcher().cancelAll();
+                            client.dispatcher().cancelAll();
                             for (Future<JSONObject> future : futures) {
                                 try {
                                     future.cancel(true);
@@ -98,7 +102,9 @@ public class JsonParallel {
     }
 
     public static void cancelTasks() {
-        OkHttp.cancelAll(OkHttp.client);
+        if (client != null) {
+            client.dispatcher().cancelAll();
+        }
         if (futures != null) {
             for (Future<JSONObject> future : futures) {
                 try {
