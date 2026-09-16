@@ -198,16 +198,8 @@ public class SubtitleViewModel extends ViewModel {
                 .addHeader("Referer", "https://secure.assrt.net")
                 .addHeader("User-Agent", ua)
                 .build();
-        OkHttpClient base = OkHttp.client();
-        OkHttpClient.Builder builder = base != null ? base.newBuilder() : new OkHttpClient.Builder().proxySelector(OkHttp.proxySelector()).proxyAuthenticator(OkHttp.proxyAuthenticator())
-                .readTimeout(15, TimeUnit.SECONDS)
-                .writeTimeout(15, TimeUnit.SECONDS)
-                .connectTimeout(15, TimeUnit.SECONDS)
-                .followRedirects(false)
-                .followSslRedirects(false)
-                .retryOnConnectionFailure(true);
-        OkHttpClient client = builder.build();
-        client.newCall(request).enqueue(new Callback() {
+        if (OkHttp.client() != null) OkHttp.client().newBuilder();
+        OkHttp.noRedirect().newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
