@@ -80,7 +80,7 @@ public class App extends Application {
         // 系统选项
         putDefault(HawkConfig.SEARCH_VIEW, 0);               //搜索展示: 0=文字列表, 1=缩略图
         putDefault(HawkConfig.DOH_URL, 0);                   //DNS: 0=运营商, 1=腾讯, 2=阿里, 3=360, 4=Google, 5=Cloudflare ,6=AdGuard, 7=DNSWatch, 8=Quad9
-        putDefault(HawkConfig.API_URL, "https://ghproxy.net/https://raw.githubusercontent.com/daji888/ys/master/ys99.txt");
+        putDefault(HawkConfig.API_URL, "https://cdn.jsdmirror.com/gh/daji888/ys@master/ys99.txt");
     }
 
     public static App getInstance() {
