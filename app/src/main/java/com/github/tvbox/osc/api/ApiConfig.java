@@ -238,11 +238,7 @@ public class ApiConfig {
                 String error = "";
                 okhttp3.Response response = null;
                 try {
-                    okhttp3.Request request = new okhttp3.Request.Builder()
-                            .url(requestUrl)
-                            .build();
-                    okhttp3.OkHttpClient client = OkHttp.client();
-                    response = client.newCall(request).execute();
+                    response = OkHttp.newCall(requestUrl).execute();
                     if (!response.isSuccessful()) {
                         error = "HTTP " + response.code();
                     } else if (response.body() == null) {
@@ -311,12 +307,7 @@ public class ApiConfig {
                     File cacheDir = cache.getParentFile();
                     if (cacheDir != null && !cacheDir.exists()) cacheDir.mkdirs();
                     if (temp.exists()) temp.delete();
-                    okhttp3.Request request = new okhttp3.Request.Builder()
-                            .url(url)
-                            .header("User-Agent", userAgent)
-                            .build();
-                    okhttp3.OkHttpClient client = OkHttp.client();
-                    response = client.newCall(request).execute();
+                    response = OkHttp.newCall(url, userAgent).execute();
                     if (!response.isSuccessful()) {
                         error = "HTTP " + response.code();
                     } else if (response.body() == null) {
