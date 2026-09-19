@@ -91,7 +91,6 @@ public class SearchActivity extends BaseActivity {
         return R.layout.activity_search;
     }
 
-
     private static Boolean hasKeyBoard;
     private static Boolean isSearchBack;
     @Override
@@ -101,29 +100,6 @@ public class SearchActivity extends BaseActivity {
         initData();
         hasKeyBoard = true;
         isSearchBack = false;
-    }
-
-    /*
-     * 禁止软键盘
-     * @param activity Activity
-     */
-    public static void disableKeyboard(Activity activity) {
-        hasKeyBoard = false;
-        activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-    }
-
-    /*
-     * 启用软键盘
-     * @param activity Activity
-     */
-    public static void enableKeyboard(Activity activity) {
-        hasKeyBoard = true;
-        activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
-    }
-
-    public void openSystemKeyBoard() {
-        InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(this.getCurrentFocus(), InputMethodManager.SHOW_FORCED);
     }
 
     private List<Runnable> pauseRunnable = null;
@@ -201,14 +177,7 @@ public class SearchActivity extends BaseActivity {
                     } catch (Throwable th) {
                         th.printStackTrace();
                     }
-                    hasKeyBoard = false;
-                    isSearchBack = true;
-                    Bundle bundle = new Bundle();
-                    bundle.putString("id", video.id);
-                    bundle.putString("sourceKey", video.sourceKey);
-                    bundle.putString("title", video.name);
-                    bundle.putString("picture", video.pic);
-                    jumpActivity(DetailActivity.class, bundle);
+                    openSearchVideo(video);
                 }
             }
         });
@@ -238,16 +207,6 @@ public class SearchActivity extends BaseActivity {
                 etSearch.setText("");
             }
         });
-//        etSearch.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                enableKeyboard(SearchActivity.this);
-//                openSystemKeyBoard();//再次尝试拉起键盘
-//                SearchActivity.this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-//            }
-//        });
-
-//        etSearch.setOnFocusChangeListener(tvSearchFocusChangeListener);
         keyboard.setOnSearchKeyListener(new SearchKeyboard.OnSearchKeyListener() {
             @Override
             public void onSearchKey(int pos, String key) {
@@ -300,6 +259,37 @@ public class SearchActivity extends BaseActivity {
 
     private void initViewModel() {
         sourceViewModel = new ViewModelProvider(this).get(SourceViewModel.class);
+        sourceViewModel.listResult.observe(this, new androidx.lifecycle.Observer<AbsXml>() {
+            @Override
+            public void onChanged(AbsXml data) {
+                if (!folderLoading) return;
+                folderLoading = false;
+                if (data == null || data.movie == null || data.movie.videoList == null) {
+                    showEmpty();
+                    return;
+                }
+                showSuccess();
+                mGridView.setVisibility(View.VISIBLE);
+                searchAdapter.setNewData(data.movie.videoList);
+            }
+        });
+    }
+
+    private void openSearchVideo(Movie.Video video) {
+        hasKeyBoard = false;
+        if (TextUtils.equals("folder", video.tag)) {
+            folderLoading = true;
+            showLoading();
+            sourceViewModel.getList(video.sourceKey, video.id);
+            return;
+        }
+        isSearchBack = true;
+        Bundle bundle = new Bundle();
+        bundle.putString("id", video.id);
+        bundle.putString("sourceKey", video.sourceKey);
+        bundle.putString("title", video.name);
+        bundle.putString("picture", video.pic);
+        jumpActivity(DetailActivity.class, bundle);
     }
 
     /**
@@ -436,6 +426,7 @@ public class SearchActivity extends BaseActivity {
 
     private ExecutorService searchExecutorService = null;
     private AtomicInteger allRunCount = new AtomicInteger(0);
+    private boolean folderLoading;
 
     private void searchResult() {
         try {

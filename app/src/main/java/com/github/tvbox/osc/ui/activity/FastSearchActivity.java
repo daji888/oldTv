@@ -67,12 +67,6 @@ public class FastSearchActivity extends BaseActivity {
     private TvRecyclerView mGridViewWord;
     private TvRecyclerView mGridViewWordFenci;
     SourceViewModel sourceViewModel;
-    //    private EditText etSearch;
-//    private TextView tvSearch;
-//    private TextView tvClear;
-//    private SearchKeyboard keyboard;
-//    private TextView tvAddress;
-//    private ImageView ivQRCode;
     private SearchWordAdapter searchWordAdapter;
     private FastSearchAdapter searchAdapter;
     private FastSearchAdapter searchAdapterFilter;
@@ -148,13 +142,6 @@ public class FastSearchActivity extends BaseActivity {
         spListAdapter = new FastListAdapter();
         mGridViewWord.setAdapter(spListAdapter);
 
-
-//        mGridViewWord.setFocusable(true);
-//        mGridViewWord.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View itemView, boolean hasFocus) {}
-//        });
-
         mGridViewWord.addOnChildAttachStateChangeListener(new RecyclerView.OnChildAttachStateChangeListener() {
             @Override
             public void onChildViewAttachedToWindow(@NonNull View child) {
@@ -164,9 +151,6 @@ public class FastSearchActivity extends BaseActivity {
                 if (t.getText() == "全部") {
                     t.requestFocus();
                 }
-//                if (child.isFocusable() && null == child.getOnFocusChangeListener()) {
-//                    child.setOnFocusChangeListener(focusChangeListener);
-//                }
             }
 
             @Override
@@ -204,12 +188,7 @@ public class FastSearchActivity extends BaseActivity {
                     } catch (Throwable th) {
                         th.printStackTrace();
                     }
-                    Bundle bundle = new Bundle();
-                    bundle.putString("id", video.id);
-                    bundle.putString("sourceKey", video.sourceKey);
-                    bundle.putString("title", video.name);
-                    bundle.putString("picture", video.pic);
-                    jumpActivity(DetailActivity.class, bundle);
+                    openSearchVideo(video, false);
                 }
             }
         });
@@ -233,12 +212,7 @@ public class FastSearchActivity extends BaseActivity {
                     } catch (Throwable th) {
                         th.printStackTrace();
                     }
-                    Bundle bundle = new Bundle();
-                    bundle.putString("id", video.id);
-                    bundle.putString("sourceKey", video.sourceKey);
-                    bundle.putString("title", video.name);
-                    bundle.putString("picture", video.pic);
-                    jumpActivity(DetailActivity.class, bundle);
+                    openSearchVideo(video, true);
                 }
             }
         });
@@ -262,6 +236,43 @@ public class FastSearchActivity extends BaseActivity {
 
     private void initViewModel() {
         sourceViewModel = new ViewModelProvider(this).get(SourceViewModel.class);
+        sourceViewModel.listResult.observe(this, new androidx.lifecycle.Observer<AbsXml>() {
+            @Override
+            public void onChanged(AbsXml data) {
+                if (!folderLoading) return;
+                folderLoading = false;
+                if (data == null || data.movie == null || data.movie.videoList == null) {
+                    showEmpty();
+                    return;
+                }
+                showSuccess();
+                if (folderFilterMode) {
+                    mGridView.setVisibility(View.GONE);
+                    mGridViewFilter.setVisibility(View.VISIBLE);
+                    searchAdapterFilter.setNewData(data.movie.videoList);
+                } else {
+                    mGridViewFilter.setVisibility(View.GONE);
+                    mGridView.setVisibility(View.VISIBLE);
+                    searchAdapter.setNewData(data.movie.videoList);
+                }
+            }
+        });
+    }
+
+    private void openSearchVideo(Movie.Video video, boolean filterMode) {
+        if (TextUtils.equals("folder", video.tag)) {
+            folderFilterMode = filterMode;
+            folderLoading = true;
+            showLoading();
+            sourceViewModel.getList(video.sourceKey, video.id);
+            return;
+        }
+        Bundle bundle = new Bundle();
+        bundle.putString("id", video.id);
+        bundle.putString("sourceKey", video.sourceKey);
+        bundle.putString("title", video.name);
+        bundle.putString("picture", video.pic);
+        jumpActivity(DetailActivity.class, bundle);
     }
 
     private void filterResult(String spName) {
@@ -393,6 +404,8 @@ public class FastSearchActivity extends BaseActivity {
 
     private ExecutorService searchExecutorService = null;
     private AtomicInteger allRunCount = new AtomicInteger(0);
+    private boolean folderFilterMode;
+    private boolean folderLoading;
 
     private void searchResult() {
         try {
