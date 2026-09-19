@@ -65,6 +65,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * @author pj567
@@ -75,11 +76,11 @@ public class SourceViewModel extends ViewModel {
     public MutableLiveData<AbsSortXml> sortResult;
     public MutableLiveData<AbsXml> listResult;
     public MutableLiveData<AbsXml> searchResult;
-    public MutableLiveData<AbsXml> quickSearchResult;
+    private MutableLiveData<AbsXml> quickSearchResult;
     public MutableLiveData<AbsXml> detailResult;
     public MutableLiveData<JSONObject> actionResult;
     public MutableLiveData<JSONObject> playResult;
-    public Gson gson;
+    private Gson gson;
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
     private final AtomicInteger playRequestSeq = new AtomicInteger();
     
@@ -246,7 +247,7 @@ public class SourceViewModel extends ViewModel {
                     sortResult.postValue(null);
                 }
                 @Override
-                public void onResponse(Call call, okhttp3.Response response) throws IOException {
+                public void onResponse(Call call, Response response) throws IOException {
                     if (!response.isSuccessful() || response.body() == null) {
                         sortResult.postValue(null);
                         return;
@@ -294,7 +295,7 @@ public class SourceViewModel extends ViewModel {
                             sortResult.postValue(null);
                         }
                         @Override
-                        public void onResponse(Call call, okhttp3.Response response) throws IOException {
+                        public void onResponse(Call call, Response response) throws IOException {
                             if (!response.isSuccessful() || response.body() == null) {
                                 sortResult.postValue(null);
                                 return;
@@ -342,7 +343,7 @@ public class SourceViewModel extends ViewModel {
                             }
     
                             @Override
-                            public void onResponse(@NonNull Call call, @NonNull okhttp3.Response response) throws IOException {
+                            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                                 assert response.body() != null;
                                 String sortJson = response.body().string();
                                 final AbsSortXml sortXml = sortJson(sortResult, sortJson);
@@ -431,7 +432,7 @@ public class SourceViewModel extends ViewModel {
                     listResult.postValue(null);
                 }
                 @Override
-                public void onResponse(Call call, okhttp3.Response response) throws IOException {
+                public void onResponse(Call call, Response response) throws IOException {
                     if (!response.isSuccessful() || response.body() == null) {
                         listResult.postValue(null);
                         return;
@@ -473,7 +474,7 @@ public class SourceViewModel extends ViewModel {
                     listResult.postValue(null);
                 }
                 @Override
-                public void onResponse(Call call, okhttp3.Response response) throws IOException {
+                public void onResponse(Call call, Response response) throws IOException {
                     if (!response.isSuccessful() || response.body() == null) {
                         listResult.postValue(null);
                         return;
@@ -481,6 +482,94 @@ public class SourceViewModel extends ViewModel {
                     String json = response.body().string();
                     LOG.i("echo-list:" + json);
                     json(listResult, json, homeSourceBean.getKey());
+                }
+            });
+        } else {
+            listResult.postValue(null);
+        }
+    }
+
+    /** Loads a folder/category for a specific source (used by inline search folders). */
+    public void getList(String sourceKey, String id) {
+        final SourceBean sourceBean = ApiConfig.get().getSource(sourceKey);
+        if (sourceBean == null || TextUtils.isEmpty(id)) {
+            listResult.postValue(null);
+            return;
+        }
+        final int type = sourceBean.getType();
+        if (type == 3) {
+            spThreadPool.execute(new Runnable() {
+                @Override
+                public void run() {
+                    ExecutorService executor = Executors.newSingleThreadExecutor();
+                    Future<String> future = executor.submit(new Callable<String>() {
+                        @Override
+                        public String call() throws Exception {
+                            Spider sp = ApiConfig.get().getCSP(sourceBean);
+                            return sp.categoryContent(id, "1", true, new HashMap<String, String>());
+                        }
+                    });
+                    String json = null;
+                    try {
+                        json = future.get(sourceBean.getPlayTimeoutSeconds(), TimeUnit.SECONDS);
+                    } catch (Throwable ignored) {
+                        future.cancel(true);
+                    } finally {
+                        executor.shutdown();
+                        if (json != null) {
+                            json(listResult, json, sourceBean.getKey());
+                        } else {
+                            listResult.postValue(null);
+                        }
+                    }
+                }
+            });
+        } else if (type == 0 || type == 1) {
+            ArrayMap<String, String> folderParams = new ArrayMap<>();
+            folderParams.put("ac", type == 0 ? "videolist" : "detail");
+            folderParams.put("t", id);
+            folderParams.put("pg", "1");
+            OkHttp.newCall(sourceBean.getApi(), sourceBean.getKey() + "_folder", folderParams).enqueue(new okhttp3.Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    listResult.postValue(null);
+                }
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    if (!response.isSuccessful() || response.body() == null) {
+                        listResult.postValue(null);
+                        return;
+                    }
+                    String body = response.body().string();
+                    if (type == 0) {
+                        xml(listResult, body, sourceBean.getKey());
+                    } else {
+                        json(listResult, body, sourceBean.getKey());
+                    }
+                }
+            });
+        } else if (type == 4) {
+            String extend = getFixUrl(sourceBean.getExt());
+            ArrayMap<String, String> folder4Params = new ArrayMap<>();
+            folder4Params.put("ac", "detail");
+            folder4Params.put("filter", "true");
+            folder4Params.put("t", id);
+            folder4Params.put("pg", "1");
+            folder4Params.put("ext", Base64.encodeToString("{}".getBytes(), Base64.DEFAULT | Base64.NO_WRAP));
+            if (!TextUtils.isEmpty(extend)) folder4Params.put("extend", extend);
+            OkHttp.newCall(sourceBean.getApi(), sourceBean.getKey() + "_folder", folder4Params).enqueue(new okhttp3.Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    listResult.postValue(null);
+                }
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    if (!response.isSuccessful() || response.body() == null) {
+                        listResult.postValue(null);
+                        return;
+                    }
+                    String body = response.body().string();
+                    json(listResult, body, sourceBean.getKey());
                 }
             });
         } else {
@@ -546,7 +635,7 @@ public class SourceViewModel extends ViewModel {
                     callback.done(null);
                 }
                 @Override
-                public void onResponse(Call call, okhttp3.Response response) throws IOException {
+                public void onResponse(Call call, Response response) throws IOException {
                     if (!response.isSuccessful() || response.body() == null) {
                         callback.done(null);
                         return;
@@ -644,7 +733,7 @@ public class SourceViewModel extends ViewModel {
                     json(detailResult, "", sourceBean.getKey());
                 }
                 @Override
-                public void onResponse(Call call, okhttp3.Response response) throws IOException {
+                public void onResponse(Call call, Response response) throws IOException {
                     if (!response.isSuccessful() || response.body() == null) {
                         json(detailResult, "", sourceBean.getKey());
                         return;
@@ -717,7 +806,7 @@ public class SourceViewModel extends ViewModel {
                     EventBus.getDefault().post(new RefreshEvent(RefreshEvent.TYPE_SEARCH_RESULT, null));
                 }
                 @Override
-                public void onResponse(Call call, okhttp3.Response response) throws IOException {
+                public void onResponse(Call call, Response response) throws IOException {
                     if (!response.isSuccessful() || response.body() == null) {
                         EventBus.getDefault().post(new RefreshEvent(RefreshEvent.TYPE_SEARCH_RESULT, null));
                         return;
@@ -751,7 +840,7 @@ public class SourceViewModel extends ViewModel {
                     EventBus.getDefault().post(new RefreshEvent(RefreshEvent.TYPE_SEARCH_RESULT, null));
                 }
                 @Override
-                public void onResponse(Call call, okhttp3.Response response) throws IOException {
+                public void onResponse(Call call, Response response) throws IOException {
                     if (!response.isSuccessful() || response.body() == null) {
                         EventBus.getDefault().post(new RefreshEvent(RefreshEvent.TYPE_SEARCH_RESULT, null));
                         return;
@@ -789,7 +878,7 @@ public class SourceViewModel extends ViewModel {
                     EventBus.getDefault().post(new RefreshEvent(RefreshEvent.TYPE_QUICK_SEARCH_RESULT, null));
                 }
                 @Override
-                public void onResponse(Call call, okhttp3.Response response) throws IOException {
+                public void onResponse(Call call, Response response) throws IOException {
                     if (!response.isSuccessful() || response.body() == null) {
                         EventBus.getDefault().post(new RefreshEvent(RefreshEvent.TYPE_QUICK_SEARCH_RESULT, null));
                         return;
@@ -818,7 +907,7 @@ public class SourceViewModel extends ViewModel {
                     EventBus.getDefault().post(new RefreshEvent(RefreshEvent.TYPE_SEARCH_RESULT, null));
                 }
                 @Override
-                public void onResponse(Call call, okhttp3.Response response) throws IOException {
+                public void onResponse(Call call, Response response) throws IOException {
                     if (!response.isSuccessful() || response.body() == null) {
                         EventBus.getDefault().post(new RefreshEvent(RefreshEvent.TYPE_SEARCH_RESULT, null));
                         return;
@@ -922,7 +1011,7 @@ public class SourceViewModel extends ViewModel {
                     postPlayResult(requestSeq, null);
                 }
                 @Override
-                public void onResponse(Call call, okhttp3.Response response) throws IOException {
+                public void onResponse(Call call, Response response) throws IOException {
                     if (!response.isSuccessful() || response.body() == null) {
                         postPlayResult(requestSeq, null);
                         return;
@@ -1226,7 +1315,7 @@ public class SourceViewModel extends ViewModel {
                                                     countDownLatch.countDown();
                                                 }
                                                 @Override
-                                                public void onResponse(Call call, okhttp3.Response response) throws IOException {
+                                                public void onResponse(Call call, Response response) throws IOException {
                                                     if (!response.isSuccessful() || response.body() == null) {
                                                         countDownLatch.countDown();
                                                         return;
