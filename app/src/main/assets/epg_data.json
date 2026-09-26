@@ -3737,6 +3737,13 @@
     "status": "1",
     "note": "Animax",
     "logo": "http://epg.51zmt.top:8000/tb1/gt/ANIMAX.png"
+  }, {
+    "tvid": "535",
+    "epgid": "CCTV16",
+    "name": "CCTV-16奥林匹克,CCTV-16,CCTV16,CCTV16奥林匹克,CCTV奥林匹克,CCTV-16奥林匹克频道,CCTV奥林匹克频道,CCTV16奥林匹克频道",
+    "status": "1",
+    "note": "CCTV-16奥林匹克",
+    "logo": "http://epg.51zmt.top:8000/tb1/CCTV/CCTV16.png"
   }
   ]
 }
