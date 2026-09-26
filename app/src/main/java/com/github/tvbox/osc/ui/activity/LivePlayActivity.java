@@ -1389,7 +1389,7 @@ public class LivePlayActivity extends BaseActivity {
                         break;
                     case VideoView.STATE_ERROR:
                         if (Hawk.get(HawkConfig.LIVE_CONNECT_TIMEOUT, 2) == 0) {
-                            mHandler.postDelayed(mConnectTimeoutReplayRun, (Hawk.get(HawkConfig.LIVE_CONNECT_TIMEOUT, 2)) * 5000);
+                            mHandler.postDelayed(mConnectTimeoutReplayRun, 10 * 1000);
                         } else {
                             mHandler.post(mConnectTimeoutChangeSourceRun);
                         }
@@ -1409,7 +1409,7 @@ public class LivePlayActivity extends BaseActivity {
                             mHandler.post(mUpdatetv_play_load_net_speedRun);
                         }
                         if (Hawk.get(HawkConfig.LIVE_CONNECT_TIMEOUT, 2) == 0 ) {
-                            mHandler.postDelayed(mConnectTimeoutReplayRun, (Hawk.get(HawkConfig.LIVE_CONNECT_TIMEOUT, 2)) * 5000);
+                            mHandler.postDelayed(mConnectTimeoutReplayRun, 10 * 1000);
                         } else {
                             mHandler.postDelayed(mConnectTimeoutChangeSourceRun, (Hawk.get(HawkConfig.LIVE_CONNECT_TIMEOUT, 2)) * 5000);
                         }
