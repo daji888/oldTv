@@ -130,21 +130,16 @@ public class LivePlayActivity extends BaseActivity {
     private TvRecyclerView mLiveChannelView;
     private LiveChannelGroupAdapter liveChannelGroupAdapter;
     private LiveChannelItemAdapter liveChannelItemAdapter;
-    
     private LinearLayout tvRightSettingLayout;
     private TvRecyclerView mSettingGroupView;
     private TvRecyclerView mSettingItemView;
     private LiveSettingGroupAdapter liveSettingGroupAdapter;
     private LiveSettingItemAdapter liveSettingItemAdapter;
     private List<LiveSettingGroup> liveSettingGroupList = new ArrayList<>();
-
-    // 遥控器数字键输入的要切换的频道号码
-    private int selectedChannelNumber = 0;
+    private int selectedChannelNumber = 0; // 遥控器数字键输入的频道号
     private TextView tvSelectedChannel;
-
     public static int currentChannelGroupIndex = 0;
     private Handler mHandler = new Handler();
-
     private List<LiveChannelGroup> liveChannelGroupList = new ArrayList<>();
     private int currentLiveChannelIndex = -1;
     private int currentLiveLookBackIndex = -1;
@@ -154,7 +149,7 @@ public class LivePlayActivity extends BaseActivity {
     private LivePlayerManager livePlayerManager = new LivePlayerManager();
     private ArrayList<Integer> channelGroupPasswordConfirmed = new ArrayList<>();
 
-//EPG   by 龍
+    //EPG   by 龍
     private static LiveChannelItem  channel_Name = null;
     private static Hashtable<String, ArrayList<Epginfo>> hsEpg = new Hashtable<>();
     private CountDownTimer countDownTimer;
@@ -172,19 +167,11 @@ public class LivePlayActivity extends BaseActivity {
     private TextView tv_videosize;
     private TextView tv_play_load_net_speed_right_top;
     private TextView txtNoEpg;
-
     private String epgStringAddress = "";
-
     private TvRecyclerView mEpgDateGridView;
     private TvRecyclerView mRightEpgList;
     private LiveEpgDateAdapter liveEpgDateAdapter;
     private LiveEpgAdapter epgListAdapter;
-
-    //laodao 7day replay
-    private static SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
-    private static String day = formatDate.format(new Date());
-    private static Date nowday = new Date();
-
     private boolean isSHIYI = false;
     public static boolean isBack = false;
     private static String shiyi_time;//时移时间
@@ -194,6 +181,7 @@ public class LivePlayActivity extends BaseActivity {
     private ImageView imgLiveIcon;
     private TextView liveIconNullText;
     private SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private Date newDate = new Date();
     private View backcontroller;
     private CountDownTimer countDownTimer3;
     private TextView tv_currentpos;
@@ -214,10 +202,8 @@ public class LivePlayActivity extends BaseActivity {
         epgStringAddress = Hawk.get(HawkConfig.EPG_URL, "");
         if (epgStringAddress == null || epgStringAddress.length() < 5)
              epgStringAddress = "https://epg.51zmt.top:8001/api/diyp/?ch={name}&date={date}";
-
         setLoadSir(findViewById(R.id.live_root));
         mVideoView = findViewById(R.id.mVideoView);
-        
         tvSelectedChannel = findViewById(R.id.tv_selected_channel);
         tvLeftChannelListLayout = findViewById(R.id.tvLeftChannelListLayout);
         mChannelGroupView = findViewById(R.id.mGroupGridView);
@@ -248,9 +234,6 @@ public class LivePlayActivity extends BaseActivity {
         //laodao 7day replay
         mEpgDateGridView = findViewById(R.id.mEpgDateGridView);
         mRightEpgList = (TvRecyclerView) findViewById(R.id.lv_epg);
-        Hawk.put(HawkConfig.NOW_DATE, formatDate.format(new Date()));
-        day = formatDate.format(new Date());
-        nowday = new Date();
         
         //EPG频道名称
         imgLiveIcon = findViewById(R.id.img_live_icon);
@@ -285,13 +268,13 @@ public class LivePlayActivity extends BaseActivity {
             int i = -1;
             int size = epgdata.size() - 1;
             while (size >= 0) {
-                if (new Date().compareTo(((Epginfo) epgdata.get(size)).startdateTime) >= 0) {
+                if (newDate.compareTo(((Epginfo) epgdata.get(size)).startdateTime) >= 0) {
                     break;
                 }
                 size--;
             }
             i = size;
-            if (i >= 0 && new Date().compareTo(epgdata.get(i).enddateTime) <= 0) {
+            if (i >= 0 && newDate.compareTo(epgdata.get(i).enddateTime) <= 0) {
             //    mRightEpgList.setSelectedPosition(i);
                 if (divEpg.getVisibility() == View.VISIBLE) {
                     mRightEpgList.setSelection(i);
@@ -315,7 +298,6 @@ public class LivePlayActivity extends BaseActivity {
 
     private void getEpg(Date date) {
         String channelName = channel_Name.getChannelName();
-        SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd");
         timeFormat.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
         String epgTagName = channelName;
         if (logoUrl == null || logoUrl.isEmpty()) {
@@ -331,7 +313,6 @@ public class LivePlayActivity extends BaseActivity {
             updateChannelIcon(channelName, logo);
         }
         epgListAdapter.CanBack(currentLiveChannelItem.getinclude_back());
-    //    epgListAdapter.updateData(date, new ArrayList<>());
         String epgUrl;
         try {
             if (epgStringAddress.contains("{name}") && epgStringAddress.contains("{date}")) {
@@ -380,8 +361,7 @@ public class LivePlayActivity extends BaseActivity {
                                     if (jSONArray != null)
                                         for (int b = 0; b < jSONArray.length(); b++) {
                                             JSONObject jSONObject = jSONArray.getJSONObject(b);
-                                            String title = jSONObject.optString("title").replace(" --免费使用", "").trim();
-                                            title = jSONObject.optString("title").replace("--免费使用", "").trim();
+                                            String title = jSONObject.optString("title").replace(" --免费使用", "").replace("--免费使用", "").trim();
                                             Epginfo epgbcinfo = new Epginfo(date, title, date, jSONObject.optString("start"), jSONObject.optString("end"), b);
                                             arrayList.add(epgbcinfo);
                                         }
@@ -418,10 +398,9 @@ public class LivePlayActivity extends BaseActivity {
                 updateChannelIcon(channel_Name.getChannelName(), epgInfo == null ? null : epgInfo[0]);
                 ArrayList<Epginfo> arrayList = (ArrayList<Epginfo>) hsEpg.get(savedEpgKey);
                 if (arrayList != null && arrayList.size() > 0) {
-                    Date date = new Date();
                     int size = arrayList.size() - 1;
                     while (size >= 0) {
-                        if (new Date().compareTo(((Epginfo) arrayList.get(size)).startdateTime) >= 0 & new Date().compareTo(((Epginfo) arrayList.get(size)).enddateTime) <= 0) {
+                        if (newDate.compareTo(((Epginfo) arrayList.get(size)).startdateTime) >= 0 & newDate.compareTo(((Epginfo) arrayList.get(size)).enddateTime) <= 0) {
                             tip_epg1.setText(((Epginfo) arrayList.get(size)).start + " - " + ((Epginfo) arrayList.get(size)).end);
                             tv_current_program_name.setText(((Epginfo) arrayList.get(size)).title);
                             if (size != arrayList.size() - 1) {
@@ -446,7 +425,7 @@ public class LivePlayActivity extends BaseActivity {
             } else {
                 int selectedIndex = liveEpgDateAdapter.getSelectedIndex();
                 if (selectedIndex < 0)
-                    getEpg(new Date());
+                    getEpg(newDate);
                 else
                     getEpg(liveEpgDateAdapter.getData().get(selectedIndex).getDateParamVal());
             }
@@ -725,7 +704,6 @@ public class LivePlayActivity extends BaseActivity {
  
      // 对比两个列表内容是否相同
      private boolean isSameData(List<LiveChannelItem> list1, List<LiveChannelItem> list2) {
- //        return list1.size() == list2.size();
          if (list1 == list2) return true;
          if (list1 == null || list2 == null || list1.size() != list2.size()) return false;
          for (int i = 0; i < list1.size(); i++) {
@@ -883,7 +861,7 @@ public class LivePlayActivity extends BaseActivity {
             currentLiveChannelItem.setinclude_back(false);
         }
         showBottomEpg();
-        getEpg(new Date());
+        getEpg(newDate);
         backcontroller.setVisibility(View.GONE);
         ll_right_top_huikan.setVisibility(View.GONE);
         if (mVideoView != null) {
@@ -908,7 +886,7 @@ public class LivePlayActivity extends BaseActivity {
         isSHIYI = false;
         isBack = false;
         showBottomEpg();
-        getEpg(new Date());
+        getEpg(newDate);
         backcontroller.setVisibility(View.GONE);
         ll_right_top_huikan.setVisibility(View.GONE);
         mVideoView.setUrl(currentLiveChannelItem.getUrl(), liveChannelHeader());
@@ -1039,7 +1017,7 @@ public class LivePlayActivity extends BaseActivity {
             public void onItemClick(TvRecyclerView parent, View itemView, int position) {
                 if (position == currentLiveLookBackIndex) return;
                 currentLiveLookBackIndex = position;  
-                Date date = liveEpgDateAdapter.getSelectedIndex() < 0 ? new Date() :
+                Date date = liveEpgDateAdapter.getSelectedIndex() < 0 ? newDate :
                         liveEpgDateAdapter.getData().get(liveEpgDateAdapter.getSelectedIndex()).getDateParamVal();
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
                 dateFormat.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
@@ -1049,20 +1027,19 @@ public class LivePlayActivity extends BaseActivity {
                 assert selectedData != null;
                 String shiyiStartdate = targetDate + selectedData.originStart.replace(":", "") + "20";
                 String shiyiEnddate = targetDate + selectedData.originEnd.replace(":", "") + "20";
-                Date now = new Date();
                 epgListAdapter.setSelectedEpgIndex(position);
-   /*             if (now.compareTo(selectedData.startdateTime) >= 0 && now.compareTo(selectedData.enddateTime) <= 0) {
+   /*             if (newDate.compareTo(selectedData.startdateTime) >= 0 && newDate.compareTo(selectedData.enddateTime) <= 0) {
                     mVideoView.release();
                     isSHIYI = false;
                     mVideoView.setUrl(currentLiveChannelItem.getUrl(), liveChannelHeader());
                     mVideoView.start();
-                    epgListAdapter.setShiyiSelection(-1, false,timeFormat.format(date));
+                    epgListAdapter.setShiyiSelection(-1, false, timeFormat.format(date));
                     epgListAdapter.notifyDataSetChanged();
                     showProgressBars(false);
                     return;
                 }  */
                 String shiyiUrl = currentLiveChannelItem.getUrl();
-                if (now.compareTo(selectedData.startdateTime) < 0) {
+                if (newDate.compareTo(selectedData.startdateTime) < 0) {
                     return;
                 }
            //     } else if (hasCatchup || currentChannelHasCatchup() || shiyiUrl.contains("/PLTV/") || shiyiUrl.contains("/TVOD/")) {
@@ -1151,7 +1128,7 @@ public class LivePlayActivity extends BaseActivity {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                Date date = liveEpgDateAdapter.getSelectedIndex() < 0 ? new Date() :
+                Date date = liveEpgDateAdapter.getSelectedIndex() < 0 ? newDate :
                         liveEpgDateAdapter.getData().get(liveEpgDateAdapter.getSelectedIndex()).getDateParamVal();
                 @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
                 dateFormat.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
@@ -1163,20 +1140,19 @@ public class LivePlayActivity extends BaseActivity {
                 LOG.i("echo-targethm" + selectedData.originStart.replace(":", ""));
                 String shiyiStartdate = targetDate + selectedData.originStart.replace(":", "") + "20";
                 String shiyiEnddate = targetDate + selectedData.originEnd.replace(":", "") + "20";
-                Date now = new Date();
                 epgListAdapter.setSelectedEpgIndex(position);
-        /*        if (now.compareTo(selectedData.startdateTime) >= 0 && now.compareTo(selectedData.enddateTime) <= 0) {
+        /*        if (newDate.compareTo(selectedData.startdateTime) >= 0 && newDate.compareTo(selectedData.enddateTime) <= 0) {
                     mVideoView.release();
                     isSHIYI = false;
                     mVideoView.setUrl(currentLiveChannelItem.getUrl(), liveChannelHeader());
                     mVideoView.start();
-                    epgListAdapter.setShiyiSelection(-1, false,timeFormat.format(date));
+                    epgListAdapter.setShiyiSelection(-1, false, timeFormat.format(date));
                     epgListAdapter.notifyDataSetChanged();
                     showProgressBars(false);
                     return;
                 }  */
                 String shiyiUrl = currentLiveChannelItem.getUrl();
-                if (now.compareTo(selectedData.startdateTime) < 0) {
+                if (newDate.compareTo(selectedData.startdateTime) < 0) {
                     return;
                 }
             //    } else if (hasCatchup || currentChannelHasCatchup() || shiyiUrl.contains("/PLTV/") || shiyiUrl.contains("/TVOD/")) {
@@ -1246,7 +1222,7 @@ public class LivePlayActivity extends BaseActivity {
                 if (liveChannelHeader() != null) LOG.i("echo-liveChannelHeader :" + liveChannelHeader().toString());
                 mVideoView.setUrl(playUrl, liveChannelHeader());
                 mVideoView.start();
-                epgListAdapter.setShiyiSelection(position, true,timeFormat.format(date));
+                epgListAdapter.setShiyiSelection(position, true, timeFormat.format(date));
                 epgListAdapter.notifyDataSetChanged();
                 mRightEpgList.setSelectedPosition(position);
                 mRightEpgList.post(new Runnable() {
@@ -1268,7 +1244,7 @@ public class LivePlayActivity extends BaseActivity {
         mEpgDateGridView.setLayoutManager(new V7LinearLayoutManager(this.mContext, 1, false));
         liveEpgDateAdapter = new LiveEpgDateAdapter();
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
+        calendar.setTime(newDate);
         @SuppressLint("SimpleDateFormat") SimpleDateFormat datePresentFormat = new SimpleDateFormat("M-d EE");
         @SuppressLint("SimpleDateFormat") SimpleDateFormat datePresentFormat1 = new SimpleDateFormat("M-d");
         calendar.add(Calendar.DAY_OF_MONTH, 1);
@@ -2202,9 +2178,8 @@ public class LivePlayActivity extends BaseActivity {
     private Runnable mUpdateTimeRun = new Runnable() {
         @Override
         public void run() {
-            Date day = new Date();
             SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
-            tvTime.setText(df.format(day));
+            tvTime.setText(df.format(newDate));
             mHandler.postDelayed(this, 1000);
         }
     };
