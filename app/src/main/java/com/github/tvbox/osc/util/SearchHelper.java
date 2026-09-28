@@ -6,9 +6,9 @@ import com.github.tvbox.osc.ui.activity.SearchActivity;
 import com.orhanobut.hawk.Hawk;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SearchHelper {
 
@@ -60,16 +60,20 @@ public class SearchHelper {
         if (text == null || text.trim().isEmpty()) {
             return result;
         }
-        result.add(text.trim());
-        String stripped = text.replaceAll("\\d+$", "").trim();
-        if (!stripped.equals(text.trim()) && !stripped.isEmpty()) {
+        String trimmed = text.trim();
+        result.add(trimmed);
+        String stripped = trimmed.replaceAll("\\d+$", "").trim();
+        if (!stripped.equals(trimmed) && !stripped.isEmpty()) {
             result.add(stripped);
         }
-        String[] parts = text.split("\\W+");
-        if (parts.length > 1) {
-            result.addAll(Arrays.asList(parts));
+        String[] parts = trimmed.split("\\W+");
+        for (String part : parts) {
+            if (!part.isEmpty() && !part.matches("\\d+")) {
+                result.add(part);
+                result.add(part.replaceAll("\\d+$", "").trim());
+            }
         }
-        return result;
+        return result.stream().distinct().collect(Collectors.toList());
     }
 
 }
