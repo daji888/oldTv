@@ -332,7 +332,6 @@ public class LivePlayActivity extends BaseActivity {
                     @Override
                     public void run() {
                         showEpg(date, arrayList);
-                    //    showBottomEpg();
                     }
                 });
             }
@@ -345,7 +344,6 @@ public class LivePlayActivity extends BaseActivity {
                         @Override
                         public void run() {
                             showEpg(date, arrayList);
-                        //    showBottomEpg();
                         }
                     });
                     return;
@@ -431,28 +429,21 @@ public class LivePlayActivity extends BaseActivity {
             if (countDownTimer != null) {
                countDownTimer.cancel();
             }
-            if (!tip_epg1.getText().equals("00:00 - 23:59")) {
-                ll_epg.setVisibility(View.VISIBLE);
-                tv_videosize.setVisibility(View.VISIBLE);
-                tv_play_load_net_speed_right_top.setVisibility(View.VISIBLE);
-                mHandler.post(mUpdatetv_play_load_net_speed_right_topRun);
-                countDownTimer = new CountDownTimer(5000, 1000) {//底部epg隐藏时间设定
-                    public void onTick(long j) {
-                    }
-                    public void onFinish() {
-                        ll_epg.setVisibility(View.GONE);
-                        tv_videosize.setVisibility(View.GONE);
-                        tv_play_load_net_speed_right_top.setVisibility(View.GONE);
-                        mHandler.removeCallbacks(mUpdatetv_play_load_net_speed_right_topRun);
-                    }
-                };
-                countDownTimer.start();
-            } else {
-                ll_epg.setVisibility(View.GONE);
-                tv_videosize.setVisibility(View.GONE);
-                tv_play_load_net_speed_right_top.setVisibility(View.GONE);
-                mHandler.removeCallbacks(mUpdatetv_play_load_net_speed_right_topRun);
-            }
+            ll_epg.setVisibility(View.VISIBLE);
+            tv_videosize.setVisibility(View.VISIBLE);
+            tv_play_load_net_speed_right_top.setVisibility(View.VISIBLE);
+            mHandler.post(mUpdatetv_play_load_net_speed_right_topRun);
+            countDownTimer = new CountDownTimer(5000, 1000) {//底部epg隐藏时间设定
+                public void onTick(long j) {
+                }
+                public void onFinish() {
+                    ll_epg.setVisibility(View.GONE);
+                    tv_videosize.setVisibility(View.GONE);
+                    tv_play_load_net_speed_right_top.setVisibility(View.GONE);
+                    mHandler.removeCallbacks(mUpdatetv_play_load_net_speed_right_topRun);
+                }
+            };
+            countDownTimer.start();
             if (channel_Name == null || channel_Name.getSourceNum() <= 0) {
                 tv_srcinfo.setText("1 / 1");
             } else {
@@ -2377,9 +2368,7 @@ public class LivePlayActivity extends BaseActivity {
             ll_epg.setVisibility(View.GONE);
         } else {
             backcontroller.setVisibility(View.GONE);
-            if (!tip_epg1.getText().equals("00:00 - 23:59")) {
-                ll_epg.setVisibility(View.VISIBLE);
-            }
+            ll_epg.setVisibility(View.VISIBLE);
         }
         sBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
