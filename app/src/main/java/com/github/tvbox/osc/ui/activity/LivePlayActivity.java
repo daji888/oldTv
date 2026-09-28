@@ -268,7 +268,7 @@ public class LivePlayActivity extends BaseActivity {
             int i = -1;
             int size = epgdata.size() - 1;
             while (size >= 0) {
-                if (newDate.compareTo(((Epginfo) epgdata.get(size)).startdateTime) >= 0) {
+                if (newDate.compareTo((epgdata.get(size)).startdateTime) >= 0) {
                     break;
                 }
                 size--;
@@ -314,6 +314,7 @@ public class LivePlayActivity extends BaseActivity {
         }
         epgListAdapter.CanBack(currentLiveChannelItem.getinclude_back());
         String epgUrl;
+        ArrayList<Epginfo> arrayList = new ArrayList<Epginfo>();
         try {
             if (epgStringAddress.contains("{name}") && epgStringAddress.contains("{date}")) {
                 epgUrl = epgStringAddress.replace("{name}", URLEncoder.encode(epgTagName, "UTF-8")).replace("{date}", timeFormat.format(date));
@@ -326,7 +327,7 @@ public class LivePlayActivity extends BaseActivity {
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            showEpg(date, new ArrayList<Epginfo>());
+                            showEpg(date, arrayList);
                         //    showBottomEpg();
                         }
                     });
@@ -339,7 +340,7 @@ public class LivePlayActivity extends BaseActivity {
                         mHandler.post(new Runnable() {
                             @Override
                             public void run() {
-                                showEpg(date, new ArrayList<Epginfo>());
+                                showEpg(date, arrayList);
                             //    showBottomEpg();
                             }
                         });
@@ -351,7 +352,6 @@ public class LivePlayActivity extends BaseActivity {
                     } finally {
                         response.close();
                     }
-                    ArrayList<Epginfo> arrayList = new ArrayList<Epginfo>();
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -396,16 +396,16 @@ public class LivePlayActivity extends BaseActivity {
             if (hsEpg.containsKey(savedEpgKey)) {
                 String[] epgInfo = EpgUtil.getEpgInfo(channel_Name.getChannelName());
                 updateChannelIcon(channel_Name.getChannelName(), epgInfo == null ? null : epgInfo[0]);
-                ArrayList<Epginfo> arrayList = (ArrayList<Epginfo>) hsEpg.get(savedEpgKey);
+                ArrayList<Epginfo> arrayList = hsEpg.get(savedEpgKey);
                 if (arrayList != null && arrayList.size() > 0) {
                     int size = arrayList.size() - 1;
                     while (size >= 0) {
-                        if (newDate.compareTo(((Epginfo) arrayList.get(size)).startdateTime) >= 0 & newDate.compareTo(((Epginfo) arrayList.get(size)).enddateTime) <= 0) {
-                            tip_epg1.setText(((Epginfo) arrayList.get(size)).start + " - " + ((Epginfo) arrayList.get(size)).end);
-                            tv_current_program_name.setText(((Epginfo) arrayList.get(size)).title);
+                        if (newDate.compareTo((arrayList.get(size)).startdateTime) >= 0 & newDate.compareTo((arrayList.get(size)).enddateTime) <= 0) {
+                            tip_epg1.setText((arrayList.get(size)).start + " - " + (arrayList.get(size)).end);
+                            tv_current_program_name.setText((arrayList.get(size)).title);
                             if (size != arrayList.size() - 1) {
-                                tip_epg2.setText(((Epginfo) arrayList.get(size + 1)).start + " - " + ((Epginfo) arrayList.get(size + 1)).end);
-                                tv_next_program_name.setText(((Epginfo) arrayList.get(size + 1)).title);
+                                tip_epg2.setText((arrayList.get(size + 1)).start + " - " + (arrayList.get(size + 1)).end);
+                                tv_next_program_name.setText((arrayList.get(size + 1)).title);
                             } else {
                                 tip_epg2.setText("00:00 - 23:59");
                                 if (tv_current_program_name.getText().equals("精彩节目-暂未提供节目预告信息")) {
