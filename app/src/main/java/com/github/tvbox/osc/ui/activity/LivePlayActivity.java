@@ -321,9 +321,26 @@ public class LivePlayActivity extends BaseActivity {
             } else {
                 epgUrl = epgStringAddress + "?ch=" + URLEncoder.encode(epgTagName, "UTF-8") + "&date=" + timeFormat.format(date);
             }
-            OkHttp.newCall(epgUrl).enqueue(new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return;
+        }
+        OkHttp.newCall(epgUrl).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        showEpg(date, arrayList);
+                    //    showBottomEpg();
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.code() != 200) {
+                    response.close();
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -331,54 +348,38 @@ public class LivePlayActivity extends BaseActivity {
                         //    showBottomEpg();
                         }
                     });
+                    return;
                 }
-
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    if (response.code() != 200) {
-                        response.close();
-                        mHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                showEpg(date, arrayList);
-                            //    showBottomEpg();
+                final String body;
+                try (Response resp = response) {
+                    body = resp.body() != null ? resp.body().string() : "";
+                }
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            if (body.contains("epg_data")) {
+                                final JSONArray jSONArray = new JSONObject(body).optJSONArray("epg_data");
+                                if (jSONArray != null)
+                                    for (int b = 0; b < jSONArray.length(); b++) {
+                                        JSONObject jSONObject = jSONArray.getJSONObject(b);
+                                        String title = jSONObject.optString("title").replace(" --免费使用", "").replace("--免费使用", "").trim();
+                                        Epginfo epgbcinfo = new Epginfo(date, title, date, jSONObject.optString("start"), jSONObject.optString("end"), b);
+                                        arrayList.add(epgbcinfo);
+                                    }
                             }
-                        });
-                        return;
-                    }
-                    final String body;
-                    try (Response resp = response) {
-                        body = resp.body() != null ? resp.body().string() : "";
-                    }
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                if (body.contains("epg_data")) {
-                                    final JSONArray jSONArray = new JSONObject(body).optJSONArray("epg_data");
-                                    if (jSONArray != null)
-                                        for (int b = 0; b < jSONArray.length(); b++) {
-                                            JSONObject jSONObject = jSONArray.getJSONObject(b);
-                                            String title = jSONObject.optString("title").replace(" --免费使用", "").replace("--免费使用", "").trim();
-                                            Epginfo epgbcinfo = new Epginfo(date, title, date, jSONObject.optString("start"), jSONObject.optString("end"), b);
-                                            arrayList.add(epgbcinfo);
-                                        }
-                                }
-                            } catch (JSONException jSONException) {
-                                jSONException.printStackTrace();
-                            }
-                            showEpg(date, arrayList);
-                            String savedEpgKey = channelName + "_" + liveEpgDateAdapter.getItem(liveEpgDateAdapter.getSelectedIndex()).getDatePresented();
-                            if (!hsEpg.contains(savedEpgKey))
-                                hsEpg.put(savedEpgKey, arrayList);
-                            showBottomEpg();
+                        } catch (JSONException jSONException) {
+                            jSONException.printStackTrace();
                         }
-                    });
-                }
-            });
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }  
+                        showEpg(date, arrayList);
+                        String savedEpgKey = channelName + "_" + liveEpgDateAdapter.getItem(liveEpgDateAdapter.getSelectedIndex()).getDatePresented();
+                        if (!hsEpg.contains(savedEpgKey))
+                            hsEpg.put(savedEpgKey, arrayList);
+                        showBottomEpg();
+                    }
+                });
+            }
+        });
     }
 
     //显示底部EPG
