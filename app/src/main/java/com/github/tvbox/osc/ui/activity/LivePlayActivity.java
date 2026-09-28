@@ -332,7 +332,6 @@ public class LivePlayActivity extends BaseActivity {
                     @Override
                     public void run() {
                         showEpg(date, arrayList);
-                    //    showBottomEpg();
                     }
                 });
             }
@@ -345,7 +344,6 @@ public class LivePlayActivity extends BaseActivity {
                         @Override
                         public void run() {
                             showEpg(date, arrayList);
-                        //    showBottomEpg();
                         }
                     });
                     return;
