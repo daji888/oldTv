@@ -306,7 +306,7 @@ public class LivePlayActivity extends BaseActivity {
                 epgTagName = epgInfo[1];
             }
             updateChannelIcon(channelName, epgInfo == null ? null : epgInfo[0]);
-        } else if (logoUrl.equals("false")) {
+        } else if ("false".equals(logoUrl)) {
             updateChannelIcon(channelName, null);
         } else {
             String logo = logoUrl.replace("{name}", epgTagName);
@@ -347,10 +347,8 @@ public class LivePlayActivity extends BaseActivity {
                         return;
                     }
                     final String body;
-                    try {
-                        body = response.body() != null ? response.body().string() : "";
-                    } finally {
-                        response.close();
+                    try (Response resp = response) {
+                        body = resp.body() != null ? resp.body().string() : "";
                     }
                     mHandler.post(new Runnable() {
                         @Override
