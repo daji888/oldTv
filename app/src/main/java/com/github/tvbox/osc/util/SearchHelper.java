@@ -7,8 +7,8 @@ import com.orhanobut.hawk.Hawk;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class SearchHelper {
 
@@ -62,18 +62,17 @@ public class SearchHelper {
         }
         String trimmed = text.trim();
         result.add(trimmed);
-        String stripped = trimmed.replaceAll("\\d+$", "").trim();
-        if (!stripped.equals(trimmed) && !stripped.isEmpty()) {
-            result.add(stripped);
-        }
         String[] parts = trimmed.split("\\W+");
         for (String part : parts) {
             if (!part.isEmpty() && !part.matches("\\d+")) {
                 result.add(part);
-                result.add(part.replaceAll("\\d+$", "").trim());
+                String stripped = part.replaceAll("\\d+$", "").trim();
+                if (!stripped.equals(part)) {
+                    result.add(stripped);
+                }
             }
         }
-        return result.stream().distinct().collect(Collectors.toList());
+        return new ArrayList<>(new LinkedHashSet<>(result));
     }
 
 }
