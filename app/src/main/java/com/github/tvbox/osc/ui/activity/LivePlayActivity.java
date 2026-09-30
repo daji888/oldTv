@@ -1076,6 +1076,8 @@ public class LivePlayActivity extends BaseActivity {
                     source = source.replace("${duration}", String.valueOf(endTimestamp - startTimestamp));
                     if (source.startsWith("http")) {
                         shiyiUrl = source;
+                    } else if (source.startsWith("&") || source.startsWith("?")) {
+                        shiyiUrl = shiyiUrl + source; 
                     } else {
                         if (shiyiUrl.contains("?")) {
                             shiyiUrl = shiyiUrl + "&" + source;
@@ -1190,6 +1192,8 @@ public class LivePlayActivity extends BaseActivity {
                     source = source.replace("${duration}", String.valueOf(endTimestamp - startTimestamp));
                     if (source.startsWith("http")) {
                         shiyiUrl = source;
+                    } else if (source.startsWith("&") || source.startsWith("?")) {
+                        shiyiUrl = shiyiUrl + source;
                     } else {
                         if (shiyiUrl.contains("?")) {
                             shiyiUrl = shiyiUrl + "&" + source;
