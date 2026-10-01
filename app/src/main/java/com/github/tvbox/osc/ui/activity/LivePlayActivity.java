@@ -299,18 +299,6 @@ public class LivePlayActivity extends BaseActivity {
         String channelName = channel_Name.getChannelName();
         timeFormat.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
         String epgTagName = channelName;
-        if (logoUrl == null || logoUrl.isEmpty()) {
-            String[] epgInfo = EpgUtil.getEpgInfo(channelName);
-            if (epgInfo != null && !epgInfo[1].isEmpty()) {
-                epgTagName = epgInfo[1];
-            }
-            updateChannelIcon(channelName, epgInfo == null ? null : epgInfo[0]);
-        } else if ("false".equals(logoUrl)) {
-            updateChannelIcon(channelName, null);
-        } else {
-            String logo = logoUrl.replace("{name}", epgTagName);
-            updateChannelIcon(channelName, logo);
-        }
         epgListAdapter.CanBack(currentLiveChannelItem.getinclude_back());
         String epgUrl;
         try {
@@ -377,6 +365,18 @@ public class LivePlayActivity extends BaseActivity {
                 });
             }
         });
+        if (logoUrl == null || logoUrl.isEmpty()) {
+            String[] epgInfo = EpgUtil.getEpgInfo(channelName);
+            if (epgInfo != null && !epgInfo[1].isEmpty()) {
+                epgTagName = epgInfo[1];
+            }
+            updateChannelIcon(channelName, epgInfo == null ? null : epgInfo[0]);
+        } else if ("false".equals(logoUrl)) {
+            updateChannelIcon(channelName, null);
+        } else {
+            String logo = logoUrl.replace("{name}", epgTagName);
+            updateChannelIcon(channelName, logo);
+        }
     }
 
     //显示底部EPG
