@@ -274,7 +274,6 @@ public class LivePlayActivity extends BaseActivity {
             }
             i = size;
             if (i >= 0 && new Date().compareTo(epgdata.get(i).enddateTime) <= 0) {
-            //    mRightEpgList.setSelectedPosition(i);
                 if (divEpg.getVisibility() == View.VISIBLE) {
                     mRightEpgList.setSelection(i);
                 }
@@ -292,6 +291,7 @@ public class LivePlayActivity extends BaseActivity {
             arrayList.add(epgbcinfo);
             epgdata = arrayList;
             epgListAdapter.setNewData(epgdata);
+            epgListAdapter.setSelectedEpgIndex(0);
         }
     }
 
@@ -360,7 +360,6 @@ public class LivePlayActivity extends BaseActivity {
                         String savedEpgKey = channelName + "_" + liveEpgDateAdapter.getItem(liveEpgDateAdapter.getSelectedIndex()).getDatePresented();
                         if (!hsEpg.contains(savedEpgKey))
                             hsEpg.put(savedEpgKey, arrayList);
-                        showBottomEpg();
                     }
                 });
             }
@@ -1188,6 +1187,7 @@ public class LivePlayActivity extends BaseActivity {
                     source = source.replace("${b}", shiyiStartdate);
                     source = source.replace("${e}", shiyiEnddate);
                     source = source.replace("${utc}", String.valueOf(startTimestamp));
+                    source = source.replace("${utcend}", String.valueOf(endTimestamp));
                     source = source.replace("${timestamp}", String.valueOf(startTimestamp));
                     source = source.replace("${duration}", String.valueOf(endTimestamp - startTimestamp));
                     if (source.startsWith("http")) {
