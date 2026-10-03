@@ -299,10 +299,26 @@ public class LivePlayActivity extends BaseActivity {
         String channelName = channel_Name.getChannelName();
         timeFormat.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
         String epgTagName = channelName;
+        String noteName = channelName;
+        String[] epgInfo = EpgUtil.getEpgInfo(channelName);
+        if (logoUrl == null || logoUrl.isEmpty()) {
+            updateChannelIcon(channelName, epgInfo == null ? null : epgInfo[0]);
+        } else if ("false".equals(logoUrl)) {
+            updateChannelIcon(channelName, null);
+        } else {
+            String logo = logoUrl.replace("{name}", channelName);
+            updateChannelIcon(channelName, logo);
+        }
+        if (epgInfo != null && epgInfo.length > 1 && !epgInfo[1].isEmpty()) {
+            epgTagName = epgInfo[1];
+            noteName = epgInfo[2];
+        }
         epgListAdapter.CanBack(currentLiveChannelItem.getinclude_back());
         String epgUrl;
         try {
-            if (epgStringAddress.contains("{name}") && epgStringAddress.contains("{date}")) {
+            if (epgStringAddress.contains("name/date")) {
+                epgUrl = epgStringAddress.replace("name", URLEncoder.encode(noteName, "UTF-8")).replace("date", timeFormat.format(date));
+            } else if (epgStringAddress.contains("{name}") && epgStringAddress.contains("{date}")) {
                 epgUrl = epgStringAddress.replace("{name}", URLEncoder.encode(epgTagName, "UTF-8")).replace("{date}", timeFormat.format(date));
             } else {
                 epgUrl = epgStringAddress + "?ch=" + URLEncoder.encode(epgTagName, "UTF-8") + "&date=" + timeFormat.format(date);
@@ -314,28 +330,17 @@ public class LivePlayActivity extends BaseActivity {
         OkHttp.newCall(epgUrl).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        showEpg(date, new ArrayList<Epginfo>());
-                    }
-                });
+                mHandler.post(() -> showEpg(date, new ArrayList<>()));
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                if (response.code() != 200) {
-                    response.close();
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            showEpg(date, new ArrayList<Epginfo>());
-                        }
-                    });
-                    return;
-                }
                 final String body;
                 try (Response resp = response) {
+                    if (!resp.isSuccessful()) {
+                        mHandler.post(() -> showEpg(date, new ArrayList<>()));
+                        return;
+                    }
                     body = resp.body() != null ? resp.body().string() : "";
                 }
                 ArrayList<Epginfo> arrayList = new ArrayList<Epginfo>();
@@ -348,7 +353,7 @@ public class LivePlayActivity extends BaseActivity {
                                 if (jSONArray != null)
                                     for (int b = 0; b < jSONArray.length(); b++) {
                                         JSONObject jSONObject = jSONArray.getJSONObject(b);
-                                        String title = jSONObject.optString("title").replace(" --免费使用", "").replace("--免费使用", "").trim();
+                                        String title = jSONObject.optString("title").replace("--免费使用", "").trim();
                                         Epginfo epgbcinfo = new Epginfo(date, title, date, jSONObject.optString("start"), jSONObject.optString("end"), b);
                                         arrayList.add(epgbcinfo);
                                     }
@@ -358,24 +363,15 @@ public class LivePlayActivity extends BaseActivity {
                         }
                         showEpg(date, arrayList);
                         String savedEpgKey = channelName + "_" + liveEpgDateAdapter.getItem(liveEpgDateAdapter.getSelectedIndex()).getDatePresented();
-                        if (!hsEpg.contains(savedEpgKey))
-                            hsEpg.put(savedEpgKey, arrayList);
+                        synchronized (hsEpg) {
+                            if (!hsEpg.containsKey(savedEpgKey))
+                                hsEpg.put(savedEpgKey, arrayList);
+                        }
+                        showBottomEpg();
                     }
                 });
             }
         });
-        if (logoUrl == null || logoUrl.isEmpty()) {
-            String[] epgInfo = EpgUtil.getEpgInfo(channelName);
-            if (epgInfo != null && !epgInfo[1].isEmpty()) {
-                epgTagName = epgInfo[1];
-            }
-            updateChannelIcon(channelName, epgInfo == null ? null : epgInfo[0]);
-        } else if ("false".equals(logoUrl)) {
-            updateChannelIcon(channelName, null);
-        } else {
-            String logo = logoUrl.replace("{name}", epgTagName);
-            updateChannelIcon(channelName, logo);
-        }
     }
 
     //显示底部EPG
