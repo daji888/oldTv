@@ -26,22 +26,6 @@
         android:text="0 x 0"
         android:textColor="@android:color/white"
         android:textSize="@dimen/ts_20" />
-	
-    <!--右上角网速-->
-    <TextView
-        android:id="@+id/tv_play_load_net_speed_right_top"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|right"
-        android:layout_marginRight="@dimen/vs_60"
-        android:layout_marginTop="@dimen/vs_10"
-        android:padding="@dimen/vs_10"
-        android:background="@drawable/shape_user_focus"
-        android:focusable="false"
-        android:visibility="gone"
-        android:text="0Kb/s"
-        android:textColor="@android:color/white"
-        android:textSize="@dimen/ts_20" />
 
     <!--右上角频道号-->
     <TextView
