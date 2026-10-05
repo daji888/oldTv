@@ -165,7 +165,6 @@ public class LivePlayActivity extends BaseActivity {
     private TextView tv_next_program_name;
     private TextView tv_srcinfo;
     private TextView tv_videosize;
-    private TextView tv_play_load_net_speed_right_top;
     private TextView txtNoEpg;
     private String epgStringAddress = "";
     private TvRecyclerView mEpgDateGridView;
@@ -214,25 +213,24 @@ public class LivePlayActivity extends BaseActivity {
         tvNetSpeed = findViewById(R.id.tvNetSpeed);
         tv_play_load_net_speed = findViewById(R.id.tv_play_load_net_speed);
         tv_videosize = findViewById(R.id.tv_videosize);
-        tv_play_load_net_speed_right_top = findViewById(R.id.tv_play_load_net_speed_right_top);
 
         //EPG  findViewById  by 龍
-        tip_chname = (TextView)  findViewById(R.id.tv_channel_bar_name);//底部名称
-        tip_epg1 = (TextView) findViewById(R.id.tv_current_program_time);//底部EPG当前节目起止时间
-        tip_epg2 = (TextView) findViewById(R.id.tv_next_program_time);//底部EPG下个节目起止时间
-        tv_current_program_name = (TextView) findViewById(R.id.tv_current_program_name);//底部EPG当前节目信息
-        tv_next_program_name = (TextView) findViewById(R.id.tv_next_program_name);//底部EPG下个节目信息
-        tv_srcinfo = (TextView) findViewById(R.id.tv_source);//线路信息
-        ll_epg = (ConstraintLayout) findViewById(R.id.ll_epg);
-        txtNoEpg = (TextView) findViewById(R.id.txtNoEpg);
-        ll_right_top_huikan = (TextView) findViewById(R.id.ll_right_top_huikan);
-        divLoadEpg = (View) findViewById(R.id.divLoadEpg);
-        divLoadEpgleft = (View) findViewById(R.id.divLoadEpgleft);
-        divEpg = (LinearLayout) findViewById(R.id.divEPG);
+        tip_chname =  findViewById(R.id.tv_channel_bar_name);//底部名称
+        tip_epg1 = findViewById(R.id.tv_current_program_time);//底部EPG当前节目起止时间
+        tip_epg2 = findViewById(R.id.tv_next_program_time);//底部EPG下个节目起止时间
+        tv_current_program_name = findViewById(R.id.tv_current_program_name);//底部EPG当前节目信息
+        tv_next_program_name = findViewById(R.id.tv_next_program_name);//底部EPG下个节目信息
+        tv_srcinfo = findViewById(R.id.tv_source);//线路信息
+        ll_epg = findViewById(R.id.ll_epg);
+        txtNoEpg = findViewById(R.id.txtNoEpg);
+        ll_right_top_huikan = findViewById(R.id.ll_right_top_huikan);
+        divLoadEpg = findViewById(R.id.divLoadEpg);
+        divLoadEpgleft = findViewById(R.id.divLoadEpgleft);
+        divEpg = findViewById(R.id.divEPG);
 
         //laodao 7day replay
         mEpgDateGridView = findViewById(R.id.mEpgDateGridView);
-        mRightEpgList = (TvRecyclerView) findViewById(R.id.lv_epg);
+        mRightEpgList = findViewById(R.id.lv_epg);
         
         //EPG频道名称
         imgLiveIcon = findViewById(R.id.img_live_icon);
@@ -240,10 +238,10 @@ public class LivePlayActivity extends BaseActivity {
         imgLiveIcon.setVisibility(View.INVISIBLE);
         liveIconNullText.setVisibility(View.INVISIBLE);
 
-        sBar = (SeekBar) findViewById(R.id.pb_progressbar);
-        tv_currentpos = (TextView) findViewById(R.id.tv_currentpos);
-        backcontroller = (View) findViewById(R.id.backcontroller);
-        tv_duration = (TextView) findViewById(R.id.tv_duration);
+        sBar = findViewById(R.id.pb_progressbar);
+        tv_currentpos = findViewById(R.id.tv_currentpos);
+        backcontroller = findViewById(R.id.backcontroller);
+        tv_duration = findViewById(R.id.tv_duration);
 
         initEpgDateView();
         initEpgListView();
@@ -418,16 +416,12 @@ public class LivePlayActivity extends BaseActivity {
             }
             ll_epg.setVisibility(View.VISIBLE);
             tv_videosize.setVisibility(View.VISIBLE);
-            tv_play_load_net_speed_right_top.setVisibility(View.VISIBLE);
-            mHandler.post(mUpdatetv_play_load_net_speed_right_topRun);
             countDownTimer = new CountDownTimer(5000, 1000) {//底部epg隐藏时间设定
                 public void onTick(long j) {
                 }
                 public void onFinish() {
                     ll_epg.setVisibility(View.GONE);
                     tv_videosize.setVisibility(View.GONE);
-                    tv_play_load_net_speed_right_top.setVisibility(View.GONE);
-                    mHandler.removeCallbacks(mUpdatetv_play_load_net_speed_right_topRun);
                 }
             };
             countDownTimer.start();
@@ -496,7 +490,6 @@ public class LivePlayActivity extends BaseActivity {
             mHandler.removeCallbacks(mUpdateNetSpeedRun);
             mHandler.removeCallbacks(mUpdateTimeRun);
             mHandler.removeCallbacks(mUpdatetv_play_load_net_speedRun);
-            mHandler.removeCallbacks(mUpdatetv_play_load_net_speed_right_topRun);
             super.onBackPressed();
         }
     }
@@ -837,7 +830,6 @@ public class LivePlayActivity extends BaseActivity {
         } else {
             currentLiveChannelItem.setinclude_back(false);
         }
-        showBottomEpg();
         getEpg(new Date());
         backcontroller.setVisibility(View.GONE);
         ll_right_top_huikan.setVisibility(View.GONE);
@@ -2197,16 +2189,6 @@ public class LivePlayActivity extends BaseActivity {
             }
         }
     }
-
-    private Runnable mUpdatetv_play_load_net_speed_right_topRun = new Runnable() {
-        @Override
-        public void run() {
-            if (mVideoView == null) return;
-            String speed = PlayerHelper.getDisplaySpeed(mVideoView.getTcpSpeed(), true);
-            tv_play_load_net_speed_right_top.setText(speed);
-            mHandler.postDelayed(this, 1000);
-        }
-    };
 
     private Runnable mUpdatetv_play_load_net_speedRun = new Runnable() {
         @Override
