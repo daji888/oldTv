@@ -287,7 +287,7 @@ public class LivePlayActivity extends BaseActivity {
                 });
             }
         } else {
-            Epginfo epgbcinfo = new Epginfo(date, "精彩节目-暂未提供节目预告信息", date, "00:00", "23:59", 0);
+            Epginfo epgbcinfo = new Epginfo(date, "无节目信息", date, "00:00", "23:59", 0);
             arrayList.add(epgbcinfo);
             epgdata = arrayList;
             epgListAdapter.setNewData(epgdata);
@@ -380,9 +380,9 @@ public class LivePlayActivity extends BaseActivity {
         if (channel_Name.getChannelName() != null) {
             tip_chname.setText(channel_Name.getChannelName());
             tip_epg1.setText("00:00 - 23:59");
-            tv_current_program_name.setText("精彩节目-暂未提供节目预告信息");
+            tv_current_program_name.setText("无节目信息");
             tip_epg2.setText("00:00 - 23:59");
-            tv_next_program_name.setText("精彩节目-暂未提供节目预告信息");
+            tv_next_program_name.setText("无节目信息");
             String savedEpgKey = channel_Name.getChannelName() + "_" + liveEpgDateAdapter.getItem(liveEpgDateAdapter.getSelectedIndex()).getDatePresented();
             if (hsEpg.containsKey(savedEpgKey)) {
                 String[] epgInfo = EpgUtil.getEpgInfo(channel_Name.getChannelName());
@@ -397,13 +397,6 @@ public class LivePlayActivity extends BaseActivity {
                             if (size != arrayList.size() - 1) {
                                 tip_epg2.setText((arrayList.get(size + 1)).start + " - " + (arrayList.get(size + 1)).end);
                                 tv_next_program_name.setText((arrayList.get(size + 1)).title);
-                            } else {
-                                tip_epg2.setText("00:00 - 23:59");
-                                if (tv_current_program_name.getText().equals("精彩节目-暂未提供节目预告信息")) {
-                                    tv_next_program_name.setText("精彩节目-暂未提供节目预告信息");
-                                } else {    
-                                    tv_next_program_name.setText("精彩节目-明日继续");
-                                }    
                             }
                             break;
                         } else {
