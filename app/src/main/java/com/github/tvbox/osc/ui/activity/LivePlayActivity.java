@@ -299,17 +299,15 @@ public class LivePlayActivity extends BaseActivity {
         String epgTagName = channelName;
         String noteName = channelName;
         String[] epgInfo = EpgUtil.getEpgInfo(channelName);
-        if (logoUrl == null || logoUrl.isEmpty()) {
-            updateChannelIcon(channelName, epgInfo == null ? null : epgInfo[0]);
-        } else if ("false".equals(logoUrl)) {
-            updateChannelIcon(channelName, null);
-        } else {
-            String logo = logoUrl.replace("{name}", channelName);
-            updateChannelIcon(channelName, logo);
-        }
         if (epgInfo != null && epgInfo.length > 1 && !epgInfo[1].isEmpty()) {
             epgTagName = epgInfo[1];
             noteName = epgInfo[2];
+        }
+        if (logoUrl == null || logoUrl.isEmpty() || "false".equals(logoUrl)) {
+            updateChannelIcon(channelName, (epgInfo != null && epgInfo.length > 0) ? epgInfo[0] : null);
+        } else {
+            String logo = logoUrl.replace("{name}", epgTagName);
+            updateChannelIcon(channelName, logo);
         }
         epgListAdapter.CanBack(currentLiveChannelItem.getinclude_back());
         String epgUrl;
@@ -361,10 +359,8 @@ public class LivePlayActivity extends BaseActivity {
                         }
                         showEpg(date, arrayList);
                         String savedEpgKey = channelName + "_" + liveEpgDateAdapter.getItem(liveEpgDateAdapter.getSelectedIndex()).getDatePresented();
-                        synchronized (hsEpg) {
-                            if (!hsEpg.containsKey(savedEpgKey))
-                                hsEpg.put(savedEpgKey, arrayList);
-                        }
+                        if (!hsEpg.containsKey(savedEpgKey))
+                            hsEpg.put(savedEpgKey, arrayList);
                         showBottomEpg();
                     }
                 });
@@ -375,16 +371,26 @@ public class LivePlayActivity extends BaseActivity {
     //显示底部EPG
     private void showBottomEpg() {
         if (isSHIYI) return;
-        if (channel_Name.getChannelName() != null) {
+        String channelName = channel_Name.getChannelName();
+        if (channelName != null) {
             tip_chname.setText(channel_Name.getChannelName());
             tip_epg1.setText("00:00 - 23:59");
             tv_current_program_name.setText("无节目信息");
             tip_epg2.setText("00:00 - 23:59");
             tv_next_program_name.setText("无节目信息");
-            String savedEpgKey = channel_Name.getChannelName() + "_" + liveEpgDateAdapter.getItem(liveEpgDateAdapter.getSelectedIndex()).getDatePresented();
+            String savedEpgKey = channelName + "_" + liveEpgDateAdapter.getItem(liveEpgDateAdapter.getSelectedIndex()).getDatePresented();
             if (hsEpg.containsKey(savedEpgKey)) {
                 String[] epgInfo = EpgUtil.getEpgInfo(channel_Name.getChannelName());
-                updateChannelIcon(channel_Name.getChannelName(), epgInfo == null ? null : epgInfo[0]);
+                String epgTagName = channelName;
+                if (epgInfo != null && epgInfo.length > 1 && !epgInfo[1].isEmpty()) {
+                    epgTagName = epgInfo[1];
+                }
+                if (logoUrl == null || logoUrl.isEmpty() || "false".equals(logoUrl)) {
+                    updateChannelIcon(channelName, (epgInfo != null && epgInfo.length > 0) ? epgInfo[0] : null);
+                } else {
+                    String logo = logoUrl.replace("{name}", epgTagName);
+                    updateChannelIcon(channelName, logo);
+                }
                 ArrayList<Epginfo> arrayList = hsEpg.get(savedEpgKey);
                 if (arrayList != null && arrayList.size() > 0) {
                     int size = arrayList.size() - 1;
@@ -854,7 +860,6 @@ public class LivePlayActivity extends BaseActivity {
         epgListAdapter.setSelectedEpgIndex(-1);
         isSHIYI = false;
         isBack = false;
-        showBottomEpg();
         getEpg(new Date());
         backcontroller.setVisibility(View.GONE);
         ll_right_top_huikan.setVisibility(View.GONE);
