@@ -293,7 +293,7 @@ public class LivePlayActivity extends BaseActivity {
         }
     }
 
-    private void getEpg(Date date) {
+    private void getEpg(Date date, boolean showBottomEpg) {
         String channelName = channel_Name.getChannelName();
         timeFormat.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
         String epgTagName = channelName;
@@ -359,9 +359,8 @@ public class LivePlayActivity extends BaseActivity {
                         }
                         showEpg(date, arrayList);
                         String savedEpgKey = channelName + "_" + liveEpgDateAdapter.getItem(liveEpgDateAdapter.getSelectedIndex()).getDatePresented();
-                        if (!hsEpg.containsKey(savedEpgKey))
-                            hsEpg.put(savedEpgKey, arrayList);
-                        showBottomEpg();
+                        if (!hsEpg.containsKey(savedEpgKey)) hsEpg.put(savedEpgKey, arrayList);
+                        if (showBottomEpg) showBottomEpg();
                     }
                 });
             }
@@ -413,9 +412,9 @@ public class LivePlayActivity extends BaseActivity {
             } else {
                 int selectedIndex = liveEpgDateAdapter.getSelectedIndex();
                 if (selectedIndex < 0)
-                    getEpg(new Date());
+                    getEpg(new Date(), true);
                 else
-                    getEpg(liveEpgDateAdapter.getData().get(selectedIndex).getDateParamVal());
+                    getEpg(liveEpgDateAdapter.getData().get(selectedIndex).getDateParamVal(), true);
             }
             if (countDownTimer != null) {
                countDownTimer.cancel();
@@ -836,7 +835,7 @@ public class LivePlayActivity extends BaseActivity {
         } else {
             currentLiveChannelItem.setinclude_back(false);
         }
-        getEpg(new Date());
+        getEpg(new Date(), true);
         backcontroller.setVisibility(View.GONE);
         ll_right_top_huikan.setVisibility(View.GONE);
         if (mVideoView != null) {
@@ -860,7 +859,7 @@ public class LivePlayActivity extends BaseActivity {
         epgListAdapter.setSelectedEpgIndex(-1);
         isSHIYI = false;
         isBack = false;
-        getEpg(new Date());
+        getEpg(new Date(), true);
         backcontroller.setVisibility(View.GONE);
         ll_right_top_huikan.setVisibility(View.GONE);
         mVideoView.setUrl(currentLiveChannelItem.getUrl(), liveChannelHeader());
@@ -1275,7 +1274,7 @@ public class LivePlayActivity extends BaseActivity {
                 mHandler.removeCallbacks(mHideChannelListRun);
                 mHandler.postDelayed(mHideChannelListRun, 5000);
                 liveEpgDateAdapter.setSelectedIndex(position);
-                getEpg(liveEpgDateAdapter.getData().get(position).getDateParamVal());
+                getEpg(liveEpgDateAdapter.getData().get(position).getDateParamVal(), false);
             }
         });
 
@@ -1287,7 +1286,7 @@ public class LivePlayActivity extends BaseActivity {
                 mHandler.removeCallbacks(mHideChannelListRun);
                 mHandler.postDelayed(mHideChannelListRun, 5000);
                 liveEpgDateAdapter.setSelectedIndex(position);
-                getEpg(liveEpgDateAdapter.getData().get(position).getDateParamVal());
+                getEpg(liveEpgDateAdapter.getData().get(position).getDateParamVal(), false);
             }
         });
         liveEpgDateAdapter.setSelectedIndex(1);
