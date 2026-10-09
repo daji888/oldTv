@@ -186,6 +186,7 @@ public class LivePlayActivity extends BaseActivity {
     private TextView tv_duration;
     private SeekBar sBar;
     private boolean show = false;
+    private boolean onFailure = true;
     private boolean mIsDragging;
     private LiveController controller;
 
@@ -311,10 +312,9 @@ public class LivePlayActivity extends BaseActivity {
         }
         epgListAdapter.CanBack(currentLiveChannelItem.getinclude_back());
         String epgUrl;
+        if (epgStringAddress.contains("{name}/{date}")) epgTagName = noteName;
         try {
-            if (epgStringAddress.contains("name/date")) {
-                epgUrl = epgStringAddress.replace("name", URLEncoder.encode(noteName, "UTF-8")).replace("date", timeFormat.format(date));
-            } else if (epgStringAddress.contains("{name}") && epgStringAddress.contains("{date}")) {
+            if (epgStringAddress.contains("{name}") && epgStringAddress.contains("{date}")) {
                 epgUrl = epgStringAddress.replace("{name}", URLEncoder.encode(epgTagName, "UTF-8")).replace("{date}", timeFormat.format(date));
             } else {
                 epgUrl = epgStringAddress + "?ch=" + URLEncoder.encode(epgTagName, "UTF-8") + "&date=" + timeFormat.format(date);
@@ -327,6 +327,7 @@ public class LivePlayActivity extends BaseActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 mHandler.post(() -> showEpg(date, new ArrayList<>()));
+                onFailure = true;
             }
 
             @Override
@@ -335,11 +336,13 @@ public class LivePlayActivity extends BaseActivity {
                 try (Response resp = response) {
                     if (!resp.isSuccessful()) {
                         mHandler.post(() -> showEpg(date, new ArrayList<>()));
+                        onFailure = true;
                         return;
                     }
                     body = resp.body() != null ? resp.body().string() : "";
                 }
                 ArrayList<Epginfo> arrayList = new ArrayList<Epginfo>();
+                onFailure = false;
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -836,6 +839,7 @@ public class LivePlayActivity extends BaseActivity {
             currentLiveChannelItem.setinclude_back(false);
         }
         getEpg(new Date(), true);
+        if (onFailure == true) showBottomEpg();
         backcontroller.setVisibility(View.GONE);
         ll_right_top_huikan.setVisibility(View.GONE);
         if (mVideoView != null) {
@@ -860,6 +864,7 @@ public class LivePlayActivity extends BaseActivity {
         isSHIYI = false;
         isBack = false;
         getEpg(new Date(), true);
+        if (onFailure == true) showBottomEpg();
         backcontroller.setVisibility(View.GONE);
         ll_right_top_huikan.setVisibility(View.GONE);
         mVideoView.setUrl(currentLiveChannelItem.getUrl(), liveChannelHeader());
