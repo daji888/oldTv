@@ -376,10 +376,6 @@ public class LivePlayActivity extends BaseActivity {
         String channelName = channel_Name.getChannelName();
         if (channelName != null) {
             tip_chname.setText(channelName);
-            tip_epg1.setText("00:00 - 23:59");
-            tv_current_program_name.setText("无节目信息");
-            tip_epg2.setText("00:00 - 23:59");
-            tv_next_program_name.setText("无节目信息");
             String savedEpgKey = channelName + "_" + liveEpgDateAdapter.getItem(liveEpgDateAdapter.getSelectedIndex()).getDatePresented();
             if (hsEpg.containsKey(savedEpgKey)) {
                 String[] epgInfo = EpgUtil.getEpgInfo(channelName);
