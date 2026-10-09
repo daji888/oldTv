@@ -416,7 +416,7 @@
 			android:textSize="@dimen/ts_26"
 			android:textColor="@color/color_FFFFFF"
 			android:ellipsize="marquee"
-			android:text="00:00"
+			android:text="00:00 - 23:59"
 			android:singleLine="true"
 			app:layout_constraintTop_toBottomOf="@id/tv_source"
 			app:layout_constraintStart_toEndOf="@id/channelinfo" />
@@ -453,7 +453,7 @@
 			android:layout_height="wrap_content"
 			android:textSize="@dimen/ts_26"
 			android:textColor="@color/color_FFFFFF"
-			android:text="00:00"
+			android:text="00:00 - 23:59"
 			android:singleLine="true"
 			android:ellipsize="marquee"
 			app:layout_constraintTop_toBottomOf="@id/view_line"
