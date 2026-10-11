@@ -186,7 +186,6 @@ public class LivePlayActivity extends BaseActivity {
     private TextView tv_duration;
     private SeekBar sBar;
     private boolean show = false;
-    private boolean onFailure = true;
     private boolean mIsDragging;
     private LiveController controller;
 
@@ -304,15 +303,9 @@ public class LivePlayActivity extends BaseActivity {
             epgTagName = epgInfo[1];
             noteName = epgInfo[2];
         }
-        if (logoUrl == null || logoUrl.isEmpty() || "false".equals(logoUrl)) {
-            updateChannelIcon(channelName, (epgInfo != null && epgInfo.length > 0) ? epgInfo[0] : null);
-        } else {
-            String logo = logoUrl.replace("{name}", epgTagName);
-            updateChannelIcon(channelName, logo);
-        }
+        if (epgStringAddress.contains("{name}/{date}")) epgTagName = noteName;
         epgListAdapter.CanBack(currentLiveChannelItem.getinclude_back());
         String epgUrl;
-        if (epgStringAddress.contains("{name}/{date}")) epgTagName = noteName;
         try {
             if (epgStringAddress.contains("{name}") && epgStringAddress.contains("{date}")) {
                 epgUrl = epgStringAddress.replace("{name}", URLEncoder.encode(epgTagName, "UTF-8")).replace("{date}", timeFormat.format(date));
@@ -326,8 +319,10 @@ public class LivePlayActivity extends BaseActivity {
         OkHttp.newCall(epgUrl).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                mHandler.post(() -> showEpg(date, new ArrayList<>()));
-                onFailure = true;
+                mHandler.post(() -> {
+                    showEpg(date, new ArrayList<>());
+                    if (showBottomEpg) showBottomEpg();
+                });
             }
 
             @Override
@@ -335,14 +330,15 @@ public class LivePlayActivity extends BaseActivity {
                 final String body;
                 try (Response resp = response) {
                     if (!resp.isSuccessful()) {
-                        mHandler.post(() -> showEpg(date, new ArrayList<>()));
-                        onFailure = true;
+                        mHandler.post(() -> {
+                            showEpg(date, new ArrayList<>());
+                            if (showBottomEpg) showBottomEpg();
+                        });
                         return;
                     }
                     body = resp.body() != null ? resp.body().string() : "";
                 }
                 ArrayList<Epginfo> arrayList = new ArrayList<Epginfo>();
-                onFailure = false;
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -376,19 +372,19 @@ public class LivePlayActivity extends BaseActivity {
         String channelName = channel_Name.getChannelName();
         if (channelName != null) {
             tip_chname.setText(channelName);
+            String[] epgInfo = EpgUtil.getEpgInfo(channelName);
+            String epgTagName = channelName;
+            if (epgInfo != null && epgInfo.length > 1 && !epgInfo[1].isEmpty()) {
+                epgTagName = epgInfo[1];
+            }
+            if (logoUrl == null || logoUrl.isEmpty() || "false".equals(logoUrl)) {
+                updateChannelIcon(channelName, (epgInfo != null && epgInfo.length > 0) ? epgInfo[0] : null);
+            } else {
+                String logo = logoUrl.replace("{name}", epgTagName);
+                updateChannelIcon(channelName, logo);
+            }
             String savedEpgKey = channelName + "_" + liveEpgDateAdapter.getItem(liveEpgDateAdapter.getSelectedIndex()).getDatePresented();
             if (hsEpg.containsKey(savedEpgKey)) {
-                String[] epgInfo = EpgUtil.getEpgInfo(channelName);
-                String epgTagName = channelName;
-                if (epgInfo != null && epgInfo.length > 1 && !epgInfo[1].isEmpty()) {
-                    epgTagName = epgInfo[1];
-                }
-                if (logoUrl == null || logoUrl.isEmpty() || "false".equals(logoUrl)) {
-                    updateChannelIcon(channelName, (epgInfo != null && epgInfo.length > 0) ? epgInfo[0] : null);
-                } else {
-                    String logo = logoUrl.replace("{name}", epgTagName);
-                    updateChannelIcon(channelName, logo);
-                }
                 ArrayList<Epginfo> arrayList = hsEpg.get(savedEpgKey);
                 if (arrayList != null && arrayList.size() > 0) {
                     int size = arrayList.size() - 1;
@@ -408,12 +404,6 @@ public class LivePlayActivity extends BaseActivity {
                 }
                 epgListAdapter.CanBack(currentLiveChannelItem.getinclude_back());
                 epgListAdapter.setNewData(arrayList);
-            } else {
-                int selectedIndex = liveEpgDateAdapter.getSelectedIndex();
-                if (selectedIndex < 0)
-                    getEpg(new Date(), true);
-                else
-                    getEpg(liveEpgDateAdapter.getData().get(selectedIndex).getDateParamVal(), true);
             }
             if (countDownTimer != null) {
                countDownTimer.cancel();
@@ -835,7 +825,6 @@ public class LivePlayActivity extends BaseActivity {
             currentLiveChannelItem.setinclude_back(false);
         }
         getEpg(new Date(), true);
-        if (onFailure == true) showBottomEpg();
         backcontroller.setVisibility(View.GONE);
         ll_right_top_huikan.setVisibility(View.GONE);
         if (mVideoView != null) {
@@ -860,7 +849,6 @@ public class LivePlayActivity extends BaseActivity {
         isSHIYI = false;
         isBack = false;
         getEpg(new Date(), true);
-        if (onFailure == true) showBottomEpg();
         backcontroller.setVisibility(View.GONE);
         ll_right_top_huikan.setVisibility(View.GONE);
         mVideoView.setUrl(currentLiveChannelItem.getUrl(), liveChannelHeader());
