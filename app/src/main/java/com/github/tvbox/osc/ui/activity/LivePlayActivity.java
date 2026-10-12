@@ -136,7 +136,7 @@ public class LivePlayActivity extends BaseActivity {
     private LiveSettingGroupAdapter liveSettingGroupAdapter;
     private LiveSettingItemAdapter liveSettingItemAdapter;
     private List<LiveSettingGroup> liveSettingGroupList = new ArrayList<>();
-    private int selectedChannelNumber = 0; // 遥控器数字键输入的频道号
+    private int selectedChannelNumber = 0; //遥控器数字键输入的频道号
     private TextView tvSelectedChannel;
     public static int currentChannelGroupIndex = 0;
     private Handler mHandler = new Handler();
@@ -173,7 +173,7 @@ public class LivePlayActivity extends BaseActivity {
     private LiveEpgAdapter epgListAdapter;
     private boolean isSHIYI = false;
     public static boolean isBack = false;
-    private static String shiyi_time;//时移时间
+    private static String shiyi_time; //时移时间
     private static String playUrl;
     
     //kenson
@@ -215,12 +215,12 @@ public class LivePlayActivity extends BaseActivity {
         tv_videosize = findViewById(R.id.tv_videosize);
 
         //EPG  findViewById  by 龍
-        tip_chname =  findViewById(R.id.tv_channel_bar_name);//底部名称
-        tip_epg1 = findViewById(R.id.tv_current_program_time);//底部EPG当前节目起止时间
-        tip_epg2 = findViewById(R.id.tv_next_program_time);//底部EPG下个节目起止时间
-        tv_current_program_name = findViewById(R.id.tv_current_program_name);//底部EPG当前节目信息
-        tv_next_program_name = findViewById(R.id.tv_next_program_name);//底部EPG下个节目信息
-        tv_srcinfo = findViewById(R.id.tv_source);//线路信息
+        tip_chname = findViewById(R.id.tv_channel_bar_name); //底部名称
+        tip_epg1 = findViewById(R.id.tv_current_program_time); //底部EPG当前节目起止时间
+        tip_epg2 = findViewById(R.id.tv_next_program_time); //底部EPG下个节目起止时间
+        tv_current_program_name = findViewById(R.id.tv_current_program_name); //底部EPG当前节目信息
+        tv_next_program_name = findViewById(R.id.tv_next_program_name); //底部EPG下个节目信息
+        tv_srcinfo = findViewById(R.id.tv_source); //线路信息
         ll_epg = findViewById(R.id.ll_epg);
         txtNoEpg = findViewById(R.id.txtNoEpg);
         ll_right_top_huikan = findViewById(R.id.ll_right_top_huikan);
@@ -254,7 +254,7 @@ public class LivePlayActivity extends BaseActivity {
         initLiveSettingGroupList();
     }
     
-    //获取EPG并存储 // 百川epg  DIYP epg   51zmt epg ------- 自建EPG格式输出格式请参考 51zmt
+    //获取EPG并存储 // 百川epg  DIYP epg   51zmt epg ------- 自建EPG格式,输出格式请参考 51zmt
     private List<Epginfo> epgdata = new ArrayList<>();
 
     private void showEpg(Date date, ArrayList<Epginfo> arrayList) {
@@ -295,6 +295,7 @@ public class LivePlayActivity extends BaseActivity {
 
     private void getEpg(Date date, boolean showBottomEpg) {
         String channelName = channel_Name.getChannelName();
+        if (channelName != null) tip_chname.setText(channelName);
         timeFormat.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
         String epgTagName = channelName;
         String noteName = channelName;
@@ -303,8 +304,14 @@ public class LivePlayActivity extends BaseActivity {
             epgTagName = epgInfo[1];
             noteName = epgInfo[2];
         }
-        if (epgStringAddress.contains("{name}/{date}")) epgTagName = noteName;
+        if (logoUrl == null || logoUrl.isEmpty() || "false".equals(logoUrl)) {
+            updateChannelIcon(channelName, (epgInfo != null && epgInfo.length > 0) ? epgInfo[0] : null);
+        } else {
+            String logo = logoUrl.replace("{name}", epgTagName);
+            updateChannelIcon(channelName, logo);
+        }
         epgListAdapter.CanBack(currentLiveChannelItem.getinclude_back());
+        if (epgStringAddress.contains("{name}/{date}")) epgTagName = noteName;
         String epgUrl;
         try {
             if (epgStringAddress.contains("{name}") && epgStringAddress.contains("{date}")) {
@@ -371,18 +378,6 @@ public class LivePlayActivity extends BaseActivity {
         if (isSHIYI) return;
         String channelName = channel_Name.getChannelName();
         if (channelName != null) {
-            tip_chname.setText(channelName);
-            String[] epgInfo = EpgUtil.getEpgInfo(channelName);
-            String epgTagName = channelName;
-            if (epgInfo != null && epgInfo.length > 1 && !epgInfo[1].isEmpty()) {
-                epgTagName = epgInfo[1];
-            }
-            if (logoUrl == null || logoUrl.isEmpty() || "false".equals(logoUrl)) {
-                updateChannelIcon(channelName, (epgInfo != null && epgInfo.length > 0) ? epgInfo[0] : null);
-            } else {
-                String logo = logoUrl.replace("{name}", epgTagName);
-                updateChannelIcon(channelName, logo);
-            }
             String savedEpgKey = channelName + "_" + liveEpgDateAdapter.getItem(liveEpgDateAdapter.getSelectedIndex()).getDatePresented();
             if (hsEpg.containsKey(savedEpgKey)) {
                 ArrayList<Epginfo> arrayList = hsEpg.get(savedEpgKey);
@@ -410,7 +405,7 @@ public class LivePlayActivity extends BaseActivity {
             }
             ll_epg.setVisibility(View.VISIBLE);
             tv_videosize.setVisibility(View.VISIBLE);
-            countDownTimer = new CountDownTimer(5000, 1000) {//底部epg隐藏时间设定
+            countDownTimer = new CountDownTimer(5000, 1000) { //底部epg隐藏时间设定
                 public void onTick(long j) {
                 }
                 public void onFinish() {
