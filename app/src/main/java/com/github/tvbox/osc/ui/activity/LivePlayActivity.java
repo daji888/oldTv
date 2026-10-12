@@ -404,13 +404,11 @@ public class LivePlayActivity extends BaseActivity {
                countDownTimer.cancel();
             }
             ll_epg.setVisibility(View.VISIBLE);
-            tv_videosize.setVisibility(View.VISIBLE);
             countDownTimer = new CountDownTimer(5000, 1000) { //底部epg隐藏时间设定
                 public void onTick(long j) {
                 }
                 public void onFinish() {
                     ll_epg.setVisibility(View.GONE);
-                    tv_videosize.setVisibility(View.GONE);
                 }
             };
             countDownTimer.start();
@@ -558,13 +556,11 @@ public class LivePlayActivity extends BaseActivity {
                             if (mVideoView.isPlaying()) {
                                 mVideoView.pause();
                                 showProgressBars(true);
-                                tv_videosize.setVisibility(View.VISIBLE);
                                 if (countDownTimer != null) {
                                     countDownTimer.cancel();
                                 }
                             } else {
                                 mVideoView.start();
-                                tv_videosize.setVisibility(View.GONE);
                                 if (countDownTimer != null) {
                                     countDownTimer.start();
                                 }
@@ -899,7 +895,6 @@ public class LivePlayActivity extends BaseActivity {
                 if (holder != null)
                     holder.itemView.requestFocus();
                 tvRightSettingLayout.setVisibility(View.VISIBLE);
-                tv_videosize.setVisibility(View.VISIBLE);
                 ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) tvRightSettingLayout.getLayoutParams();
                 if (tvRightSettingLayout.getVisibility() == View.VISIBLE) {
                     ViewObj viewObj = new ViewObj(tvRightSettingLayout, params);
@@ -931,7 +926,6 @@ public class LivePlayActivity extends BaseActivity {
                     public void onAnimationEnd(Animator animation) {
                         super.onAnimationEnd(animation);
                         tvRightSettingLayout.setVisibility(View.INVISIBLE);
-                        tv_videosize.setVisibility(View.GONE);
                         liveSettingGroupAdapter.setSelectedGroupIndex(-1);
                     }
                 });
@@ -1285,10 +1279,8 @@ public class LivePlayActivity extends BaseActivity {
                    if (mVideoView.isPlaying()) {
                        mVideoView.pause();
                        showProgressBars(true);
-                       tv_videosize.setVisibility(View.VISIBLE);
                    } else {
                        mVideoView.start();
-                       tv_videosize.setVisibility(View.GONE);
                    }   
                 } else {
                     showChannelList();

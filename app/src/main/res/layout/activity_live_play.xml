@@ -10,22 +10,6 @@
         android:id="@+id/mVideoView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-	
-    <!--左上角分辨率-->
-    <TextView
-        android:id="@+id/tv_videosize"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|left"
-        android:layout_marginLeft="@dimen/vs_60"
-        android:layout_marginTop="@dimen/vs_10"
-        android:padding="@dimen/vs_10"
-        android:background="@drawable/shape_user_focus"
-        android:focusable="false"
-        android:visibility="gone"
-        android:text="0 x 0"
-        android:textColor="@android:color/white"
-        android:textSize="@dimen/ts_20" />
 
     <!--右上角频道号-->
     <TextView
@@ -406,6 +390,19 @@
 			app:layout_constraintTop_toTopOf="@id/view_bg"
 			app:layout_constraintEnd_toEndOf="parent"
 			android:text="线路 1/1"
+			android:textColor="@color/color_FFFFFF"
+			android:textSize="@dimen/ts_26" />
+
+		<TextView
+			android:id="@+id/tv_videosize"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/vs_10"
+			android:layout_marginBottom="@dimen/vs_10"
+			android:layout_marginRight="@dimen/vs_50"
+			app:layout_constraintTop_toTopOf="@id/view_bg"
+			app:layout_constraintEnd_toStartOf="@id/tv_source"
+			android:text="0 x 0"
 			android:textColor="@color/color_FFFFFF"
 			android:textSize="@dimen/ts_26" />
 		
