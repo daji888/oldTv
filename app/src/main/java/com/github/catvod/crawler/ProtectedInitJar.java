@@ -77,7 +77,7 @@ class ProtectedInitJar {
     }
 
     private boolean bindDexLoader(Class<?> clz, Object init) {
-        if (init == null) return false;
+        if (init == null || clz == null) return false;
         try {
             Class<?> nativeClass = clz.getClassLoader().loadClass("com.github.catvod.spider.DexNative");
             Method getLoader = nativeClass.getMethod("getLoader", Object.class);
@@ -93,6 +93,8 @@ class ProtectedInitJar {
                 }
             }
             return bound;
+        } catch (ClassNotFoundException ignored) {
+            return true;
         } catch (Throwable ignored) {
         }
         return false;
