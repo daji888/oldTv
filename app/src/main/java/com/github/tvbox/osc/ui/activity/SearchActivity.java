@@ -327,7 +327,8 @@ public class SearchActivity extends BaseActivity {
             }
         });
     }
-
+    
+    private static ArrayList<String> hots;
     private void initData() {
         initCheckedSourcesForSearch();
         Intent intent = getIntent();
@@ -341,6 +342,10 @@ public class SearchActivity extends BaseActivity {
             } else {
                 search(title);
             }
+        }
+        if (hots != null && !hots.isEmpty()) {
+            wordAdapter.setNewData(hots);
+            return;
         }
         // 加载热词
         String doubanUrl = "https://movie.douban.com/j/search_subjects?type=tv&tag=%E7%83%AD%E9%97%A8&sort=recommend&page_limit=20&page_start=0";
@@ -360,7 +365,7 @@ public class SearchActivity extends BaseActivity {
                     @Override
                     public void run() {
                         try {
-                            ArrayList<String> hots = new ArrayList<>();
+                            hots = new ArrayList<String>();
                             JsonArray itemList = JsonParser.parseString(result).getAsJsonObject().get("subjects").getAsJsonArray();
                             for (JsonElement ele : itemList) {
                                 JsonObject obj = (JsonObject) ele;
@@ -479,7 +484,7 @@ public class SearchActivity extends BaseActivity {
         searchTitle = searchTitle.trim();
         String[] arr = searchTitle.split("\\s+");
         int matchNum = 0;
-        for(String one : arr) {
+        for (String one : arr) {
             if (name.contains(one)) matchNum++;
         }
         return matchNum == arr.length ? true : false;
@@ -508,7 +513,6 @@ public class SearchActivity extends BaseActivity {
             cancel();
         }
     }
-
 
     private void cancel() {
         OkHttp.cancel("search");
