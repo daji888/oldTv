@@ -12,9 +12,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
+      - name: set up JDK 17
+        uses: actions/setup-java@v6
+        with:
+          java-version: '17'
+          distribution: 'temurin'
       - name: Check New Commit
         run: |
           commit=$(curl -sL https://github.com/daji888/oldTv/commits/main |grep -o "commit/[a-z0-9]\+" |head -1 | cut -d\/ -f5)
