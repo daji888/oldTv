@@ -4,14 +4,14 @@ plugins {
 
 android {
     namespace = 'com.github.tvbox.osc'
-    compileSdk = 37
+    compileSdk 37
 
     defaultConfig {
-        applicationId = 'com.github.tvbox.osc.dj'
-        minSdk = 23
-        targetSdk = 28
-        versionCode = 1
-        versionName = '1.0.0'
+        applicationId 'com.github.tvbox.osc.dj'
+        minSdk 23
+        targetSdk 28
+        versionCode 1
+        versionName '1.0.0'
         //设置room的Schema的位置
         javaCompileOptions {
             annotationProcessorOptions {
@@ -23,7 +23,7 @@ android {
     buildTypes {
         debug {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            minifyEnabled = false
+            minifyEnabled false
 
             ndk {
                 abiFilters 'armeabi-v7a'
@@ -31,7 +31,7 @@ android {
         }
         release {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            minifyEnabled = true
+            minifyEnabled true
 
             ndk {
                 abiFilters 'armeabi-v7a'
