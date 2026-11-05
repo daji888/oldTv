@@ -83,7 +83,6 @@ public class VodController extends BaseController {
                         mBottomRoot.setVisibility(VISIBLE);
                         mTopRoot1.setVisibility(VISIBLE);
                         mTopRoot2.setVisibility(VISIBLE);
-                        mPlayTitle.setVisibility(GONE);
                         mNextBtn.requestFocus();
                         backBtn.setVisibility(ScreenUtils.isTv(context) ? INVISIBLE : VISIBLE);
                         showLockView();
@@ -130,7 +129,6 @@ public class VodController extends BaseController {
     LinearLayout mParseRoot;
     TvRecyclerView mGridView;
     TextView mPlayTitle;
-    TextView mPlayTitle1;
     TextView mPlayLoadNetSpeedRightTop;
     TextView mNextBtn;
     TextView mPreBtn;
@@ -191,7 +189,6 @@ public class VodController extends BaseController {
         mCurrentTime = findViewById(R.id.curr_time);
         mTotalTime = findViewById(R.id.total_time);
         mPlayTitle = findViewById(R.id.tv_info_name);
-        mPlayTitle1 = findViewById(R.id.tv_info_name1);
         mPlayLoadNetSpeedRightTop = findViewById(R.id.tv_play_load_net_speed_right_top);
         mSeekBar = findViewById(R.id.seekBar);
         mProgressTop = findViewById(R.id.tv_pause_container);
@@ -863,11 +860,6 @@ public class VodController extends BaseController {
 
     public void setTitle(String playTitleInfo) {
         mPlayTitle.setText(playTitleInfo);
-        mPlayTitle1.setText(playTitleInfo);
-    }
-
-    public void setUrlTitle(String playTitleInfo) {
-        mPlayTitle.setText(playTitleInfo);
     }
 
     public void resetSpeed() {
@@ -982,15 +974,10 @@ public class VodController extends BaseController {
             case VideoView.STATE_IDLE:
                 break;
             case VideoView.STATE_PLAYING:
-                mTopRoot1.setVisibility(GONE);
-                mTopRoot2.setVisibility(GONE);
                 initLandscapePortraitBtnInfo();
                 startProgress();
                 break;
             case VideoView.STATE_PAUSED:
-                mTopRoot1.setVisibility(VISIBLE);
-                mTopRoot2.setVisibility(VISIBLE);
-                mPlayTitle.setVisibility(GONE);
                 break;
             case VideoView.STATE_ERROR:
                 listener.errReplay();
