@@ -79,7 +79,7 @@ public class ExoMediaPlayer extends AbstractPlayer implements Player.Listener {
         }
         mTrackSelector.setParameters(
             mTrackSelector.buildUponParameters()
-                .setTunnelingEnabled(true)
+            //    .setTunnelingEnabled(true)
                 .setPreferredAudioLanguages("chi", "chs", "zh-Hans", "zho", "cht", "zh-Hant", "zh")
                 .setPreferredTextLanguages("chi", "chs", "zh-Hans", "zho", "cht", "zh-Hant", "zh")                     
         );
