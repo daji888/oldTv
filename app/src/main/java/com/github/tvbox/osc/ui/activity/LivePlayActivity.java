@@ -390,6 +390,9 @@ public class LivePlayActivity extends BaseActivity {
                             if (size != arrayList.size() - 1) {
                                 tip_epg2.setText((arrayList.get(size + 1)).start + " - " + (arrayList.get(size + 1)).end);
                                 tv_next_program_name.setText((arrayList.get(size + 1)).title);
+                            } else {
+                                tip_epg2.setText((arrayList.get(size)).end + " - " + "23:59");
+                                tv_next_program_name.setText("无节目信息");
                             }
                             break;
                         } else {
