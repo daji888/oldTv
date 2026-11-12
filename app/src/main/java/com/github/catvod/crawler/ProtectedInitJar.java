@@ -3,6 +3,7 @@ package com.github.catvod.crawler;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 
 import com.github.tvbox.osc.base.App;
 
@@ -52,6 +53,7 @@ class ProtectedInitJar {
         }
         bindContext(clz, init);
         if (!bindDexLoader(clz, init)) return false;
+        invokeNoArg(clz, "saveConfig");
         invokeNoArg(clz, "replaceCloudDiskNames");
         invokeStartGoProxy(clz);
         return true;
@@ -102,9 +104,12 @@ class ProtectedInitJar {
 
     private void invokeNoArg(Class<?> clz, String methodName) {
         try {
-            Method method = clz.getMethod(methodName);
+            Method method = clz.getDeclaredMethod(methodName);
+            method.setAccessible(true);
             method.invoke(null);
-        } catch (Throwable ignored) {
+        } catch (NoSuchMethodException ignored) {
+        } catch (Throwable th) {
+            Log.e("JarLoader", "echo-init " + methodName + " failed", th);
         }
     }
 
