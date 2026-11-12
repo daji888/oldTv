@@ -235,7 +235,7 @@ public class ApiConfig {
                 String error = "";
                 okhttp3.Response response = null;
                 try {
-                    response = OkHttp.newCall(requestUrl).execute();
+                    response = OkHttp.newCall(requestUrl, userAgent).execute();
                     if (!response.isSuccessful()) {
                         error = "HTTP " + response.code();
                     } else if (response.body() == null) {
