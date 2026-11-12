@@ -329,7 +329,6 @@ public class HomeActivity extends BaseActivity {
 
     private static boolean dataInitOk = false;
     private static boolean jarInitOk = false;
-    private boolean searchSpiderWarmStarted = false;
 
     private void initData() {
         SourceBean home = ApiConfig.get().getHomeSourceBean();
@@ -346,7 +345,6 @@ public class HomeActivity extends BaseActivity {
             if (Hawk.get(HawkConfig.HOME_DEFAULT_SHOW, false)) {
                 jumpActivity(LivePlayActivity.class);
             }   
-            if (!useCacheConfig) warmSearchSpidersOnce(); // 爬虫预热 仅首次加载
             return;
         }
         showLoading();
@@ -465,12 +463,6 @@ public class HomeActivity extends BaseActivity {
                 });
             }
         }, this);
-    }
-
-    private void warmSearchSpidersOnce() {
-        if (searchSpiderWarmStarted) return;
-        searchSpiderWarmStarted = true;
-        ApiConfig.get().warmSearchSpiders();
     }
 
     private void initViewPager(AbsSortXml absXml) {
