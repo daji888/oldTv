@@ -10,7 +10,6 @@ import androidx.core.content.ContextCompat;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.github.tvbox.osc.R;
-import com.github.tvbox.osc.ui.activity.LivePlayActivity;
 import com.github.tvbox.osc.ui.tv.widget.AudioWaveView;
 import com.github.tvbox.osc.bean.Epginfo;
 
@@ -91,7 +90,7 @@ public class LiveEpgAdapter extends BaseQuickAdapter<Epginfo, BaseViewHolder> {
                 wqddg_AudioWaveView.setVisibility(View.GONE);
             }
         } else {
-            if ((value.index == this.selectedEpgIndex && value.currentEpgDate.equals(shiyiDate)) && LivePlayActivity.isBack == true) {
+            if (value.index == this.selectedEpgIndex && value.currentEpgDate.equals(shiyiDate)) {
                 wqddg_AudioWaveView.setVisibility(View.VISIBLE);
                 textview.setFreezesText(true);
                 timeview.setFreezesText(true);
@@ -99,19 +98,15 @@ public class LiveEpgAdapter extends BaseQuickAdapter<Epginfo, BaseViewHolder> {
                 shiyi.setBackground(roundedBg);
                 shiyi.setTextColor(Color.RED);
                 shiyi.setText("回看中");
-            } else {
-                wqddg_AudioWaveView.setVisibility(View.GONE);
-            }
-            if (LivePlayActivity.isBack == false) {
                 if (now.compareTo(value.startdateTime) >= 0 && now.compareTo(value.enddateTime) <= 0) {
-                    wqddg_AudioWaveView.setVisibility(View.VISIBLE);
-                    textview.setFreezesText(true);
-                    timeview.setFreezesText(true);
+                    shiyi.setVisibility(View.VISIBLE);
                     roundedBg.setColor(Color.YELLOW);
                     shiyi.setBackground(roundedBg);
                     shiyi.setTextColor(Color.RED);
-                    shiyi.setText("直播");
-                }    
+                    shiyi.setText("直播中");
+                }
+            } else {
+                wqddg_AudioWaveView.setVisibility(View.GONE);
             }
         }
     }
