@@ -172,7 +172,7 @@ public class LivePlayActivity extends BaseActivity {
     private LiveEpgDateAdapter liveEpgDateAdapter;
     private LiveEpgAdapter epgListAdapter;
     private boolean isSHIYI = false;
-    public static boolean isBack = false;
+    private static boolean isBack = false;
     private static String shiyi_time; //时移时间
     private static String playUrl;
     
