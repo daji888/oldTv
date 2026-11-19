@@ -52,7 +52,7 @@ public class LiveEpgAdapter extends BaseQuickAdapter<Epginfo, BaseViewHolder> {
         String nowStr = timeFormat.format(now);
         GradientDrawable roundedBg = new GradientDrawable();
         roundedBg.setCornerRadius(AutoSizeUtils.dp2px(holder.itemView.getContext(), 5));
-        if (value.index == selectedEpgIndex && value.currentEpgDate != null && (value.currentEpgDate.equals(shiyiDate) || value.currentEpgDate.equals(nowStr))) {
+        if (value.index == selectedEpgIndex && value.index != focusedEpgIndex && (value.currentEpgDate.equals(shiyiDate) || value.currentEpgDate.equals(nowStr))) {
             textview.setTextColor(ContextCompat.getColor(mContext, R.color.color_FF5F00));
             timeview.setTextColor(ContextCompat.getColor(mContext, R.color.color_FF5F00));
         } else {
@@ -110,7 +110,7 @@ public class LiveEpgAdapter extends BaseQuickAdapter<Epginfo, BaseViewHolder> {
                     roundedBg.setColor(Color.YELLOW);
                     shiyi.setBackground(roundedBg);
                     shiyi.setTextColor(Color.RED);
-                    shiyi.setText("直播中");
+                    shiyi.setText("直播");
                 }    
             }
         }
