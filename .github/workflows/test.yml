@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v7
         with:
           fetch-depth: 0
-      - name: set up JDK 17
+      - name: Set up JDK 17
         uses: actions/setup-java@v6
         with:
           java-version: '17'
@@ -35,12 +35,6 @@ jobs:
           echo '修改VersionName'
           sed -i "/versionName/s#[0-9a-zA-Z_\.\'\"-]\+\$#\'${{ env.tag }}\'#" app/build.gradle
           sed -i "/android:text=/s#。#。\\\\n\\\\n                                                                       ${{ env.tag }}#" app/src/main/res/layout/dialog_about.xml
-          echo 'crosswalk源，防挂'
-          if grep -q 'crosswalk' build.gradle; then
-            sed -i "/crosswalk/a\        maven { url = 'https://o0halflife0o.github.io/crosswalk/releases/crosswalk/android/maven2' }" build.gradle
-          else
-            sed -i "/jitpack.io/a\        maven { url = 'https://o0halflife0o.github.io/crosswalk/releases/crosswalk/android/maven2' }" build.gradle
-          fi
       - name: Release Apk Sign
         run: |
           signingConfigs='ICAgIHNpZ25pbmdDb25maWdzIHtcCiAgICAgICAgaWYgKHByb2plY3QuaGFzUHJvcGVydHkoIlJFTEVBU0VfU1RPUkVfRklMRSIpKSB7XAogICAgICAgICAgICBteUNvbmZpZyB7XAogICAgICAgICAgICAgICAgc3RvcmVGaWxlIGZpbGUoUkVMRUFTRV9TVE9SRV9GSUxFKVwKICAgICAgICAgICAgICAgIHN0b3JlUGFzc3dvcmQgUkVMRUFTRV9TVE9SRV9QQVNTV09SRFwKICAgICAgICAgICAgICAgIGtleUFsaWFzIFJFTEVBU0VfS0VZX0FMSUFTXAogICAgICAgICAgICAgICAga2V5UGFzc3dvcmQgUkVMRUFTRV9LRVlfUEFTU1dPUkRcCiAgICAgICAgICAgICAgICB2MVNpZ25pbmdFbmFibGVkID0gdHJ1ZVwKICAgICAgICAgICAgICAgIHYyU2lnbmluZ0VuYWJsZWQgPSB0cnVlXAogICAgICAgICAgICAgICAgZW5hYmxlVjNTaWduaW5nID0gdHJ1ZVwKICAgICAgICAgICAgICAgIGVuYWJsZVY0U2lnbmluZyA9IHRydWVcCiAgICAgICAgICAgIH1cCiAgICAgICAgfVwKICAgIH1cClw='
