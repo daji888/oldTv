@@ -1,10 +1,6 @@
 name: Test Build
 
 on:
-#  push:
-#    branches:
-#      - main
-#  pull_request:
   workflow_dispatch:
 
 jobs:
@@ -22,11 +18,9 @@ jobs:
           distribution: 'temurin'
       - name: Check New Commit
         run: |
-          commit=$(curl -sL https://github.com/daji888/oldTv/commits/main |grep -o "commit/[a-z0-9]\+" |head -1 | cut -d\/ -f5)
-          if [ "${{ inputs.rebuild }}" == "true" ]; then
-            echo "commit=$commit" >> $GITHUB_ENV
-            echo "commitS=${commit:0:7}" >> $GITHUB_ENV
-          fi
+          commit=$(curl -sL https://github.com/daji888/oldTv/commits/xg6 |grep -o "commit/[a-z0-9]\+" |head -1 | cut -d\/ -f5)
+          echo "commit=$commit" >> $GITHUB_ENV
+          echo "commitS=${commit:0:7}" >> $GITHUB_ENV
       - name: Checkout Tag
         run: |
           echo "tag=$(git log --date=format:'%Y.%m%d.%H%M' --pretty=format:%cd ${{ env.commitS }} -1)" >> $GITHUB_ENV
