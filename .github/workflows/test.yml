@@ -22,7 +22,7 @@ jobs:
           distribution: 'temurin'
       - name: Check New Commit
         run: |
-          commit=$(curl -sL https://github.com/daji888/oldTv/commits/main |grep -o "commit/[a-z0-9]\+" |head -1 | cut -d\/ -f5)
+          commit=$(curl -sL https://github.com/daji888/oldTv/commits/xg6 |grep -o "commit/[a-z0-9]\+" |head -1 | cut -d\/ -f5)
           if [ "${{ inputs.rebuild }}" == "true" ]; then
             echo "commit=$commit" >> $GITHUB_ENV
             echo "commitS=${commit:0:7}" >> $GITHUB_ENV
