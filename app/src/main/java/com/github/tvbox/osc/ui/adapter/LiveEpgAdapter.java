@@ -93,10 +93,6 @@ public class LiveEpgAdapter extends BaseQuickAdapter<Epginfo, BaseViewHolder> {
             if (value.index == this.selectedEpgIndex && value.currentEpgDate.equals(shiyiDate)) {
                 if (now.compareTo(value.startdateTime) >= 0 && now.compareTo(value.enddateTime) <= 0) {
                     wqddg_AudioWaveView.setVisibility(View.VISIBLE);
-                    roundedBg.setColor(Color.YELLOW);
-                    shiyi.setBackground(roundedBg);
-                    shiyi.setTextColor(Color.RED);
-                    shiyi.setText("直播中");
                 } else if (now.compareTo(value.startdateTime) > 0 && now.compareTo(value.enddateTime) > 0) {
                     wqddg_AudioWaveView.setVisibility(View.VISIBLE);
                     textview.setFreezesText(true);
@@ -105,11 +101,6 @@ public class LiveEpgAdapter extends BaseQuickAdapter<Epginfo, BaseViewHolder> {
                     shiyi.setBackground(roundedBg);
                     shiyi.setTextColor(Color.RED);
                     shiyi.setText("回看中");
-                } else if (now.compareTo(value.startdateTime) < 0) {
-                    roundedBg.setColor(Color.GRAY);
-                    shiyi.setBackground(roundedBg);
-                    shiyi.setTextColor(Color.BLACK);
-                    shiyi.setText("预约");
                 }
             } else {
                 wqddg_AudioWaveView.setVisibility(View.GONE);
